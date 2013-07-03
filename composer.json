@@ -1,0 +1,28 @@
+{
+	"name" : "keeko/core",
+	"description" : "Keeko core",
+	"type" : "keeko-core",
+	"authors" : [{
+			"name" : "gossi",
+			"homepage" : "http://gos.si"
+		}
+	],
+	"license" : [
+		"MIT"
+	],
+	"require" : {
+		"symfony/config" : "~2",
+		"symfony/http-foundation" : "~2",
+		"symfony/routing" : "~2",
+		"twig/twig" : "~1",
+		"symfony/finder" : "~2",
+		"symfony/yaml" : "~2",
+		"propel/propel1" : "~1",
+		"symfony/filesystem" : "~2"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"keeko\\core" : "src"
+		}
+	}
+}
