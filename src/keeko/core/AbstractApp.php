@@ -7,7 +7,7 @@ use keeko\entities\App;
 
 use Composer\Autoload\ClassLoader;
 
-use keeko\routing\AppRouter;
+use keeko\routing\ApplicationRouter;
 
 abstract class AbstractApp {
 
@@ -19,7 +19,7 @@ abstract class AbstractApp {
 
 	protected $root;
 
-	public function __construct(App $app, AppRouter $appRouter, ClassLoader $classLoader) {
+	public function __construct(App $app, ApplicationRouter $appRouter, ClassLoader $classLoader) {
 		$this->app = $app;
 		$this->appRouter = $appRouter;
 		$this->classLoader = $classLoader;
@@ -56,7 +56,7 @@ abstract class AbstractApp {
 	 *
 	 * @param AppRouter $router
 	 */
-	public function setAppRouter(AppRouter $router) {
+	public function setAppRouter(ApplicationRouter $router) {
 		$this->appRouter = $router;
 	}
 }

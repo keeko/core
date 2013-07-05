@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Route;
 
 use Symfony\Component\Routing\RouteCollection;
 
-class ModuleActionRouter {
+class ModuleActionRouter implements RouteMatcherInterface, RouteGeneratorInterface {
 
 	private $generator;
 	private $matcher;

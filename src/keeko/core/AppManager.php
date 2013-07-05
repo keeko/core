@@ -1,16 +1,11 @@
 <?php
 namespace keeko\core;
 
-use keeko\routing\AppRouter;
-
-use keeko\exceptions\AppException;
-
+use keeko\core\routing\ApplicationRouter;
+use keeko\core\exceptions\AppException;
 use Composer\Autoload\ClassLoader;
-
-use keeko\entities\App;
-
-use keeko\entities\AppQuery;
-
+use keeko\core\entities\App;
+use keeko\core\entities\AppQuery;
 use Symfony\Component\HttpFoundation\Request;
 
 class AppManager {
@@ -26,7 +21,7 @@ class AppManager {
 
 	public function __construct(ClassLoader $loader) {
 		$this->loader = $loader;
-		$this->router = new AppRouter();
+		$this->router = new ApplicationRouter();
 
 		// load apps
 		$apps = AppQuery::create()->find();

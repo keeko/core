@@ -59,7 +59,7 @@ class LocalizationTableMap extends TableMap
         $this->addRelation('Language', 'keeko\\core\\entities\\Language', RelationMap::MANY_TO_ONE, array('language_id' => 'id', ), null, null);
         $this->addRelation('Country', 'keeko\\core\\entities\\Country', RelationMap::MANY_TO_ONE, array('country_iso_nr' => 'iso_nr', ), null, null);
         $this->addRelation('LocalizationRelatedById', 'keeko\\core\\entities\\Localization', RelationMap::ONE_TO_MANY, array('id' => 'parent_id', ), null, null, 'LocalizationsRelatedById');
-        $this->addRelation('AppUri', 'keeko\\core\\entities\\AppUri', RelationMap::ONE_TO_MANY, array('id' => 'localization_id', ), 'RESTRICT', null, 'AppUris');
+        $this->addRelation('GatewayUri', 'keeko\\core\\entities\\GatewayUri', RelationMap::ONE_TO_MANY, array('id' => 'localization_id', ), 'RESTRICT', null, 'GatewayUris');
     } // buildRelations()
 
 } // LocalizationTableMap

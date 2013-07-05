@@ -171,29 +171,53 @@
 		<column name="name" type="VARCHAR" size="128"/>
 	</table>
 
-	<table name="app">
+	<table name="application">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" size="255" />
-		<column name="unixname" type="VARCHAR" size="255" required="true" />
-		<column name="classname" type="VARCHAR" size="255" required="true" />
+		<column name="title" type="VARCHAR" size="255" />
+		<column name="description" type="LONGVARCHAR"/>
+	</table>
+
+	<table name="router">
+		<column name="id" type="INTEGER" size="10" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="title" type="VARCHAR" size="255" />
+		<column name="classname" type="VARCHAR" size="255" />
 	</table>
 	
-	<table name="app_uri">
+	<table name="gateway">
+		<column name="id" type="INTEGER" size="10" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="title" type="VARCHAR" size="255" />
+		<column name="application_id" type="INTEGER" size="10" required="true" />
+		<column name="router_id" type="INTEGER" size="10" required="true" />
+		
+		<foreign-key foreignTable="application" onDelete="restrict">
+			<reference local="application_id" foreign="id" />
+		</foreign-key>
+		
+		<foreign-key foreignTable="router" onDelete="restrict">
+			<reference local="router_id" foreign="id" />
+		</foreign-key>
+		
+		<behavior name="extra_properties" />
+	</table>
+	
+	<table name="gateway_uri">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="httphost" type="VARCHAR" size="255" required="true" />
 		<column name="basepath" type="VARCHAR" size="255" required="true" />
 		<column name="secure" type="BOOLEAN"/>
-		<column name="app_id" type="INTEGER" size="10" required="true" />
+		<column name="gateway_id" type="INTEGER" size="10" required="true" />
 		<column name="localization_id" type="INTEGER" size="10" required="true" />
-		<foreign-key foreignTable="app" onDelete="restrict">
-			<reference local="app_id" foreign="id" />
+		<foreign-key foreignTable="gateway" onDelete="restrict">
+			<reference local="gateway_id" foreign="id" />
 		</foreign-key>
 		<foreign-key foreignTable="localization" onDelete="restrict">
 			<reference local="localization_id" foreign="id" />
 		</foreign-key>
-		
 	</table>
 	
 	<table name="group">
