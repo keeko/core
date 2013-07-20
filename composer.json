@@ -12,8 +12,8 @@
 	],
 	"require" : {
 		"keeko/composer-installer" : "*",
-		"composer/composer" : "dev-master",
-		"CarpeHora/ExtraPropertiesBehavior" : "dev-master",
+		"composer/composer" : "dev-master@dev",
+		"CarpeHora/ExtraPropertiesBehavior" : "dev-master@dev",
 		"symfony/config" : "~2",
 		"symfony/http-foundation" : "~2",
 		"symfony/routing" : "~2",
