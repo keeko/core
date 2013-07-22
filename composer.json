@@ -13,11 +13,12 @@
 	"require" : {
 		"keeko/composer-installer" : "*",
 		"composer/composer" : "dev-master",
-		"CarpeHora/ExtraPropertiesBehavior" : "dev-master",
+		"CarpeHora/ExtraPropertiesBehavior" : "~1",
 		"symfony/config" : "~2",
 		"symfony/http-foundation" : "~2",
 		"symfony/routing" : "~2",
 		"twig/twig" : "~1",
+		"symfony/options-resolver" : "~2",
 		"symfony/finder" : "~2",
 		"symfony/yaml" : "~2",
 		"propel/propel1" : "~1",
