@@ -3,8 +3,8 @@ namespace keeko\core\routing;
 
 use keeko\core\exceptions\AppException;
 use Symfony\Component\HttpFoundation\Request;
-use keeko\core\entities\GatewayUriQuery;
-use keeko\core\entities\GatewayUri;
+use keeko\core\entities\ApplicationUriQuery;
+use keeko\core\entities\ApplicationUri;
 
 class ApplicationRouter implements RouteMatcherInterface {
 
@@ -27,15 +27,15 @@ class ApplicationRouter implements RouteMatcherInterface {
 	 *
 	 * @param Request $request
 	 * @throws AppException
-	 * @return GatewayUri
+	 * @return ApplicationUri
 	 */
-	public function match(Request $request) {
+	public function match($request) {
 		$uri = null;
 		// better loop. Maybe some priority on longer strings?
 		// Or strings with more slashes?
 		// better query on that?
-		$uris = GatewayUriQuery::create()
-			->joinApp()
+		$uris = ApplicationUriQuery::create()
+			->joinApplication()
 			->filterByHttphost($request->getHttpHost())
 			->find();
 

@@ -43,10 +43,9 @@ class ModuleTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
-        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
-        $this->addColumn('unixname', 'Unixname', 'VARCHAR', false, 255, null);
-        $this->addColumn('version', 'Version', 'VARCHAR', false, 10, null);
         $this->addColumn('classname', 'Classname', 'VARCHAR', false, 255, null);
+        $this->addColumn('activated_version', 'ActivatedVersion', 'VARCHAR', false, 50, null);
+        $this->addForeignKey('package_id', 'PackageId', 'INTEGER', 'keeko_package', 'id', false, null, null);
         // validators
     } // initialize()
 
@@ -55,7 +54,23 @@ class ModuleTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Package', 'keeko\\core\\entities\\Package', RelationMap::MANY_TO_ONE, array('package_id' => 'id', ), null, null);
         $this->addRelation('Action', 'keeko\\core\\entities\\Action', RelationMap::ONE_TO_MANY, array('id' => 'module_id', ), 'CASCADE', null, 'Actions');
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'delegate' =>  array (
+  'to' => 'package',
+),
+        );
+    } // getBehaviors()
 
 } // ModuleTableMap

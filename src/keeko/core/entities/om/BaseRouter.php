@@ -13,8 +13,8 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use keeko\core\entities\Gateway;
-use keeko\core\entities\GatewayQuery;
+use keeko\core\entities\Application;
+use keeko\core\entities\ApplicationQuery;
 use keeko\core\entities\Router;
 use keeko\core\entities\RouterPeer;
 use keeko\core\entities\RouterQuery;
@@ -66,10 +66,10 @@ abstract class BaseRouter extends BaseObject implements Persistent
     protected $classname;
 
     /**
-     * @var        PropelObjectCollection|Gateway[] Collection to store aggregation of Gateway objects.
+     * @var        PropelObjectCollection|Application[] Collection to store aggregation of Application objects.
      */
-    protected $collGateways;
-    protected $collGatewaysPartial;
+    protected $collApplications;
+    protected $collApplicationsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -95,7 +95,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $gatewaysScheduledForDeletion = null;
+    protected $applicationsScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -295,7 +295,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collGateways = null;
+            $this->collApplications = null;
 
         } // if (deep)
     }
@@ -421,17 +421,17 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 $this->resetModified();
             }
 
-            if ($this->gatewaysScheduledForDeletion !== null) {
-                if (!$this->gatewaysScheduledForDeletion->isEmpty()) {
-                    GatewayQuery::create()
-                        ->filterByPrimaryKeys($this->gatewaysScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->applicationsScheduledForDeletion !== null) {
+                if (!$this->applicationsScheduledForDeletion->isEmpty()) {
+                    ApplicationQuery::create()
+                        ->filterByPrimaryKeys($this->applicationsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->gatewaysScheduledForDeletion = null;
+                    $this->applicationsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collGateways !== null) {
-                foreach ($this->collGateways as $referrerFK) {
+            if ($this->collApplications !== null) {
+                foreach ($this->collApplications as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -592,8 +592,8 @@ abstract class BaseRouter extends BaseObject implements Persistent
             }
 
 
-                if ($this->collGateways !== null) {
-                    foreach ($this->collGateways as $referrerFK) {
+                if ($this->collApplications !== null) {
+                    foreach ($this->collApplications as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -678,8 +678,8 @@ abstract class BaseRouter extends BaseObject implements Persistent
             $keys[2] => $this->getClassname(),
         );
         if ($includeForeignObjects) {
-            if (null !== $this->collGateways) {
-                $result['Gateways'] = $this->collGateways->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collApplications) {
+                $result['Applications'] = $this->collApplications->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -838,9 +838,9 @@ abstract class BaseRouter extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
-            foreach ($this->getGateways() as $relObj) {
+            foreach ($this->getApplications() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addGateway($relObj->copy($deepCopy));
+                    $copyObj->addApplication($relObj->copy($deepCopy));
                 }
             }
 
@@ -905,42 +905,42 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
-        if ('Gateway' == $relationName) {
-            $this->initGateways();
+        if ('Application' == $relationName) {
+            $this->initApplications();
         }
     }
 
     /**
-     * Clears out the collGateways collection
+     * Clears out the collApplications collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return Router The current object (for fluent API support)
-     * @see        addGateways()
+     * @see        addApplications()
      */
-    public function clearGateways()
+    public function clearApplications()
     {
-        $this->collGateways = null; // important to set this to null since that means it is uninitialized
-        $this->collGatewaysPartial = null;
+        $this->collApplications = null; // important to set this to null since that means it is uninitialized
+        $this->collApplicationsPartial = null;
 
         return $this;
     }
 
     /**
-     * reset is the collGateways collection loaded partially
+     * reset is the collApplications collection loaded partially
      *
      * @return void
      */
-    public function resetPartialGateways($v = true)
+    public function resetPartialApplications($v = true)
     {
-        $this->collGatewaysPartial = $v;
+        $this->collApplicationsPartial = $v;
     }
 
     /**
-     * Initializes the collGateways collection.
+     * Initializes the collApplications collection.
      *
-     * By default this just sets the collGateways collection to an empty array (like clearcollGateways());
+     * By default this just sets the collApplications collection to an empty array (like clearcollApplications());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -949,17 +949,17 @@ abstract class BaseRouter extends BaseObject implements Persistent
      *
      * @return void
      */
-    public function initGateways($overrideExisting = true)
+    public function initApplications($overrideExisting = true)
     {
-        if (null !== $this->collGateways && !$overrideExisting) {
+        if (null !== $this->collApplications && !$overrideExisting) {
             return;
         }
-        $this->collGateways = new PropelObjectCollection();
-        $this->collGateways->setModel('Gateway');
+        $this->collApplications = new PropelObjectCollection();
+        $this->collApplications->setModel('Application');
     }
 
     /**
-     * Gets an array of Gateway objects which contain a foreign key that references this object.
+     * Gets an array of Application objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -969,105 +969,105 @@ abstract class BaseRouter extends BaseObject implements Persistent
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Gateway[] List of Gateway objects
+     * @return PropelObjectCollection|Application[] List of Application objects
      * @throws PropelException
      */
-    public function getGateways($criteria = null, PropelPDO $con = null)
+    public function getApplications($criteria = null, PropelPDO $con = null)
     {
-        $partial = $this->collGatewaysPartial && !$this->isNew();
-        if (null === $this->collGateways || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collGateways) {
+        $partial = $this->collApplicationsPartial && !$this->isNew();
+        if (null === $this->collApplications || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collApplications) {
                 // return empty collection
-                $this->initGateways();
+                $this->initApplications();
             } else {
-                $collGateways = GatewayQuery::create(null, $criteria)
+                $collApplications = ApplicationQuery::create(null, $criteria)
                     ->filterByRouter($this)
                     ->find($con);
                 if (null !== $criteria) {
-                    if (false !== $this->collGatewaysPartial && count($collGateways)) {
-                      $this->initGateways(false);
+                    if (false !== $this->collApplicationsPartial && count($collApplications)) {
+                      $this->initApplications(false);
 
-                      foreach($collGateways as $obj) {
-                        if (false == $this->collGateways->contains($obj)) {
-                          $this->collGateways->append($obj);
+                      foreach($collApplications as $obj) {
+                        if (false == $this->collApplications->contains($obj)) {
+                          $this->collApplications->append($obj);
                         }
                       }
 
-                      $this->collGatewaysPartial = true;
+                      $this->collApplicationsPartial = true;
                     }
 
-                    $collGateways->getInternalIterator()->rewind();
-                    return $collGateways;
+                    $collApplications->getInternalIterator()->rewind();
+                    return $collApplications;
                 }
 
-                if($partial && $this->collGateways) {
-                    foreach($this->collGateways as $obj) {
+                if($partial && $this->collApplications) {
+                    foreach($this->collApplications as $obj) {
                         if($obj->isNew()) {
-                            $collGateways[] = $obj;
+                            $collApplications[] = $obj;
                         }
                     }
                 }
 
-                $this->collGateways = $collGateways;
-                $this->collGatewaysPartial = false;
+                $this->collApplications = $collApplications;
+                $this->collApplicationsPartial = false;
             }
         }
 
-        return $this->collGateways;
+        return $this->collApplications;
     }
 
     /**
-     * Sets a collection of Gateway objects related by a one-to-many relationship
+     * Sets a collection of Application objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param PropelCollection $gateways A Propel collection.
+     * @param PropelCollection $applications A Propel collection.
      * @param PropelPDO $con Optional connection object
      * @return Router The current object (for fluent API support)
      */
-    public function setGateways(PropelCollection $gateways, PropelPDO $con = null)
+    public function setApplications(PropelCollection $applications, PropelPDO $con = null)
     {
-        $gatewaysToDelete = $this->getGateways(new Criteria(), $con)->diff($gateways);
+        $applicationsToDelete = $this->getApplications(new Criteria(), $con)->diff($applications);
 
-        $this->gatewaysScheduledForDeletion = unserialize(serialize($gatewaysToDelete));
+        $this->applicationsScheduledForDeletion = unserialize(serialize($applicationsToDelete));
 
-        foreach ($gatewaysToDelete as $gatewayRemoved) {
-            $gatewayRemoved->setRouter(null);
+        foreach ($applicationsToDelete as $applicationRemoved) {
+            $applicationRemoved->setRouter(null);
         }
 
-        $this->collGateways = null;
-        foreach ($gateways as $gateway) {
-            $this->addGateway($gateway);
+        $this->collApplications = null;
+        foreach ($applications as $application) {
+            $this->addApplication($application);
         }
 
-        $this->collGateways = $gateways;
-        $this->collGatewaysPartial = false;
+        $this->collApplications = $applications;
+        $this->collApplicationsPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related Gateway objects.
+     * Returns the number of related Application objects.
      *
      * @param Criteria $criteria
      * @param boolean $distinct
      * @param PropelPDO $con
-     * @return int             Count of related Gateway objects.
+     * @return int             Count of related Application objects.
      * @throws PropelException
      */
-    public function countGateways(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countApplications(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
     {
-        $partial = $this->collGatewaysPartial && !$this->isNew();
-        if (null === $this->collGateways || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collGateways) {
+        $partial = $this->collApplicationsPartial && !$this->isNew();
+        if (null === $this->collApplications || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collApplications) {
                 return 0;
             }
 
             if($partial && !$criteria) {
-                return count($this->getGateways());
+                return count($this->getApplications());
             }
-            $query = GatewayQuery::create(null, $criteria);
+            $query = ApplicationQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
@@ -1077,52 +1077,52 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 ->count($con);
         }
 
-        return count($this->collGateways);
+        return count($this->collApplications);
     }
 
     /**
-     * Method called to associate a Gateway object to this object
-     * through the Gateway foreign key attribute.
+     * Method called to associate a Application object to this object
+     * through the Application foreign key attribute.
      *
-     * @param    Gateway $l Gateway
+     * @param    Application $l Application
      * @return Router The current object (for fluent API support)
      */
-    public function addGateway(Gateway $l)
+    public function addApplication(Application $l)
     {
-        if ($this->collGateways === null) {
-            $this->initGateways();
-            $this->collGatewaysPartial = true;
+        if ($this->collApplications === null) {
+            $this->initApplications();
+            $this->collApplicationsPartial = true;
         }
-        if (!in_array($l, $this->collGateways->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddGateway($l);
+        if (!in_array($l, $this->collApplications->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddApplication($l);
         }
 
         return $this;
     }
 
     /**
-     * @param	Gateway $gateway The gateway object to add.
+     * @param	Application $application The application object to add.
      */
-    protected function doAddGateway($gateway)
+    protected function doAddApplication($application)
     {
-        $this->collGateways[]= $gateway;
-        $gateway->setRouter($this);
+        $this->collApplications[]= $application;
+        $application->setRouter($this);
     }
 
     /**
-     * @param	Gateway $gateway The gateway object to remove.
+     * @param	Application $application The application object to remove.
      * @return Router The current object (for fluent API support)
      */
-    public function removeGateway($gateway)
+    public function removeApplication($application)
     {
-        if ($this->getGateways()->contains($gateway)) {
-            $this->collGateways->remove($this->collGateways->search($gateway));
-            if (null === $this->gatewaysScheduledForDeletion) {
-                $this->gatewaysScheduledForDeletion = clone $this->collGateways;
-                $this->gatewaysScheduledForDeletion->clear();
+        if ($this->getApplications()->contains($application)) {
+            $this->collApplications->remove($this->collApplications->search($application));
+            if (null === $this->applicationsScheduledForDeletion) {
+                $this->applicationsScheduledForDeletion = clone $this->collApplications;
+                $this->applicationsScheduledForDeletion->clear();
             }
-            $this->gatewaysScheduledForDeletion[]= clone $gateway;
-            $gateway->setRouter(null);
+            $this->applicationsScheduledForDeletion[]= clone $application;
+            $application->setRouter(null);
         }
 
         return $this;
@@ -1134,7 +1134,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      * an identical criteria, it returns the collection.
      * Otherwise if this Router is new, it will return
      * an empty collection; or if this Router has previously
-     * been saved, it will retrieve related Gateways from storage.
+     * been saved, it will retrieve related Applications from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1143,14 +1143,14 @@ abstract class BaseRouter extends BaseObject implements Persistent
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Gateway[] List of Gateway objects
+     * @return PropelObjectCollection|Application[] List of Application objects
      */
-    public function getGatewaysJoinApplication($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getApplicationsJoinApplicationType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
-        $query = GatewayQuery::create(null, $criteria);
-        $query->joinWith('Application', $join_behavior);
+        $query = ApplicationQuery::create(null, $criteria);
+        $query->joinWith('ApplicationType', $join_behavior);
 
-        return $this->getGateways($query, $con);
+        return $this->getApplications($query, $con);
     }
 
     /**
@@ -1183,8 +1183,8 @@ abstract class BaseRouter extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collGateways) {
-                foreach ($this->collGateways as $o) {
+            if ($this->collApplications) {
+                foreach ($this->collApplications as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -1192,10 +1192,10 @@ abstract class BaseRouter extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->collGateways instanceof PropelCollection) {
-            $this->collGateways->clearIterator();
+        if ($this->collApplications instanceof PropelCollection) {
+            $this->collApplications->clearIterator();
         }
-        $this->collGateways = null;
+        $this->collApplications = null;
     }
 
     /**

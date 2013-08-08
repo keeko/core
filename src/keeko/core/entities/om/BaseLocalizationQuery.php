@@ -12,8 +12,8 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use keeko\core\entities\ApplicationUri;
 use keeko\core\entities\Country;
-use keeko\core\entities\GatewayUri;
 use keeko\core\entities\Language;
 use keeko\core\entities\Localization;
 use keeko\core\entities\LocalizationPeer;
@@ -56,9 +56,9 @@ use keeko\core\entities\LocalizationQuery;
  * @method LocalizationQuery rightJoinLocalizationRelatedById($relationAlias = null) Adds a RIGHT JOIN clause to the query using the LocalizationRelatedById relation
  * @method LocalizationQuery innerJoinLocalizationRelatedById($relationAlias = null) Adds a INNER JOIN clause to the query using the LocalizationRelatedById relation
  *
- * @method LocalizationQuery leftJoinGatewayUri($relationAlias = null) Adds a LEFT JOIN clause to the query using the GatewayUri relation
- * @method LocalizationQuery rightJoinGatewayUri($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GatewayUri relation
- * @method LocalizationQuery innerJoinGatewayUri($relationAlias = null) Adds a INNER JOIN clause to the query using the GatewayUri relation
+ * @method LocalizationQuery leftJoinApplicationUri($relationAlias = null) Adds a LEFT JOIN clause to the query using the ApplicationUri relation
+ * @method LocalizationQuery rightJoinApplicationUri($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ApplicationUri relation
+ * @method LocalizationQuery innerJoinApplicationUri($relationAlias = null) Adds a INNER JOIN clause to the query using the ApplicationUri relation
  *
  * @method Localization findOne(PropelPDO $con = null) Return the first Localization matching the query
  * @method Localization findOneOrCreate(PropelPDO $con = null) Return the first Localization matching the query, or a new Localization object populated from the query conditions when no match is found
@@ -769,41 +769,41 @@ abstract class BaseLocalizationQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related GatewayUri object
+     * Filter the query by a related ApplicationUri object
      *
-     * @param   GatewayUri|PropelObjectCollection $gatewayUri  the related object to use as filter
+     * @param   ApplicationUri|PropelObjectCollection $applicationUri  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 LocalizationQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByGatewayUri($gatewayUri, $comparison = null)
+    public function filterByApplicationUri($applicationUri, $comparison = null)
     {
-        if ($gatewayUri instanceof GatewayUri) {
+        if ($applicationUri instanceof ApplicationUri) {
             return $this
-                ->addUsingAlias(LocalizationPeer::ID, $gatewayUri->getLocalizationId(), $comparison);
-        } elseif ($gatewayUri instanceof PropelObjectCollection) {
+                ->addUsingAlias(LocalizationPeer::ID, $applicationUri->getLocalizationId(), $comparison);
+        } elseif ($applicationUri instanceof PropelObjectCollection) {
             return $this
-                ->useGatewayUriQuery()
-                ->filterByPrimaryKeys($gatewayUri->getPrimaryKeys())
+                ->useApplicationUriQuery()
+                ->filterByPrimaryKeys($applicationUri->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByGatewayUri() only accepts arguments of type GatewayUri or PropelCollection');
+            throw new PropelException('filterByApplicationUri() only accepts arguments of type ApplicationUri or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the GatewayUri relation
+     * Adds a JOIN clause to the query using the ApplicationUri relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return LocalizationQuery The current query, for fluid interface
      */
-    public function joinGatewayUri($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinApplicationUri($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('GatewayUri');
+        $relationMap = $tableMap->getRelation('ApplicationUri');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -818,14 +818,14 @@ abstract class BaseLocalizationQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'GatewayUri');
+            $this->addJoinObject($join, 'ApplicationUri');
         }
 
         return $this;
     }
 
     /**
-     * Use the GatewayUri relation GatewayUri object
+     * Use the ApplicationUri relation ApplicationUri object
      *
      * @see       useQuery()
      *
@@ -833,13 +833,13 @@ abstract class BaseLocalizationQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \keeko\core\entities\GatewayUriQuery A secondary query class using the current class as primary query
+     * @return   \keeko\core\entities\ApplicationUriQuery A secondary query class using the current class as primary query
      */
-    public function useGatewayUriQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useApplicationUriQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinGatewayUri($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'GatewayUri', '\keeko\core\entities\GatewayUriQuery');
+            ->joinApplicationUri($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ApplicationUri', '\keeko\core\entities\ApplicationUriQuery');
     }
 
     /**

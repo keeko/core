@@ -13,9 +13,12 @@ use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
 use keeko\core\entities\Application;
+use keeko\core\entities\ApplicationExtraProperty;
 use keeko\core\entities\ApplicationPeer;
 use keeko\core\entities\ApplicationQuery;
-use keeko\core\entities\Gateway;
+use keeko\core\entities\ApplicationType;
+use keeko\core\entities\ApplicationUri;
+use keeko\core\entities\Router;
 
 /**
  * Base class that represents a query for the 'keeko_application' table.
@@ -23,34 +26,46 @@ use keeko\core\entities\Gateway;
  *
  *
  * @method ApplicationQuery orderById($order = Criteria::ASC) Order by the id column
- * @method ApplicationQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method ApplicationQuery orderByTitle($order = Criteria::ASC) Order by the title column
- * @method ApplicationQuery orderByDescription($order = Criteria::ASC) Order by the description column
+ * @method ApplicationQuery orderByApplicationTypeId($order = Criteria::ASC) Order by the application_type_id column
+ * @method ApplicationQuery orderByRouterId($order = Criteria::ASC) Order by the router_id column
  *
  * @method ApplicationQuery groupById() Group by the id column
- * @method ApplicationQuery groupByName() Group by the name column
  * @method ApplicationQuery groupByTitle() Group by the title column
- * @method ApplicationQuery groupByDescription() Group by the description column
+ * @method ApplicationQuery groupByApplicationTypeId() Group by the application_type_id column
+ * @method ApplicationQuery groupByRouterId() Group by the router_id column
  *
  * @method ApplicationQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method ApplicationQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method ApplicationQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method ApplicationQuery leftJoinGateway($relationAlias = null) Adds a LEFT JOIN clause to the query using the Gateway relation
- * @method ApplicationQuery rightJoinGateway($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Gateway relation
- * @method ApplicationQuery innerJoinGateway($relationAlias = null) Adds a INNER JOIN clause to the query using the Gateway relation
+ * @method ApplicationQuery leftJoinApplicationType($relationAlias = null) Adds a LEFT JOIN clause to the query using the ApplicationType relation
+ * @method ApplicationQuery rightJoinApplicationType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ApplicationType relation
+ * @method ApplicationQuery innerJoinApplicationType($relationAlias = null) Adds a INNER JOIN clause to the query using the ApplicationType relation
+ *
+ * @method ApplicationQuery leftJoinRouter($relationAlias = null) Adds a LEFT JOIN clause to the query using the Router relation
+ * @method ApplicationQuery rightJoinRouter($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Router relation
+ * @method ApplicationQuery innerJoinRouter($relationAlias = null) Adds a INNER JOIN clause to the query using the Router relation
+ *
+ * @method ApplicationQuery leftJoinApplicationUri($relationAlias = null) Adds a LEFT JOIN clause to the query using the ApplicationUri relation
+ * @method ApplicationQuery rightJoinApplicationUri($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ApplicationUri relation
+ * @method ApplicationQuery innerJoinApplicationUri($relationAlias = null) Adds a INNER JOIN clause to the query using the ApplicationUri relation
+ *
+ * @method ApplicationQuery leftJoinApplicationExtraProperty($relationAlias = null) Adds a LEFT JOIN clause to the query using the ApplicationExtraProperty relation
+ * @method ApplicationQuery rightJoinApplicationExtraProperty($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ApplicationExtraProperty relation
+ * @method ApplicationQuery innerJoinApplicationExtraProperty($relationAlias = null) Adds a INNER JOIN clause to the query using the ApplicationExtraProperty relation
  *
  * @method Application findOne(PropelPDO $con = null) Return the first Application matching the query
  * @method Application findOneOrCreate(PropelPDO $con = null) Return the first Application matching the query, or a new Application object populated from the query conditions when no match is found
  *
- * @method Application findOneByName(string $name) Return the first Application filtered by the name column
  * @method Application findOneByTitle(string $title) Return the first Application filtered by the title column
- * @method Application findOneByDescription(string $description) Return the first Application filtered by the description column
+ * @method Application findOneByApplicationTypeId(int $application_type_id) Return the first Application filtered by the application_type_id column
+ * @method Application findOneByRouterId(int $router_id) Return the first Application filtered by the router_id column
  *
  * @method array findById(int $id) Return Application objects filtered by the id column
- * @method array findByName(string $name) Return Application objects filtered by the name column
  * @method array findByTitle(string $title) Return Application objects filtered by the title column
- * @method array findByDescription(string $description) Return Application objects filtered by the description column
+ * @method array findByApplicationTypeId(int $application_type_id) Return Application objects filtered by the application_type_id column
+ * @method array findByRouterId(int $router_id) Return Application objects filtered by the router_id column
  *
  * @package    propel.generator.keeko.core.entities.om
  */
@@ -154,7 +169,7 @@ abstract class BaseApplicationQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `name`, `title`, `description` FROM `keeko_application` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `title`, `application_type_id`, `router_id` FROM `keeko_application` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -286,35 +301,6 @@ abstract class BaseApplicationQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the name column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
-     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $name The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ApplicationQuery The current query, for fluid interface
-     */
-    public function filterByName($name = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($name)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $name)) {
-                $name = str_replace('*', '%', $name);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(ApplicationPeer::NAME, $name, $comparison);
-    }
-
-    /**
      * Filter the query on the title column
      *
      * Example usage:
@@ -344,70 +330,131 @@ abstract class BaseApplicationQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the description column
+     * Filter the query on the application_type_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByDescription('fooValue');   // WHERE description = 'fooValue'
-     * $query->filterByDescription('%fooValue%'); // WHERE description LIKE '%fooValue%'
+     * $query->filterByApplicationTypeId(1234); // WHERE application_type_id = 1234
+     * $query->filterByApplicationTypeId(array(12, 34)); // WHERE application_type_id IN (12, 34)
+     * $query->filterByApplicationTypeId(array('min' => 12)); // WHERE application_type_id >= 12
+     * $query->filterByApplicationTypeId(array('max' => 12)); // WHERE application_type_id <= 12
      * </code>
      *
-     * @param     string $description The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
+     * @see       filterByApplicationType()
+     *
+     * @param     mixed $applicationTypeId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ApplicationQuery The current query, for fluid interface
      */
-    public function filterByDescription($description = null, $comparison = null)
+    public function filterByApplicationTypeId($applicationTypeId = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($description)) {
+        if (is_array($applicationTypeId)) {
+            $useMinMax = false;
+            if (isset($applicationTypeId['min'])) {
+                $this->addUsingAlias(ApplicationPeer::APPLICATION_TYPE_ID, $applicationTypeId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($applicationTypeId['max'])) {
+                $this->addUsingAlias(ApplicationPeer::APPLICATION_TYPE_ID, $applicationTypeId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $description)) {
-                $description = str_replace('*', '%', $description);
-                $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(ApplicationPeer::DESCRIPTION, $description, $comparison);
+        return $this->addUsingAlias(ApplicationPeer::APPLICATION_TYPE_ID, $applicationTypeId, $comparison);
     }
 
     /**
-     * Filter the query by a related Gateway object
+     * Filter the query on the router_id column
      *
-     * @param   Gateway|PropelObjectCollection $gateway  the related object to use as filter
+     * Example usage:
+     * <code>
+     * $query->filterByRouterId(1234); // WHERE router_id = 1234
+     * $query->filterByRouterId(array(12, 34)); // WHERE router_id IN (12, 34)
+     * $query->filterByRouterId(array('min' => 12)); // WHERE router_id >= 12
+     * $query->filterByRouterId(array('max' => 12)); // WHERE router_id <= 12
+     * </code>
+     *
+     * @see       filterByRouter()
+     *
+     * @param     mixed $routerId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ApplicationQuery The current query, for fluid interface
+     */
+    public function filterByRouterId($routerId = null, $comparison = null)
+    {
+        if (is_array($routerId)) {
+            $useMinMax = false;
+            if (isset($routerId['min'])) {
+                $this->addUsingAlias(ApplicationPeer::ROUTER_ID, $routerId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($routerId['max'])) {
+                $this->addUsingAlias(ApplicationPeer::ROUTER_ID, $routerId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ApplicationPeer::ROUTER_ID, $routerId, $comparison);
+    }
+
+    /**
+     * Filter the query by a related ApplicationType object
+     *
+     * @param   ApplicationType|PropelObjectCollection $applicationType The related object(s) to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 ApplicationQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByGateway($gateway, $comparison = null)
+    public function filterByApplicationType($applicationType, $comparison = null)
     {
-        if ($gateway instanceof Gateway) {
+        if ($applicationType instanceof ApplicationType) {
             return $this
-                ->addUsingAlias(ApplicationPeer::ID, $gateway->getApplicationId(), $comparison);
-        } elseif ($gateway instanceof PropelObjectCollection) {
+                ->addUsingAlias(ApplicationPeer::APPLICATION_TYPE_ID, $applicationType->getId(), $comparison);
+        } elseif ($applicationType instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
             return $this
-                ->useGatewayQuery()
-                ->filterByPrimaryKeys($gateway->getPrimaryKeys())
-                ->endUse();
+                ->addUsingAlias(ApplicationPeer::APPLICATION_TYPE_ID, $applicationType->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByGateway() only accepts arguments of type Gateway or PropelCollection');
+            throw new PropelException('filterByApplicationType() only accepts arguments of type ApplicationType or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Gateway relation
+     * Adds a JOIN clause to the query using the ApplicationType relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return ApplicationQuery The current query, for fluid interface
      */
-    public function joinGateway($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinApplicationType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Gateway');
+        $relationMap = $tableMap->getRelation('ApplicationType');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -422,14 +469,14 @@ abstract class BaseApplicationQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Gateway');
+            $this->addJoinObject($join, 'ApplicationType');
         }
 
         return $this;
     }
 
     /**
-     * Use the Gateway relation Gateway object
+     * Use the ApplicationType relation ApplicationType object
      *
      * @see       useQuery()
      *
@@ -437,13 +484,237 @@ abstract class BaseApplicationQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \keeko\core\entities\GatewayQuery A secondary query class using the current class as primary query
+     * @return   \keeko\core\entities\ApplicationTypeQuery A secondary query class using the current class as primary query
      */
-    public function useGatewayQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useApplicationTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinGateway($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Gateway', '\keeko\core\entities\GatewayQuery');
+            ->joinApplicationType($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ApplicationType', '\keeko\core\entities\ApplicationTypeQuery');
+    }
+
+    /**
+     * Filter the query by a related Router object
+     *
+     * @param   Router|PropelObjectCollection $router The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 ApplicationQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByRouter($router, $comparison = null)
+    {
+        if ($router instanceof Router) {
+            return $this
+                ->addUsingAlias(ApplicationPeer::ROUTER_ID, $router->getId(), $comparison);
+        } elseif ($router instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(ApplicationPeer::ROUTER_ID, $router->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByRouter() only accepts arguments of type Router or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Router relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ApplicationQuery The current query, for fluid interface
+     */
+    public function joinRouter($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Router');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Router');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Router relation Router object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \keeko\core\entities\RouterQuery A secondary query class using the current class as primary query
+     */
+    public function useRouterQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinRouter($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Router', '\keeko\core\entities\RouterQuery');
+    }
+
+    /**
+     * Filter the query by a related ApplicationUri object
+     *
+     * @param   ApplicationUri|PropelObjectCollection $applicationUri  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 ApplicationQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByApplicationUri($applicationUri, $comparison = null)
+    {
+        if ($applicationUri instanceof ApplicationUri) {
+            return $this
+                ->addUsingAlias(ApplicationPeer::ID, $applicationUri->getApplicationId(), $comparison);
+        } elseif ($applicationUri instanceof PropelObjectCollection) {
+            return $this
+                ->useApplicationUriQuery()
+                ->filterByPrimaryKeys($applicationUri->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByApplicationUri() only accepts arguments of type ApplicationUri or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ApplicationUri relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ApplicationQuery The current query, for fluid interface
+     */
+    public function joinApplicationUri($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ApplicationUri');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ApplicationUri');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ApplicationUri relation ApplicationUri object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \keeko\core\entities\ApplicationUriQuery A secondary query class using the current class as primary query
+     */
+    public function useApplicationUriQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinApplicationUri($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ApplicationUri', '\keeko\core\entities\ApplicationUriQuery');
+    }
+
+    /**
+     * Filter the query by a related ApplicationExtraProperty object
+     *
+     * @param   ApplicationExtraProperty|PropelObjectCollection $applicationExtraProperty  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 ApplicationQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByApplicationExtraProperty($applicationExtraProperty, $comparison = null)
+    {
+        if ($applicationExtraProperty instanceof ApplicationExtraProperty) {
+            return $this
+                ->addUsingAlias(ApplicationPeer::ID, $applicationExtraProperty->getKeekoApplicationId(), $comparison);
+        } elseif ($applicationExtraProperty instanceof PropelObjectCollection) {
+            return $this
+                ->useApplicationExtraPropertyQuery()
+                ->filterByPrimaryKeys($applicationExtraProperty->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByApplicationExtraProperty() only accepts arguments of type ApplicationExtraProperty or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ApplicationExtraProperty relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ApplicationQuery The current query, for fluid interface
+     */
+    public function joinApplicationExtraProperty($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ApplicationExtraProperty');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ApplicationExtraProperty');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ApplicationExtraProperty relation ApplicationExtraProperty object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \keeko\core\entities\ApplicationExtraPropertyQuery A secondary query class using the current class as primary query
+     */
+    public function useApplicationExtraPropertyQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinApplicationExtraProperty($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ApplicationExtraProperty', '\keeko\core\entities\ApplicationExtraPropertyQuery');
     }
 
     /**
@@ -461,5 +732,53 @@ abstract class BaseApplicationQuery extends ModelCriteria
 
         return $this;
     }
+
+    // extra_properties behavior
+    /**
+     * Filter based on an extra property
+     *
+     * If the property is not set for a particular object it will be present in the results
+     *
+     * @var string $propertyName The name of the property to filter on
+     * @var mixed $propertyValue The value of the property to filter on
+     *
+     * @return ApplicationQuery
+     */
+    public function filterByExtraProperty($propertyName, $propertyValue)
+    {
+      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
+      $propertyValue = ApplicationPeer::normalizeExtraPropertyValue($propertyValue);
+
+      return $this
+        ->leftJoinApplicationExtraProperty($joinName = $propertyName . '_' . uniqid())
+        ->addJoinCondition($joinName, "{$joinName}.PropertyName = ?", $propertyName)
+        ->where("{$joinName}.PropertyValue = ?", $propertyValue);
+    }
+
+    /**
+     * Filter based on an extra property
+     *
+     * If the property is not set for a particular object it it will be assumed
+     * to have a value of $default
+     *
+     * @var string $propertyName The name of the property to filter on
+     * @var mixed $propertyValue The value of the property to filter on
+     * @var mixed $default The value that will be assumed as default if an object
+     *                     does not have the property set
+     *
+     * @return ApplicationQuery
+     */
+    public function filterByExtraPropertyWithDefault($propertyName, $propertyValue, $default)
+    {
+      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
+      $propertyValue = ApplicationPeer::normalizeExtraPropertyValue($propertyValue);
+      $default = ApplicationPeer::normalizeExtraPropertyValue($default);
+
+      return $this
+        ->leftJoinApplicationExtraProperty($joinName = $propertyName . '_' . uniqid())
+        ->addJoinCondition($joinName, "{$joinName}.PropertyName = ?", $propertyName)
+        ->where("COALESCE({$joinName}.PropertyValue, '{$default}') = ?", $propertyValue);
+    }
+
 
 }

@@ -16,6 +16,8 @@ use \PropelPDO;
 use keeko\core\entities\Action;
 use keeko\core\entities\ActionPeer;
 use keeko\core\entities\ActionQuery;
+use keeko\core\entities\BlockContent;
+use keeko\core\entities\BlockContentQuery;
 use keeko\core\entities\GroupAction;
 use keeko\core\entities\GroupActionQuery;
 use keeko\core\entities\Module;
@@ -73,6 +75,12 @@ abstract class BaseAction extends BaseObject implements Persistent
     protected $aModule;
 
     /**
+     * @var        PropelObjectCollection|BlockContent[] Collection to store aggregation of BlockContent objects.
+     */
+    protected $collBlockContents;
+    protected $collBlockContentsPartial;
+
+    /**
      * @var        PropelObjectCollection|GroupAction[] Collection to store aggregation of GroupAction objects.
      */
     protected $collGroupActions;
@@ -97,6 +105,12 @@ abstract class BaseAction extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $blockContentsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -310,6 +324,8 @@ abstract class BaseAction extends BaseObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aModule = null;
+            $this->collBlockContents = null;
+
             $this->collGroupActions = null;
 
         } // if (deep)
@@ -446,6 +462,24 @@ abstract class BaseAction extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->blockContentsScheduledForDeletion !== null) {
+                if (!$this->blockContentsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->blockContentsScheduledForDeletion as $blockContent) {
+                        // need to save related object because we set the relation to null
+                        $blockContent->save($con);
+                    }
+                    $this->blockContentsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collBlockContents !== null) {
+                foreach ($this->collBlockContents as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->groupActionsScheduledForDeletion !== null) {
@@ -631,6 +665,14 @@ abstract class BaseAction extends BaseObject implements Persistent
             }
 
 
+                if ($this->collBlockContents !== null) {
+                    foreach ($this->collBlockContents as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collGroupActions !== null) {
                     foreach ($this->collGroupActions as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -719,6 +761,9 @@ abstract class BaseAction extends BaseObject implements Persistent
         if ($includeForeignObjects) {
             if (null !== $this->aModule) {
                 $result['Module'] = $this->aModule->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collBlockContents) {
+                $result['BlockContents'] = $this->collBlockContents->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collGroupActions) {
                 $result['GroupActions'] = $this->collGroupActions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -880,6 +925,12 @@ abstract class BaseAction extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
+            foreach ($this->getBlockContents() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addBlockContent($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getGroupActions() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addGroupAction($relObj->copy($deepCopy));
@@ -999,9 +1050,255 @@ abstract class BaseAction extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('BlockContent' == $relationName) {
+            $this->initBlockContents();
+        }
         if ('GroupAction' == $relationName) {
             $this->initGroupActions();
         }
+    }
+
+    /**
+     * Clears out the collBlockContents collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return Action The current object (for fluent API support)
+     * @see        addBlockContents()
+     */
+    public function clearBlockContents()
+    {
+        $this->collBlockContents = null; // important to set this to null since that means it is uninitialized
+        $this->collBlockContentsPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collBlockContents collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialBlockContents($v = true)
+    {
+        $this->collBlockContentsPartial = $v;
+    }
+
+    /**
+     * Initializes the collBlockContents collection.
+     *
+     * By default this just sets the collBlockContents collection to an empty array (like clearcollBlockContents());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initBlockContents($overrideExisting = true)
+    {
+        if (null !== $this->collBlockContents && !$overrideExisting) {
+            return;
+        }
+        $this->collBlockContents = new PropelObjectCollection();
+        $this->collBlockContents->setModel('BlockContent');
+    }
+
+    /**
+     * Gets an array of BlockContent objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Action is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|BlockContent[] List of BlockContent objects
+     * @throws PropelException
+     */
+    public function getBlockContents($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collBlockContentsPartial && !$this->isNew();
+        if (null === $this->collBlockContents || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collBlockContents) {
+                // return empty collection
+                $this->initBlockContents();
+            } else {
+                $collBlockContents = BlockContentQuery::create(null, $criteria)
+                    ->filterByAction($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collBlockContentsPartial && count($collBlockContents)) {
+                      $this->initBlockContents(false);
+
+                      foreach($collBlockContents as $obj) {
+                        if (false == $this->collBlockContents->contains($obj)) {
+                          $this->collBlockContents->append($obj);
+                        }
+                      }
+
+                      $this->collBlockContentsPartial = true;
+                    }
+
+                    $collBlockContents->getInternalIterator()->rewind();
+                    return $collBlockContents;
+                }
+
+                if($partial && $this->collBlockContents) {
+                    foreach($this->collBlockContents as $obj) {
+                        if($obj->isNew()) {
+                            $collBlockContents[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collBlockContents = $collBlockContents;
+                $this->collBlockContentsPartial = false;
+            }
+        }
+
+        return $this->collBlockContents;
+    }
+
+    /**
+     * Sets a collection of BlockContent objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $blockContents A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return Action The current object (for fluent API support)
+     */
+    public function setBlockContents(PropelCollection $blockContents, PropelPDO $con = null)
+    {
+        $blockContentsToDelete = $this->getBlockContents(new Criteria(), $con)->diff($blockContents);
+
+        $this->blockContentsScheduledForDeletion = unserialize(serialize($blockContentsToDelete));
+
+        foreach ($blockContentsToDelete as $blockContentRemoved) {
+            $blockContentRemoved->setAction(null);
+        }
+
+        $this->collBlockContents = null;
+        foreach ($blockContents as $blockContent) {
+            $this->addBlockContent($blockContent);
+        }
+
+        $this->collBlockContents = $blockContents;
+        $this->collBlockContentsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related BlockContent objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related BlockContent objects.
+     * @throws PropelException
+     */
+    public function countBlockContents(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collBlockContentsPartial && !$this->isNew();
+        if (null === $this->collBlockContents || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collBlockContents) {
+                return 0;
+            }
+
+            if($partial && !$criteria) {
+                return count($this->getBlockContents());
+            }
+            $query = BlockContentQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByAction($this)
+                ->count($con);
+        }
+
+        return count($this->collBlockContents);
+    }
+
+    /**
+     * Method called to associate a BlockContent object to this object
+     * through the BlockContent foreign key attribute.
+     *
+     * @param    BlockContent $l BlockContent
+     * @return Action The current object (for fluent API support)
+     */
+    public function addBlockContent(BlockContent $l)
+    {
+        if ($this->collBlockContents === null) {
+            $this->initBlockContents();
+            $this->collBlockContentsPartial = true;
+        }
+        if (!in_array($l, $this->collBlockContents->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddBlockContent($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	BlockContent $blockContent The blockContent object to add.
+     */
+    protected function doAddBlockContent($blockContent)
+    {
+        $this->collBlockContents[]= $blockContent;
+        $blockContent->setAction($this);
+    }
+
+    /**
+     * @param	BlockContent $blockContent The blockContent object to remove.
+     * @return Action The current object (for fluent API support)
+     */
+    public function removeBlockContent($blockContent)
+    {
+        if ($this->getBlockContents()->contains($blockContent)) {
+            $this->collBlockContents->remove($this->collBlockContents->search($blockContent));
+            if (null === $this->blockContentsScheduledForDeletion) {
+                $this->blockContentsScheduledForDeletion = clone $this->collBlockContents;
+                $this->blockContentsScheduledForDeletion->clear();
+            }
+            $this->blockContentsScheduledForDeletion[]= $blockContent;
+            $blockContent->setAction(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Action is new, it will return
+     * an empty collection; or if this Action has previously
+     * been saved, it will retrieve related BlockContents from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Action.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|BlockContent[] List of BlockContent objects
+     */
+    public function getBlockContentsJoinBlockItem($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = BlockContentQuery::create(null, $criteria);
+        $query->joinWith('BlockItem', $join_behavior);
+
+        return $this->getBlockContents($query, $con);
     }
 
     /**
@@ -1277,6 +1574,11 @@ abstract class BaseAction extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collBlockContents) {
+                foreach ($this->collBlockContents as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collGroupActions) {
                 foreach ($this->collGroupActions as $o) {
                     $o->clearAllReferences($deep);
@@ -1289,6 +1591,10 @@ abstract class BaseAction extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collBlockContents instanceof PropelCollection) {
+            $this->collBlockContents->clearIterator();
+        }
+        $this->collBlockContents = null;
         if ($this->collGroupActions instanceof PropelCollection) {
             $this->collGroupActions->clearIterator();
         }

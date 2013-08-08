@@ -15,6 +15,7 @@ use \PropelPDO;
 use keeko\core\entities\Action;
 use keeko\core\entities\ActionPeer;
 use keeko\core\entities\ActionQuery;
+use keeko\core\entities\BlockContent;
 use keeko\core\entities\GroupAction;
 use keeko\core\entities\Module;
 
@@ -38,6 +39,10 @@ use keeko\core\entities\Module;
  * @method ActionQuery leftJoinModule($relationAlias = null) Adds a LEFT JOIN clause to the query using the Module relation
  * @method ActionQuery rightJoinModule($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Module relation
  * @method ActionQuery innerJoinModule($relationAlias = null) Adds a INNER JOIN clause to the query using the Module relation
+ *
+ * @method ActionQuery leftJoinBlockContent($relationAlias = null) Adds a LEFT JOIN clause to the query using the BlockContent relation
+ * @method ActionQuery rightJoinBlockContent($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BlockContent relation
+ * @method ActionQuery innerJoinBlockContent($relationAlias = null) Adds a INNER JOIN clause to the query using the BlockContent relation
  *
  * @method ActionQuery leftJoinGroupAction($relationAlias = null) Adds a LEFT JOIN clause to the query using the GroupAction relation
  * @method ActionQuery rightJoinGroupAction($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GroupAction relation
@@ -433,6 +438,80 @@ abstract class BaseActionQuery extends ModelCriteria
         return $this
             ->joinModule($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Module', '\keeko\core\entities\ModuleQuery');
+    }
+
+    /**
+     * Filter the query by a related BlockContent object
+     *
+     * @param   BlockContent|PropelObjectCollection $blockContent  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 ActionQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByBlockContent($blockContent, $comparison = null)
+    {
+        if ($blockContent instanceof BlockContent) {
+            return $this
+                ->addUsingAlias(ActionPeer::ID, $blockContent->getActionId(), $comparison);
+        } elseif ($blockContent instanceof PropelObjectCollection) {
+            return $this
+                ->useBlockContentQuery()
+                ->filterByPrimaryKeys($blockContent->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByBlockContent() only accepts arguments of type BlockContent or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the BlockContent relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ActionQuery The current query, for fluid interface
+     */
+    public function joinBlockContent($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('BlockContent');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'BlockContent');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the BlockContent relation BlockContent object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \keeko\core\entities\BlockContentQuery A secondary query class using the current class as primary query
+     */
+    public function useBlockContentQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinBlockContent($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BlockContent', '\keeko\core\entities\BlockContentQuery');
     }
 
     /**

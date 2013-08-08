@@ -54,6 +54,7 @@ class ActionTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Module', 'keeko\\core\\entities\\Module', RelationMap::MANY_TO_ONE, array('module_id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('BlockContent', 'keeko\\core\\entities\\BlockContent', RelationMap::ONE_TO_MANY, array('id' => 'action_id', ), null, null, 'BlockContents');
         $this->addRelation('GroupAction', 'keeko\\core\\entities\\GroupAction', RelationMap::ONE_TO_MANY, array('id' => 'action_id', ), 'RESTRICT', null, 'GroupActions');
     } // buildRelations()
 

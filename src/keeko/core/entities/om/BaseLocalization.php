@@ -13,10 +13,10 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use keeko\core\entities\ApplicationUri;
+use keeko\core\entities\ApplicationUriQuery;
 use keeko\core\entities\Country;
 use keeko\core\entities\CountryQuery;
-use keeko\core\entities\GatewayUri;
-use keeko\core\entities\GatewayUriQuery;
 use keeko\core\entities\Language;
 use keeko\core\entities\LanguageQuery;
 use keeko\core\entities\Localization;
@@ -103,10 +103,10 @@ abstract class BaseLocalization extends BaseObject implements Persistent
     protected $collLocalizationsRelatedByIdPartial;
 
     /**
-     * @var        PropelObjectCollection|GatewayUri[] Collection to store aggregation of GatewayUri objects.
+     * @var        PropelObjectCollection|ApplicationUri[] Collection to store aggregation of ApplicationUri objects.
      */
-    protected $collGatewayUris;
-    protected $collGatewayUrisPartial;
+    protected $collApplicationUris;
+    protected $collApplicationUrisPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -138,7 +138,7 @@ abstract class BaseLocalization extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $gatewayUrisScheduledForDeletion = null;
+    protected $applicationUrisScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -436,7 +436,7 @@ abstract class BaseLocalization extends BaseObject implements Persistent
             $this->aCountry = null;
             $this->collLocalizationsRelatedById = null;
 
-            $this->collGatewayUris = null;
+            $this->collApplicationUris = null;
 
         } // if (deep)
     }
@@ -606,17 +606,17 @@ abstract class BaseLocalization extends BaseObject implements Persistent
                 }
             }
 
-            if ($this->gatewayUrisScheduledForDeletion !== null) {
-                if (!$this->gatewayUrisScheduledForDeletion->isEmpty()) {
-                    GatewayUriQuery::create()
-                        ->filterByPrimaryKeys($this->gatewayUrisScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->applicationUrisScheduledForDeletion !== null) {
+                if (!$this->applicationUrisScheduledForDeletion->isEmpty()) {
+                    ApplicationUriQuery::create()
+                        ->filterByPrimaryKeys($this->applicationUrisScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->gatewayUrisScheduledForDeletion = null;
+                    $this->applicationUrisScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collGatewayUris !== null) {
-                foreach ($this->collGatewayUris as $referrerFK) {
+            if ($this->collApplicationUris !== null) {
+                foreach ($this->collApplicationUris as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -821,8 +821,8 @@ abstract class BaseLocalization extends BaseObject implements Persistent
                     }
                 }
 
-                if ($this->collGatewayUris !== null) {
-                    foreach ($this->collGatewayUris as $referrerFK) {
+                if ($this->collApplicationUris !== null) {
+                    foreach ($this->collApplicationUris as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -927,8 +927,8 @@ abstract class BaseLocalization extends BaseObject implements Persistent
             if (null !== $this->collLocalizationsRelatedById) {
                 $result['LocalizationsRelatedById'] = $this->collLocalizationsRelatedById->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collGatewayUris) {
-                $result['GatewayUris'] = $this->collGatewayUris->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collApplicationUris) {
+                $result['ApplicationUris'] = $this->collApplicationUris->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1105,9 +1105,9 @@ abstract class BaseLocalization extends BaseObject implements Persistent
                 }
             }
 
-            foreach ($this->getGatewayUris() as $relObj) {
+            foreach ($this->getApplicationUris() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addGatewayUri($relObj->copy($deepCopy));
+                    $copyObj->addApplicationUri($relObj->copy($deepCopy));
                 }
             }
 
@@ -1331,8 +1331,8 @@ abstract class BaseLocalization extends BaseObject implements Persistent
         if ('LocalizationRelatedById' == $relationName) {
             $this->initLocalizationsRelatedById();
         }
-        if ('GatewayUri' == $relationName) {
-            $this->initGatewayUris();
+        if ('ApplicationUri' == $relationName) {
+            $this->initApplicationUris();
         }
     }
 
@@ -1605,36 +1605,36 @@ abstract class BaseLocalization extends BaseObject implements Persistent
     }
 
     /**
-     * Clears out the collGatewayUris collection
+     * Clears out the collApplicationUris collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return Localization The current object (for fluent API support)
-     * @see        addGatewayUris()
+     * @see        addApplicationUris()
      */
-    public function clearGatewayUris()
+    public function clearApplicationUris()
     {
-        $this->collGatewayUris = null; // important to set this to null since that means it is uninitialized
-        $this->collGatewayUrisPartial = null;
+        $this->collApplicationUris = null; // important to set this to null since that means it is uninitialized
+        $this->collApplicationUrisPartial = null;
 
         return $this;
     }
 
     /**
-     * reset is the collGatewayUris collection loaded partially
+     * reset is the collApplicationUris collection loaded partially
      *
      * @return void
      */
-    public function resetPartialGatewayUris($v = true)
+    public function resetPartialApplicationUris($v = true)
     {
-        $this->collGatewayUrisPartial = $v;
+        $this->collApplicationUrisPartial = $v;
     }
 
     /**
-     * Initializes the collGatewayUris collection.
+     * Initializes the collApplicationUris collection.
      *
-     * By default this just sets the collGatewayUris collection to an empty array (like clearcollGatewayUris());
+     * By default this just sets the collApplicationUris collection to an empty array (like clearcollApplicationUris());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1643,17 +1643,17 @@ abstract class BaseLocalization extends BaseObject implements Persistent
      *
      * @return void
      */
-    public function initGatewayUris($overrideExisting = true)
+    public function initApplicationUris($overrideExisting = true)
     {
-        if (null !== $this->collGatewayUris && !$overrideExisting) {
+        if (null !== $this->collApplicationUris && !$overrideExisting) {
             return;
         }
-        $this->collGatewayUris = new PropelObjectCollection();
-        $this->collGatewayUris->setModel('GatewayUri');
+        $this->collApplicationUris = new PropelObjectCollection();
+        $this->collApplicationUris->setModel('ApplicationUri');
     }
 
     /**
-     * Gets an array of GatewayUri objects which contain a foreign key that references this object.
+     * Gets an array of ApplicationUri objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -1663,105 +1663,105 @@ abstract class BaseLocalization extends BaseObject implements Persistent
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|GatewayUri[] List of GatewayUri objects
+     * @return PropelObjectCollection|ApplicationUri[] List of ApplicationUri objects
      * @throws PropelException
      */
-    public function getGatewayUris($criteria = null, PropelPDO $con = null)
+    public function getApplicationUris($criteria = null, PropelPDO $con = null)
     {
-        $partial = $this->collGatewayUrisPartial && !$this->isNew();
-        if (null === $this->collGatewayUris || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collGatewayUris) {
+        $partial = $this->collApplicationUrisPartial && !$this->isNew();
+        if (null === $this->collApplicationUris || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collApplicationUris) {
                 // return empty collection
-                $this->initGatewayUris();
+                $this->initApplicationUris();
             } else {
-                $collGatewayUris = GatewayUriQuery::create(null, $criteria)
+                $collApplicationUris = ApplicationUriQuery::create(null, $criteria)
                     ->filterByLocalization($this)
                     ->find($con);
                 if (null !== $criteria) {
-                    if (false !== $this->collGatewayUrisPartial && count($collGatewayUris)) {
-                      $this->initGatewayUris(false);
+                    if (false !== $this->collApplicationUrisPartial && count($collApplicationUris)) {
+                      $this->initApplicationUris(false);
 
-                      foreach($collGatewayUris as $obj) {
-                        if (false == $this->collGatewayUris->contains($obj)) {
-                          $this->collGatewayUris->append($obj);
+                      foreach($collApplicationUris as $obj) {
+                        if (false == $this->collApplicationUris->contains($obj)) {
+                          $this->collApplicationUris->append($obj);
                         }
                       }
 
-                      $this->collGatewayUrisPartial = true;
+                      $this->collApplicationUrisPartial = true;
                     }
 
-                    $collGatewayUris->getInternalIterator()->rewind();
-                    return $collGatewayUris;
+                    $collApplicationUris->getInternalIterator()->rewind();
+                    return $collApplicationUris;
                 }
 
-                if($partial && $this->collGatewayUris) {
-                    foreach($this->collGatewayUris as $obj) {
+                if($partial && $this->collApplicationUris) {
+                    foreach($this->collApplicationUris as $obj) {
                         if($obj->isNew()) {
-                            $collGatewayUris[] = $obj;
+                            $collApplicationUris[] = $obj;
                         }
                     }
                 }
 
-                $this->collGatewayUris = $collGatewayUris;
-                $this->collGatewayUrisPartial = false;
+                $this->collApplicationUris = $collApplicationUris;
+                $this->collApplicationUrisPartial = false;
             }
         }
 
-        return $this->collGatewayUris;
+        return $this->collApplicationUris;
     }
 
     /**
-     * Sets a collection of GatewayUri objects related by a one-to-many relationship
+     * Sets a collection of ApplicationUri objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param PropelCollection $gatewayUris A Propel collection.
+     * @param PropelCollection $applicationUris A Propel collection.
      * @param PropelPDO $con Optional connection object
      * @return Localization The current object (for fluent API support)
      */
-    public function setGatewayUris(PropelCollection $gatewayUris, PropelPDO $con = null)
+    public function setApplicationUris(PropelCollection $applicationUris, PropelPDO $con = null)
     {
-        $gatewayUrisToDelete = $this->getGatewayUris(new Criteria(), $con)->diff($gatewayUris);
+        $applicationUrisToDelete = $this->getApplicationUris(new Criteria(), $con)->diff($applicationUris);
 
-        $this->gatewayUrisScheduledForDeletion = unserialize(serialize($gatewayUrisToDelete));
+        $this->applicationUrisScheduledForDeletion = unserialize(serialize($applicationUrisToDelete));
 
-        foreach ($gatewayUrisToDelete as $gatewayUriRemoved) {
-            $gatewayUriRemoved->setLocalization(null);
+        foreach ($applicationUrisToDelete as $applicationUriRemoved) {
+            $applicationUriRemoved->setLocalization(null);
         }
 
-        $this->collGatewayUris = null;
-        foreach ($gatewayUris as $gatewayUri) {
-            $this->addGatewayUri($gatewayUri);
+        $this->collApplicationUris = null;
+        foreach ($applicationUris as $applicationUri) {
+            $this->addApplicationUri($applicationUri);
         }
 
-        $this->collGatewayUris = $gatewayUris;
-        $this->collGatewayUrisPartial = false;
+        $this->collApplicationUris = $applicationUris;
+        $this->collApplicationUrisPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related GatewayUri objects.
+     * Returns the number of related ApplicationUri objects.
      *
      * @param Criteria $criteria
      * @param boolean $distinct
      * @param PropelPDO $con
-     * @return int             Count of related GatewayUri objects.
+     * @return int             Count of related ApplicationUri objects.
      * @throws PropelException
      */
-    public function countGatewayUris(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countApplicationUris(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
     {
-        $partial = $this->collGatewayUrisPartial && !$this->isNew();
-        if (null === $this->collGatewayUris || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collGatewayUris) {
+        $partial = $this->collApplicationUrisPartial && !$this->isNew();
+        if (null === $this->collApplicationUris || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collApplicationUris) {
                 return 0;
             }
 
             if($partial && !$criteria) {
-                return count($this->getGatewayUris());
+                return count($this->getApplicationUris());
             }
-            $query = GatewayUriQuery::create(null, $criteria);
+            $query = ApplicationUriQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
@@ -1771,52 +1771,52 @@ abstract class BaseLocalization extends BaseObject implements Persistent
                 ->count($con);
         }
 
-        return count($this->collGatewayUris);
+        return count($this->collApplicationUris);
     }
 
     /**
-     * Method called to associate a GatewayUri object to this object
-     * through the GatewayUri foreign key attribute.
+     * Method called to associate a ApplicationUri object to this object
+     * through the ApplicationUri foreign key attribute.
      *
-     * @param    GatewayUri $l GatewayUri
+     * @param    ApplicationUri $l ApplicationUri
      * @return Localization The current object (for fluent API support)
      */
-    public function addGatewayUri(GatewayUri $l)
+    public function addApplicationUri(ApplicationUri $l)
     {
-        if ($this->collGatewayUris === null) {
-            $this->initGatewayUris();
-            $this->collGatewayUrisPartial = true;
+        if ($this->collApplicationUris === null) {
+            $this->initApplicationUris();
+            $this->collApplicationUrisPartial = true;
         }
-        if (!in_array($l, $this->collGatewayUris->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddGatewayUri($l);
+        if (!in_array($l, $this->collApplicationUris->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddApplicationUri($l);
         }
 
         return $this;
     }
 
     /**
-     * @param	GatewayUri $gatewayUri The gatewayUri object to add.
+     * @param	ApplicationUri $applicationUri The applicationUri object to add.
      */
-    protected function doAddGatewayUri($gatewayUri)
+    protected function doAddApplicationUri($applicationUri)
     {
-        $this->collGatewayUris[]= $gatewayUri;
-        $gatewayUri->setLocalization($this);
+        $this->collApplicationUris[]= $applicationUri;
+        $applicationUri->setLocalization($this);
     }
 
     /**
-     * @param	GatewayUri $gatewayUri The gatewayUri object to remove.
+     * @param	ApplicationUri $applicationUri The applicationUri object to remove.
      * @return Localization The current object (for fluent API support)
      */
-    public function removeGatewayUri($gatewayUri)
+    public function removeApplicationUri($applicationUri)
     {
-        if ($this->getGatewayUris()->contains($gatewayUri)) {
-            $this->collGatewayUris->remove($this->collGatewayUris->search($gatewayUri));
-            if (null === $this->gatewayUrisScheduledForDeletion) {
-                $this->gatewayUrisScheduledForDeletion = clone $this->collGatewayUris;
-                $this->gatewayUrisScheduledForDeletion->clear();
+        if ($this->getApplicationUris()->contains($applicationUri)) {
+            $this->collApplicationUris->remove($this->collApplicationUris->search($applicationUri));
+            if (null === $this->applicationUrisScheduledForDeletion) {
+                $this->applicationUrisScheduledForDeletion = clone $this->collApplicationUris;
+                $this->applicationUrisScheduledForDeletion->clear();
             }
-            $this->gatewayUrisScheduledForDeletion[]= clone $gatewayUri;
-            $gatewayUri->setLocalization(null);
+            $this->applicationUrisScheduledForDeletion[]= clone $applicationUri;
+            $applicationUri->setLocalization(null);
         }
 
         return $this;
@@ -1828,7 +1828,7 @@ abstract class BaseLocalization extends BaseObject implements Persistent
      * an identical criteria, it returns the collection.
      * Otherwise if this Localization is new, it will return
      * an empty collection; or if this Localization has previously
-     * been saved, it will retrieve related GatewayUris from storage.
+     * been saved, it will retrieve related ApplicationUris from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1837,14 +1837,14 @@ abstract class BaseLocalization extends BaseObject implements Persistent
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|GatewayUri[] List of GatewayUri objects
+     * @return PropelObjectCollection|ApplicationUri[] List of ApplicationUri objects
      */
-    public function getGatewayUrisJoinGateway($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getApplicationUrisJoinApplication($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
-        $query = GatewayUriQuery::create(null, $criteria);
-        $query->joinWith('Gateway', $join_behavior);
+        $query = ApplicationUriQuery::create(null, $criteria);
+        $query->joinWith('Application', $join_behavior);
 
-        return $this->getGatewayUris($query, $con);
+        return $this->getApplicationUris($query, $con);
     }
 
     /**
@@ -1884,8 +1884,8 @@ abstract class BaseLocalization extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collGatewayUris) {
-                foreach ($this->collGatewayUris as $o) {
+            if ($this->collApplicationUris) {
+                foreach ($this->collApplicationUris as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -1906,10 +1906,10 @@ abstract class BaseLocalization extends BaseObject implements Persistent
             $this->collLocalizationsRelatedById->clearIterator();
         }
         $this->collLocalizationsRelatedById = null;
-        if ($this->collGatewayUris instanceof PropelCollection) {
-            $this->collGatewayUris->clearIterator();
+        if ($this->collApplicationUris instanceof PropelCollection) {
+            $this->collApplicationUris->clearIterator();
         }
-        $this->collGatewayUris = null;
+        $this->collApplicationUris = null;
         $this->aLocalizationRelatedByParentId = null;
         $this->aLanguage = null;
         $this->aCountry = null;

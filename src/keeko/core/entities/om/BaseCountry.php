@@ -168,12 +168,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
     protected $aCurrency;
 
     /**
-     * @var        PropelObjectCollection|User[] Collection to store aggregation of User objects.
-     */
-    protected $collUsers;
-    protected $collUsersPartial;
-
-    /**
      * @var        PropelObjectCollection|Localization[] Collection to store aggregation of Localization objects.
      */
     protected $collLocalizations;
@@ -184,6 +178,12 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     protected $collSubdivisions;
     protected $collSubdivisionsPartial;
+
+    /**
+     * @var        PropelObjectCollection|User[] Collection to store aggregation of User objects.
+     */
+    protected $collUsers;
+    protected $collUsersPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -209,12 +209,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $usersScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
     protected $localizationsScheduledForDeletion = null;
 
     /**
@@ -222,6 +216,12 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * @var		PropelObjectCollection
      */
     protected $subdivisionsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $usersScheduledForDeletion = null;
 
     /**
      * Get the [iso_nr] column value.
@@ -885,11 +885,11 @@ abstract class BaseCountry extends BaseObject implements Persistent
 
             $this->aTerritory = null;
             $this->aCurrency = null;
-            $this->collUsers = null;
-
             $this->collLocalizations = null;
 
             $this->collSubdivisions = null;
+
+            $this->collUsers = null;
 
         } // if (deep)
     }
@@ -1034,23 +1034,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
                 $this->resetModified();
             }
 
-            if ($this->usersScheduledForDeletion !== null) {
-                if (!$this->usersScheduledForDeletion->isEmpty()) {
-                    UserQuery::create()
-                        ->filterByPrimaryKeys($this->usersScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->usersScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collUsers !== null) {
-                foreach ($this->collUsers as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             if ($this->localizationsScheduledForDeletion !== null) {
                 if (!$this->localizationsScheduledForDeletion->isEmpty()) {
                     foreach ($this->localizationsScheduledForDeletion as $localization) {
@@ -1080,6 +1063,23 @@ abstract class BaseCountry extends BaseObject implements Persistent
 
             if ($this->collSubdivisions !== null) {
                 foreach ($this->collSubdivisions as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->usersScheduledForDeletion !== null) {
+                if (!$this->usersScheduledForDeletion->isEmpty()) {
+                    UserQuery::create()
+                        ->filterByPrimaryKeys($this->usersScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->usersScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collUsers !== null) {
+                foreach ($this->collUsers as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1331,14 +1331,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             }
 
 
-                if ($this->collUsers !== null) {
-                    foreach ($this->collUsers as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-
                 if ($this->collLocalizations !== null) {
                     foreach ($this->collLocalizations as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -1349,6 +1341,14 @@ abstract class BaseCountry extends BaseObject implements Persistent
 
                 if ($this->collSubdivisions !== null) {
                     foreach ($this->collSubdivisions as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collUsers !== null) {
+                    foreach ($this->collUsers as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -1495,14 +1495,14 @@ abstract class BaseCountry extends BaseObject implements Persistent
             if (null !== $this->aCurrency) {
                 $result['Currency'] = $this->aCurrency->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collUsers) {
-                $result['Users'] = $this->collUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
             if (null !== $this->collLocalizations) {
                 $result['Localizations'] = $this->collLocalizations->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collSubdivisions) {
                 $result['Subdivisions'] = $this->collSubdivisions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collUsers) {
+                $result['Users'] = $this->collUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1745,12 +1745,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
-            foreach ($this->getUsers() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addUser($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getLocalizations() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addLocalization($relObj->copy($deepCopy));
@@ -1760,6 +1754,12 @@ abstract class BaseCountry extends BaseObject implements Persistent
             foreach ($this->getSubdivisions() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addSubdivision($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getUsers() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addUser($relObj->copy($deepCopy));
                 }
             }
 
@@ -1928,258 +1928,15 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
-        if ('User' == $relationName) {
-            $this->initUsers();
-        }
         if ('Localization' == $relationName) {
             $this->initLocalizations();
         }
         if ('Subdivision' == $relationName) {
             $this->initSubdivisions();
         }
-    }
-
-    /**
-     * Clears out the collUsers collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return Country The current object (for fluent API support)
-     * @see        addUsers()
-     */
-    public function clearUsers()
-    {
-        $this->collUsers = null; // important to set this to null since that means it is uninitialized
-        $this->collUsersPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collUsers collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialUsers($v = true)
-    {
-        $this->collUsersPartial = $v;
-    }
-
-    /**
-     * Initializes the collUsers collection.
-     *
-     * By default this just sets the collUsers collection to an empty array (like clearcollUsers());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initUsers($overrideExisting = true)
-    {
-        if (null !== $this->collUsers && !$overrideExisting) {
-            return;
-        }
-        $this->collUsers = new PropelObjectCollection();
-        $this->collUsers->setModel('User');
-    }
-
-    /**
-     * Gets an array of User objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Country is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|User[] List of User objects
-     * @throws PropelException
-     */
-    public function getUsers($criteria = null, PropelPDO $con = null)
-    {
-        $partial = $this->collUsersPartial && !$this->isNew();
-        if (null === $this->collUsers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collUsers) {
-                // return empty collection
-                $this->initUsers();
-            } else {
-                $collUsers = UserQuery::create(null, $criteria)
-                    ->filterByCountry($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collUsersPartial && count($collUsers)) {
-                      $this->initUsers(false);
-
-                      foreach($collUsers as $obj) {
-                        if (false == $this->collUsers->contains($obj)) {
-                          $this->collUsers->append($obj);
-                        }
-                      }
-
-                      $this->collUsersPartial = true;
-                    }
-
-                    $collUsers->getInternalIterator()->rewind();
-                    return $collUsers;
-                }
-
-                if($partial && $this->collUsers) {
-                    foreach($this->collUsers as $obj) {
-                        if($obj->isNew()) {
-                            $collUsers[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collUsers = $collUsers;
-                $this->collUsersPartial = false;
-            }
-        }
-
-        return $this->collUsers;
-    }
-
-    /**
-     * Sets a collection of User objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $users A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return Country The current object (for fluent API support)
-     */
-    public function setUsers(PropelCollection $users, PropelPDO $con = null)
-    {
-        $usersToDelete = $this->getUsers(new Criteria(), $con)->diff($users);
-
-        $this->usersScheduledForDeletion = unserialize(serialize($usersToDelete));
-
-        foreach ($usersToDelete as $userRemoved) {
-            $userRemoved->setCountry(null);
-        }
-
-        $this->collUsers = null;
-        foreach ($users as $user) {
-            $this->addUser($user);
-        }
-
-        $this->collUsers = $users;
-        $this->collUsersPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related User objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related User objects.
-     * @throws PropelException
-     */
-    public function countUsers(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collUsersPartial && !$this->isNew();
-        if (null === $this->collUsers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collUsers) {
-                return 0;
-            }
-
-            if($partial && !$criteria) {
-                return count($this->getUsers());
-            }
-            $query = UserQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByCountry($this)
-                ->count($con);
-        }
-
-        return count($this->collUsers);
-    }
-
-    /**
-     * Method called to associate a User object to this object
-     * through the User foreign key attribute.
-     *
-     * @param    User $l User
-     * @return Country The current object (for fluent API support)
-     */
-    public function addUser(User $l)
-    {
-        if ($this->collUsers === null) {
+        if ('User' == $relationName) {
             $this->initUsers();
-            $this->collUsersPartial = true;
         }
-        if (!in_array($l, $this->collUsers->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddUser($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	User $user The user object to add.
-     */
-    protected function doAddUser($user)
-    {
-        $this->collUsers[]= $user;
-        $user->setCountry($this);
-    }
-
-    /**
-     * @param	User $user The user object to remove.
-     * @return Country The current object (for fluent API support)
-     */
-    public function removeUser($user)
-    {
-        if ($this->getUsers()->contains($user)) {
-            $this->collUsers->remove($this->collUsers->search($user));
-            if (null === $this->usersScheduledForDeletion) {
-                $this->usersScheduledForDeletion = clone $this->collUsers;
-                $this->usersScheduledForDeletion->clear();
-            }
-            $this->usersScheduledForDeletion[]= clone $user;
-            $user->setCountry(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Country is new, it will return
-     * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Users from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Country.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|User[] List of User objects
-     */
-    public function getUsersJoinSubdivision($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = UserQuery::create(null, $criteria);
-        $query->joinWith('Subdivision', $join_behavior);
-
-        return $this->getUsers($query, $con);
     }
 
     /**
@@ -2694,6 +2451,249 @@ abstract class BaseCountry extends BaseObject implements Persistent
     }
 
     /**
+     * Clears out the collUsers collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return Country The current object (for fluent API support)
+     * @see        addUsers()
+     */
+    public function clearUsers()
+    {
+        $this->collUsers = null; // important to set this to null since that means it is uninitialized
+        $this->collUsersPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collUsers collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialUsers($v = true)
+    {
+        $this->collUsersPartial = $v;
+    }
+
+    /**
+     * Initializes the collUsers collection.
+     *
+     * By default this just sets the collUsers collection to an empty array (like clearcollUsers());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initUsers($overrideExisting = true)
+    {
+        if (null !== $this->collUsers && !$overrideExisting) {
+            return;
+        }
+        $this->collUsers = new PropelObjectCollection();
+        $this->collUsers->setModel('User');
+    }
+
+    /**
+     * Gets an array of User objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Country is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|User[] List of User objects
+     * @throws PropelException
+     */
+    public function getUsers($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collUsersPartial && !$this->isNew();
+        if (null === $this->collUsers || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collUsers) {
+                // return empty collection
+                $this->initUsers();
+            } else {
+                $collUsers = UserQuery::create(null, $criteria)
+                    ->filterByCountry($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collUsersPartial && count($collUsers)) {
+                      $this->initUsers(false);
+
+                      foreach($collUsers as $obj) {
+                        if (false == $this->collUsers->contains($obj)) {
+                          $this->collUsers->append($obj);
+                        }
+                      }
+
+                      $this->collUsersPartial = true;
+                    }
+
+                    $collUsers->getInternalIterator()->rewind();
+                    return $collUsers;
+                }
+
+                if($partial && $this->collUsers) {
+                    foreach($this->collUsers as $obj) {
+                        if($obj->isNew()) {
+                            $collUsers[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collUsers = $collUsers;
+                $this->collUsersPartial = false;
+            }
+        }
+
+        return $this->collUsers;
+    }
+
+    /**
+     * Sets a collection of User objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $users A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return Country The current object (for fluent API support)
+     */
+    public function setUsers(PropelCollection $users, PropelPDO $con = null)
+    {
+        $usersToDelete = $this->getUsers(new Criteria(), $con)->diff($users);
+
+        $this->usersScheduledForDeletion = unserialize(serialize($usersToDelete));
+
+        foreach ($usersToDelete as $userRemoved) {
+            $userRemoved->setCountry(null);
+        }
+
+        $this->collUsers = null;
+        foreach ($users as $user) {
+            $this->addUser($user);
+        }
+
+        $this->collUsers = $users;
+        $this->collUsersPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related User objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related User objects.
+     * @throws PropelException
+     */
+    public function countUsers(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collUsersPartial && !$this->isNew();
+        if (null === $this->collUsers || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collUsers) {
+                return 0;
+            }
+
+            if($partial && !$criteria) {
+                return count($this->getUsers());
+            }
+            $query = UserQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCountry($this)
+                ->count($con);
+        }
+
+        return count($this->collUsers);
+    }
+
+    /**
+     * Method called to associate a User object to this object
+     * through the User foreign key attribute.
+     *
+     * @param    User $l User
+     * @return Country The current object (for fluent API support)
+     */
+    public function addUser(User $l)
+    {
+        if ($this->collUsers === null) {
+            $this->initUsers();
+            $this->collUsersPartial = true;
+        }
+        if (!in_array($l, $this->collUsers->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddUser($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	User $user The user object to add.
+     */
+    protected function doAddUser($user)
+    {
+        $this->collUsers[]= $user;
+        $user->setCountry($this);
+    }
+
+    /**
+     * @param	User $user The user object to remove.
+     * @return Country The current object (for fluent API support)
+     */
+    public function removeUser($user)
+    {
+        if ($this->getUsers()->contains($user)) {
+            $this->collUsers->remove($this->collUsers->search($user));
+            if (null === $this->usersScheduledForDeletion) {
+                $this->usersScheduledForDeletion = clone $this->collUsers;
+                $this->usersScheduledForDeletion->clear();
+            }
+            $this->usersScheduledForDeletion[]= clone $user;
+            $user->setCountry(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Country is new, it will return
+     * an empty collection; or if this Country has previously
+     * been saved, it will retrieve related Users from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Country.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|User[] List of User objects
+     */
+    public function getUsersJoinSubdivision($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = UserQuery::create(null, $criteria);
+        $query->joinWith('Subdivision', $join_behavior);
+
+        return $this->getUsers($query, $con);
+    }
+
+    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
@@ -2737,11 +2737,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collUsers) {
-                foreach ($this->collUsers as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collLocalizations) {
                 foreach ($this->collLocalizations as $o) {
                     $o->clearAllReferences($deep);
@@ -2749,6 +2744,11 @@ abstract class BaseCountry extends BaseObject implements Persistent
             }
             if ($this->collSubdivisions) {
                 foreach ($this->collSubdivisions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collUsers) {
+                foreach ($this->collUsers as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -2762,10 +2762,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->collUsers instanceof PropelCollection) {
-            $this->collUsers->clearIterator();
-        }
-        $this->collUsers = null;
         if ($this->collLocalizations instanceof PropelCollection) {
             $this->collLocalizations->clearIterator();
         }
@@ -2774,6 +2770,10 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $this->collSubdivisions->clearIterator();
         }
         $this->collSubdivisions = null;
+        if ($this->collUsers instanceof PropelCollection) {
+            $this->collUsers->clearIterator();
+        }
+        $this->collUsers = null;
         $this->aTerritory = null;
         $this->aCurrency = null;
     }

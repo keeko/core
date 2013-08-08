@@ -69,9 +69,9 @@ class CountryTableMap extends TableMap
     {
         $this->addRelation('Territory', 'keeko\\core\\entities\\Territory', RelationMap::MANY_TO_ONE, array('territory_iso_nr' => 'iso_nr', ), null, null);
         $this->addRelation('Currency', 'keeko\\core\\entities\\Currency', RelationMap::MANY_TO_ONE, array('currency_iso_nr' => 'iso_nr', ), null, null);
-        $this->addRelation('User', 'keeko\\core\\entities\\User', RelationMap::ONE_TO_MANY, array('iso_nr' => 'country_iso_nr', ), null, null, 'Users');
         $this->addRelation('Localization', 'keeko\\core\\entities\\Localization', RelationMap::ONE_TO_MANY, array('iso_nr' => 'country_iso_nr', ), null, null, 'Localizations');
         $this->addRelation('Subdivision', 'keeko\\core\\entities\\Subdivision', RelationMap::ONE_TO_MANY, array('iso_nr' => 'country_iso_nr', ), null, null, 'Subdivisions');
+        $this->addRelation('User', 'keeko\\core\\entities\\User', RelationMap::ONE_TO_MANY, array('iso_nr' => 'country_iso_nr', ), null, null, 'Users');
     } // buildRelations()
 
 } // CountryTableMap

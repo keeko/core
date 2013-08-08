@@ -1,182 +1,160 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database defaultIdMethod="native" name="keeko"
-	namespace="keeko\core\entities"
-	tablePrefix="keeko_" 
-	defaultPhpNamingMethod="phpname"
+<database defaultIdMethod="native" name="keeko" namespace="keeko\core\entities"
+	tablePrefix="keeko_" defaultPhpNamingMethod="phpname"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd">
 
-	<!-- 
-	<behavior name="listener">
-		<parameter name="table" value="iuf_listener"/>
-		<parameter name="phpName" value="Listener"/>
-	</behavior>
-	-->
+	<!-- <behavior name="listener"> <parameter name="table" value="iuf_listener"/> 
+		<parameter name="phpName" value="Listener"/> </behavior> -->
 
-	<table name="user">
-		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
-		<column name="login_name" type="VARCHAR" size="100" required="true"/>
-		<column name="password" type="VARCHAR" size="100" required="true"/>
-		<column name="given_name" type="VARCHAR" size="100" required="true"/>
-		<column name="family_name" type="VARCHAR" size="100" required="true"/>
-		<column name="display_name" type="VARCHAR" size="100" required="true"/>
-		<column name="email" type="VARCHAR" size="255" required="true"/>
-		<column name="country_iso_nr" type="INTEGER" required="true"/>
-		<column name="subdivision_id" type="INTEGER"/>
-		<column name="address" type="LONGVARCHAR"/>
-		<column name="address2" type="LONGVARCHAR"/>
-		<column name="birthday" type="DATE" required="true"/>
-		<column name="sex" type="TINYINT" required="true"/>
-		<column name="club" type="VARCHAR" size="100"/>
-		<column name="city" type="VARCHAR" size="128"/>
-		<column name="postal_code" type="VARCHAR" size="45"/>
-		<column name="tan" type="VARCHAR" size="13"/>
-		<column name="password_recover_code" type="VARCHAR" size="32"/>
-		<column name="password_recover_time" type="TIMESTAMP"/>
-		<column name="location_status" type="TINYINT" size="2"/>
-		<column name="latitude" type="FLOAT" size="10"/>
-		<column name="longitude" type="FLOAT" size="10"/>
-
-		<behavior name="timestampable">
-			<parameter name="create_column" value="created" />
-			<parameter name="update_column" value="updated" />
-		</behavior>
-
-		<foreign-key foreignTable="country">
-			<reference local="country_iso_nr" foreign="iso_nr"/>
-		</foreign-key>
-		<foreign-key foreignTable="subdivision">
-			<reference local="subdivision_id" foreign="id"/>
-		</foreign-key>
-		
-		<unique name="login_name_UNIQUE">
-			<unique-column name="login_name" size="45"/>
-		</unique>
-	</table>
 	
 	<table name="language">
-		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
-		<column name="alpha_2" type="VARCHAR" size="2"/>
-		<column name="alpha_3T" type="VARCHAR" size="3"/>
-		<column name="alpha_3B" type="VARCHAR" size="3"/>
-		<column name="alpha_3" type="VARCHAR" size="3"/>
-		<column name="local_name" type="VARCHAR" size="128"/>
-		<column name="en_name" type="VARCHAR" size="128"/>
-		<column name="collate" type="VARCHAR" size="10"/>
-		<column name="scope_id" type="INTEGER" size="10"/>
-		<column name="type_id" type="INTEGER" size="10"/>
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
+		<column name="alpha_2" type="VARCHAR" size="2" />
+		<column name="alpha_3T" type="VARCHAR" size="3" />
+		<column name="alpha_3B" type="VARCHAR" size="3" />
+		<column name="alpha_3" type="VARCHAR" size="3" />
+		<column name="local_name" type="VARCHAR" size="128" />
+		<column name="en_name" type="VARCHAR" size="128" />
+		<column name="collate" type="VARCHAR" size="10" />
+		<column name="scope_id" type="INTEGER" size="10" />
+		<column name="type_id" type="INTEGER" size="10" />
 
 		<foreign-key foreignTable="language_scope">
-			<reference local="scope_id" foreign="id"/>
+			<reference local="scope_id" foreign="id" />
 		</foreign-key>
 		<foreign-key foreignTable="language_type">
-			<reference local="type_id" foreign="id"/>
-		</foreign-key>		
+			<reference local="type_id" foreign="id" />
+		</foreign-key>
 	</table>
 
 	<table name="language_scope">
-		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
-		<column name="name" type="VARCHAR"/>
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
+		<column name="name" type="VARCHAR" />
 	</table>
 
 	<table name="language_type">
-		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
-		<column name="name" type="VARCHAR"/>
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
+		<column name="name" type="VARCHAR" />
 	</table>
-	
+
 	<table name="localization">
-		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
-		<column name="parent_id" type="INTEGER" size="10"/>
-		<column name="language_id" type="INTEGER" size="10"/>
-		<column name="country_iso_nr" type="INTEGER" size="10"/>
-		<column name="is_default" type="BOOLEAN"/>
-		
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
+		<column name="parent_id" type="INTEGER" size="10" />
+		<column name="language_id" type="INTEGER" size="10" />
+		<column name="country_iso_nr" type="INTEGER" size="10" />
+		<column name="is_default" type="BOOLEAN" />
+
 		<foreign-key foreignTable="localization">
-			<reference local="parent_id" foreign="id"/>
+			<reference local="parent_id" foreign="id" />
 		</foreign-key>
 		<foreign-key foreignTable="language">
-			<reference local="language_id" foreign="id"/>
+			<reference local="language_id" foreign="id" />
 		</foreign-key>
 		<foreign-key foreignTable="country">
-			<reference local="country_iso_nr" foreign="iso_nr"/>
+			<reference local="country_iso_nr" foreign="iso_nr" />
 		</foreign-key>
 	</table>
 
 	<table name="country">
-		<column name="iso_nr" type="INTEGER" primaryKey="true" required="true"/>
-		<column name="alpha_2" type="CHAR" size="2"/>
-		<column name="alpha_3" type="CHAR" size="3"/>
-		<column name="ioc" type="CHAR" size="3"/>
-		<column name="capital" type="VARCHAR" size="128"/>
-		<column name="tld" type="VARCHAR" size="3"/>
-		<column name="phone" type="VARCHAR" size="16"/>
-		<column name="territory_iso_nr" type="INTEGER" required="true"/>
-		<column name="currency_iso_nr" type="INTEGER" required="true"/>
-		<column name="official_local_name" type="VARCHAR" size="128"/>
-		<column name="official_en_name" type="VARCHAR" size="128"/>
-		<column name="short_local_name" type="VARCHAR" size="128"/>
-		<column name="short_en_name" type="VARCHAR" size="128"/>
-		<column name="bbox_sw_lat" type="FLOAT"/>
-		<column name="bbox_sw_lng" type="FLOAT"/>
-		<column name="bbox_ne_lat" type="FLOAT"/>
-		<column name="bbox_ne_lng" type="FLOAT"/>
-		
+		<column name="iso_nr" type="INTEGER" primaryKey="true"
+			required="true" />
+		<column name="alpha_2" type="CHAR" size="2" />
+		<column name="alpha_3" type="CHAR" size="3" />
+		<column name="ioc" type="CHAR" size="3" />
+		<column name="capital" type="VARCHAR" size="128" />
+		<column name="tld" type="VARCHAR" size="3" />
+		<column name="phone" type="VARCHAR" size="16" />
+		<column name="territory_iso_nr" type="INTEGER" required="true" />
+		<column name="currency_iso_nr" type="INTEGER" required="true" />
+		<column name="official_local_name" type="VARCHAR" size="128" />
+		<column name="official_en_name" type="VARCHAR" size="128" />
+		<column name="short_local_name" type="VARCHAR" size="128" />
+		<column name="short_en_name" type="VARCHAR" size="128" />
+		<column name="bbox_sw_lat" type="FLOAT" />
+		<column name="bbox_sw_lng" type="FLOAT" />
+		<column name="bbox_ne_lat" type="FLOAT" />
+		<column name="bbox_ne_lng" type="FLOAT" />
+
 		<foreign-key foreignTable="territory">
-			<reference local="territory_iso_nr" foreign="iso_nr"/>
+			<reference local="territory_iso_nr" foreign="iso_nr" />
 		</foreign-key>
 		<foreign-key foreignTable="currency">
-			<reference local="currency_iso_nr" foreign="iso_nr"/>
+			<reference local="currency_iso_nr" foreign="iso_nr" />
 		</foreign-key>
 	</table>
-  
+
 	<table name="territory">
-		<column name="iso_nr" type="INTEGER" primaryKey="true" required="true"/>
-		<column name="parent_iso_nr" type="INTEGER"/>
-		<column name="name_en" type="VARCHAR" size="45" required="true"/>
+		<column name="iso_nr" type="INTEGER" primaryKey="true"
+			required="true" />
+		<column name="parent_iso_nr" type="INTEGER" />
+		<column name="name_en" type="VARCHAR" size="45" required="true" />
 	</table>
 
 	<table name="currency">
-		<column name="iso_nr" type="INTEGER" primaryKey="true" required="true"/>
-		<column name="iso3" type="CHAR" size="3" required="true"/>
-		<column name="en_name" type="VARCHAR" size="45"/>
-		<column name="symbol_left" type="VARCHAR" size="45"/>
-		<column name="symbol_right" type="VARCHAR" size="45"/>
-		<column name="decimal_digits" type="INTEGER"/>
-		<column name="sub_divisor" type="INTEGER"/>
-		<column name="sub_symbol_left" type="VARCHAR" size="45"/>
-		<column name="sub_symbol_right" type="VARCHAR" size="45"/>
+		<column name="iso_nr" type="INTEGER" primaryKey="true"
+			required="true" />
+		<column name="iso3" type="CHAR" size="3" required="true" />
+		<column name="en_name" type="VARCHAR" size="45" />
+		<column name="symbol_left" type="VARCHAR" size="45" />
+		<column name="symbol_right" type="VARCHAR" size="45" />
+		<column name="decimal_digits" type="INTEGER" />
+		<column name="sub_divisor" type="INTEGER" />
+		<column name="sub_symbol_left" type="VARCHAR" size="45" />
+		<column name="sub_symbol_right" type="VARCHAR" size="45" />
 	</table>
 
 	<table name="subdivision">
-		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
-		<column name="iso" type="VARCHAR" size="45"/>
-		<column name="name" type="VARCHAR" size="128"/>
-		<column name="local_name" type="VARCHAR" size="128"/>
-		<column name="en_name" type="VARCHAR" size="128"/>
-		<column name="alt_names" type="VARCHAR" size="255"/>
-		<column name="parent_id" type="INTEGER"/>
-		<column name="country_iso_nr" type="INTEGER" required="true"/>
-		<column name="subdivision_type_id" type="INTEGER"/>
-		
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
+		<column name="iso" type="VARCHAR" size="45" />
+		<column name="name" type="VARCHAR" size="128" />
+		<column name="local_name" type="VARCHAR" size="128" />
+		<column name="en_name" type="VARCHAR" size="128" />
+		<column name="alt_names" type="VARCHAR" size="255" />
+		<column name="parent_id" type="INTEGER" />
+		<column name="country_iso_nr" type="INTEGER" required="true" />
+		<column name="subdivision_type_id" type="INTEGER" />
+
 		<foreign-key foreignTable="country">
-			<reference local="country_iso_nr" foreign="iso_nr"/>
+			<reference local="country_iso_nr" foreign="iso_nr" />
 		</foreign-key>
 		<foreign-key foreignTable="subdivision_type">
-			<reference local="subdivision_type_id" foreign="id"/>
+			<reference local="subdivision_type_id" foreign="id" />
 		</foreign-key>
 	</table>
 
 	<table name="subdivision_type">
-		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true"/>
-		<column name="name" type="VARCHAR" size="128"/>
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
+		<column name="name" type="VARCHAR" size="128" />
 	</table>
 
-	<table name="application">
+	<table name="package">
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
+		<column name="title" type="VARCHAR" size="255" />
+		<column name="installed_version" type="VARCHAR" size="50" />
+		<column name="description" type="LONGVARCHAR" />
+	</table>
+
+	<table name="application_type">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
-		<column name="name" type="VARCHAR" size="255" />
-		<column name="title" type="VARCHAR" size="255" />
-		<column name="description" type="LONGVARCHAR"/>
+		<column name="classname" type="VARCHAR" size="255" />
+		<column name="package_id" type="INTEGER" />
+
+		<foreign-key foreignTable="package">
+			<reference local="package_id" foreign="id" />
+		</foreign-key>
+
+		<behavior name="delegate">
+			<parameter name="to" value="package" />
+		</behavior>
 	</table>
 
 	<table name="router">
@@ -185,40 +163,239 @@
 		<column name="title" type="VARCHAR" size="255" />
 		<column name="classname" type="VARCHAR" size="255" />
 	</table>
-	
-	<table name="gateway">
+
+	<table name="application">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="title" type="VARCHAR" size="255" />
-		<column name="application_id" type="INTEGER" size="10" required="true" />
+		<column name="application_type_id" type="INTEGER" size="10"
+			required="true" />
 		<column name="router_id" type="INTEGER" size="10" required="true" />
-		
-		<foreign-key foreignTable="application" onDelete="restrict">
-			<reference local="application_id" foreign="id" />
+
+		<foreign-key foreignTable="application_type" onDelete="restrict">
+			<reference local="application_type_id" foreign="id" />
 		</foreign-key>
-		
+
 		<foreign-key foreignTable="router" onDelete="restrict">
 			<reference local="router_id" foreign="id" />
 		</foreign-key>
-		
-		<behavior name="extra_properties" />
+
+		<behavior name="extra_properties">
+			<parameter name="properties_table" value="application_params" />
+		</behavior>
 	</table>
-	
-	<table name="gateway_uri">
+
+	<table name="application_uri">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="httphost" type="VARCHAR" size="255" required="true" />
 		<column name="basepath" type="VARCHAR" size="255" required="true" />
-		<column name="secure" type="BOOLEAN"/>
-		<column name="gateway_id" type="INTEGER" size="10" required="true" />
-		<column name="localization_id" type="INTEGER" size="10" required="true" />
-		<foreign-key foreignTable="gateway" onDelete="restrict">
-			<reference local="gateway_id" foreign="id" />
+		<column name="secure" type="BOOLEAN" />
+		<column name="application_id" type="INTEGER" size="10" required="true" />
+		<column name="localization_id" type="INTEGER" size="10"
+			required="true" />
+		<foreign-key foreignTable="application" onDelete="restrict">
+			<reference local="application_id" foreign="id" />
 		</foreign-key>
 		<foreign-key foreignTable="localization" onDelete="restrict">
 			<reference local="localization_id" foreign="id" />
 		</foreign-key>
 	</table>
+
+	<table name="page">
+		<column name="id" type="INTEGER" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="parent_id" type="INTEGER" required="false"/>
+		<column name="title" type="VARCHAR"/>
+		<column name="slug" type="VARCHAR"/>
+		<column name="description" type="LONGVARCHAR"/>
+		<column name="keywords" type="VARCHAR"/>
+		<column name="layout_id" type="INTEGER"/>
+		<column name="application_id" type="INTEGER"/>
+		
+		<foreign-key foreignTable="page">
+			<reference local="parent_id" foreign="id" />
+		</foreign-key>
+		
+		<foreign-key foreignTable="layout">
+			<reference local="layout_id" foreign="id" />
+		</foreign-key>
+		
+		<foreign-key foreignTable="application">
+			<reference local="application_id" foreign="id" />
+		</foreign-key>
+	</table>
+	
+	<table name="route">
+		<column name="id" type="INTEGER" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="slug" type="VARCHAR"/>
+		<column name="redirect_id" type="VARCHAR" required="false"/>
+		<column name="page_id" type="INTEGER" required="false"/>
+		
+		<foreign-key foreignTable="route">
+			<reference local="redirect_id" foreign="id" />
+		</foreign-key>
+		
+		<foreign-key foreignTable="page">
+			<reference local="page_id" foreign="id" />
+		</foreign-key>
+	</table>
+	
+	<table name="design">
+		<column name="id" type="INTEGER" size="10" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="package_id" type="INTEGER" />
+		<column name="application_type_id" type="INTEGER" />
+
+		<foreign-key foreignTable="package">
+			<reference local="package_id" foreign="id" />
+		</foreign-key>
+		
+		<foreign-key foreignTable="application_type">
+			<reference local="application_type_id" foreign="id" />
+		</foreign-key>
+
+		<behavior name="delegate">
+			<parameter name="to" value="package" />
+		</behavior>
+	</table>
+	
+	<table name="layout">
+		<column name="id" type="INTEGER" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="title" type="VARCHAR" />
+		<column name="design_id" type="INTEGER" />
+
+		<foreign-key foreignTable="design">
+			<reference local="design_id" foreign="id" />
+		</foreign-key>
+	</table>
+	
+	<table name="block">
+		<column name="id" type="INTEGER" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="title" type="VARCHAR" />
+		<column name="layout_id" type="INTEGER" />
+
+		<foreign-key foreignTable="layout">
+			<reference local="layout_id" foreign="id" />
+		</foreign-key>
+	</table>
+	
+	<table name="block_item">
+		<column name="id" type="INTEGER" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="block_id" type="INTEGER"/>
+		<column name="parent_id" type="INTEGER"/>
+	</table>
+	
+	<table name="block_grid">
+		<column name="id" type="INTEGER" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="block_item_id" type="INTEGER" />
+		<column name="span" type="INTEGER"/>
+
+		<foreign-key foreignTable="block_item">
+			<reference local="block_item_id" foreign="id" />
+		</foreign-key>
+
+		<behavior name="delegate">
+			<parameter name="to" value="block_item" />
+		</behavior>
+		
+		<behavior name="extra_properties">
+			<parameter name="properties_table" value="block_grid_properties" />
+		</behavior>
+	</table>
+	
+	<table name="block_content">
+		<column name="id" type="INTEGER" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="block_item_id" type="INTEGER" />
+		<column name="action_id" type="INTEGER" />
+
+		<foreign-key foreignTable="block_item">
+			<reference local="block_item_id" foreign="id" />
+		</foreign-key>
+		
+		<foreign-key foreignTable="action">
+			<reference local="action_id" foreign="id" />
+		</foreign-key>
+
+		<behavior name="delegate">
+			<parameter name="to" value="block_item" />
+		</behavior>
+	</table>
+
+	<table name="module">
+		<column name="id" type="INTEGER" size="10" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="classname" type="VARCHAR" size="255" />
+		<column name="activated_version" type="VARCHAR" size="50" />
+		<column name="package_id" type="INTEGER" />
+
+		<foreign-key foreignTable="package">
+			<reference local="package_id" foreign="id" />
+		</foreign-key>
+
+		<behavior name="delegate">
+			<parameter name="to" value="package" />
+		</behavior>
+	</table>
+
+	<table name="action">
+		<column name="id" type="INTEGER" size="10" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="module_id" type="INTEGER" size="10" required="true" />
+		<column name="name" type="VARCHAR" size="32" />
+		<foreign-key foreignTable="module" onDelete="cascade">
+			<reference local="module_id" foreign="id" />
+		</foreign-key>
+	</table>
+	
+	<table name="user">
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
+		<column name="login_name" type="VARCHAR" size="100" required="true" />
+		<column name="password" type="VARCHAR" size="100" required="true" />
+		<column name="given_name" type="VARCHAR" size="100" required="true" />
+		<column name="family_name" type="VARCHAR" size="100" required="true" />
+		<column name="display_name" type="VARCHAR" size="100" required="true" />
+		<column name="email" type="VARCHAR" size="255" required="true" />
+		<column name="country_iso_nr" type="INTEGER" required="true" />
+		<column name="subdivision_id" type="INTEGER" />
+		<column name="address" type="LONGVARCHAR" />
+		<column name="address2" type="LONGVARCHAR" />
+		<column name="birthday" type="DATE" required="true" />
+		<column name="sex" type="TINYINT" required="true" />
+		<column name="club" type="VARCHAR" size="100" />
+		<column name="city" type="VARCHAR" size="128" />
+		<column name="postal_code" type="VARCHAR" size="45" />
+		<column name="tan" type="VARCHAR" size="13" />
+		<column name="password_recover_code" type="VARCHAR" size="32" />
+		<column name="password_recover_time" type="TIMESTAMP" />
+		<column name="location_status" type="TINYINT" size="2" />
+		<column name="latitude" type="FLOAT" size="10" />
+		<column name="longitude" type="FLOAT" size="10" />
+
+		<behavior name="timestampable">
+			<parameter name="create_column" value="created" />
+			<parameter name="update_column" value="updated" />
+		</behavior>
+
+		<foreign-key foreignTable="country">
+			<reference local="country_iso_nr" foreign="iso_nr" />
+		</foreign-key>
+		<foreign-key foreignTable="subdivision">
+			<reference local="subdivision_id" foreign="id" />
+		</foreign-key>
+
+		<unique name="login_name_UNIQUE">
+			<unique-column name="login_name" size="45" />
+		</unique>
+	</table>
+	
 	
 	<table name="group">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
@@ -233,7 +410,7 @@
 			<reference local="user_id" foreign="id" />
 		</foreign-key>
 	</table>
-	
+
 	<table name="group_user">
 		<column name="user_id" type="INTEGER" size="10" primaryKey="true"
 			required="true" />
@@ -246,7 +423,7 @@
 			<reference local="user_id" foreign="id" />
 		</foreign-key>
 	</table>
-	
+
 	<table name="group_action">
 		<column name="group_id" type="INTEGER" size="10" primaryKey="true"
 			required="true" />
@@ -260,22 +437,4 @@
 		</foreign-key>
 	</table>
 	
-	<table name="module">
-		<column name="id" type="INTEGER" size="10" primaryKey="true"
-			required="true" autoIncrement="true" />
-		<column name="name" type="VARCHAR" />
-		<column name="unixname" type="VARCHAR" size="255"/>
-		<column name="version" type="VARCHAR" size="10" />
-		<column name="classname" type="VARCHAR" size="255"/>
-	</table>
-
-	<table name="action">
-		<column name="id" type="INTEGER" size="10" primaryKey="true"
-			required="true" autoIncrement="true" />
-		<column name="module_id" type="INTEGER" size="10" required="true" />
-		<column name="name" type="VARCHAR" size="32" />
-		<foreign-key foreignTable="module" onDelete="cascade">
-			<reference local="module_id" foreign="id" />
-		</foreign-key>
-	</table>
 </database>

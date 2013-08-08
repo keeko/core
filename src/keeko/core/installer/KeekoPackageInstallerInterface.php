@@ -1,13 +1,14 @@
 <?php
 namespace keeko\core\installer;
 
-use Composer\Package\PackageInterface;
+use Composer\Package\CompletePackageInterface;
+use Composer\IO\IOInterface;
 
 interface KeekoPackageInstallerInterface {
 	
-	public function install(PackageInterface $package);
+	public function install(IOInterface $io, CompletePackageInterface $package);
 	
-	public function update(PackageInterface $initial, PackageInterface $target);
+	public function update(IOInterface $io, CompletePackageInterface $initial, CompletePackageInterface $target);
 	
-	public function uninstall(PackageInterface $package);
+	public function uninstall(IOInterface $io, CompletePackageInterface $package);
 }

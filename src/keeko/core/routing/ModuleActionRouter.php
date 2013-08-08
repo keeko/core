@@ -2,36 +2,61 @@
 namespace keeko\core\routing;
 
 use Symfony\Component\Routing\Generator\UrlGenerator;
-
 use Symfony\Component\Routing\Matcher\UrlMatcher;
-
 use Symfony\Component\Routing\RequestContext;
-
 use Symfony\Component\Routing\Route;
-
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use keeko\core\handler\ModuleActionHandler;
 
-class ModuleActionRouter implements RouteMatcherInterface, RouteGeneratorInterface {
+class ModuleActionRouter implements RouterInterface {
 
 	private $generator;
 	private $matcher;
+	private $options;
 
-	public function __construct($defaultModule, $baseUrl = '') {
+	public function __construct(array $options) {
+		// options
+		$resolver = new OptionsResolver();
+		$this->setDefaultOptions($resolver);
+		$this->options = $resolver->resolve($options);
+		
+		// routes
 		$routes = new RouteCollection();
 
-		$moduleRoute = new Route('/{module}', array('module' => $defaultModule));
+		$moduleRoute = new Route('/{module}', array('module' => $this->options['module']));
 		$actionRoute = new Route('/{module}/{action}');
-		$paramsRoute = new Route('/{module}/{action}/{params}');
+		$paramsRoute = new Route(sprintf('/{module}/{action}%s{params}', 
+				$this->options['param-separator']));
 
 		$routes->add('module', $moduleRoute);
 		$routes->add('action', $actionRoute);
 		$routes->add('params', $paramsRoute);
-
-		$context = new RequestContext($baseUrl);
+	
+		$context = new RequestContext($this->options['basepath']);
 
 		$this->matcher = new UrlMatcher($routes, $context);
 		$this->generator = new UrlGenerator($routes, $context);
 	}
+	
+	private function setDefaultOptions(OptionsResolverInterface $resolver) {
+		$resolver->setDefaults([
+			'param-separator' => '?',
+			'param-delimiter' => '&'
+		]);
+		$resolver->setOptional(['application']);
+		$resolver->setRequired(['module', 'basepath']);
+	}
+	
+	
+	/* (non-PHPdoc)
+	 * @see \keeko\core\routing\RouteWithHandlerInterface::getHandler()
+	 */
+	public function getHandler() {
+		return new ModuleActionHandler();
+	}
+
 
 	public function match($destination) {
 		if ($destination == '') {
@@ -40,9 +65,9 @@ class ModuleActionRouter implements RouteMatcherInterface, RouteGeneratorInterfa
 
 		$data = $this->matcher->match($destination);
 
-		// polish params
+		// read params
 		if (array_key_exists('params', $data)) {
-			$parts = explode(';', $data['params']);
+			$parts = explode($this->options['param-delimiter'], $data['params']);
 			$params = array();
 			foreach ($parts as $part) {
 				$kv = explode('=', $part);
@@ -72,7 +97,7 @@ class ModuleActionRouter implements RouteMatcherInterface, RouteGeneratorInterfa
 				} else if ($val != '') {
 					$params .= '=' . $val;
 				}
-				$params .= ';';
+				$params .= $this->options['param-delimiter'];
 			}
 			$data['params'] = $data;
 			return $this->generator->generate('params', $data);

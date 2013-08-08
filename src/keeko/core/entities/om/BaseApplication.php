@@ -13,11 +13,18 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use \RuntimeException;
 use keeko\core\entities\Application;
+use keeko\core\entities\ApplicationExtraProperty;
+use keeko\core\entities\ApplicationExtraPropertyQuery;
 use keeko\core\entities\ApplicationPeer;
 use keeko\core\entities\ApplicationQuery;
-use keeko\core\entities\Gateway;
-use keeko\core\entities\GatewayQuery;
+use keeko\core\entities\ApplicationType;
+use keeko\core\entities\ApplicationTypeQuery;
+use keeko\core\entities\ApplicationUri;
+use keeko\core\entities\ApplicationUriQuery;
+use keeko\core\entities\Router;
+use keeko\core\entities\RouterQuery;
 
 /**
  * Base class that represents a row from the 'keeko_application' table.
@@ -54,28 +61,44 @@ abstract class BaseApplication extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the name field.
-     * @var        string
-     */
-    protected $name;
-
-    /**
      * The value for the title field.
      * @var        string
      */
     protected $title;
 
     /**
-     * The value for the description field.
-     * @var        string
+     * The value for the application_type_id field.
+     * @var        int
      */
-    protected $description;
+    protected $application_type_id;
 
     /**
-     * @var        PropelObjectCollection|Gateway[] Collection to store aggregation of Gateway objects.
+     * The value for the router_id field.
+     * @var        int
      */
-    protected $collGateways;
-    protected $collGatewaysPartial;
+    protected $router_id;
+
+    /**
+     * @var        ApplicationType
+     */
+    protected $aApplicationType;
+
+    /**
+     * @var        Router
+     */
+    protected $aRouter;
+
+    /**
+     * @var        PropelObjectCollection|ApplicationUri[] Collection to store aggregation of ApplicationUri objects.
+     */
+    protected $collApplicationUris;
+    protected $collApplicationUrisPartial;
+
+    /**
+     * @var        PropelObjectCollection|ApplicationExtraProperty[] Collection to store aggregation of ApplicationExtraProperty objects.
+     */
+    protected $collApplicationExtraPropertys;
+    protected $collApplicationExtraPropertysPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -97,11 +120,23 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     protected $alreadyInClearAllReferencesDeep = false;
 
+    // extra_properties behavior
+
+    /** the list of all single properties */
+    protected $extraProperties = array();
+    /** the list of all multiple properties */
+    protected $multipleExtraProperties = array();
     /**
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $gatewaysScheduledForDeletion = null;
+    protected $applicationUrisScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $applicationExtraPropertysScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -111,16 +146,6 @@ abstract class BaseApplication extends BaseObject implements Persistent
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get the [name] column value.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -134,13 +159,23 @@ abstract class BaseApplication extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [description] column value.
+     * Get the [application_type_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getDescription()
+    public function getApplicationTypeId()
     {
-        return $this->description;
+        return $this->application_type_id;
+    }
+
+    /**
+     * Get the [router_id] column value.
+     *
+     * @return int
+     */
+    public function getRouterId()
+    {
+        return $this->router_id;
     }
 
     /**
@@ -165,27 +200,6 @@ abstract class BaseApplication extends BaseObject implements Persistent
     } // setId()
 
     /**
-     * Set the value of [name] column.
-     *
-     * @param string $v new value
-     * @return Application The current object (for fluent API support)
-     */
-    public function setName($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->name !== $v) {
-            $this->name = $v;
-            $this->modifiedColumns[] = ApplicationPeer::NAME;
-        }
-
-
-        return $this;
-    } // setName()
-
-    /**
      * Set the value of [title] column.
      *
      * @param string $v new value
@@ -207,25 +221,54 @@ abstract class BaseApplication extends BaseObject implements Persistent
     } // setTitle()
 
     /**
-     * Set the value of [description] column.
+     * Set the value of [application_type_id] column.
      *
-     * @param string $v new value
+     * @param int $v new value
      * @return Application The current object (for fluent API support)
      */
-    public function setDescription($v)
+    public function setApplicationTypeId($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->description !== $v) {
-            $this->description = $v;
-            $this->modifiedColumns[] = ApplicationPeer::DESCRIPTION;
+        if ($this->application_type_id !== $v) {
+            $this->application_type_id = $v;
+            $this->modifiedColumns[] = ApplicationPeer::APPLICATION_TYPE_ID;
+        }
+
+        if ($this->aApplicationType !== null && $this->aApplicationType->getId() !== $v) {
+            $this->aApplicationType = null;
         }
 
 
         return $this;
-    } // setDescription()
+    } // setApplicationTypeId()
+
+    /**
+     * Set the value of [router_id] column.
+     *
+     * @param int $v new value
+     * @return Application The current object (for fluent API support)
+     */
+    public function setRouterId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->router_id !== $v) {
+            $this->router_id = $v;
+            $this->modifiedColumns[] = ApplicationPeer::ROUTER_ID;
+        }
+
+        if ($this->aRouter !== null && $this->aRouter->getId() !== $v) {
+            $this->aRouter = null;
+        }
+
+
+        return $this;
+    } // setRouterId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -260,9 +303,9 @@ abstract class BaseApplication extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->application_type_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->router_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -294,6 +337,12 @@ abstract class BaseApplication extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
+        if ($this->aApplicationType !== null && $this->application_type_id !== $this->aApplicationType->getId()) {
+            $this->aApplicationType = null;
+        }
+        if ($this->aRouter !== null && $this->router_id !== $this->aRouter->getId()) {
+            $this->aRouter = null;
+        }
     } // ensureConsistency
 
     /**
@@ -333,7 +382,11 @@ abstract class BaseApplication extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collGateways = null;
+            $this->aApplicationType = null;
+            $this->aRouter = null;
+            $this->collApplicationUris = null;
+
+            $this->collApplicationExtraPropertys = null;
 
         } // if (deep)
     }
@@ -448,6 +501,25 @@ abstract class BaseApplication extends BaseObject implements Persistent
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their coresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aApplicationType !== null) {
+                if ($this->aApplicationType->isModified() || $this->aApplicationType->isNew()) {
+                    $affectedRows += $this->aApplicationType->save($con);
+                }
+                $this->setApplicationType($this->aApplicationType);
+            }
+
+            if ($this->aRouter !== null) {
+                if ($this->aRouter->isModified() || $this->aRouter->isNew()) {
+                    $affectedRows += $this->aRouter->save($con);
+                }
+                $this->setRouter($this->aRouter);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -459,17 +531,34 @@ abstract class BaseApplication extends BaseObject implements Persistent
                 $this->resetModified();
             }
 
-            if ($this->gatewaysScheduledForDeletion !== null) {
-                if (!$this->gatewaysScheduledForDeletion->isEmpty()) {
-                    GatewayQuery::create()
-                        ->filterByPrimaryKeys($this->gatewaysScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->applicationUrisScheduledForDeletion !== null) {
+                if (!$this->applicationUrisScheduledForDeletion->isEmpty()) {
+                    ApplicationUriQuery::create()
+                        ->filterByPrimaryKeys($this->applicationUrisScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->gatewaysScheduledForDeletion = null;
+                    $this->applicationUrisScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collGateways !== null) {
-                foreach ($this->collGateways as $referrerFK) {
+            if ($this->collApplicationUris !== null) {
+                foreach ($this->collApplicationUris as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->applicationExtraPropertysScheduledForDeletion !== null) {
+                if (!$this->applicationExtraPropertysScheduledForDeletion->isEmpty()) {
+                    ApplicationExtraPropertyQuery::create()
+                        ->filterByPrimaryKeys($this->applicationExtraPropertysScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->applicationExtraPropertysScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collApplicationExtraPropertys !== null) {
+                foreach ($this->collApplicationExtraPropertys as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -505,14 +594,14 @@ abstract class BaseApplication extends BaseObject implements Persistent
         if ($this->isColumnModified(ApplicationPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(ApplicationPeer::NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`name`';
-        }
         if ($this->isColumnModified(ApplicationPeer::TITLE)) {
             $modifiedColumns[':p' . $index++]  = '`title`';
         }
-        if ($this->isColumnModified(ApplicationPeer::DESCRIPTION)) {
-            $modifiedColumns[':p' . $index++]  = '`description`';
+        if ($this->isColumnModified(ApplicationPeer::APPLICATION_TYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`application_type_id`';
+        }
+        if ($this->isColumnModified(ApplicationPeer::ROUTER_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`router_id`';
         }
 
         $sql = sprintf(
@@ -528,14 +617,14 @@ abstract class BaseApplication extends BaseObject implements Persistent
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`name`':
-                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
-                        break;
                     case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
-                    case '`description`':
-                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
+                    case '`application_type_id`':
+                        $stmt->bindValue($identifier, $this->application_type_id, PDO::PARAM_INT);
+                        break;
+                    case '`router_id`':
+                        $stmt->bindValue($identifier, $this->router_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -631,13 +720,39 @@ abstract class BaseApplication extends BaseObject implements Persistent
             $failureMap = array();
 
 
+            // We call the validate method on the following object(s) if they
+            // were passed to this object by their coresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aApplicationType !== null) {
+                if (!$this->aApplicationType->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aApplicationType->getValidationFailures());
+                }
+            }
+
+            if ($this->aRouter !== null) {
+                if (!$this->aRouter->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aRouter->getValidationFailures());
+                }
+            }
+
+
             if (($retval = ApplicationPeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
             }
 
 
-                if ($this->collGateways !== null) {
-                    foreach ($this->collGateways as $referrerFK) {
+                if ($this->collApplicationUris !== null) {
+                    foreach ($this->collApplicationUris as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collApplicationExtraPropertys !== null) {
+                    foreach ($this->collApplicationExtraPropertys as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -683,13 +798,13 @@ abstract class BaseApplication extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getName();
-                break;
-            case 2:
                 return $this->getTitle();
                 break;
+            case 2:
+                return $this->getApplicationTypeId();
+                break;
             case 3:
-                return $this->getDescription();
+                return $this->getRouterId();
                 break;
             default:
                 return null;
@@ -721,13 +836,22 @@ abstract class BaseApplication extends BaseObject implements Persistent
         $keys = ApplicationPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getName(),
-            $keys[2] => $this->getTitle(),
-            $keys[3] => $this->getDescription(),
+            $keys[1] => $this->getTitle(),
+            $keys[2] => $this->getApplicationTypeId(),
+            $keys[3] => $this->getRouterId(),
         );
         if ($includeForeignObjects) {
-            if (null !== $this->collGateways) {
-                $result['Gateways'] = $this->collGateways->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->aApplicationType) {
+                $result['ApplicationType'] = $this->aApplicationType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aRouter) {
+                $result['Router'] = $this->aRouter->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collApplicationUris) {
+                $result['ApplicationUris'] = $this->collApplicationUris->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collApplicationExtraPropertys) {
+                $result['ApplicationExtraPropertys'] = $this->collApplicationExtraPropertys->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -767,13 +891,13 @@ abstract class BaseApplication extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setName($value);
-                break;
-            case 2:
                 $this->setTitle($value);
                 break;
+            case 2:
+                $this->setApplicationTypeId($value);
+                break;
             case 3:
-                $this->setDescription($value);
+                $this->setRouterId($value);
                 break;
         } // switch()
     }
@@ -800,9 +924,9 @@ abstract class BaseApplication extends BaseObject implements Persistent
         $keys = ApplicationPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
+        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setApplicationTypeId($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setRouterId($arr[$keys[3]]);
     }
 
     /**
@@ -815,9 +939,9 @@ abstract class BaseApplication extends BaseObject implements Persistent
         $criteria = new Criteria(ApplicationPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(ApplicationPeer::ID)) $criteria->add(ApplicationPeer::ID, $this->id);
-        if ($this->isColumnModified(ApplicationPeer::NAME)) $criteria->add(ApplicationPeer::NAME, $this->name);
         if ($this->isColumnModified(ApplicationPeer::TITLE)) $criteria->add(ApplicationPeer::TITLE, $this->title);
-        if ($this->isColumnModified(ApplicationPeer::DESCRIPTION)) $criteria->add(ApplicationPeer::DESCRIPTION, $this->description);
+        if ($this->isColumnModified(ApplicationPeer::APPLICATION_TYPE_ID)) $criteria->add(ApplicationPeer::APPLICATION_TYPE_ID, $this->application_type_id);
+        if ($this->isColumnModified(ApplicationPeer::ROUTER_ID)) $criteria->add(ApplicationPeer::ROUTER_ID, $this->router_id);
 
         return $criteria;
     }
@@ -881,9 +1005,9 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setName($this->getName());
         $copyObj->setTitle($this->getTitle());
-        $copyObj->setDescription($this->getDescription());
+        $copyObj->setApplicationTypeId($this->getApplicationTypeId());
+        $copyObj->setRouterId($this->getRouterId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -892,9 +1016,15 @@ abstract class BaseApplication extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
-            foreach ($this->getGateways() as $relObj) {
+            foreach ($this->getApplicationUris() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addGateway($relObj->copy($deepCopy));
+                    $copyObj->addApplicationUri($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getApplicationExtraPropertys() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addApplicationExtraProperty($relObj->copy($deepCopy));
                 }
             }
 
@@ -948,6 +1078,110 @@ abstract class BaseApplication extends BaseObject implements Persistent
         return self::$peer;
     }
 
+    /**
+     * Declares an association between this object and a ApplicationType object.
+     *
+     * @param             ApplicationType $v
+     * @return Application The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setApplicationType(ApplicationType $v = null)
+    {
+        if ($v === null) {
+            $this->setApplicationTypeId(NULL);
+        } else {
+            $this->setApplicationTypeId($v->getId());
+        }
+
+        $this->aApplicationType = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ApplicationType object, it will not be re-added.
+        if ($v !== null) {
+            $v->addApplication($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ApplicationType object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return ApplicationType The associated ApplicationType object.
+     * @throws PropelException
+     */
+    public function getApplicationType(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aApplicationType === null && ($this->application_type_id !== null) && $doQuery) {
+            $this->aApplicationType = ApplicationTypeQuery::create()->findPk($this->application_type_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aApplicationType->addApplications($this);
+             */
+        }
+
+        return $this->aApplicationType;
+    }
+
+    /**
+     * Declares an association between this object and a Router object.
+     *
+     * @param             Router $v
+     * @return Application The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setRouter(Router $v = null)
+    {
+        if ($v === null) {
+            $this->setRouterId(NULL);
+        } else {
+            $this->setRouterId($v->getId());
+        }
+
+        $this->aRouter = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Router object, it will not be re-added.
+        if ($v !== null) {
+            $v->addApplication($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Router object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return Router The associated Router object.
+     * @throws PropelException
+     */
+    public function getRouter(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aRouter === null && ($this->router_id !== null) && $doQuery) {
+            $this->aRouter = RouterQuery::create()->findPk($this->router_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aRouter->addApplications($this);
+             */
+        }
+
+        return $this->aRouter;
+    }
+
 
     /**
      * Initializes a collection based on the name of a relation.
@@ -959,42 +1193,45 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
-        if ('Gateway' == $relationName) {
-            $this->initGateways();
+        if ('ApplicationUri' == $relationName) {
+            $this->initApplicationUris();
+        }
+        if ('ApplicationExtraProperty' == $relationName) {
+            $this->initApplicationExtraPropertys();
         }
     }
 
     /**
-     * Clears out the collGateways collection
+     * Clears out the collApplicationUris collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return Application The current object (for fluent API support)
-     * @see        addGateways()
+     * @see        addApplicationUris()
      */
-    public function clearGateways()
+    public function clearApplicationUris()
     {
-        $this->collGateways = null; // important to set this to null since that means it is uninitialized
-        $this->collGatewaysPartial = null;
+        $this->collApplicationUris = null; // important to set this to null since that means it is uninitialized
+        $this->collApplicationUrisPartial = null;
 
         return $this;
     }
 
     /**
-     * reset is the collGateways collection loaded partially
+     * reset is the collApplicationUris collection loaded partially
      *
      * @return void
      */
-    public function resetPartialGateways($v = true)
+    public function resetPartialApplicationUris($v = true)
     {
-        $this->collGatewaysPartial = $v;
+        $this->collApplicationUrisPartial = $v;
     }
 
     /**
-     * Initializes the collGateways collection.
+     * Initializes the collApplicationUris collection.
      *
-     * By default this just sets the collGateways collection to an empty array (like clearcollGateways());
+     * By default this just sets the collApplicationUris collection to an empty array (like clearcollApplicationUris());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1003,17 +1240,17 @@ abstract class BaseApplication extends BaseObject implements Persistent
      *
      * @return void
      */
-    public function initGateways($overrideExisting = true)
+    public function initApplicationUris($overrideExisting = true)
     {
-        if (null !== $this->collGateways && !$overrideExisting) {
+        if (null !== $this->collApplicationUris && !$overrideExisting) {
             return;
         }
-        $this->collGateways = new PropelObjectCollection();
-        $this->collGateways->setModel('Gateway');
+        $this->collApplicationUris = new PropelObjectCollection();
+        $this->collApplicationUris->setModel('ApplicationUri');
     }
 
     /**
-     * Gets an array of Gateway objects which contain a foreign key that references this object.
+     * Gets an array of ApplicationUri objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -1023,105 +1260,105 @@ abstract class BaseApplication extends BaseObject implements Persistent
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Gateway[] List of Gateway objects
+     * @return PropelObjectCollection|ApplicationUri[] List of ApplicationUri objects
      * @throws PropelException
      */
-    public function getGateways($criteria = null, PropelPDO $con = null)
+    public function getApplicationUris($criteria = null, PropelPDO $con = null)
     {
-        $partial = $this->collGatewaysPartial && !$this->isNew();
-        if (null === $this->collGateways || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collGateways) {
+        $partial = $this->collApplicationUrisPartial && !$this->isNew();
+        if (null === $this->collApplicationUris || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collApplicationUris) {
                 // return empty collection
-                $this->initGateways();
+                $this->initApplicationUris();
             } else {
-                $collGateways = GatewayQuery::create(null, $criteria)
+                $collApplicationUris = ApplicationUriQuery::create(null, $criteria)
                     ->filterByApplication($this)
                     ->find($con);
                 if (null !== $criteria) {
-                    if (false !== $this->collGatewaysPartial && count($collGateways)) {
-                      $this->initGateways(false);
+                    if (false !== $this->collApplicationUrisPartial && count($collApplicationUris)) {
+                      $this->initApplicationUris(false);
 
-                      foreach($collGateways as $obj) {
-                        if (false == $this->collGateways->contains($obj)) {
-                          $this->collGateways->append($obj);
+                      foreach($collApplicationUris as $obj) {
+                        if (false == $this->collApplicationUris->contains($obj)) {
+                          $this->collApplicationUris->append($obj);
                         }
                       }
 
-                      $this->collGatewaysPartial = true;
+                      $this->collApplicationUrisPartial = true;
                     }
 
-                    $collGateways->getInternalIterator()->rewind();
-                    return $collGateways;
+                    $collApplicationUris->getInternalIterator()->rewind();
+                    return $collApplicationUris;
                 }
 
-                if($partial && $this->collGateways) {
-                    foreach($this->collGateways as $obj) {
+                if($partial && $this->collApplicationUris) {
+                    foreach($this->collApplicationUris as $obj) {
                         if($obj->isNew()) {
-                            $collGateways[] = $obj;
+                            $collApplicationUris[] = $obj;
                         }
                     }
                 }
 
-                $this->collGateways = $collGateways;
-                $this->collGatewaysPartial = false;
+                $this->collApplicationUris = $collApplicationUris;
+                $this->collApplicationUrisPartial = false;
             }
         }
 
-        return $this->collGateways;
+        return $this->collApplicationUris;
     }
 
     /**
-     * Sets a collection of Gateway objects related by a one-to-many relationship
+     * Sets a collection of ApplicationUri objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param PropelCollection $gateways A Propel collection.
+     * @param PropelCollection $applicationUris A Propel collection.
      * @param PropelPDO $con Optional connection object
      * @return Application The current object (for fluent API support)
      */
-    public function setGateways(PropelCollection $gateways, PropelPDO $con = null)
+    public function setApplicationUris(PropelCollection $applicationUris, PropelPDO $con = null)
     {
-        $gatewaysToDelete = $this->getGateways(new Criteria(), $con)->diff($gateways);
+        $applicationUrisToDelete = $this->getApplicationUris(new Criteria(), $con)->diff($applicationUris);
 
-        $this->gatewaysScheduledForDeletion = unserialize(serialize($gatewaysToDelete));
+        $this->applicationUrisScheduledForDeletion = unserialize(serialize($applicationUrisToDelete));
 
-        foreach ($gatewaysToDelete as $gatewayRemoved) {
-            $gatewayRemoved->setApplication(null);
+        foreach ($applicationUrisToDelete as $applicationUriRemoved) {
+            $applicationUriRemoved->setApplication(null);
         }
 
-        $this->collGateways = null;
-        foreach ($gateways as $gateway) {
-            $this->addGateway($gateway);
+        $this->collApplicationUris = null;
+        foreach ($applicationUris as $applicationUri) {
+            $this->addApplicationUri($applicationUri);
         }
 
-        $this->collGateways = $gateways;
-        $this->collGatewaysPartial = false;
+        $this->collApplicationUris = $applicationUris;
+        $this->collApplicationUrisPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related Gateway objects.
+     * Returns the number of related ApplicationUri objects.
      *
      * @param Criteria $criteria
      * @param boolean $distinct
      * @param PropelPDO $con
-     * @return int             Count of related Gateway objects.
+     * @return int             Count of related ApplicationUri objects.
      * @throws PropelException
      */
-    public function countGateways(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countApplicationUris(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
     {
-        $partial = $this->collGatewaysPartial && !$this->isNew();
-        if (null === $this->collGateways || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collGateways) {
+        $partial = $this->collApplicationUrisPartial && !$this->isNew();
+        if (null === $this->collApplicationUris || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collApplicationUris) {
                 return 0;
             }
 
             if($partial && !$criteria) {
-                return count($this->getGateways());
+                return count($this->getApplicationUris());
             }
-            $query = GatewayQuery::create(null, $criteria);
+            $query = ApplicationUriQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
@@ -1131,52 +1368,52 @@ abstract class BaseApplication extends BaseObject implements Persistent
                 ->count($con);
         }
 
-        return count($this->collGateways);
+        return count($this->collApplicationUris);
     }
 
     /**
-     * Method called to associate a Gateway object to this object
-     * through the Gateway foreign key attribute.
+     * Method called to associate a ApplicationUri object to this object
+     * through the ApplicationUri foreign key attribute.
      *
-     * @param    Gateway $l Gateway
+     * @param    ApplicationUri $l ApplicationUri
      * @return Application The current object (for fluent API support)
      */
-    public function addGateway(Gateway $l)
+    public function addApplicationUri(ApplicationUri $l)
     {
-        if ($this->collGateways === null) {
-            $this->initGateways();
-            $this->collGatewaysPartial = true;
+        if ($this->collApplicationUris === null) {
+            $this->initApplicationUris();
+            $this->collApplicationUrisPartial = true;
         }
-        if (!in_array($l, $this->collGateways->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddGateway($l);
+        if (!in_array($l, $this->collApplicationUris->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddApplicationUri($l);
         }
 
         return $this;
     }
 
     /**
-     * @param	Gateway $gateway The gateway object to add.
+     * @param	ApplicationUri $applicationUri The applicationUri object to add.
      */
-    protected function doAddGateway($gateway)
+    protected function doAddApplicationUri($applicationUri)
     {
-        $this->collGateways[]= $gateway;
-        $gateway->setApplication($this);
+        $this->collApplicationUris[]= $applicationUri;
+        $applicationUri->setApplication($this);
     }
 
     /**
-     * @param	Gateway $gateway The gateway object to remove.
+     * @param	ApplicationUri $applicationUri The applicationUri object to remove.
      * @return Application The current object (for fluent API support)
      */
-    public function removeGateway($gateway)
+    public function removeApplicationUri($applicationUri)
     {
-        if ($this->getGateways()->contains($gateway)) {
-            $this->collGateways->remove($this->collGateways->search($gateway));
-            if (null === $this->gatewaysScheduledForDeletion) {
-                $this->gatewaysScheduledForDeletion = clone $this->collGateways;
-                $this->gatewaysScheduledForDeletion->clear();
+        if ($this->getApplicationUris()->contains($applicationUri)) {
+            $this->collApplicationUris->remove($this->collApplicationUris->search($applicationUri));
+            if (null === $this->applicationUrisScheduledForDeletion) {
+                $this->applicationUrisScheduledForDeletion = clone $this->collApplicationUris;
+                $this->applicationUrisScheduledForDeletion->clear();
             }
-            $this->gatewaysScheduledForDeletion[]= clone $gateway;
-            $gateway->setApplication(null);
+            $this->applicationUrisScheduledForDeletion[]= clone $applicationUri;
+            $applicationUri->setApplication(null);
         }
 
         return $this;
@@ -1188,7 +1425,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
      * an identical criteria, it returns the collection.
      * Otherwise if this Application is new, it will return
      * an empty collection; or if this Application has previously
-     * been saved, it will retrieve related Gateways from storage.
+     * been saved, it will retrieve related ApplicationUris from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1197,14 +1434,232 @@ abstract class BaseApplication extends BaseObject implements Persistent
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Gateway[] List of Gateway objects
+     * @return PropelObjectCollection|ApplicationUri[] List of ApplicationUri objects
      */
-    public function getGatewaysJoinRouter($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getApplicationUrisJoinLocalization($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
-        $query = GatewayQuery::create(null, $criteria);
-        $query->joinWith('Router', $join_behavior);
+        $query = ApplicationUriQuery::create(null, $criteria);
+        $query->joinWith('Localization', $join_behavior);
 
-        return $this->getGateways($query, $con);
+        return $this->getApplicationUris($query, $con);
+    }
+
+    /**
+     * Clears out the collApplicationExtraPropertys collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return Application The current object (for fluent API support)
+     * @see        addApplicationExtraPropertys()
+     */
+    public function clearApplicationExtraPropertys()
+    {
+        $this->collApplicationExtraPropertys = null; // important to set this to null since that means it is uninitialized
+        $this->collApplicationExtraPropertysPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collApplicationExtraPropertys collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialApplicationExtraPropertys($v = true)
+    {
+        $this->collApplicationExtraPropertysPartial = $v;
+    }
+
+    /**
+     * Initializes the collApplicationExtraPropertys collection.
+     *
+     * By default this just sets the collApplicationExtraPropertys collection to an empty array (like clearcollApplicationExtraPropertys());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initApplicationExtraPropertys($overrideExisting = true)
+    {
+        if (null !== $this->collApplicationExtraPropertys && !$overrideExisting) {
+            return;
+        }
+        $this->collApplicationExtraPropertys = new PropelObjectCollection();
+        $this->collApplicationExtraPropertys->setModel('ApplicationExtraProperty');
+    }
+
+    /**
+     * Gets an array of ApplicationExtraProperty objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Application is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|ApplicationExtraProperty[] List of ApplicationExtraProperty objects
+     * @throws PropelException
+     */
+    public function getApplicationExtraPropertys($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collApplicationExtraPropertysPartial && !$this->isNew();
+        if (null === $this->collApplicationExtraPropertys || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collApplicationExtraPropertys) {
+                // return empty collection
+                $this->initApplicationExtraPropertys();
+            } else {
+                $collApplicationExtraPropertys = ApplicationExtraPropertyQuery::create(null, $criteria)
+                    ->filterByApplication($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collApplicationExtraPropertysPartial && count($collApplicationExtraPropertys)) {
+                      $this->initApplicationExtraPropertys(false);
+
+                      foreach($collApplicationExtraPropertys as $obj) {
+                        if (false == $this->collApplicationExtraPropertys->contains($obj)) {
+                          $this->collApplicationExtraPropertys->append($obj);
+                        }
+                      }
+
+                      $this->collApplicationExtraPropertysPartial = true;
+                    }
+
+                    $collApplicationExtraPropertys->getInternalIterator()->rewind();
+                    return $collApplicationExtraPropertys;
+                }
+
+                if($partial && $this->collApplicationExtraPropertys) {
+                    foreach($this->collApplicationExtraPropertys as $obj) {
+                        if($obj->isNew()) {
+                            $collApplicationExtraPropertys[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collApplicationExtraPropertys = $collApplicationExtraPropertys;
+                $this->collApplicationExtraPropertysPartial = false;
+            }
+        }
+
+        return $this->collApplicationExtraPropertys;
+    }
+
+    /**
+     * Sets a collection of ApplicationExtraProperty objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $applicationExtraPropertys A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return Application The current object (for fluent API support)
+     */
+    public function setApplicationExtraPropertys(PropelCollection $applicationExtraPropertys, PropelPDO $con = null)
+    {
+        $applicationExtraPropertysToDelete = $this->getApplicationExtraPropertys(new Criteria(), $con)->diff($applicationExtraPropertys);
+
+        $this->applicationExtraPropertysScheduledForDeletion = unserialize(serialize($applicationExtraPropertysToDelete));
+
+        foreach ($applicationExtraPropertysToDelete as $applicationExtraPropertyRemoved) {
+            $applicationExtraPropertyRemoved->setApplication(null);
+        }
+
+        $this->collApplicationExtraPropertys = null;
+        foreach ($applicationExtraPropertys as $applicationExtraProperty) {
+            $this->addApplicationExtraProperty($applicationExtraProperty);
+        }
+
+        $this->collApplicationExtraPropertys = $applicationExtraPropertys;
+        $this->collApplicationExtraPropertysPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ApplicationExtraProperty objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related ApplicationExtraProperty objects.
+     * @throws PropelException
+     */
+    public function countApplicationExtraPropertys(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collApplicationExtraPropertysPartial && !$this->isNew();
+        if (null === $this->collApplicationExtraPropertys || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collApplicationExtraPropertys) {
+                return 0;
+            }
+
+            if($partial && !$criteria) {
+                return count($this->getApplicationExtraPropertys());
+            }
+            $query = ApplicationExtraPropertyQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByApplication($this)
+                ->count($con);
+        }
+
+        return count($this->collApplicationExtraPropertys);
+    }
+
+    /**
+     * Method called to associate a ApplicationExtraProperty object to this object
+     * through the ApplicationExtraProperty foreign key attribute.
+     *
+     * @param    ApplicationExtraProperty $l ApplicationExtraProperty
+     * @return Application The current object (for fluent API support)
+     */
+    public function addApplicationExtraProperty(ApplicationExtraProperty $l)
+    {
+        if ($this->collApplicationExtraPropertys === null) {
+            $this->initApplicationExtraPropertys();
+            $this->collApplicationExtraPropertysPartial = true;
+        }
+        if (!in_array($l, $this->collApplicationExtraPropertys->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddApplicationExtraProperty($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	ApplicationExtraProperty $applicationExtraProperty The applicationExtraProperty object to add.
+     */
+    protected function doAddApplicationExtraProperty($applicationExtraProperty)
+    {
+        $this->collApplicationExtraPropertys[]= $applicationExtraProperty;
+        $applicationExtraProperty->setApplication($this);
+    }
+
+    /**
+     * @param	ApplicationExtraProperty $applicationExtraProperty The applicationExtraProperty object to remove.
+     * @return Application The current object (for fluent API support)
+     */
+    public function removeApplicationExtraProperty($applicationExtraProperty)
+    {
+        if ($this->getApplicationExtraPropertys()->contains($applicationExtraProperty)) {
+            $this->collApplicationExtraPropertys->remove($this->collApplicationExtraPropertys->search($applicationExtraProperty));
+            if (null === $this->applicationExtraPropertysScheduledForDeletion) {
+                $this->applicationExtraPropertysScheduledForDeletion = clone $this->collApplicationExtraPropertys;
+                $this->applicationExtraPropertysScheduledForDeletion->clear();
+            }
+            $this->applicationExtraPropertysScheduledForDeletion[]= clone $applicationExtraProperty;
+            $applicationExtraProperty->setApplication(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1213,9 +1668,9 @@ abstract class BaseApplication extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->name = null;
         $this->title = null;
-        $this->description = null;
+        $this->application_type_id = null;
+        $this->router_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1238,19 +1693,36 @@ abstract class BaseApplication extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collGateways) {
-                foreach ($this->collGateways as $o) {
+            if ($this->collApplicationUris) {
+                foreach ($this->collApplicationUris as $o) {
                     $o->clearAllReferences($deep);
                 }
+            }
+            if ($this->collApplicationExtraPropertys) {
+                foreach ($this->collApplicationExtraPropertys as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->aApplicationType instanceof Persistent) {
+              $this->aApplicationType->clearAllReferences($deep);
+            }
+            if ($this->aRouter instanceof Persistent) {
+              $this->aRouter->clearAllReferences($deep);
             }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->collGateways instanceof PropelCollection) {
-            $this->collGateways->clearIterator();
+        if ($this->collApplicationUris instanceof PropelCollection) {
+            $this->collApplicationUris->clearIterator();
         }
-        $this->collGateways = null;
+        $this->collApplicationUris = null;
+        if ($this->collApplicationExtraPropertys instanceof PropelCollection) {
+            $this->collApplicationExtraPropertys->clearIterator();
+        }
+        $this->collApplicationExtraPropertys = null;
+        $this->aApplicationType = null;
+        $this->aRouter = null;
     }
 
     /**
@@ -1271,6 +1743,570 @@ abstract class BaseApplication extends BaseObject implements Persistent
     public function isAlreadyInSave()
     {
         return $this->alreadyInSave;
+    }
+
+    // extra_properties behavior
+    /**
+     * convert propertyname in method to property name
+     *
+     * @param String $name the camelized property name
+     *
+     * @return String
+     */
+    protected function extraPropertyNameFromMethod($name)
+    {
+      $tmp = $name;
+      $tmp = str_replace('::', '/', $tmp);
+      $tmp = preg_replace(array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'),
+                          array('\1_\2', '\1_\2'), $tmp);
+      return strtolower($tmp);
+    }
+
+    /**
+     * checks that the event defines a property with $propertyName
+     *
+     * @todo optimize to make it stop on first occurence
+     *
+     * @param String    $propertyName  name of the property to check.
+     * @param PropelPDO $con           Optional connection object
+     *
+     * @return Boolean
+     */
+    public function hasProperty($propertyName, PropelPDO $con = null)
+    {
+      return $this->countPropertiesByName($propertyName, $con) > 0;
+    }
+
+    /**
+     * Count the number of occurences of $propertyName.
+     *
+     * @param   String    $propertyName   the property to count.
+     * @param   PropelPDO $con            Optional connection object
+     *
+     * @return  Integer
+     */
+    public function countPropertiesByName($propertyName, PropelPDO $con = null)
+    {
+      $count = 0;
+      $properties = $this->getApplicationExtraPropertys(null, $con);
+      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
+      foreach($properties as $prop)
+      {
+        if($prop->getPropertyName() == $propertyName)
+        {
+          $count++;
+        }
+      }
+      return $count;
+    }
+
+    /**
+     * Set the property with id $id.
+     * can only be used with an already set property
+     *
+     * @param   PropelPDO $con Optional connection object
+     *
+     * @return Application|false
+     */
+    protected function setPropertyById($id, $value, PropelPDO $con = null)
+    {
+      $prop = $this->getPropertyObjectById($id, $con);
+      if($prop instanceof ApplicationExtraProperty)
+      {
+        $prop->setPropertyValue(ApplicationPeer::normalizeExtraPropertyValue($value));
+        return $this;
+      }
+      else
+      {
+        return false;
+      }
+    }
+
+    /**
+     * Retrive property objects with $propertyName.
+     *
+     * @param   String    $propertyName the properties to look for.
+     * @param   PropelPDO $con          Optional connection object
+     *
+     * @return  Array
+     */
+    protected function getPropertiesObjectsByName($propertyName, PropelPDO $con = null)
+    {
+      $ret = array();
+      $properties = $this->getApplicationExtraPropertys(null, $con);
+      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
+      foreach($properties as $prop)
+      {
+        if($prop->getPropertyName() == $propertyName)
+        {
+          $ret[$prop->getId() ? $prop->getId() : $propertyName.'_'.count($ret)] = $prop;
+        }
+      }
+      return $ret;
+    }
+
+    /**
+     * Retrieve related property with $id.
+     * If property is not saved yet, id is the list index, created this way :
+     * $propertyName.'_'.$index.
+     *
+     * @param Integer|String  $id   the id of prorty to retrieve.
+     * @param PropelPDO       $con  Optional connection object
+     *
+     * @return ApplicationExtraProperty
+     */
+    protected function getPropertyObjectById($id, PropelPDO $con = null)
+    {
+      if(is_numeric($id))
+      {
+        $properties = $this->getApplicationExtraPropertys(null, $con);
+        foreach($properties as $prop)
+        {
+          if($prop->getId() == $id)
+          {
+            return $prop;
+          }
+        }
+      }
+      else
+      {
+        $propertyName = substr($id, 0, strrpos($id, '_'));
+        $properties = $this->getPropertiesObjectsByName($propertyName, $con);
+        return $properties[$id];
+      }
+    }
+
+    /**
+     * Check wether property with $id is
+     *
+     * @param PropelPDO $con  Optional connection object
+     */
+    protected function isPropertyWithIdA($id, $propertyName, PropelPDO $con = null)
+    {
+      $prop = $this->getPropertyObjectById($id, $con);
+      return $prop && $prop->getPropertyName() == ApplicationPeer::normalizeExtraPropertyName($propertyName);
+    }
+
+    /**
+     * wrapped function on update{Property} callback
+     *
+     * @param string          $name  the property to update's type
+     * @param mixed           $value the new value
+     * @param integer|string  $id    the id of the property to update
+     * @param PropelPDO       $con   Optional connection object
+     *
+     * @return Boolean|ApplicationExtraProperty
+     */
+    protected function setPropertyByNameAndId($name, $value, $id, PropelPDO $con = null)
+    {
+      if($this->isPropertyWithIdA($id, ApplicationPeer::normalizeExtraPropertyName($name), $con))
+      {
+        return $this->setPropertyById($id, $value);
+      }
+      return false;
+    }
+
+    /**
+     * get the property with id $id.
+     * can only be used with an already set property
+     *
+     * @param PropelPDO $con Optional connection object
+     */
+    protected function getPropertyById($id, $defaultValue = null, PropelPDO $con = null)
+    {
+      $prop = $this->getPropertyObjectById($id, $con);
+      if($prop instanceof ApplicationExtraProperty)
+      {
+        return $prop->getPropertyValue();
+      }
+      else
+      {
+        return $defaultValue;
+      }
+    }
+
+    /**
+     * wrapped function on deleteProperty callback
+     *
+     * @param PropelPDO $con Optional connection object
+     */
+    protected function deletePropertyByNameAndId($name, $id, PropelPDO $con = null)
+    {
+      if($this->isPropertyWithIdA($id, ApplicationPeer::normalizeExtraPropertyName($name), $con))
+      {
+        return $this->deletePropertyById($id, $con);
+      }
+      return false;
+    }
+
+    /**
+     * delete a multiple occurence property
+     *
+     * @param PropelPDO $con  Optional connection object
+     */
+    protected function deletePropertyById($id, PropelPDO $con = null)
+    {
+      $prop = $this->getPropertyObjectById($id, $con);
+      if($prop instanceof ApplicationExtraProperty)
+      {
+        if(!$prop->isNew())
+        {
+          $prop->delete($con);
+        }
+        $this->collApplicationExtraPropertys->remove($this->collApplicationExtraPropertys->search($prop));
+        return $prop;
+      }
+      else
+      {
+        return false;
+      }
+    }
+
+    /**
+     * delete all properties with $name
+     *
+     * @param PropelPDO $con Optional connection object
+     */
+    public function deletePropertiesByName($name, PropelPDO $con = null)
+    {
+      $props = $this->getPropertiesObjectsByName($name, $con);
+      foreach($props as $prop)
+      {
+        if($prop instanceof ApplicationExtraProperty)
+        {
+          $prop->delete($con);
+          $this->collApplicationExtraPropertys->remove($this->collApplicationExtraPropertys->search($prop));
+        }
+      }
+      return $props;
+    }
+/**
+ * Initializes internal state of Application object.
+ */
+public function __construct()
+{
+  parent::__construct();
+
+  $this->initializeProperties();
+}
+
+/**
+     * initialize properties.
+     * called in the constructor to add default properties.
+     */
+    protected function initializeProperties()
+    {
+    }/**
+     * Returns the list of registered extra properties
+     * that can be set only once.
+     *
+     * @return array
+     */
+    public function getRegisteredSingleProperties()
+    {
+      return array_keys($this->extraProperties);
+    }
+
+    /**
+     * Register a new single occurence property $propertyName for the object.
+     * The property will be accessible through getPropertyName method.
+     *
+     * @param String  $propertyName   the property name.
+     * @param Mixed   $defaultValue   default property value.
+     *
+     * @return Application
+     */
+    public function registerProperty($propertyName, $defaultValue = null)
+    {
+      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
+      /* comment this line to remove default value update ability
+      if(!array_key_exists($propertyName, $this->extraProperties))
+      {
+        $this->extraProperties[$propertyName] = $defaultValue;
+      }
+      /*/
+      $this->extraProperties[$propertyName] = $defaultValue;
+      //*/
+      return $this;
+    }
+
+    /**
+     * Set a single occurence property.
+     * If the property already exists, then it is ovverriden, ortherwise
+     * new property is created.
+     *
+     * @param String    $name   the property name.
+     * @param Mixed     $value  default property value.
+     * @param PropelPDO $con    Optional connection object
+     *
+     * @return Application
+     */
+    public function setProperty($name, $value, PropelPDO $con = null)
+    {
+      $name = ApplicationPeer::normalizeExtraPropertyName($name);
+      if($this->hasProperty($name, $con))
+      {
+        $properties = $this->getApplicationExtraPropertys(null, $con);
+        foreach($properties as $prop)
+        {
+          if($prop->getPropertyName() == $name)
+          {
+            $prop->setPropertyValue(ApplicationPeer::normalizeExtraPropertyValue($value));
+            return $this;
+          }
+        }
+      }
+      else
+      {
+        $property = new ApplicationExtraProperty();
+        $property->setPropertyName($name);
+        $property->setPropertyValue(ApplicationPeer::normalizeExtraPropertyValue($value));
+        $this->addApplicationExtraProperty($property);
+      }
+      return $this;
+    }
+
+    /**
+     * Get the value of an extra property that can appear only once.
+     *
+     * @param   String    $propertyName   the name of propertyto retrieve.
+     * @param   Mixed     $defaultValue   default value if property isn't set.
+     * @param   PropelPDO $con            Optional connection object
+     *
+     * @return  Mixed
+     */
+    public function getProperty($propertyName, $defaultValue = null, PropelPDO $con = null)
+    {
+      $properties = $this->getApplicationExtraPropertys(null, $con);
+      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
+      foreach($properties as $prop)
+      {
+        if($prop->getPropertyName() == $propertyName)
+        {
+          return $prop->getPropertyValue();
+        }
+      }
+      return is_null($defaultValue)
+                ? isset($this->extraProperties[$propertyName])
+                          ? $this->extraProperties[$propertyName]
+                          : null
+                : $defaultValue;
+    }/**
+     * returns the list of registered multiple properties
+     *
+     * @return array
+     */
+    public function getRegisteredMultipleProperties()
+    {
+      return array_keys($this->multipleExtraProperties);
+    }
+
+    /**
+     * Register a new multiple occurence property $propertyName for the object.
+     * The properties will be accessible through getPropertyNames method.
+     *
+     * @param String  $propertyName   the property name.
+     * @param Mixed   $defaultValue   default property value.
+     * @return Application
+     */
+    public function registerMultipleProperty($propertyName, $defaultValue = null)
+    {
+      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
+      /* comment this line to remove default value update ability
+      if(!array_key_exists($propertyName, $this->multipleExtraProperties))
+      {
+        $this->multipleExtraProperties[$propertyName] = $defaultValue;
+      }
+      /*/
+      $this->multipleExtraProperties[$propertyName] = $defaultValue;
+      //*/
+      return $this;
+    }
+
+    /**
+     * adds a multiple instance property to event
+     *
+     * @param String  $propertyName   the name of the property to add.
+     * @param Mixed   $value          the value for new property.
+     */
+    public function addProperty($propertyName, $value)
+    {
+      $property = new ApplicationExtraProperty();
+      $property->setPropertyName(ApplicationPeer::normalizeExtraPropertyName($propertyName));
+      $property->setPropertyValue(ApplicationPeer::normalizeExtraPropertyValue($value));
+      $this->addApplicationExtraProperty($property);
+      return $this;
+    }
+
+    /**
+     * returns an array of all matching values for given property
+     * the array keys are the values ID
+     * @todo enhance the case an id is given
+     * @todo check the case there is an id but does not exists
+     *
+     * @param string    $propertyName    the name of properties to retrieve
+     * @param mixed     $default         The default value to use
+     * @param Integer   $id              The unique id of the property to retrieve
+     * @param PropelPDO $con             Optional connection object
+     *
+     * @return array  the list of matching properties (prop_id => value).
+     */
+    public function getPropertiesByName($propertyName, $default = array(), $id = null, PropelPDO $con = null)
+    {
+      $ret = array();
+      $properties = $this->getPropertiesObjectsByName($propertyName, $con);
+      foreach($properties as $key => $prop)
+      {
+        $ret[$key] = $prop->getPropertyValue();
+      }
+      // is there a property id ?
+      if (!is_null($id) && isset($ret[$id]))
+      {
+        return $ret[$id];
+      }
+      // no results ?
+      if(!count($ret))
+      {
+        return $default;
+      }
+      return $ret;
+    }
+    /**
+     * returns an associative array with the properties and associated values.
+     *
+     * @return array
+     */
+    public function getExtraProperties($con = null)
+    {
+      $ret = array();
+
+      // init with default single and multiple properties
+      $ret = array_merge($ret, $this->extraProperties);
+      foreach ($this->multipleExtraProperties as $propertyName => $default) {
+        $ret[$propertyName] = array();
+      }
+
+      foreach ($this->getApplicationExtraPropertys(null, $con) as $property) {
+        $pname = $property->getPropertyName();
+        $pvalue = $property->getPropertyValue();
+
+        if (array_key_exists($pname, $this->extraProperties)) {
+          // single property
+          $ret[$pname] = $pvalue;
+        }
+        elseif (array_key_exists($pname, $ret) && is_array($ret[$pname])){
+          $ret[$pname][] = $pvalue;
+        }
+        elseif (array_key_exists($pname, $ret)){
+          $ret[$pname] = array($ret[$pname], $pvalue);
+        }
+        else {
+          $ret[$pname] = $pvalue;
+        }
+      }
+
+      // set multiple properties default
+      foreach ($this->multipleExtraProperties as $propertyName => $default) {
+        if (!is_null($default) && !count($ret[$propertyName])) {
+          $ret[$propertyName][] = $default;
+        }
+      }
+
+      return $ret;
+    }
+    /**
+     * Catches calls to virtual methods
+     */
+    public function __call($name, $params)
+    {
+
+        // extra_properties behavior
+        // calls the registered properties dedicated functions
+        if(in_array($methodName = substr($name, 0,3), array('add', 'set', 'has', 'get')))
+        {
+          $propertyName = ApplicationPeer::normalizeExtraPropertyName($this->extraPropertyNameFromMethod(substr($name, 3)));
+        }
+        else if(in_array($methodName = substr($name, 0,5), array('count', 'clear')))
+        {
+          $propertyName = ApplicationPeer::normalizeExtraPropertyName($this->extraPropertyNameFromMethod(substr($name, 5)));
+        }
+        else if(in_array($methodName = substr($name, 0,6), array('delete', 'update')))
+        {
+          $propertyName = ApplicationPeer::normalizeExtraPropertyName($this->extraPropertyNameFromMethod(substr($name, 6)));
+        }
+        if(isset($propertyName))
+        {
+          if(array_key_exists($propertyName, $this->extraProperties))
+          {
+            switch($methodName)
+            {
+              case 'add':
+              case 'set':
+                $callable = array($this, 'setProperty');
+                break;
+              case 'get':
+                $callable = array($this, 'getProperty');
+                break;
+              case 'has':
+                $callable = array($this, 'hasProperty');
+                break;
+              case 'count':
+                $callable = array($this, 'countPropertiesByName');
+                break;
+              case 'clear':
+              case 'delete':
+                $callable = array($this, 'deletePropertiesByName');
+                break;
+              case 'update':
+                $callable = array($this, 'setPropertyByName');
+                break;
+            }
+          }
+          else if(array_key_exists($propertyName, $this->multipleExtraProperties) ||
+                  ('S' == substr($propertyName, -1) && array_key_exists($propertyName = substr($propertyName, 0, -1), $this->multipleExtraProperties)))
+          {
+            switch($methodName)
+            {
+              case 'add':
+              case 'set':
+                $callable = array($this, 'addProperty');
+                break;
+              case 'get':
+                $callable = array($this, 'getPropertiesByName');
+                break;
+              case 'has':
+                $callable = array($this, 'hasProperty');
+                break;
+              case 'count':
+                $callable = array($this, 'countPropertiesByName');
+                break;
+              case 'clear':
+                $callable = array($this, 'deletePropertiesByName');
+                break;
+              case 'delete':
+                $callable = array($this, 'deletePropertyByNameAndId');
+                break;
+              case 'update':
+                $callable = array($this, 'setPropertyByNameAndId');
+                break;
+            }
+          }
+            //* no error throw to make sure other behaviors can be called.
+            else
+            {
+              throw new RuntimeException(sprintf('Unknown property %s.<br />possible single properties: %s<br />possible multiple properties', $propertyName, join(',', array_keys($this->extraProperties)), join(',', array_keys($this->multipleExtraProperties))));
+            }
+            //*/
+          if(isset($callable))
+          {
+            array_unshift($params, $propertyName);
+            return call_user_func_array($callable, $params);
+          }
+
+        }
+
+
+        return parent::__call($name, $params);
     }
 
 }

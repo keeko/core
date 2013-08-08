@@ -12,7 +12,7 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use keeko\core\entities\Gateway;
+use keeko\core\entities\Application;
 use keeko\core\entities\Router;
 use keeko\core\entities\RouterPeer;
 use keeko\core\entities\RouterQuery;
@@ -34,9 +34,9 @@ use keeko\core\entities\RouterQuery;
  * @method RouterQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method RouterQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method RouterQuery leftJoinGateway($relationAlias = null) Adds a LEFT JOIN clause to the query using the Gateway relation
- * @method RouterQuery rightJoinGateway($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Gateway relation
- * @method RouterQuery innerJoinGateway($relationAlias = null) Adds a INNER JOIN clause to the query using the Gateway relation
+ * @method RouterQuery leftJoinApplication($relationAlias = null) Adds a LEFT JOIN clause to the query using the Application relation
+ * @method RouterQuery rightJoinApplication($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Application relation
+ * @method RouterQuery innerJoinApplication($relationAlias = null) Adds a INNER JOIN clause to the query using the Application relation
  *
  * @method Router findOne(PropelPDO $con = null) Return the first Router matching the query
  * @method Router findOneOrCreate(PropelPDO $con = null) Return the first Router matching the query, or a new Router object populated from the query conditions when no match is found
@@ -340,41 +340,41 @@ abstract class BaseRouterQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related Gateway object
+     * Filter the query by a related Application object
      *
-     * @param   Gateway|PropelObjectCollection $gateway  the related object to use as filter
+     * @param   Application|PropelObjectCollection $application  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 RouterQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByGateway($gateway, $comparison = null)
+    public function filterByApplication($application, $comparison = null)
     {
-        if ($gateway instanceof Gateway) {
+        if ($application instanceof Application) {
             return $this
-                ->addUsingAlias(RouterPeer::ID, $gateway->getRouterId(), $comparison);
-        } elseif ($gateway instanceof PropelObjectCollection) {
+                ->addUsingAlias(RouterPeer::ID, $application->getRouterId(), $comparison);
+        } elseif ($application instanceof PropelObjectCollection) {
             return $this
-                ->useGatewayQuery()
-                ->filterByPrimaryKeys($gateway->getPrimaryKeys())
+                ->useApplicationQuery()
+                ->filterByPrimaryKeys($application->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByGateway() only accepts arguments of type Gateway or PropelCollection');
+            throw new PropelException('filterByApplication() only accepts arguments of type Application or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Gateway relation
+     * Adds a JOIN clause to the query using the Application relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return RouterQuery The current query, for fluid interface
      */
-    public function joinGateway($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinApplication($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Gateway');
+        $relationMap = $tableMap->getRelation('Application');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -389,14 +389,14 @@ abstract class BaseRouterQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Gateway');
+            $this->addJoinObject($join, 'Application');
         }
 
         return $this;
     }
 
     /**
-     * Use the Gateway relation Gateway object
+     * Use the Application relation Application object
      *
      * @see       useQuery()
      *
@@ -404,13 +404,13 @@ abstract class BaseRouterQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \keeko\core\entities\GatewayQuery A secondary query class using the current class as primary query
+     * @return   \keeko\core\entities\ApplicationQuery A secondary query class using the current class as primary query
      */
-    public function useGatewayQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useApplicationQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinGateway($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Gateway', '\keeko\core\entities\GatewayQuery');
+            ->joinApplication($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Application', '\keeko\core\entities\ApplicationQuery');
     }
 
     /**

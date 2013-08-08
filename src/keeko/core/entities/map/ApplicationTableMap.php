@@ -43,9 +43,9 @@ class ApplicationTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
-        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
         $this->addColumn('title', 'Title', 'VARCHAR', false, 255, null);
-        $this->addColumn('description', 'Description', 'LONGVARCHAR', false, null, null);
+        $this->addForeignKey('application_type_id', 'ApplicationTypeId', 'INTEGER', 'keeko_application_type', 'id', true, 10, null);
+        $this->addForeignKey('router_id', 'RouterId', 'INTEGER', 'keeko_router', 'id', true, 10, null);
         // validators
     } // initialize()
 
@@ -54,7 +54,30 @@ class ApplicationTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Gateway', 'keeko\\core\\entities\\Gateway', RelationMap::ONE_TO_MANY, array('id' => 'application_id', ), 'RESTRICT', null, 'Gateways');
+        $this->addRelation('ApplicationType', 'keeko\\core\\entities\\ApplicationType', RelationMap::MANY_TO_ONE, array('application_type_id' => 'id', ), 'RESTRICT', null);
+        $this->addRelation('Router', 'keeko\\core\\entities\\Router', RelationMap::MANY_TO_ONE, array('router_id' => 'id', ), 'RESTRICT', null);
+        $this->addRelation('ApplicationUri', 'keeko\\core\\entities\\ApplicationUri', RelationMap::ONE_TO_MANY, array('id' => 'application_id', ), 'RESTRICT', null, 'ApplicationUris');
+        $this->addRelation('ApplicationExtraProperty', 'keeko\\core\\entities\\ApplicationExtraProperty', RelationMap::ONE_TO_MANY, array('id' => 'keeko_application_id', ), 'CASCADE', null, 'ApplicationExtraPropertys');
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'extra_properties' =>  array (
+  'properties_table' => 'application_params',
+  'property_name_column' => 'property_name',
+  'property_value_column' => 'property_value',
+  'default_properties' => '',
+  'normalize' => 'true',
+  'throw_error' => 'true',
+),
+        );
+    } // getBehaviors()
 
 } // ApplicationTableMap
