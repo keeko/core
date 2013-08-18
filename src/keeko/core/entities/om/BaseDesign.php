@@ -13,8 +13,8 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use keeko\core\entities\ApplicationType;
-use keeko\core\entities\ApplicationTypeQuery;
+use keeko\core\entities\Application;
+use keeko\core\entities\ApplicationQuery;
 use keeko\core\entities\Design;
 use keeko\core\entities\DesignPeer;
 use keeko\core\entities\DesignQuery;
@@ -64,20 +64,15 @@ abstract class BaseDesign extends BaseObject implements Persistent
     protected $package_id;
 
     /**
-     * The value for the application_type_id field.
-     * @var        int
-     */
-    protected $application_type_id;
-
-    /**
      * @var        Package
      */
     protected $aPackage;
 
     /**
-     * @var        ApplicationType
+     * @var        PropelObjectCollection|Application[] Collection to store aggregation of Application objects.
      */
-    protected $aApplicationType;
+    protected $collApplications;
+    protected $collApplicationsPartial;
 
     /**
      * @var        PropelObjectCollection|Layout[] Collection to store aggregation of Layout objects.
@@ -109,6 +104,12 @@ abstract class BaseDesign extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
+    protected $applicationsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
     protected $layoutsScheduledForDeletion = null;
 
     /**
@@ -129,16 +130,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
     public function getPackageId()
     {
         return $this->package_id;
-    }
-
-    /**
-     * Get the [application_type_id] column value.
-     *
-     * @return int
-     */
-    public function getApplicationTypeId()
-    {
-        return $this->application_type_id;
     }
 
     /**
@@ -188,31 +179,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
     } // setPackageId()
 
     /**
-     * Set the value of [application_type_id] column.
-     *
-     * @param int $v new value
-     * @return Design The current object (for fluent API support)
-     */
-    public function setApplicationTypeId($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (int) $v;
-        }
-
-        if ($this->application_type_id !== $v) {
-            $this->application_type_id = $v;
-            $this->modifiedColumns[] = DesignPeer::APPLICATION_TYPE_ID;
-        }
-
-        if ($this->aApplicationType !== null && $this->aApplicationType->getId() !== $v) {
-            $this->aApplicationType = null;
-        }
-
-
-        return $this;
-    } // setApplicationTypeId()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -246,7 +212,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->package_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
-            $this->application_type_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -255,7 +220,7 @@ abstract class BaseDesign extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 3; // 3 = DesignPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 2; // 2 = DesignPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Design object", $e);
@@ -280,9 +245,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
 
         if ($this->aPackage !== null && $this->package_id !== $this->aPackage->getId()) {
             $this->aPackage = null;
-        }
-        if ($this->aApplicationType !== null && $this->application_type_id !== $this->aApplicationType->getId()) {
-            $this->aApplicationType = null;
         }
     } // ensureConsistency
 
@@ -324,7 +286,8 @@ abstract class BaseDesign extends BaseObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aPackage = null;
-            $this->aApplicationType = null;
+            $this->collApplications = null;
+
             $this->collLayouts = null;
 
         } // if (deep)
@@ -452,13 +415,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
                 $this->setPackage($this->aPackage);
             }
 
-            if ($this->aApplicationType !== null) {
-                if ($this->aApplicationType->isModified() || $this->aApplicationType->isNew()) {
-                    $affectedRows += $this->aApplicationType->save($con);
-                }
-                $this->setApplicationType($this->aApplicationType);
-            }
-
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -468,6 +424,23 @@ abstract class BaseDesign extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->applicationsScheduledForDeletion !== null) {
+                if (!$this->applicationsScheduledForDeletion->isEmpty()) {
+                    ApplicationQuery::create()
+                        ->filterByPrimaryKeys($this->applicationsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->applicationsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collApplications !== null) {
+                foreach ($this->collApplications as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->layoutsScheduledForDeletion !== null) {
@@ -520,9 +493,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
         if ($this->isColumnModified(DesignPeer::PACKAGE_ID)) {
             $modifiedColumns[':p' . $index++]  = '`package_id`';
         }
-        if ($this->isColumnModified(DesignPeer::APPLICATION_TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`application_type_id`';
-        }
 
         $sql = sprintf(
             'INSERT INTO `keeko_design` (%s) VALUES (%s)',
@@ -539,9 +509,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
                         break;
                     case '`package_id`':
                         $stmt->bindValue($identifier, $this->package_id, PDO::PARAM_INT);
-                        break;
-                    case '`application_type_id`':
-                        $stmt->bindValue($identifier, $this->application_type_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -648,17 +615,19 @@ abstract class BaseDesign extends BaseObject implements Persistent
                 }
             }
 
-            if ($this->aApplicationType !== null) {
-                if (!$this->aApplicationType->validate($columns)) {
-                    $failureMap = array_merge($failureMap, $this->aApplicationType->getValidationFailures());
-                }
-            }
-
 
             if (($retval = DesignPeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
             }
 
+
+                if ($this->collApplications !== null) {
+                    foreach ($this->collApplications as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
 
                 if ($this->collLayouts !== null) {
                     foreach ($this->collLayouts as $referrerFK) {
@@ -709,9 +678,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
             case 1:
                 return $this->getPackageId();
                 break;
-            case 2:
-                return $this->getApplicationTypeId();
-                break;
             default:
                 return null;
                 break;
@@ -743,14 +709,13 @@ abstract class BaseDesign extends BaseObject implements Persistent
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getPackageId(),
-            $keys[2] => $this->getApplicationTypeId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aPackage) {
                 $result['Package'] = $this->aPackage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aApplicationType) {
-                $result['ApplicationType'] = $this->aApplicationType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            if (null !== $this->collApplications) {
+                $result['Applications'] = $this->collApplications->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collLayouts) {
                 $result['Layouts'] = $this->collLayouts->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -795,9 +760,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
             case 1:
                 $this->setPackageId($value);
                 break;
-            case 2:
-                $this->setApplicationTypeId($value);
-                break;
         } // switch()
     }
 
@@ -824,7 +786,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setPackageId($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setApplicationTypeId($arr[$keys[2]]);
     }
 
     /**
@@ -838,7 +799,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
 
         if ($this->isColumnModified(DesignPeer::ID)) $criteria->add(DesignPeer::ID, $this->id);
         if ($this->isColumnModified(DesignPeer::PACKAGE_ID)) $criteria->add(DesignPeer::PACKAGE_ID, $this->package_id);
-        if ($this->isColumnModified(DesignPeer::APPLICATION_TYPE_ID)) $criteria->add(DesignPeer::APPLICATION_TYPE_ID, $this->application_type_id);
 
         return $criteria;
     }
@@ -903,7 +863,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setPackageId($this->getPackageId());
-        $copyObj->setApplicationTypeId($this->getApplicationTypeId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -911,6 +870,12 @@ abstract class BaseDesign extends BaseObject implements Persistent
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
+
+            foreach ($this->getApplications() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addApplication($relObj->copy($deepCopy));
+                }
+            }
 
             foreach ($this->getLayouts() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -1020,58 +985,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
         return $this->aPackage;
     }
 
-    /**
-     * Declares an association between this object and a ApplicationType object.
-     *
-     * @param             ApplicationType $v
-     * @return Design The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setApplicationType(ApplicationType $v = null)
-    {
-        if ($v === null) {
-            $this->setApplicationTypeId(NULL);
-        } else {
-            $this->setApplicationTypeId($v->getId());
-        }
-
-        $this->aApplicationType = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ApplicationType object, it will not be re-added.
-        if ($v !== null) {
-            $v->addDesign($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ApplicationType object
-     *
-     * @param PropelPDO $con Optional Connection object.
-     * @param $doQuery Executes a query to get the object if required
-     * @return ApplicationType The associated ApplicationType object.
-     * @throws PropelException
-     */
-    public function getApplicationType(PropelPDO $con = null, $doQuery = true)
-    {
-        if ($this->aApplicationType === null && ($this->application_type_id !== null) && $doQuery) {
-            $this->aApplicationType = ApplicationTypeQuery::create()->findPk($this->application_type_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aApplicationType->addDesigns($this);
-             */
-        }
-
-        return $this->aApplicationType;
-    }
-
 
     /**
      * Initializes a collection based on the name of a relation.
@@ -1083,9 +996,280 @@ abstract class BaseDesign extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('Application' == $relationName) {
+            $this->initApplications();
+        }
         if ('Layout' == $relationName) {
             $this->initLayouts();
         }
+    }
+
+    /**
+     * Clears out the collApplications collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return Design The current object (for fluent API support)
+     * @see        addApplications()
+     */
+    public function clearApplications()
+    {
+        $this->collApplications = null; // important to set this to null since that means it is uninitialized
+        $this->collApplicationsPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collApplications collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialApplications($v = true)
+    {
+        $this->collApplicationsPartial = $v;
+    }
+
+    /**
+     * Initializes the collApplications collection.
+     *
+     * By default this just sets the collApplications collection to an empty array (like clearcollApplications());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initApplications($overrideExisting = true)
+    {
+        if (null !== $this->collApplications && !$overrideExisting) {
+            return;
+        }
+        $this->collApplications = new PropelObjectCollection();
+        $this->collApplications->setModel('Application');
+    }
+
+    /**
+     * Gets an array of Application objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Design is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Application[] List of Application objects
+     * @throws PropelException
+     */
+    public function getApplications($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collApplicationsPartial && !$this->isNew();
+        if (null === $this->collApplications || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collApplications) {
+                // return empty collection
+                $this->initApplications();
+            } else {
+                $collApplications = ApplicationQuery::create(null, $criteria)
+                    ->filterByDesign($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collApplicationsPartial && count($collApplications)) {
+                      $this->initApplications(false);
+
+                      foreach($collApplications as $obj) {
+                        if (false == $this->collApplications->contains($obj)) {
+                          $this->collApplications->append($obj);
+                        }
+                      }
+
+                      $this->collApplicationsPartial = true;
+                    }
+
+                    $collApplications->getInternalIterator()->rewind();
+                    return $collApplications;
+                }
+
+                if($partial && $this->collApplications) {
+                    foreach($this->collApplications as $obj) {
+                        if($obj->isNew()) {
+                            $collApplications[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collApplications = $collApplications;
+                $this->collApplicationsPartial = false;
+            }
+        }
+
+        return $this->collApplications;
+    }
+
+    /**
+     * Sets a collection of Application objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $applications A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return Design The current object (for fluent API support)
+     */
+    public function setApplications(PropelCollection $applications, PropelPDO $con = null)
+    {
+        $applicationsToDelete = $this->getApplications(new Criteria(), $con)->diff($applications);
+
+        $this->applicationsScheduledForDeletion = unserialize(serialize($applicationsToDelete));
+
+        foreach ($applicationsToDelete as $applicationRemoved) {
+            $applicationRemoved->setDesign(null);
+        }
+
+        $this->collApplications = null;
+        foreach ($applications as $application) {
+            $this->addApplication($application);
+        }
+
+        $this->collApplications = $applications;
+        $this->collApplicationsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Application objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Application objects.
+     * @throws PropelException
+     */
+    public function countApplications(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collApplicationsPartial && !$this->isNew();
+        if (null === $this->collApplications || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collApplications) {
+                return 0;
+            }
+
+            if($partial && !$criteria) {
+                return count($this->getApplications());
+            }
+            $query = ApplicationQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByDesign($this)
+                ->count($con);
+        }
+
+        return count($this->collApplications);
+    }
+
+    /**
+     * Method called to associate a Application object to this object
+     * through the Application foreign key attribute.
+     *
+     * @param    Application $l Application
+     * @return Design The current object (for fluent API support)
+     */
+    public function addApplication(Application $l)
+    {
+        if ($this->collApplications === null) {
+            $this->initApplications();
+            $this->collApplicationsPartial = true;
+        }
+        if (!in_array($l, $this->collApplications->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddApplication($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	Application $application The application object to add.
+     */
+    protected function doAddApplication($application)
+    {
+        $this->collApplications[]= $application;
+        $application->setDesign($this);
+    }
+
+    /**
+     * @param	Application $application The application object to remove.
+     * @return Design The current object (for fluent API support)
+     */
+    public function removeApplication($application)
+    {
+        if ($this->getApplications()->contains($application)) {
+            $this->collApplications->remove($this->collApplications->search($application));
+            if (null === $this->applicationsScheduledForDeletion) {
+                $this->applicationsScheduledForDeletion = clone $this->collApplications;
+                $this->applicationsScheduledForDeletion->clear();
+            }
+            $this->applicationsScheduledForDeletion[]= clone $application;
+            $application->setDesign(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Design is new, it will return
+     * an empty collection; or if this Design has previously
+     * been saved, it will retrieve related Applications from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Design.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Application[] List of Application objects
+     */
+    public function getApplicationsJoinApplicationType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = ApplicationQuery::create(null, $criteria);
+        $query->joinWith('ApplicationType', $join_behavior);
+
+        return $this->getApplications($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Design is new, it will return
+     * an empty collection; or if this Design has previously
+     * been saved, it will retrieve related Applications from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Design.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Application[] List of Application objects
+     */
+    public function getApplicationsJoinRouter($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = ApplicationQuery::create(null, $criteria);
+        $query->joinWith('Router', $join_behavior);
+
+        return $this->getApplications($query, $con);
     }
 
     /**
@@ -1313,7 +1497,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
     {
         $this->id = null;
         $this->package_id = null;
-        $this->application_type_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1336,6 +1519,11 @@ abstract class BaseDesign extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collApplications) {
+                foreach ($this->collApplications as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collLayouts) {
                 foreach ($this->collLayouts as $o) {
                     $o->clearAllReferences($deep);
@@ -1344,19 +1532,19 @@ abstract class BaseDesign extends BaseObject implements Persistent
             if ($this->aPackage instanceof Persistent) {
               $this->aPackage->clearAllReferences($deep);
             }
-            if ($this->aApplicationType instanceof Persistent) {
-              $this->aApplicationType->clearAllReferences($deep);
-            }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collApplications instanceof PropelCollection) {
+            $this->collApplications->clearIterator();
+        }
+        $this->collApplications = null;
         if ($this->collLayouts instanceof PropelCollection) {
             $this->collLayouts->clearIterator();
         }
         $this->collLayouts = null;
         $this->aPackage = null;
-        $this->aApplicationType = null;
     }
 
     /**

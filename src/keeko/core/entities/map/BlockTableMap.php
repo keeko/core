@@ -43,6 +43,7 @@ class BlockTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
         $this->addColumn('title', 'Title', 'VARCHAR', false, 255, null);
         $this->addForeignKey('layout_id', 'LayoutId', 'INTEGER', 'keeko_layout', 'id', false, null, null);
         // validators

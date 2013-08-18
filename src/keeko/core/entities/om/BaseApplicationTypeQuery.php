@@ -16,7 +16,6 @@ use keeko\core\entities\Application;
 use keeko\core\entities\ApplicationType;
 use keeko\core\entities\ApplicationTypePeer;
 use keeko\core\entities\ApplicationTypeQuery;
-use keeko\core\entities\Design;
 use keeko\core\entities\Package;
 
 /**
@@ -43,10 +42,6 @@ use keeko\core\entities\Package;
  * @method ApplicationTypeQuery leftJoinApplication($relationAlias = null) Adds a LEFT JOIN clause to the query using the Application relation
  * @method ApplicationTypeQuery rightJoinApplication($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Application relation
  * @method ApplicationTypeQuery innerJoinApplication($relationAlias = null) Adds a INNER JOIN clause to the query using the Application relation
- *
- * @method ApplicationTypeQuery leftJoinDesign($relationAlias = null) Adds a LEFT JOIN clause to the query using the Design relation
- * @method ApplicationTypeQuery rightJoinDesign($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Design relation
- * @method ApplicationTypeQuery innerJoinDesign($relationAlias = null) Adds a INNER JOIN clause to the query using the Design relation
  *
  * @method ApplicationType findOne(PropelPDO $con = null) Return the first ApplicationType matching the query
  * @method ApplicationType findOneOrCreate(PropelPDO $con = null) Return the first ApplicationType matching the query, or a new ApplicationType object populated from the query conditions when no match is found
@@ -512,80 +507,6 @@ abstract class BaseApplicationTypeQuery extends ModelCriteria
         return $this
             ->joinApplication($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Application', '\keeko\core\entities\ApplicationQuery');
-    }
-
-    /**
-     * Filter the query by a related Design object
-     *
-     * @param   Design|PropelObjectCollection $design  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 ApplicationTypeQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByDesign($design, $comparison = null)
-    {
-        if ($design instanceof Design) {
-            return $this
-                ->addUsingAlias(ApplicationTypePeer::ID, $design->getApplicationTypeId(), $comparison);
-        } elseif ($design instanceof PropelObjectCollection) {
-            return $this
-                ->useDesignQuery()
-                ->filterByPrimaryKeys($design->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByDesign() only accepts arguments of type Design or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Design relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return ApplicationTypeQuery The current query, for fluid interface
-     */
-    public function joinDesign($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Design');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Design');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Design relation Design object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \keeko\core\entities\DesignQuery A secondary query class using the current class as primary query
-     */
-    public function useDesignQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinDesign($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Design', '\keeko\core\entities\DesignQuery');
     }
 
     /**

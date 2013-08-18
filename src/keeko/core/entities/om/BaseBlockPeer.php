@@ -37,16 +37,19 @@ abstract class BaseBlockPeer
     const TM_CLASS = 'BlockTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /** the column name for the id field */
     const ID = 'keeko_block.id';
+
+    /** the column name for the name field */
+    const NAME = 'keeko_block.name';
 
     /** the column name for the title field */
     const TITLE = 'keeko_block.title';
@@ -73,12 +76,12 @@ abstract class BaseBlockPeer
      * e.g. BlockPeer::$fieldNames[BlockPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'LayoutId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'layoutId', ),
-        BasePeer::TYPE_COLNAME => array (BlockPeer::ID, BlockPeer::TITLE, BlockPeer::LAYOUT_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'LAYOUT_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'layout_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Title', 'LayoutId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'title', 'layoutId', ),
+        BasePeer::TYPE_COLNAME => array (BlockPeer::ID, BlockPeer::NAME, BlockPeer::TITLE, BlockPeer::LAYOUT_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'TITLE', 'LAYOUT_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'title', 'layout_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -88,12 +91,12 @@ abstract class BaseBlockPeer
      * e.g. BlockPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'LayoutId' => 2, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'layoutId' => 2, ),
-        BasePeer::TYPE_COLNAME => array (BlockPeer::ID => 0, BlockPeer::TITLE => 1, BlockPeer::LAYOUT_ID => 2, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'LAYOUT_ID' => 2, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'layout_id' => 2, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Title' => 2, 'LayoutId' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'layoutId' => 3, ),
+        BasePeer::TYPE_COLNAME => array (BlockPeer::ID => 0, BlockPeer::NAME => 1, BlockPeer::TITLE => 2, BlockPeer::LAYOUT_ID => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'TITLE' => 2, 'LAYOUT_ID' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'layout_id' => 3, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -168,10 +171,12 @@ abstract class BaseBlockPeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(BlockPeer::ID);
+            $criteria->addSelectColumn(BlockPeer::NAME);
             $criteria->addSelectColumn(BlockPeer::TITLE);
             $criteria->addSelectColumn(BlockPeer::LAYOUT_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.title');
             $criteria->addSelectColumn($alias . '.layout_id');
         }

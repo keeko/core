@@ -58,6 +58,12 @@ abstract class BaseLayout extends BaseObject implements Persistent
     protected $id;
 
     /**
+     * The value for the name field.
+     * @var        string
+     */
+    protected $name;
+
+    /**
      * The value for the title field.
      * @var        string
      */
@@ -129,6 +135,16 @@ abstract class BaseLayout extends BaseObject implements Persistent
     }
 
     /**
+     * Get the [name] column value.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Get the [title] column value.
      *
      * @return string
@@ -168,6 +184,27 @@ abstract class BaseLayout extends BaseObject implements Persistent
 
         return $this;
     } // setId()
+
+    /**
+     * Set the value of [name] column.
+     *
+     * @param string $v new value
+     * @return Layout The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[] = LayoutPeer::NAME;
+        }
+
+
+        return $this;
+    } // setName()
 
     /**
      * Set the value of [title] column.
@@ -248,8 +285,9 @@ abstract class BaseLayout extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->design_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->design_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -258,7 +296,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 3; // 3 = LayoutPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = LayoutPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Layout object", $e);
@@ -529,6 +567,9 @@ abstract class BaseLayout extends BaseObject implements Persistent
         if ($this->isColumnModified(LayoutPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
+        if ($this->isColumnModified(LayoutPeer::NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`name`';
+        }
         if ($this->isColumnModified(LayoutPeer::TITLE)) {
             $modifiedColumns[':p' . $index++]  = '`title`';
         }
@@ -548,6 +589,9 @@ abstract class BaseLayout extends BaseObject implements Persistent
                 switch ($columnName) {
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case '`name`':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
                     case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
@@ -721,9 +765,12 @@ abstract class BaseLayout extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getTitle();
+                return $this->getName();
                 break;
             case 2:
+                return $this->getTitle();
+                break;
+            case 3:
                 return $this->getDesignId();
                 break;
             default:
@@ -756,8 +803,9 @@ abstract class BaseLayout extends BaseObject implements Persistent
         $keys = LayoutPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getDesignId(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getTitle(),
+            $keys[3] => $this->getDesignId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aDesign) {
@@ -807,9 +855,12 @@ abstract class BaseLayout extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTitle($value);
+                $this->setName($value);
                 break;
             case 2:
+                $this->setTitle($value);
+                break;
+            case 3:
                 $this->setDesignId($value);
                 break;
         } // switch()
@@ -837,8 +888,9 @@ abstract class BaseLayout extends BaseObject implements Persistent
         $keys = LayoutPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setDesignId($arr[$keys[2]]);
+        if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDesignId($arr[$keys[3]]);
     }
 
     /**
@@ -851,6 +903,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
         $criteria = new Criteria(LayoutPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(LayoutPeer::ID)) $criteria->add(LayoutPeer::ID, $this->id);
+        if ($this->isColumnModified(LayoutPeer::NAME)) $criteria->add(LayoutPeer::NAME, $this->name);
         if ($this->isColumnModified(LayoutPeer::TITLE)) $criteria->add(LayoutPeer::TITLE, $this->title);
         if ($this->isColumnModified(LayoutPeer::DESIGN_ID)) $criteria->add(LayoutPeer::DESIGN_ID, $this->design_id);
 
@@ -916,6 +969,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setName($this->getName());
         $copyObj->setTitle($this->getTitle());
         $copyObj->setDesignId($this->getDesignId());
 
@@ -1277,6 +1331,56 @@ abstract class BaseLayout extends BaseObject implements Persistent
         return $this;
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Layout is new, it will return
+     * an empty collection; or if this Layout has previously
+     * been saved, it will retrieve related Pages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Layout.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Page[] List of Page objects
+     */
+    public function getPagesJoinPageRelatedByParentId($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = PageQuery::create(null, $criteria);
+        $query->joinWith('PageRelatedByParentId', $join_behavior);
+
+        return $this->getPages($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Layout is new, it will return
+     * an empty collection; or if this Layout has previously
+     * been saved, it will retrieve related Pages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Layout.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Page[] List of Page objects
+     */
+    public function getPagesJoinApplication($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = PageQuery::create(null, $criteria);
+        $query->joinWith('Application', $join_behavior);
+
+        return $this->getPages($query, $con);
+    }
+
     /**
      * Clears out the collBlocks collection
      *
@@ -1501,6 +1605,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
+        $this->name = null;
         $this->title = null;
         $this->design_id = null;
         $this->alreadyInSave = false;

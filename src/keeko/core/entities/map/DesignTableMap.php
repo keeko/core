@@ -42,9 +42,8 @@ class DesignTableMap extends TableMap
         $this->setPackage('keeko.core.entities');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('package_id', 'PackageId', 'INTEGER', 'keeko_package', 'id', false, null, null);
-        $this->addForeignKey('application_type_id', 'ApplicationTypeId', 'INTEGER', 'keeko_application_type', 'id', false, null, null);
         // validators
     } // initialize()
 
@@ -54,7 +53,7 @@ class DesignTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Package', 'keeko\\core\\entities\\Package', RelationMap::MANY_TO_ONE, array('package_id' => 'id', ), null, null);
-        $this->addRelation('ApplicationType', 'keeko\\core\\entities\\ApplicationType', RelationMap::MANY_TO_ONE, array('application_type_id' => 'id', ), null, null);
+        $this->addRelation('Application', 'keeko\\core\\entities\\Application', RelationMap::ONE_TO_MANY, array('id' => 'design_id', ), 'RESTRICT', null, 'Applications');
         $this->addRelation('Layout', 'keeko\\core\\entities\\Layout', RelationMap::ONE_TO_MANY, array('id' => 'design_id', ), null, null, 'Layouts');
     } // buildRelations()
 

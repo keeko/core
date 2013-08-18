@@ -9,6 +9,7 @@ use \PDOStatement;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
+use keeko\core\entities\ApplicationPeer;
 use keeko\core\entities\LayoutPeer;
 use keeko\core\entities\Page;
 use keeko\core\entities\PagePeer;
@@ -37,16 +38,19 @@ abstract class BasePagePeer
     const TM_CLASS = 'PageTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 8;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /** the column name for the id field */
     const ID = 'keeko_page.id';
+
+    /** the column name for the parent_id field */
+    const PARENT_ID = 'keeko_page.parent_id';
 
     /** the column name for the title field */
     const TITLE = 'keeko_page.title';
@@ -62,6 +66,9 @@ abstract class BasePagePeer
 
     /** the column name for the layout_id field */
     const LAYOUT_ID = 'keeko_page.layout_id';
+
+    /** the column name for the application_id field */
+    const APPLICATION_ID = 'keeko_page.application_id';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -82,12 +89,12 @@ abstract class BasePagePeer
      * e.g. PagePeer::$fieldNames[PagePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Slug', 'Description', 'Keywords', 'LayoutId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'slug', 'description', 'keywords', 'layoutId', ),
-        BasePeer::TYPE_COLNAME => array (PagePeer::ID, PagePeer::TITLE, PagePeer::SLUG, PagePeer::DESCRIPTION, PagePeer::KEYWORDS, PagePeer::LAYOUT_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'SLUG', 'DESCRIPTION', 'KEYWORDS', 'LAYOUT_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'slug', 'description', 'keywords', 'layout_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'ParentId', 'Title', 'Slug', 'Description', 'Keywords', 'LayoutId', 'ApplicationId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'parentId', 'title', 'slug', 'description', 'keywords', 'layoutId', 'applicationId', ),
+        BasePeer::TYPE_COLNAME => array (PagePeer::ID, PagePeer::PARENT_ID, PagePeer::TITLE, PagePeer::SLUG, PagePeer::DESCRIPTION, PagePeer::KEYWORDS, PagePeer::LAYOUT_ID, PagePeer::APPLICATION_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'PARENT_ID', 'TITLE', 'SLUG', 'DESCRIPTION', 'KEYWORDS', 'LAYOUT_ID', 'APPLICATION_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'parent_id', 'title', 'slug', 'description', 'keywords', 'layout_id', 'application_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -97,12 +104,12 @@ abstract class BasePagePeer
      * e.g. PagePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Slug' => 2, 'Description' => 3, 'Keywords' => 4, 'LayoutId' => 5, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'slug' => 2, 'description' => 3, 'keywords' => 4, 'layoutId' => 5, ),
-        BasePeer::TYPE_COLNAME => array (PagePeer::ID => 0, PagePeer::TITLE => 1, PagePeer::SLUG => 2, PagePeer::DESCRIPTION => 3, PagePeer::KEYWORDS => 4, PagePeer::LAYOUT_ID => 5, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'SLUG' => 2, 'DESCRIPTION' => 3, 'KEYWORDS' => 4, 'LAYOUT_ID' => 5, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'slug' => 2, 'description' => 3, 'keywords' => 4, 'layout_id' => 5, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'ParentId' => 1, 'Title' => 2, 'Slug' => 3, 'Description' => 4, 'Keywords' => 5, 'LayoutId' => 6, 'ApplicationId' => 7, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'parentId' => 1, 'title' => 2, 'slug' => 3, 'description' => 4, 'keywords' => 5, 'layoutId' => 6, 'applicationId' => 7, ),
+        BasePeer::TYPE_COLNAME => array (PagePeer::ID => 0, PagePeer::PARENT_ID => 1, PagePeer::TITLE => 2, PagePeer::SLUG => 3, PagePeer::DESCRIPTION => 4, PagePeer::KEYWORDS => 5, PagePeer::LAYOUT_ID => 6, PagePeer::APPLICATION_ID => 7, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'PARENT_ID' => 1, 'TITLE' => 2, 'SLUG' => 3, 'DESCRIPTION' => 4, 'KEYWORDS' => 5, 'LAYOUT_ID' => 6, 'APPLICATION_ID' => 7, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'parent_id' => 1, 'title' => 2, 'slug' => 3, 'description' => 4, 'keywords' => 5, 'layout_id' => 6, 'application_id' => 7, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -177,18 +184,22 @@ abstract class BasePagePeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(PagePeer::ID);
+            $criteria->addSelectColumn(PagePeer::PARENT_ID);
             $criteria->addSelectColumn(PagePeer::TITLE);
             $criteria->addSelectColumn(PagePeer::SLUG);
             $criteria->addSelectColumn(PagePeer::DESCRIPTION);
             $criteria->addSelectColumn(PagePeer::KEYWORDS);
             $criteria->addSelectColumn(PagePeer::LAYOUT_ID);
+            $criteria->addSelectColumn(PagePeer::APPLICATION_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.parent_id');
             $criteria->addSelectColumn($alias . '.title');
             $criteria->addSelectColumn($alias . '.slug');
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.keywords');
             $criteria->addSelectColumn($alias . '.layout_id');
+            $criteria->addSelectColumn($alias . '.application_id');
         }
     }
 
@@ -544,6 +555,57 @@ abstract class BasePagePeer
 
 
     /**
+     * Returns the number of rows matching criteria, joining the related Application table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinApplication(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(PagePeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            PagePeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(PagePeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(PagePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(PagePeer::APPLICATION_ID, ApplicationPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
      * Selects a collection of Page objects pre-filled with their Layout objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
@@ -611,6 +673,73 @@ abstract class BasePagePeer
 
 
     /**
+     * Selects a collection of Page objects pre-filled with their Application objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Page objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinApplication(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(PagePeer::DATABASE_NAME);
+        }
+
+        PagePeer::addSelectColumns($criteria);
+        $startcol = PagePeer::NUM_HYDRATE_COLUMNS;
+        ApplicationPeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(PagePeer::APPLICATION_ID, ApplicationPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = PagePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = PagePeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = PagePeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                PagePeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = ApplicationPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = ApplicationPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = ApplicationPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    ApplicationPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (Page) to $obj2 (Application)
+                $obj2->addPage($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
      * Returns the number of rows matching criteria, joining all related tables
      *
      * @param      Criteria $criteria
@@ -647,6 +776,8 @@ abstract class BasePagePeer
         }
 
         $criteria->addJoin(PagePeer::LAYOUT_ID, LayoutPeer::ID, $join_behavior);
+
+        $criteria->addJoin(PagePeer::APPLICATION_ID, ApplicationPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -685,7 +816,12 @@ abstract class BasePagePeer
         LayoutPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + LayoutPeer::NUM_HYDRATE_COLUMNS;
 
+        ApplicationPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + ApplicationPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(PagePeer::LAYOUT_ID, LayoutPeer::ID, $join_behavior);
+
+        $criteria->addJoin(PagePeer::APPLICATION_ID, ApplicationPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -721,6 +857,425 @@ abstract class BasePagePeer
                 // Add the $obj1 (Page) to the collection in $obj2 (Layout)
                 $obj2->addPage($obj1);
             } // if joined row not null
+
+            // Add objects for joined Application rows
+
+            $key3 = ApplicationPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+            if ($key3 !== null) {
+                $obj3 = ApplicationPeer::getInstanceFromPool($key3);
+                if (!$obj3) {
+
+                    $cls = ApplicationPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    ApplicationPeer::addInstanceToPool($obj3, $key3);
+                } // if obj3 loaded
+
+                // Add the $obj1 (Page) to the collection in $obj3 (Application)
+                $obj3->addPage($obj1);
+            } // if joined row not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related PageRelatedByParentId table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptPageRelatedByParentId(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(PagePeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            PagePeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(PagePeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(PagePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(PagePeer::LAYOUT_ID, LayoutPeer::ID, $join_behavior);
+
+        $criteria->addJoin(PagePeer::APPLICATION_ID, ApplicationPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related Layout table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptLayout(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(PagePeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            PagePeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(PagePeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(PagePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(PagePeer::APPLICATION_ID, ApplicationPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related Application table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptApplication(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(PagePeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            PagePeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(PagePeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(PagePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(PagePeer::LAYOUT_ID, LayoutPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Selects a collection of Page objects pre-filled with all related objects except PageRelatedByParentId.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Page objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptPageRelatedByParentId(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(PagePeer::DATABASE_NAME);
+        }
+
+        PagePeer::addSelectColumns($criteria);
+        $startcol2 = PagePeer::NUM_HYDRATE_COLUMNS;
+
+        LayoutPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + LayoutPeer::NUM_HYDRATE_COLUMNS;
+
+        ApplicationPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + ApplicationPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(PagePeer::LAYOUT_ID, LayoutPeer::ID, $join_behavior);
+
+        $criteria->addJoin(PagePeer::APPLICATION_ID, ApplicationPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = PagePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = PagePeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = PagePeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                PagePeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined Layout rows
+
+                $key2 = LayoutPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = LayoutPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = LayoutPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    LayoutPeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Page) to the collection in $obj2 (Layout)
+                $obj2->addPage($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Application rows
+
+                $key3 = ApplicationPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = ApplicationPeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = ApplicationPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    ApplicationPeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (Page) to the collection in $obj3 (Application)
+                $obj3->addPage($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Page objects pre-filled with all related objects except Layout.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Page objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptLayout(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(PagePeer::DATABASE_NAME);
+        }
+
+        PagePeer::addSelectColumns($criteria);
+        $startcol2 = PagePeer::NUM_HYDRATE_COLUMNS;
+
+        ApplicationPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + ApplicationPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(PagePeer::APPLICATION_ID, ApplicationPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = PagePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = PagePeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = PagePeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                PagePeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined Application rows
+
+                $key2 = ApplicationPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = ApplicationPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = ApplicationPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    ApplicationPeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Page) to the collection in $obj2 (Application)
+                $obj2->addPage($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Page objects pre-filled with all related objects except Application.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Page objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptApplication(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(PagePeer::DATABASE_NAME);
+        }
+
+        PagePeer::addSelectColumns($criteria);
+        $startcol2 = PagePeer::NUM_HYDRATE_COLUMNS;
+
+        LayoutPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + LayoutPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(PagePeer::LAYOUT_ID, LayoutPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = PagePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = PagePeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = PagePeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                PagePeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined Layout rows
+
+                $key2 = LayoutPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = LayoutPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = LayoutPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    LayoutPeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Page) to the collection in $obj2 (Layout)
+                $obj2->addPage($obj1);
+
+            } // if joined row is not null
 
             $results[] = $obj1;
         }

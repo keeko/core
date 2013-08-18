@@ -55,7 +55,6 @@ class ApplicationTypeTableMap extends TableMap
     {
         $this->addRelation('Package', 'keeko\\core\\entities\\Package', RelationMap::MANY_TO_ONE, array('package_id' => 'id', ), null, null);
         $this->addRelation('Application', 'keeko\\core\\entities\\Application', RelationMap::ONE_TO_MANY, array('id' => 'application_type_id', ), 'RESTRICT', null, 'Applications');
-        $this->addRelation('Design', 'keeko\\core\\entities\\Design', RelationMap::ONE_TO_MANY, array('id' => 'application_type_id', ), null, null, 'Designs');
     } // buildRelations()
 
     /**

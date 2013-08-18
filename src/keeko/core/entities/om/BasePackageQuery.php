@@ -25,14 +25,16 @@ use keeko\core\entities\PackageQuery;
  *
  *
  * @method PackageQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method PackageQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method PackageQuery orderByTitle($order = Criteria::ASC) Order by the title column
- * @method PackageQuery orderByInstalledVersion($order = Criteria::ASC) Order by the installed_version column
  * @method PackageQuery orderByDescription($order = Criteria::ASC) Order by the description column
+ * @method PackageQuery orderByInstalledVersion($order = Criteria::ASC) Order by the installed_version column
  *
  * @method PackageQuery groupById() Group by the id column
+ * @method PackageQuery groupByName() Group by the name column
  * @method PackageQuery groupByTitle() Group by the title column
- * @method PackageQuery groupByInstalledVersion() Group by the installed_version column
  * @method PackageQuery groupByDescription() Group by the description column
+ * @method PackageQuery groupByInstalledVersion() Group by the installed_version column
  *
  * @method PackageQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method PackageQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -53,14 +55,16 @@ use keeko\core\entities\PackageQuery;
  * @method Package findOne(PropelPDO $con = null) Return the first Package matching the query
  * @method Package findOneOrCreate(PropelPDO $con = null) Return the first Package matching the query, or a new Package object populated from the query conditions when no match is found
  *
+ * @method Package findOneByName(string $name) Return the first Package filtered by the name column
  * @method Package findOneByTitle(string $title) Return the first Package filtered by the title column
- * @method Package findOneByInstalledVersion(string $installed_version) Return the first Package filtered by the installed_version column
  * @method Package findOneByDescription(string $description) Return the first Package filtered by the description column
+ * @method Package findOneByInstalledVersion(string $installed_version) Return the first Package filtered by the installed_version column
  *
  * @method array findById(int $id) Return Package objects filtered by the id column
+ * @method array findByName(string $name) Return Package objects filtered by the name column
  * @method array findByTitle(string $title) Return Package objects filtered by the title column
- * @method array findByInstalledVersion(string $installed_version) Return Package objects filtered by the installed_version column
  * @method array findByDescription(string $description) Return Package objects filtered by the description column
+ * @method array findByInstalledVersion(string $installed_version) Return Package objects filtered by the installed_version column
  *
  * @package    propel.generator.keeko.core.entities.om
  */
@@ -164,7 +168,7 @@ abstract class BasePackageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `title`, `installed_version`, `description` FROM `keeko_package` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `name`, `title`, `description`, `installed_version` FROM `keeko_package` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -296,6 +300,35 @@ abstract class BasePackageQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $name The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PackageQuery The current query, for fluid interface
+     */
+    public function filterByName($name = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($name)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $name)) {
+                $name = str_replace('*', '%', $name);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PackagePeer::NAME, $name, $comparison);
+    }
+
+    /**
      * Filter the query on the title column
      *
      * Example usage:
@@ -325,35 +358,6 @@ abstract class BasePackageQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the installed_version column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByInstalledVersion('fooValue');   // WHERE installed_version = 'fooValue'
-     * $query->filterByInstalledVersion('%fooValue%'); // WHERE installed_version LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $installedVersion The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return PackageQuery The current query, for fluid interface
-     */
-    public function filterByInstalledVersion($installedVersion = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($installedVersion)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $installedVersion)) {
-                $installedVersion = str_replace('*', '%', $installedVersion);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(PackagePeer::INSTALLED_VERSION, $installedVersion, $comparison);
-    }
-
-    /**
      * Filter the query on the description column
      *
      * Example usage:
@@ -380,6 +384,35 @@ abstract class BasePackageQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PackagePeer::DESCRIPTION, $description, $comparison);
+    }
+
+    /**
+     * Filter the query on the installed_version column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByInstalledVersion('fooValue');   // WHERE installed_version = 'fooValue'
+     * $query->filterByInstalledVersion('%fooValue%'); // WHERE installed_version LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $installedVersion The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PackageQuery The current query, for fluid interface
+     */
+    public function filterByInstalledVersion($installedVersion = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($installedVersion)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $installedVersion)) {
+                $installedVersion = str_replace('*', '%', $installedVersion);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PackagePeer::INSTALLED_VERSION, $installedVersion, $comparison);
     }
 
     /**

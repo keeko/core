@@ -9,13 +9,19 @@ use \Exception;
 use \PDO;
 use \Persistent;
 use \Propel;
+use \PropelCollection;
 use \PropelException;
+use \PropelObjectCollection;
 use \PropelPDO;
+use keeko\core\entities\Application;
+use keeko\core\entities\ApplicationQuery;
 use keeko\core\entities\Layout;
 use keeko\core\entities\LayoutQuery;
 use keeko\core\entities\Page;
 use keeko\core\entities\PagePeer;
 use keeko\core\entities\PageQuery;
+use keeko\core\entities\Route;
+use keeko\core\entities\RouteQuery;
 
 /**
  * Base class that represents a row from the 'keeko_page' table.
@@ -52,6 +58,12 @@ abstract class BasePage extends BaseObject implements Persistent
     protected $id;
 
     /**
+     * The value for the parent_id field.
+     * @var        int
+     */
+    protected $parent_id;
+
+    /**
      * The value for the title field.
      * @var        string
      */
@@ -82,9 +94,37 @@ abstract class BasePage extends BaseObject implements Persistent
     protected $layout_id;
 
     /**
+     * The value for the application_id field.
+     * @var        int
+     */
+    protected $application_id;
+
+    /**
+     * @var        Page
+     */
+    protected $aPageRelatedByParentId;
+
+    /**
      * @var        Layout
      */
     protected $aLayout;
+
+    /**
+     * @var        Application
+     */
+    protected $aApplication;
+
+    /**
+     * @var        PropelObjectCollection|Page[] Collection to store aggregation of Page objects.
+     */
+    protected $collPagesRelatedById;
+    protected $collPagesRelatedByIdPartial;
+
+    /**
+     * @var        PropelObjectCollection|Route[] Collection to store aggregation of Route objects.
+     */
+    protected $collRoutes;
+    protected $collRoutesPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -107,6 +147,18 @@ abstract class BasePage extends BaseObject implements Persistent
     protected $alreadyInClearAllReferencesDeep = false;
 
     /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $pagesRelatedByIdScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $routesScheduledForDeletion = null;
+
+    /**
      * Get the [id] column value.
      *
      * @return int
@@ -114,6 +166,16 @@ abstract class BasePage extends BaseObject implements Persistent
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get the [parent_id] column value.
+     *
+     * @return int
+     */
+    public function getParentId()
+    {
+        return $this->parent_id;
     }
 
     /**
@@ -167,6 +229,16 @@ abstract class BasePage extends BaseObject implements Persistent
     }
 
     /**
+     * Get the [application_id] column value.
+     *
+     * @return int
+     */
+    public function getApplicationId()
+    {
+        return $this->application_id;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -186,6 +258,31 @@ abstract class BasePage extends BaseObject implements Persistent
 
         return $this;
     } // setId()
+
+    /**
+     * Set the value of [parent_id] column.
+     *
+     * @param int $v new value
+     * @return Page The current object (for fluent API support)
+     */
+    public function setParentId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->parent_id !== $v) {
+            $this->parent_id = $v;
+            $this->modifiedColumns[] = PagePeer::PARENT_ID;
+        }
+
+        if ($this->aPageRelatedByParentId !== null && $this->aPageRelatedByParentId->getId() !== $v) {
+            $this->aPageRelatedByParentId = null;
+        }
+
+
+        return $this;
+    } // setParentId()
 
     /**
      * Set the value of [title] column.
@@ -297,6 +394,31 @@ abstract class BasePage extends BaseObject implements Persistent
     } // setLayoutId()
 
     /**
+     * Set the value of [application_id] column.
+     *
+     * @param int $v new value
+     * @return Page The current object (for fluent API support)
+     */
+    public function setApplicationId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->application_id !== $v) {
+            $this->application_id = $v;
+            $this->modifiedColumns[] = PagePeer::APPLICATION_ID;
+        }
+
+        if ($this->aApplication !== null && $this->aApplication->getId() !== $v) {
+            $this->aApplication = null;
+        }
+
+
+        return $this;
+    } // setApplicationId()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -329,11 +451,13 @@ abstract class BasePage extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->slug = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->keywords = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->layout_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+            $this->parent_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+            $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->slug = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->keywords = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->layout_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+            $this->application_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -342,7 +466,7 @@ abstract class BasePage extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 6; // 6 = PagePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = PagePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Page object", $e);
@@ -365,8 +489,14 @@ abstract class BasePage extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
+        if ($this->aPageRelatedByParentId !== null && $this->parent_id !== $this->aPageRelatedByParentId->getId()) {
+            $this->aPageRelatedByParentId = null;
+        }
         if ($this->aLayout !== null && $this->layout_id !== $this->aLayout->getId()) {
             $this->aLayout = null;
+        }
+        if ($this->aApplication !== null && $this->application_id !== $this->aApplication->getId()) {
+            $this->aApplication = null;
         }
     } // ensureConsistency
 
@@ -407,7 +537,13 @@ abstract class BasePage extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aPageRelatedByParentId = null;
             $this->aLayout = null;
+            $this->aApplication = null;
+            $this->collPagesRelatedById = null;
+
+            $this->collRoutes = null;
+
         } // if (deep)
     }
 
@@ -526,11 +662,25 @@ abstract class BasePage extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aPageRelatedByParentId !== null) {
+                if ($this->aPageRelatedByParentId->isModified() || $this->aPageRelatedByParentId->isNew()) {
+                    $affectedRows += $this->aPageRelatedByParentId->save($con);
+                }
+                $this->setPageRelatedByParentId($this->aPageRelatedByParentId);
+            }
+
             if ($this->aLayout !== null) {
                 if ($this->aLayout->isModified() || $this->aLayout->isNew()) {
                     $affectedRows += $this->aLayout->save($con);
                 }
                 $this->setLayout($this->aLayout);
+            }
+
+            if ($this->aApplication !== null) {
+                if ($this->aApplication->isModified() || $this->aApplication->isNew()) {
+                    $affectedRows += $this->aApplication->save($con);
+                }
+                $this->setApplication($this->aApplication);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -542,6 +692,42 @@ abstract class BasePage extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->pagesRelatedByIdScheduledForDeletion !== null) {
+                if (!$this->pagesRelatedByIdScheduledForDeletion->isEmpty()) {
+                    foreach ($this->pagesRelatedByIdScheduledForDeletion as $pageRelatedById) {
+                        // need to save related object because we set the relation to null
+                        $pageRelatedById->save($con);
+                    }
+                    $this->pagesRelatedByIdScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPagesRelatedById !== null) {
+                foreach ($this->collPagesRelatedById as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->routesScheduledForDeletion !== null) {
+                if (!$this->routesScheduledForDeletion->isEmpty()) {
+                    foreach ($this->routesScheduledForDeletion as $route) {
+                        // need to save related object because we set the relation to null
+                        $route->save($con);
+                    }
+                    $this->routesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collRoutes !== null) {
+                foreach ($this->collRoutes as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -573,6 +759,9 @@ abstract class BasePage extends BaseObject implements Persistent
         if ($this->isColumnModified(PagePeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
+        if ($this->isColumnModified(PagePeer::PARENT_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`parent_id`';
+        }
         if ($this->isColumnModified(PagePeer::TITLE)) {
             $modifiedColumns[':p' . $index++]  = '`title`';
         }
@@ -588,6 +777,9 @@ abstract class BasePage extends BaseObject implements Persistent
         if ($this->isColumnModified(PagePeer::LAYOUT_ID)) {
             $modifiedColumns[':p' . $index++]  = '`layout_id`';
         }
+        if ($this->isColumnModified(PagePeer::APPLICATION_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`application_id`';
+        }
 
         $sql = sprintf(
             'INSERT INTO `keeko_page` (%s) VALUES (%s)',
@@ -601,6 +793,9 @@ abstract class BasePage extends BaseObject implements Persistent
                 switch ($columnName) {
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case '`parent_id`':
+                        $stmt->bindValue($identifier, $this->parent_id, PDO::PARAM_INT);
                         break;
                     case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
@@ -616,6 +811,9 @@ abstract class BasePage extends BaseObject implements Persistent
                         break;
                     case '`layout_id`':
                         $stmt->bindValue($identifier, $this->layout_id, PDO::PARAM_INT);
+                        break;
+                    case '`application_id`':
+                        $stmt->bindValue($identifier, $this->application_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -716,9 +914,21 @@ abstract class BasePage extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aPageRelatedByParentId !== null) {
+                if (!$this->aPageRelatedByParentId->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aPageRelatedByParentId->getValidationFailures());
+                }
+            }
+
             if ($this->aLayout !== null) {
                 if (!$this->aLayout->validate($columns)) {
                     $failureMap = array_merge($failureMap, $this->aLayout->getValidationFailures());
+                }
+            }
+
+            if ($this->aApplication !== null) {
+                if (!$this->aApplication->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aApplication->getValidationFailures());
                 }
             }
 
@@ -727,6 +937,22 @@ abstract class BasePage extends BaseObject implements Persistent
                 $failureMap = array_merge($failureMap, $retval);
             }
 
+
+                if ($this->collPagesRelatedById !== null) {
+                    foreach ($this->collPagesRelatedById as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collRoutes !== null) {
+                    foreach ($this->collRoutes as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
 
 
             $this->alreadyInValidation = false;
@@ -767,19 +993,25 @@ abstract class BasePage extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getTitle();
+                return $this->getParentId();
                 break;
             case 2:
-                return $this->getSlug();
+                return $this->getTitle();
                 break;
             case 3:
-                return $this->getDescription();
+                return $this->getSlug();
                 break;
             case 4:
-                return $this->getKeywords();
+                return $this->getDescription();
                 break;
             case 5:
+                return $this->getKeywords();
+                break;
+            case 6:
                 return $this->getLayoutId();
+                break;
+            case 7:
+                return $this->getApplicationId();
                 break;
             default:
                 return null;
@@ -811,15 +1043,29 @@ abstract class BasePage extends BaseObject implements Persistent
         $keys = PagePeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getSlug(),
-            $keys[3] => $this->getDescription(),
-            $keys[4] => $this->getKeywords(),
-            $keys[5] => $this->getLayoutId(),
+            $keys[1] => $this->getParentId(),
+            $keys[2] => $this->getTitle(),
+            $keys[3] => $this->getSlug(),
+            $keys[4] => $this->getDescription(),
+            $keys[5] => $this->getKeywords(),
+            $keys[6] => $this->getLayoutId(),
+            $keys[7] => $this->getApplicationId(),
         );
         if ($includeForeignObjects) {
+            if (null !== $this->aPageRelatedByParentId) {
+                $result['PageRelatedByParentId'] = $this->aPageRelatedByParentId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aLayout) {
                 $result['Layout'] = $this->aLayout->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aApplication) {
+                $result['Application'] = $this->aApplication->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collPagesRelatedById) {
+                $result['PagesRelatedById'] = $this->collPagesRelatedById->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collRoutes) {
+                $result['Routes'] = $this->collRoutes->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -859,19 +1105,25 @@ abstract class BasePage extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTitle($value);
+                $this->setParentId($value);
                 break;
             case 2:
-                $this->setSlug($value);
+                $this->setTitle($value);
                 break;
             case 3:
-                $this->setDescription($value);
+                $this->setSlug($value);
                 break;
             case 4:
-                $this->setKeywords($value);
+                $this->setDescription($value);
                 break;
             case 5:
+                $this->setKeywords($value);
+                break;
+            case 6:
                 $this->setLayoutId($value);
+                break;
+            case 7:
+                $this->setApplicationId($value);
                 break;
         } // switch()
     }
@@ -898,11 +1150,13 @@ abstract class BasePage extends BaseObject implements Persistent
         $keys = PagePeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setSlug($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setKeywords($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setLayoutId($arr[$keys[5]]);
+        if (array_key_exists($keys[1], $arr)) $this->setParentId($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setSlug($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDescription($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setKeywords($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setLayoutId($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setApplicationId($arr[$keys[7]]);
     }
 
     /**
@@ -915,11 +1169,13 @@ abstract class BasePage extends BaseObject implements Persistent
         $criteria = new Criteria(PagePeer::DATABASE_NAME);
 
         if ($this->isColumnModified(PagePeer::ID)) $criteria->add(PagePeer::ID, $this->id);
+        if ($this->isColumnModified(PagePeer::PARENT_ID)) $criteria->add(PagePeer::PARENT_ID, $this->parent_id);
         if ($this->isColumnModified(PagePeer::TITLE)) $criteria->add(PagePeer::TITLE, $this->title);
         if ($this->isColumnModified(PagePeer::SLUG)) $criteria->add(PagePeer::SLUG, $this->slug);
         if ($this->isColumnModified(PagePeer::DESCRIPTION)) $criteria->add(PagePeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(PagePeer::KEYWORDS)) $criteria->add(PagePeer::KEYWORDS, $this->keywords);
         if ($this->isColumnModified(PagePeer::LAYOUT_ID)) $criteria->add(PagePeer::LAYOUT_ID, $this->layout_id);
+        if ($this->isColumnModified(PagePeer::APPLICATION_ID)) $criteria->add(PagePeer::APPLICATION_ID, $this->application_id);
 
         return $criteria;
     }
@@ -983,11 +1239,13 @@ abstract class BasePage extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setParentId($this->getParentId());
         $copyObj->setTitle($this->getTitle());
         $copyObj->setSlug($this->getSlug());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setKeywords($this->getKeywords());
         $copyObj->setLayoutId($this->getLayoutId());
+        $copyObj->setApplicationId($this->getApplicationId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -995,6 +1253,18 @@ abstract class BasePage extends BaseObject implements Persistent
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
+
+            foreach ($this->getPagesRelatedById() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPageRelatedById($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getRoutes() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addRoute($relObj->copy($deepCopy));
+                }
+            }
 
             //unflag object copy
             $this->startCopy = false;
@@ -1044,6 +1314,58 @@ abstract class BasePage extends BaseObject implements Persistent
         }
 
         return self::$peer;
+    }
+
+    /**
+     * Declares an association between this object and a Page object.
+     *
+     * @param             Page $v
+     * @return Page The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setPageRelatedByParentId(Page $v = null)
+    {
+        if ($v === null) {
+            $this->setParentId(NULL);
+        } else {
+            $this->setParentId($v->getId());
+        }
+
+        $this->aPageRelatedByParentId = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Page object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPageRelatedById($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Page object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return Page The associated Page object.
+     * @throws PropelException
+     */
+    public function getPageRelatedByParentId(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aPageRelatedByParentId === null && ($this->parent_id !== null) && $doQuery) {
+            $this->aPageRelatedByParentId = PageQuery::create()->findPk($this->parent_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aPageRelatedByParentId->addPagesRelatedById($this);
+             */
+        }
+
+        return $this->aPageRelatedByParentId;
     }
 
     /**
@@ -1099,16 +1421,600 @@ abstract class BasePage extends BaseObject implements Persistent
     }
 
     /**
+     * Declares an association between this object and a Application object.
+     *
+     * @param             Application $v
+     * @return Page The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setApplication(Application $v = null)
+    {
+        if ($v === null) {
+            $this->setApplicationId(NULL);
+        } else {
+            $this->setApplicationId($v->getId());
+        }
+
+        $this->aApplication = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Application object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPage($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Application object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return Application The associated Application object.
+     * @throws PropelException
+     */
+    public function getApplication(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aApplication === null && ($this->application_id !== null) && $doQuery) {
+            $this->aApplication = ApplicationQuery::create()->findPk($this->application_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aApplication->addPages($this);
+             */
+        }
+
+        return $this->aApplication;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('PageRelatedById' == $relationName) {
+            $this->initPagesRelatedById();
+        }
+        if ('Route' == $relationName) {
+            $this->initRoutes();
+        }
+    }
+
+    /**
+     * Clears out the collPagesRelatedById collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return Page The current object (for fluent API support)
+     * @see        addPagesRelatedById()
+     */
+    public function clearPagesRelatedById()
+    {
+        $this->collPagesRelatedById = null; // important to set this to null since that means it is uninitialized
+        $this->collPagesRelatedByIdPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collPagesRelatedById collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialPagesRelatedById($v = true)
+    {
+        $this->collPagesRelatedByIdPartial = $v;
+    }
+
+    /**
+     * Initializes the collPagesRelatedById collection.
+     *
+     * By default this just sets the collPagesRelatedById collection to an empty array (like clearcollPagesRelatedById());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPagesRelatedById($overrideExisting = true)
+    {
+        if (null !== $this->collPagesRelatedById && !$overrideExisting) {
+            return;
+        }
+        $this->collPagesRelatedById = new PropelObjectCollection();
+        $this->collPagesRelatedById->setModel('Page');
+    }
+
+    /**
+     * Gets an array of Page objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Page is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Page[] List of Page objects
+     * @throws PropelException
+     */
+    public function getPagesRelatedById($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collPagesRelatedByIdPartial && !$this->isNew();
+        if (null === $this->collPagesRelatedById || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPagesRelatedById) {
+                // return empty collection
+                $this->initPagesRelatedById();
+            } else {
+                $collPagesRelatedById = PageQuery::create(null, $criteria)
+                    ->filterByPageRelatedByParentId($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collPagesRelatedByIdPartial && count($collPagesRelatedById)) {
+                      $this->initPagesRelatedById(false);
+
+                      foreach($collPagesRelatedById as $obj) {
+                        if (false == $this->collPagesRelatedById->contains($obj)) {
+                          $this->collPagesRelatedById->append($obj);
+                        }
+                      }
+
+                      $this->collPagesRelatedByIdPartial = true;
+                    }
+
+                    $collPagesRelatedById->getInternalIterator()->rewind();
+                    return $collPagesRelatedById;
+                }
+
+                if($partial && $this->collPagesRelatedById) {
+                    foreach($this->collPagesRelatedById as $obj) {
+                        if($obj->isNew()) {
+                            $collPagesRelatedById[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPagesRelatedById = $collPagesRelatedById;
+                $this->collPagesRelatedByIdPartial = false;
+            }
+        }
+
+        return $this->collPagesRelatedById;
+    }
+
+    /**
+     * Sets a collection of PageRelatedById objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $pagesRelatedById A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return Page The current object (for fluent API support)
+     */
+    public function setPagesRelatedById(PropelCollection $pagesRelatedById, PropelPDO $con = null)
+    {
+        $pagesRelatedByIdToDelete = $this->getPagesRelatedById(new Criteria(), $con)->diff($pagesRelatedById);
+
+        $this->pagesRelatedByIdScheduledForDeletion = unserialize(serialize($pagesRelatedByIdToDelete));
+
+        foreach ($pagesRelatedByIdToDelete as $pageRelatedByIdRemoved) {
+            $pageRelatedByIdRemoved->setPageRelatedByParentId(null);
+        }
+
+        $this->collPagesRelatedById = null;
+        foreach ($pagesRelatedById as $pageRelatedById) {
+            $this->addPageRelatedById($pageRelatedById);
+        }
+
+        $this->collPagesRelatedById = $pagesRelatedById;
+        $this->collPagesRelatedByIdPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Page objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Page objects.
+     * @throws PropelException
+     */
+    public function countPagesRelatedById(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collPagesRelatedByIdPartial && !$this->isNew();
+        if (null === $this->collPagesRelatedById || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPagesRelatedById) {
+                return 0;
+            }
+
+            if($partial && !$criteria) {
+                return count($this->getPagesRelatedById());
+            }
+            $query = PageQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPageRelatedByParentId($this)
+                ->count($con);
+        }
+
+        return count($this->collPagesRelatedById);
+    }
+
+    /**
+     * Method called to associate a Page object to this object
+     * through the Page foreign key attribute.
+     *
+     * @param    Page $l Page
+     * @return Page The current object (for fluent API support)
+     */
+    public function addPageRelatedById(Page $l)
+    {
+        if ($this->collPagesRelatedById === null) {
+            $this->initPagesRelatedById();
+            $this->collPagesRelatedByIdPartial = true;
+        }
+        if (!in_array($l, $this->collPagesRelatedById->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddPageRelatedById($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	PageRelatedById $pageRelatedById The pageRelatedById object to add.
+     */
+    protected function doAddPageRelatedById($pageRelatedById)
+    {
+        $this->collPagesRelatedById[]= $pageRelatedById;
+        $pageRelatedById->setPageRelatedByParentId($this);
+    }
+
+    /**
+     * @param	PageRelatedById $pageRelatedById The pageRelatedById object to remove.
+     * @return Page The current object (for fluent API support)
+     */
+    public function removePageRelatedById($pageRelatedById)
+    {
+        if ($this->getPagesRelatedById()->contains($pageRelatedById)) {
+            $this->collPagesRelatedById->remove($this->collPagesRelatedById->search($pageRelatedById));
+            if (null === $this->pagesRelatedByIdScheduledForDeletion) {
+                $this->pagesRelatedByIdScheduledForDeletion = clone $this->collPagesRelatedById;
+                $this->pagesRelatedByIdScheduledForDeletion->clear();
+            }
+            $this->pagesRelatedByIdScheduledForDeletion[]= $pageRelatedById;
+            $pageRelatedById->setPageRelatedByParentId(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Page is new, it will return
+     * an empty collection; or if this Page has previously
+     * been saved, it will retrieve related PagesRelatedById from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Page.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Page[] List of Page objects
+     */
+    public function getPagesRelatedByIdJoinLayout($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = PageQuery::create(null, $criteria);
+        $query->joinWith('Layout', $join_behavior);
+
+        return $this->getPagesRelatedById($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Page is new, it will return
+     * an empty collection; or if this Page has previously
+     * been saved, it will retrieve related PagesRelatedById from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Page.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Page[] List of Page objects
+     */
+    public function getPagesRelatedByIdJoinApplication($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = PageQuery::create(null, $criteria);
+        $query->joinWith('Application', $join_behavior);
+
+        return $this->getPagesRelatedById($query, $con);
+    }
+
+    /**
+     * Clears out the collRoutes collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return Page The current object (for fluent API support)
+     * @see        addRoutes()
+     */
+    public function clearRoutes()
+    {
+        $this->collRoutes = null; // important to set this to null since that means it is uninitialized
+        $this->collRoutesPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collRoutes collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialRoutes($v = true)
+    {
+        $this->collRoutesPartial = $v;
+    }
+
+    /**
+     * Initializes the collRoutes collection.
+     *
+     * By default this just sets the collRoutes collection to an empty array (like clearcollRoutes());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initRoutes($overrideExisting = true)
+    {
+        if (null !== $this->collRoutes && !$overrideExisting) {
+            return;
+        }
+        $this->collRoutes = new PropelObjectCollection();
+        $this->collRoutes->setModel('Route');
+    }
+
+    /**
+     * Gets an array of Route objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Page is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Route[] List of Route objects
+     * @throws PropelException
+     */
+    public function getRoutes($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collRoutesPartial && !$this->isNew();
+        if (null === $this->collRoutes || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collRoutes) {
+                // return empty collection
+                $this->initRoutes();
+            } else {
+                $collRoutes = RouteQuery::create(null, $criteria)
+                    ->filterByPage($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collRoutesPartial && count($collRoutes)) {
+                      $this->initRoutes(false);
+
+                      foreach($collRoutes as $obj) {
+                        if (false == $this->collRoutes->contains($obj)) {
+                          $this->collRoutes->append($obj);
+                        }
+                      }
+
+                      $this->collRoutesPartial = true;
+                    }
+
+                    $collRoutes->getInternalIterator()->rewind();
+                    return $collRoutes;
+                }
+
+                if($partial && $this->collRoutes) {
+                    foreach($this->collRoutes as $obj) {
+                        if($obj->isNew()) {
+                            $collRoutes[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collRoutes = $collRoutes;
+                $this->collRoutesPartial = false;
+            }
+        }
+
+        return $this->collRoutes;
+    }
+
+    /**
+     * Sets a collection of Route objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $routes A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return Page The current object (for fluent API support)
+     */
+    public function setRoutes(PropelCollection $routes, PropelPDO $con = null)
+    {
+        $routesToDelete = $this->getRoutes(new Criteria(), $con)->diff($routes);
+
+        $this->routesScheduledForDeletion = unserialize(serialize($routesToDelete));
+
+        foreach ($routesToDelete as $routeRemoved) {
+            $routeRemoved->setPage(null);
+        }
+
+        $this->collRoutes = null;
+        foreach ($routes as $route) {
+            $this->addRoute($route);
+        }
+
+        $this->collRoutes = $routes;
+        $this->collRoutesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Route objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Route objects.
+     * @throws PropelException
+     */
+    public function countRoutes(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collRoutesPartial && !$this->isNew();
+        if (null === $this->collRoutes || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collRoutes) {
+                return 0;
+            }
+
+            if($partial && !$criteria) {
+                return count($this->getRoutes());
+            }
+            $query = RouteQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPage($this)
+                ->count($con);
+        }
+
+        return count($this->collRoutes);
+    }
+
+    /**
+     * Method called to associate a Route object to this object
+     * through the Route foreign key attribute.
+     *
+     * @param    Route $l Route
+     * @return Page The current object (for fluent API support)
+     */
+    public function addRoute(Route $l)
+    {
+        if ($this->collRoutes === null) {
+            $this->initRoutes();
+            $this->collRoutesPartial = true;
+        }
+        if (!in_array($l, $this->collRoutes->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddRoute($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	Route $route The route object to add.
+     */
+    protected function doAddRoute($route)
+    {
+        $this->collRoutes[]= $route;
+        $route->setPage($this);
+    }
+
+    /**
+     * @param	Route $route The route object to remove.
+     * @return Page The current object (for fluent API support)
+     */
+    public function removeRoute($route)
+    {
+        if ($this->getRoutes()->contains($route)) {
+            $this->collRoutes->remove($this->collRoutes->search($route));
+            if (null === $this->routesScheduledForDeletion) {
+                $this->routesScheduledForDeletion = clone $this->collRoutes;
+                $this->routesScheduledForDeletion->clear();
+            }
+            $this->routesScheduledForDeletion[]= $route;
+            $route->setPage(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Page is new, it will return
+     * an empty collection; or if this Page has previously
+     * been saved, it will retrieve related Routes from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Page.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Route[] List of Route objects
+     */
+    public function getRoutesJoinRouteRelatedByRedirectId($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = RouteQuery::create(null, $criteria);
+        $query->joinWith('RouteRelatedByRedirectId', $join_behavior);
+
+        return $this->getRoutes($query, $con);
+    }
+
+    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
     {
         $this->id = null;
+        $this->parent_id = null;
         $this->title = null;
         $this->slug = null;
         $this->description = null;
         $this->keywords = null;
         $this->layout_id = null;
+        $this->application_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1131,14 +2037,40 @@ abstract class BasePage extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collPagesRelatedById) {
+                foreach ($this->collPagesRelatedById as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collRoutes) {
+                foreach ($this->collRoutes as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->aPageRelatedByParentId instanceof Persistent) {
+              $this->aPageRelatedByParentId->clearAllReferences($deep);
+            }
             if ($this->aLayout instanceof Persistent) {
               $this->aLayout->clearAllReferences($deep);
+            }
+            if ($this->aApplication instanceof Persistent) {
+              $this->aApplication->clearAllReferences($deep);
             }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collPagesRelatedById instanceof PropelCollection) {
+            $this->collPagesRelatedById->clearIterator();
+        }
+        $this->collPagesRelatedById = null;
+        if ($this->collRoutes instanceof PropelCollection) {
+            $this->collRoutes->clearIterator();
+        }
+        $this->collRoutes = null;
+        $this->aPageRelatedByParentId = null;
         $this->aLayout = null;
+        $this->aApplication = null;
     }
 
     /**

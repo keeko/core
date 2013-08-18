@@ -58,22 +58,28 @@ abstract class BasePackage extends BaseObject implements Persistent
     protected $id;
 
     /**
+     * The value for the name field.
+     * @var        string
+     */
+    protected $name;
+
+    /**
      * The value for the title field.
      * @var        string
      */
     protected $title;
 
     /**
-     * The value for the installed_version field.
-     * @var        string
-     */
-    protected $installed_version;
-
-    /**
      * The value for the description field.
      * @var        string
      */
     protected $description;
+
+    /**
+     * The value for the installed_version field.
+     * @var        string
+     */
+    protected $installed_version;
 
     /**
      * @var        PropelObjectCollection|ApplicationType[] Collection to store aggregation of ApplicationType objects.
@@ -142,6 +148,16 @@ abstract class BasePackage extends BaseObject implements Persistent
     }
 
     /**
+     * Get the [name] column value.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Get the [title] column value.
      *
      * @return string
@@ -152,16 +168,6 @@ abstract class BasePackage extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [installed_version] column value.
-     *
-     * @return string
-     */
-    public function getInstalledVersion()
-    {
-        return $this->installed_version;
-    }
-
-    /**
      * Get the [description] column value.
      *
      * @return string
@@ -169,6 +175,16 @@ abstract class BasePackage extends BaseObject implements Persistent
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Get the [installed_version] column value.
+     *
+     * @return string
+     */
+    public function getInstalledVersion()
+    {
+        return $this->installed_version;
     }
 
     /**
@@ -193,6 +209,27 @@ abstract class BasePackage extends BaseObject implements Persistent
     } // setId()
 
     /**
+     * Set the value of [name] column.
+     *
+     * @param string $v new value
+     * @return Package The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[] = PackagePeer::NAME;
+        }
+
+
+        return $this;
+    } // setName()
+
+    /**
      * Set the value of [title] column.
      *
      * @param string $v new value
@@ -214,27 +251,6 @@ abstract class BasePackage extends BaseObject implements Persistent
     } // setTitle()
 
     /**
-     * Set the value of [installed_version] column.
-     *
-     * @param string $v new value
-     * @return Package The current object (for fluent API support)
-     */
-    public function setInstalledVersion($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->installed_version !== $v) {
-            $this->installed_version = $v;
-            $this->modifiedColumns[] = PackagePeer::INSTALLED_VERSION;
-        }
-
-
-        return $this;
-    } // setInstalledVersion()
-
-    /**
      * Set the value of [description] column.
      *
      * @param string $v new value
@@ -254,6 +270,27 @@ abstract class BasePackage extends BaseObject implements Persistent
 
         return $this;
     } // setDescription()
+
+    /**
+     * Set the value of [installed_version] column.
+     *
+     * @param string $v new value
+     * @return Package The current object (for fluent API support)
+     */
+    public function setInstalledVersion($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->installed_version !== $v) {
+            $this->installed_version = $v;
+            $this->modifiedColumns[] = PackagePeer::INSTALLED_VERSION;
+        }
+
+
+        return $this;
+    } // setInstalledVersion()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -288,9 +325,10 @@ abstract class BasePackage extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->installed_version = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->installed_version = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -299,7 +337,7 @@ abstract class BasePackage extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 4; // 4 = PackagePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = PackagePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Package object", $e);
@@ -574,14 +612,17 @@ abstract class BasePackage extends BaseObject implements Persistent
         if ($this->isColumnModified(PackagePeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
+        if ($this->isColumnModified(PackagePeer::NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`name`';
+        }
         if ($this->isColumnModified(PackagePeer::TITLE)) {
             $modifiedColumns[':p' . $index++]  = '`title`';
         }
-        if ($this->isColumnModified(PackagePeer::INSTALLED_VERSION)) {
-            $modifiedColumns[':p' . $index++]  = '`installed_version`';
-        }
         if ($this->isColumnModified(PackagePeer::DESCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = '`description`';
+        }
+        if ($this->isColumnModified(PackagePeer::INSTALLED_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = '`installed_version`';
         }
 
         $sql = sprintf(
@@ -597,14 +638,17 @@ abstract class BasePackage extends BaseObject implements Persistent
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
+                    case '`name`':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
                     case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
-                    case '`installed_version`':
-                        $stmt->bindValue($identifier, $this->installed_version, PDO::PARAM_STR);
-                        break;
                     case '`description`':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
+                        break;
+                    case '`installed_version`':
+                        $stmt->bindValue($identifier, $this->installed_version, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -768,13 +812,16 @@ abstract class BasePackage extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getTitle();
+                return $this->getName();
                 break;
             case 2:
-                return $this->getInstalledVersion();
+                return $this->getTitle();
                 break;
             case 3:
                 return $this->getDescription();
+                break;
+            case 4:
+                return $this->getInstalledVersion();
                 break;
             default:
                 return null;
@@ -806,9 +853,10 @@ abstract class BasePackage extends BaseObject implements Persistent
         $keys = PackagePeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getInstalledVersion(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getTitle(),
             $keys[3] => $this->getDescription(),
+            $keys[4] => $this->getInstalledVersion(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->collApplicationTypes) {
@@ -858,13 +906,16 @@ abstract class BasePackage extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTitle($value);
+                $this->setName($value);
                 break;
             case 2:
-                $this->setInstalledVersion($value);
+                $this->setTitle($value);
                 break;
             case 3:
                 $this->setDescription($value);
+                break;
+            case 4:
+                $this->setInstalledVersion($value);
                 break;
         } // switch()
     }
@@ -891,9 +942,10 @@ abstract class BasePackage extends BaseObject implements Persistent
         $keys = PackagePeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setInstalledVersion($arr[$keys[2]]);
+        if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setInstalledVersion($arr[$keys[4]]);
     }
 
     /**
@@ -906,9 +958,10 @@ abstract class BasePackage extends BaseObject implements Persistent
         $criteria = new Criteria(PackagePeer::DATABASE_NAME);
 
         if ($this->isColumnModified(PackagePeer::ID)) $criteria->add(PackagePeer::ID, $this->id);
+        if ($this->isColumnModified(PackagePeer::NAME)) $criteria->add(PackagePeer::NAME, $this->name);
         if ($this->isColumnModified(PackagePeer::TITLE)) $criteria->add(PackagePeer::TITLE, $this->title);
-        if ($this->isColumnModified(PackagePeer::INSTALLED_VERSION)) $criteria->add(PackagePeer::INSTALLED_VERSION, $this->installed_version);
         if ($this->isColumnModified(PackagePeer::DESCRIPTION)) $criteria->add(PackagePeer::DESCRIPTION, $this->description);
+        if ($this->isColumnModified(PackagePeer::INSTALLED_VERSION)) $criteria->add(PackagePeer::INSTALLED_VERSION, $this->installed_version);
 
         return $criteria;
     }
@@ -972,9 +1025,10 @@ abstract class BasePackage extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setName($this->getName());
         $copyObj->setTitle($this->getTitle());
-        $copyObj->setInstalledVersion($this->getInstalledVersion());
         $copyObj->setDescription($this->getDescription());
+        $copyObj->setInstalledVersion($this->getInstalledVersion());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1509,31 +1563,6 @@ abstract class BasePackage extends BaseObject implements Persistent
         return $this;
     }
 
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Package is new, it will return
-     * an empty collection; or if this Package has previously
-     * been saved, it will retrieve related Designs from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Package.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Design[] List of Design objects
-     */
-    public function getDesignsJoinApplicationType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = DesignQuery::create(null, $criteria);
-        $query->joinWith('ApplicationType', $join_behavior);
-
-        return $this->getDesigns($query, $con);
-    }
-
     /**
      * Clears out the collModules collection
      *
@@ -1758,9 +1787,10 @@ abstract class BasePackage extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
+        $this->name = null;
         $this->title = null;
-        $this->installed_version = null;
         $this->description = null;
+        $this->installed_version = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

@@ -12,10 +12,12 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use keeko\core\entities\Application;
 use keeko\core\entities\Layout;
 use keeko\core\entities\Page;
 use keeko\core\entities\PagePeer;
 use keeko\core\entities\PageQuery;
+use keeko\core\entities\Route;
 
 /**
  * Base class that represents a query for the 'keeko_page' table.
@@ -23,42 +25,66 @@ use keeko\core\entities\PageQuery;
  *
  *
  * @method PageQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method PageQuery orderByParentId($order = Criteria::ASC) Order by the parent_id column
  * @method PageQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method PageQuery orderBySlug($order = Criteria::ASC) Order by the slug column
  * @method PageQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method PageQuery orderByKeywords($order = Criteria::ASC) Order by the keywords column
  * @method PageQuery orderByLayoutId($order = Criteria::ASC) Order by the layout_id column
+ * @method PageQuery orderByApplicationId($order = Criteria::ASC) Order by the application_id column
  *
  * @method PageQuery groupById() Group by the id column
+ * @method PageQuery groupByParentId() Group by the parent_id column
  * @method PageQuery groupByTitle() Group by the title column
  * @method PageQuery groupBySlug() Group by the slug column
  * @method PageQuery groupByDescription() Group by the description column
  * @method PageQuery groupByKeywords() Group by the keywords column
  * @method PageQuery groupByLayoutId() Group by the layout_id column
+ * @method PageQuery groupByApplicationId() Group by the application_id column
  *
  * @method PageQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method PageQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method PageQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method PageQuery leftJoinPageRelatedByParentId($relationAlias = null) Adds a LEFT JOIN clause to the query using the PageRelatedByParentId relation
+ * @method PageQuery rightJoinPageRelatedByParentId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PageRelatedByParentId relation
+ * @method PageQuery innerJoinPageRelatedByParentId($relationAlias = null) Adds a INNER JOIN clause to the query using the PageRelatedByParentId relation
+ *
  * @method PageQuery leftJoinLayout($relationAlias = null) Adds a LEFT JOIN clause to the query using the Layout relation
  * @method PageQuery rightJoinLayout($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Layout relation
  * @method PageQuery innerJoinLayout($relationAlias = null) Adds a INNER JOIN clause to the query using the Layout relation
  *
+ * @method PageQuery leftJoinApplication($relationAlias = null) Adds a LEFT JOIN clause to the query using the Application relation
+ * @method PageQuery rightJoinApplication($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Application relation
+ * @method PageQuery innerJoinApplication($relationAlias = null) Adds a INNER JOIN clause to the query using the Application relation
+ *
+ * @method PageQuery leftJoinPageRelatedById($relationAlias = null) Adds a LEFT JOIN clause to the query using the PageRelatedById relation
+ * @method PageQuery rightJoinPageRelatedById($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PageRelatedById relation
+ * @method PageQuery innerJoinPageRelatedById($relationAlias = null) Adds a INNER JOIN clause to the query using the PageRelatedById relation
+ *
+ * @method PageQuery leftJoinRoute($relationAlias = null) Adds a LEFT JOIN clause to the query using the Route relation
+ * @method PageQuery rightJoinRoute($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Route relation
+ * @method PageQuery innerJoinRoute($relationAlias = null) Adds a INNER JOIN clause to the query using the Route relation
+ *
  * @method Page findOne(PropelPDO $con = null) Return the first Page matching the query
  * @method Page findOneOrCreate(PropelPDO $con = null) Return the first Page matching the query, or a new Page object populated from the query conditions when no match is found
  *
+ * @method Page findOneByParentId(int $parent_id) Return the first Page filtered by the parent_id column
  * @method Page findOneByTitle(string $title) Return the first Page filtered by the title column
  * @method Page findOneBySlug(string $slug) Return the first Page filtered by the slug column
  * @method Page findOneByDescription(string $description) Return the first Page filtered by the description column
  * @method Page findOneByKeywords(string $keywords) Return the first Page filtered by the keywords column
  * @method Page findOneByLayoutId(int $layout_id) Return the first Page filtered by the layout_id column
+ * @method Page findOneByApplicationId(int $application_id) Return the first Page filtered by the application_id column
  *
  * @method array findById(int $id) Return Page objects filtered by the id column
+ * @method array findByParentId(int $parent_id) Return Page objects filtered by the parent_id column
  * @method array findByTitle(string $title) Return Page objects filtered by the title column
  * @method array findBySlug(string $slug) Return Page objects filtered by the slug column
  * @method array findByDescription(string $description) Return Page objects filtered by the description column
  * @method array findByKeywords(string $keywords) Return Page objects filtered by the keywords column
  * @method array findByLayoutId(int $layout_id) Return Page objects filtered by the layout_id column
+ * @method array findByApplicationId(int $application_id) Return Page objects filtered by the application_id column
  *
  * @package    propel.generator.keeko.core.entities.om
  */
@@ -162,7 +188,7 @@ abstract class BasePageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `title`, `slug`, `description`, `keywords`, `layout_id` FROM `keeko_page` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `parent_id`, `title`, `slug`, `description`, `keywords`, `layout_id`, `application_id` FROM `keeko_page` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -291,6 +317,50 @@ abstract class BasePageQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PagePeer::ID, $id, $comparison);
+    }
+
+    /**
+     * Filter the query on the parent_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByParentId(1234); // WHERE parent_id = 1234
+     * $query->filterByParentId(array(12, 34)); // WHERE parent_id IN (12, 34)
+     * $query->filterByParentId(array('min' => 12)); // WHERE parent_id >= 12
+     * $query->filterByParentId(array('max' => 12)); // WHERE parent_id <= 12
+     * </code>
+     *
+     * @see       filterByPageRelatedByParentId()
+     *
+     * @param     mixed $parentId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PageQuery The current query, for fluid interface
+     */
+    public function filterByParentId($parentId = null, $comparison = null)
+    {
+        if (is_array($parentId)) {
+            $useMinMax = false;
+            if (isset($parentId['min'])) {
+                $this->addUsingAlias(PagePeer::PARENT_ID, $parentId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($parentId['max'])) {
+                $this->addUsingAlias(PagePeer::PARENT_ID, $parentId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PagePeer::PARENT_ID, $parentId, $comparison);
     }
 
     /**
@@ -454,6 +524,126 @@ abstract class BasePageQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the application_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByApplicationId(1234); // WHERE application_id = 1234
+     * $query->filterByApplicationId(array(12, 34)); // WHERE application_id IN (12, 34)
+     * $query->filterByApplicationId(array('min' => 12)); // WHERE application_id >= 12
+     * $query->filterByApplicationId(array('max' => 12)); // WHERE application_id <= 12
+     * </code>
+     *
+     * @see       filterByApplication()
+     *
+     * @param     mixed $applicationId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PageQuery The current query, for fluid interface
+     */
+    public function filterByApplicationId($applicationId = null, $comparison = null)
+    {
+        if (is_array($applicationId)) {
+            $useMinMax = false;
+            if (isset($applicationId['min'])) {
+                $this->addUsingAlias(PagePeer::APPLICATION_ID, $applicationId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($applicationId['max'])) {
+                $this->addUsingAlias(PagePeer::APPLICATION_ID, $applicationId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PagePeer::APPLICATION_ID, $applicationId, $comparison);
+    }
+
+    /**
+     * Filter the query by a related Page object
+     *
+     * @param   Page|PropelObjectCollection $page The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 PageQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByPageRelatedByParentId($page, $comparison = null)
+    {
+        if ($page instanceof Page) {
+            return $this
+                ->addUsingAlias(PagePeer::PARENT_ID, $page->getId(), $comparison);
+        } elseif ($page instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(PagePeer::PARENT_ID, $page->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByPageRelatedByParentId() only accepts arguments of type Page or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PageRelatedByParentId relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return PageQuery The current query, for fluid interface
+     */
+    public function joinPageRelatedByParentId($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PageRelatedByParentId');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PageRelatedByParentId');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PageRelatedByParentId relation Page object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \keeko\core\entities\PageQuery A secondary query class using the current class as primary query
+     */
+    public function usePageRelatedByParentIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinPageRelatedByParentId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PageRelatedByParentId', '\keeko\core\entities\PageQuery');
+    }
+
+    /**
      * Filter the query by a related Layout object
      *
      * @param   Layout|PropelObjectCollection $layout The related object(s) to use as filter
@@ -527,6 +717,230 @@ abstract class BasePageQuery extends ModelCriteria
         return $this
             ->joinLayout($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Layout', '\keeko\core\entities\LayoutQuery');
+    }
+
+    /**
+     * Filter the query by a related Application object
+     *
+     * @param   Application|PropelObjectCollection $application The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 PageQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByApplication($application, $comparison = null)
+    {
+        if ($application instanceof Application) {
+            return $this
+                ->addUsingAlias(PagePeer::APPLICATION_ID, $application->getId(), $comparison);
+        } elseif ($application instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(PagePeer::APPLICATION_ID, $application->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByApplication() only accepts arguments of type Application or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Application relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return PageQuery The current query, for fluid interface
+     */
+    public function joinApplication($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Application');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Application');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Application relation Application object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \keeko\core\entities\ApplicationQuery A secondary query class using the current class as primary query
+     */
+    public function useApplicationQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinApplication($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Application', '\keeko\core\entities\ApplicationQuery');
+    }
+
+    /**
+     * Filter the query by a related Page object
+     *
+     * @param   Page|PropelObjectCollection $page  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 PageQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByPageRelatedById($page, $comparison = null)
+    {
+        if ($page instanceof Page) {
+            return $this
+                ->addUsingAlias(PagePeer::ID, $page->getParentId(), $comparison);
+        } elseif ($page instanceof PropelObjectCollection) {
+            return $this
+                ->usePageRelatedByIdQuery()
+                ->filterByPrimaryKeys($page->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPageRelatedById() only accepts arguments of type Page or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PageRelatedById relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return PageQuery The current query, for fluid interface
+     */
+    public function joinPageRelatedById($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PageRelatedById');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PageRelatedById');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PageRelatedById relation Page object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \keeko\core\entities\PageQuery A secondary query class using the current class as primary query
+     */
+    public function usePageRelatedByIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinPageRelatedById($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PageRelatedById', '\keeko\core\entities\PageQuery');
+    }
+
+    /**
+     * Filter the query by a related Route object
+     *
+     * @param   Route|PropelObjectCollection $route  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 PageQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByRoute($route, $comparison = null)
+    {
+        if ($route instanceof Route) {
+            return $this
+                ->addUsingAlias(PagePeer::ID, $route->getPageId(), $comparison);
+        } elseif ($route instanceof PropelObjectCollection) {
+            return $this
+                ->useRouteQuery()
+                ->filterByPrimaryKeys($route->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByRoute() only accepts arguments of type Route or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Route relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return PageQuery The current query, for fluid interface
+     */
+    public function joinRoute($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Route');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Route');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Route relation Route object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \keeko\core\entities\RouteQuery A secondary query class using the current class as primary query
+     */
+    public function useRouteQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinRoute($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Route', '\keeko\core\entities\RouteQuery');
     }
 
     /**

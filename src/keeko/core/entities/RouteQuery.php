@@ -2,11 +2,11 @@
 
 namespace keeko\core\entities;
 
-use keeko\core\entities\om\BaseDesign;
+use keeko\core\entities\om\BaseRouteQuery;
 
 
 /**
- * Skeleton subclass for representing a row from the 'keeko_design' table.
+ * Skeleton subclass for performing query and update operations on the 'keeko_route' table.
  *
  *
  *
@@ -16,5 +16,6 @@ use keeko\core\entities\om\BaseDesign;
  *
  * @package    propel.generator.keeko.core.entities
  */
-class Design extends BaseDesign {
+class RouteQuery extends BaseRouteQuery
+{
 }

@@ -6,13 +6,18 @@ use keeko\core\entities\Localization;
 use keeko\core\entities\Application;
 use keeko\core\entities\ApplicationType;
 use keeko\core\entities\ApplicationUri;
+use keeko\core\entities\Design;
+use keeko\core\entities\Layout;
+use keeko\core\entities\Block;
 
 class KeekoInstaller {
 
 	public function __construct() {
 		
 		// bootstrap
-		require_once rtrim(getcwd(), '/\\') . '/src/bootstrap.php';
+		if (!defined('KEEKO_PATH')) {
+			require_once rtrim(getcwd(), '/\\') . '/src/bootstrap.php';
+		}
 	}
 	
 	public function installKeeko() {
@@ -32,6 +37,29 @@ class KeekoInstaller {
 		$de->setIsDefault(true);
 		$de->save();
 		
+		// design
+		$design = new Design();
+		$design->setName('keeko/bootstrap-design');
+		$design->setInstalledVersion('dev-master');
+		
+		$layout = new Layout();
+		$layout->setName('main');
+		$layout->setTitle('Default Layout');
+		$layout->setDesign($design);
+		
+		$main = new Block();
+		$main->setName('main');
+		$main->setTitle('Main Content Block');
+		$main->setLayout($layout);
+		
+		$menu = new Block();
+		$menu->setName('menu');
+		$menu->setTitle('Navigation');
+		$menu->setLayout($layout);
+		
+		$design->save();
+		
+		
 		// apps
 		// website
 		$website = new ApplicationType();
@@ -44,6 +72,7 @@ class KeekoInstaller {
 		// gateways
 		// admin
 		$admin = new Application();
+		$admin->setDesign($design);
 		$admin->setTitle('Admin');
 		$admin->setApplicationType($website);
 		$admin->setRouter($mar);
@@ -68,8 +97,12 @@ class KeekoInstaller {
 			if (file_exists($path)) {
 				$sql = file_get_contents($path);
 				
-				$stmt = $con->prepare($sql);
-				$stmt->execute();
+				try {
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+				} catch (\Exception $e) {
+					echo $e->getMessage();
+				}
 			}
 		} 
 	}

@@ -42,10 +42,11 @@ class ApplicationTableMap extends TableMap
         $this->setPackage('keeko.core.entities');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('title', 'Title', 'VARCHAR', false, 255, null);
-        $this->addForeignKey('application_type_id', 'ApplicationTypeId', 'INTEGER', 'keeko_application_type', 'id', true, 10, null);
+        $this->addForeignKey('application_type_id', 'ApplicationTypeId', 'INTEGER', 'keeko_application_type', 'id', true, null, null);
         $this->addForeignKey('router_id', 'RouterId', 'INTEGER', 'keeko_router', 'id', true, 10, null);
+        $this->addForeignKey('design_id', 'DesignId', 'INTEGER', 'keeko_design', 'id', true, null, null);
         // validators
     } // initialize()
 
@@ -56,7 +57,9 @@ class ApplicationTableMap extends TableMap
     {
         $this->addRelation('ApplicationType', 'keeko\\core\\entities\\ApplicationType', RelationMap::MANY_TO_ONE, array('application_type_id' => 'id', ), 'RESTRICT', null);
         $this->addRelation('Router', 'keeko\\core\\entities\\Router', RelationMap::MANY_TO_ONE, array('router_id' => 'id', ), 'RESTRICT', null);
+        $this->addRelation('Design', 'keeko\\core\\entities\\Design', RelationMap::MANY_TO_ONE, array('design_id' => 'id', ), 'RESTRICT', null);
         $this->addRelation('ApplicationUri', 'keeko\\core\\entities\\ApplicationUri', RelationMap::ONE_TO_MANY, array('id' => 'application_id', ), 'RESTRICT', null, 'ApplicationUris');
+        $this->addRelation('Page', 'keeko\\core\\entities\\Page', RelationMap::ONE_TO_MANY, array('id' => 'application_id', ), null, null, 'Pages');
         $this->addRelation('ApplicationExtraProperty', 'keeko\\core\\entities\\ApplicationExtraProperty', RelationMap::ONE_TO_MANY, array('id' => 'keeko_application_id', ), 'CASCADE', null, 'ApplicationExtraPropertys');
     } // buildRelations()
 

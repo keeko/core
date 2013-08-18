@@ -52,6 +52,12 @@ abstract class BaseBlock extends BaseObject implements Persistent
     protected $id;
 
     /**
+     * The value for the name field.
+     * @var        string
+     */
+    protected $name;
+
+    /**
      * The value for the title field.
      * @var        string
      */
@@ -99,6 +105,16 @@ abstract class BaseBlock extends BaseObject implements Persistent
     }
 
     /**
+     * Get the [name] column value.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Get the [title] column value.
      *
      * @return string
@@ -138,6 +154,27 @@ abstract class BaseBlock extends BaseObject implements Persistent
 
         return $this;
     } // setId()
+
+    /**
+     * Set the value of [name] column.
+     *
+     * @param string $v new value
+     * @return Block The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[] = BlockPeer::NAME;
+        }
+
+
+        return $this;
+    } // setName()
 
     /**
      * Set the value of [title] column.
@@ -218,8 +255,9 @@ abstract class BaseBlock extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->layout_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->layout_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -228,7 +266,7 @@ abstract class BaseBlock extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 3; // 3 = BlockPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = BlockPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Block object", $e);
@@ -459,6 +497,9 @@ abstract class BaseBlock extends BaseObject implements Persistent
         if ($this->isColumnModified(BlockPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
+        if ($this->isColumnModified(BlockPeer::NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`name`';
+        }
         if ($this->isColumnModified(BlockPeer::TITLE)) {
             $modifiedColumns[':p' . $index++]  = '`title`';
         }
@@ -478,6 +519,9 @@ abstract class BaseBlock extends BaseObject implements Persistent
                 switch ($columnName) {
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case '`name`':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
                     case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
@@ -635,9 +679,12 @@ abstract class BaseBlock extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getTitle();
+                return $this->getName();
                 break;
             case 2:
+                return $this->getTitle();
+                break;
+            case 3:
                 return $this->getLayoutId();
                 break;
             default:
@@ -670,8 +717,9 @@ abstract class BaseBlock extends BaseObject implements Persistent
         $keys = BlockPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getLayoutId(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getTitle(),
+            $keys[3] => $this->getLayoutId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aLayout) {
@@ -715,9 +763,12 @@ abstract class BaseBlock extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTitle($value);
+                $this->setName($value);
                 break;
             case 2:
+                $this->setTitle($value);
+                break;
+            case 3:
                 $this->setLayoutId($value);
                 break;
         } // switch()
@@ -745,8 +796,9 @@ abstract class BaseBlock extends BaseObject implements Persistent
         $keys = BlockPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setLayoutId($arr[$keys[2]]);
+        if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setLayoutId($arr[$keys[3]]);
     }
 
     /**
@@ -759,6 +811,7 @@ abstract class BaseBlock extends BaseObject implements Persistent
         $criteria = new Criteria(BlockPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(BlockPeer::ID)) $criteria->add(BlockPeer::ID, $this->id);
+        if ($this->isColumnModified(BlockPeer::NAME)) $criteria->add(BlockPeer::NAME, $this->name);
         if ($this->isColumnModified(BlockPeer::TITLE)) $criteria->add(BlockPeer::TITLE, $this->title);
         if ($this->isColumnModified(BlockPeer::LAYOUT_ID)) $criteria->add(BlockPeer::LAYOUT_ID, $this->layout_id);
 
@@ -824,6 +877,7 @@ abstract class BaseBlock extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setName($this->getName());
         $copyObj->setTitle($this->getTitle());
         $copyObj->setLayoutId($this->getLayoutId());
 
@@ -942,6 +996,7 @@ abstract class BaseBlock extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
+        $this->name = null;
         $this->title = null;
         $this->layout_id = null;
         $this->alreadyInSave = false;

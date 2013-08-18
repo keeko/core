@@ -58,6 +58,10 @@ class ModuleActionRouter implements RouterInterface {
 	}
 
 
+	/*
+	 * (non-PHPdoc)
+	 * @see \keeko\core\routing\RouteMatcherInterface::match()
+	 */
 	public function match($destination) {
 		if ($destination == '') {
 			$destination = '/';

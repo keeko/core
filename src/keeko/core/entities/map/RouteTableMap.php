@@ -7,7 +7,7 @@ use \TableMap;
 
 
 /**
- * This class defines the structure of the 'keeko_application_params' table.
+ * This class defines the structure of the 'keeko_route' table.
  *
  *
  *
@@ -18,13 +18,13 @@ use \TableMap;
  *
  * @package    propel.generator.keeko.core.entities.map
  */
-class ApplicationExtraPropertyTableMap extends TableMap
+class RouteTableMap extends TableMap
 {
 
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.entities.map.ApplicationExtraPropertyTableMap';
+    const CLASS_NAME = 'keeko.core.entities.map.RouteTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -36,16 +36,16 @@ class ApplicationExtraPropertyTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_application_params');
-        $this->setPhpName('ApplicationExtraProperty');
-        $this->setClassname('keeko\\core\\entities\\ApplicationExtraProperty');
+        $this->setName('keeko_route');
+        $this->setPhpName('Route');
+        $this->setClassname('keeko\\core\\entities\\Route');
         $this->setPackage('keeko.core.entities');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('property_name', 'PropertyName', 'VARCHAR', true, 255, null);
-        $this->addColumn('property_value', 'PropertyValue', 'LONGVARCHAR', false, null, null);
-        $this->addForeignKey('keeko_application_id', 'KeekoApplicationId', 'INTEGER', 'keeko_application', 'id', true, null, null);
+        $this->addColumn('slug', 'Slug', 'VARCHAR', false, 255, null);
+        $this->addForeignKey('redirect_id', 'RedirectId', 'INTEGER', 'keeko_route', 'id', false, null, null);
+        $this->addForeignKey('page_id', 'PageId', 'INTEGER', 'keeko_page', 'id', false, null, null);
         // validators
     } // initialize()
 
@@ -54,7 +54,9 @@ class ApplicationExtraPropertyTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Application', 'keeko\\core\\entities\\Application', RelationMap::MANY_TO_ONE, array('keeko_application_id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('RouteRelatedByRedirectId', 'keeko\\core\\entities\\Route', RelationMap::MANY_TO_ONE, array('redirect_id' => 'id', ), null, null);
+        $this->addRelation('Page', 'keeko\\core\\entities\\Page', RelationMap::MANY_TO_ONE, array('page_id' => 'id', ), null, null);
+        $this->addRelation('RouteRelatedById', 'keeko\\core\\entities\\Route', RelationMap::ONE_TO_MANY, array('id' => 'redirect_id', ), null, null, 'RoutesRelatedById');
     } // buildRelations()
 
-} // ApplicationExtraPropertyTableMap
+} // RouteTableMap

@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "aec5ddcb5690ca657390f515778aa372",
+    "hash": "926699d1dc031ad205bd82cfc8708a1f",
     "packages": [
         {
             "name": "CarpeHora/ExtraPropertiesBehavior",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Carpe-Hora/ExtraPropertiesBehavior.git",
-                "reference": "4b58d4991202c73a49a240486cc20c6db40fb497"
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Carpe-Hora/ExtraPropertiesBehavior/zipball/4b58d4991202c73a49a240486cc20c6db40fb497",
-                "reference": "4b58d4991202c73a49a240486cc20c6db40fb497",
+                "url": "https://api.github.com/repos/Carpe-Hora/ExtraPropertiesBehavior/zipball/1.0.0",
+                "reference": "1.0.0",
                 "shasum": ""
             },
             "require": {
@@ -48,7 +48,7 @@
                 "Key value",
                 "propel"
             ],
-            "time": "2013-07-21 14:30:41"
+            "time": "2013-07-21 14:25:38"
         },
         {
             "name": "composer/composer",
@@ -176,16 +176,16 @@
         },
         {
             "name": "keeko/composer-installer",
-            "version": "0.12",
+            "version": "0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keeko/composer-installer.git",
-                "reference": "0.12"
+                "reference": "0.13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keeko/composer-installer/zipball/0.12",
-                "reference": "0.12",
+                "url": "https://api.github.com/repos/keeko/composer-installer/zipball/0.13",
+                "reference": "0.13",
                 "shasum": ""
             },
             "require": {
@@ -214,7 +214,7 @@
                 }
             ],
             "description": "Keeko component installer",
-            "time": "2013-07-05 17:43:49"
+            "time": "2013-08-17 14:51:00"
         },
         {
             "name": "phing/phing",
@@ -882,8 +882,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "composer/composer": 20,
-        "carpehora/extrapropertiesbehavior": 20
+        "composer/composer": 20
     },
     "platform": [
 

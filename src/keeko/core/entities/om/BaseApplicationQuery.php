@@ -18,6 +18,8 @@ use keeko\core\entities\ApplicationPeer;
 use keeko\core\entities\ApplicationQuery;
 use keeko\core\entities\ApplicationType;
 use keeko\core\entities\ApplicationUri;
+use keeko\core\entities\Design;
+use keeko\core\entities\Page;
 use keeko\core\entities\Router;
 
 /**
@@ -29,11 +31,13 @@ use keeko\core\entities\Router;
  * @method ApplicationQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method ApplicationQuery orderByApplicationTypeId($order = Criteria::ASC) Order by the application_type_id column
  * @method ApplicationQuery orderByRouterId($order = Criteria::ASC) Order by the router_id column
+ * @method ApplicationQuery orderByDesignId($order = Criteria::ASC) Order by the design_id column
  *
  * @method ApplicationQuery groupById() Group by the id column
  * @method ApplicationQuery groupByTitle() Group by the title column
  * @method ApplicationQuery groupByApplicationTypeId() Group by the application_type_id column
  * @method ApplicationQuery groupByRouterId() Group by the router_id column
+ * @method ApplicationQuery groupByDesignId() Group by the design_id column
  *
  * @method ApplicationQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method ApplicationQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -47,9 +51,17 @@ use keeko\core\entities\Router;
  * @method ApplicationQuery rightJoinRouter($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Router relation
  * @method ApplicationQuery innerJoinRouter($relationAlias = null) Adds a INNER JOIN clause to the query using the Router relation
  *
+ * @method ApplicationQuery leftJoinDesign($relationAlias = null) Adds a LEFT JOIN clause to the query using the Design relation
+ * @method ApplicationQuery rightJoinDesign($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Design relation
+ * @method ApplicationQuery innerJoinDesign($relationAlias = null) Adds a INNER JOIN clause to the query using the Design relation
+ *
  * @method ApplicationQuery leftJoinApplicationUri($relationAlias = null) Adds a LEFT JOIN clause to the query using the ApplicationUri relation
  * @method ApplicationQuery rightJoinApplicationUri($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ApplicationUri relation
  * @method ApplicationQuery innerJoinApplicationUri($relationAlias = null) Adds a INNER JOIN clause to the query using the ApplicationUri relation
+ *
+ * @method ApplicationQuery leftJoinPage($relationAlias = null) Adds a LEFT JOIN clause to the query using the Page relation
+ * @method ApplicationQuery rightJoinPage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Page relation
+ * @method ApplicationQuery innerJoinPage($relationAlias = null) Adds a INNER JOIN clause to the query using the Page relation
  *
  * @method ApplicationQuery leftJoinApplicationExtraProperty($relationAlias = null) Adds a LEFT JOIN clause to the query using the ApplicationExtraProperty relation
  * @method ApplicationQuery rightJoinApplicationExtraProperty($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ApplicationExtraProperty relation
@@ -61,11 +73,13 @@ use keeko\core\entities\Router;
  * @method Application findOneByTitle(string $title) Return the first Application filtered by the title column
  * @method Application findOneByApplicationTypeId(int $application_type_id) Return the first Application filtered by the application_type_id column
  * @method Application findOneByRouterId(int $router_id) Return the first Application filtered by the router_id column
+ * @method Application findOneByDesignId(int $design_id) Return the first Application filtered by the design_id column
  *
  * @method array findById(int $id) Return Application objects filtered by the id column
  * @method array findByTitle(string $title) Return Application objects filtered by the title column
  * @method array findByApplicationTypeId(int $application_type_id) Return Application objects filtered by the application_type_id column
  * @method array findByRouterId(int $router_id) Return Application objects filtered by the router_id column
+ * @method array findByDesignId(int $design_id) Return Application objects filtered by the design_id column
  *
  * @package    propel.generator.keeko.core.entities.om
  */
@@ -169,7 +183,7 @@ abstract class BaseApplicationQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `title`, `application_type_id`, `router_id` FROM `keeko_application` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `title`, `application_type_id`, `router_id`, `design_id` FROM `keeko_application` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -418,6 +432,50 @@ abstract class BaseApplicationQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the design_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDesignId(1234); // WHERE design_id = 1234
+     * $query->filterByDesignId(array(12, 34)); // WHERE design_id IN (12, 34)
+     * $query->filterByDesignId(array('min' => 12)); // WHERE design_id >= 12
+     * $query->filterByDesignId(array('max' => 12)); // WHERE design_id <= 12
+     * </code>
+     *
+     * @see       filterByDesign()
+     *
+     * @param     mixed $designId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ApplicationQuery The current query, for fluid interface
+     */
+    public function filterByDesignId($designId = null, $comparison = null)
+    {
+        if (is_array($designId)) {
+            $useMinMax = false;
+            if (isset($designId['min'])) {
+                $this->addUsingAlias(ApplicationPeer::DESIGN_ID, $designId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($designId['max'])) {
+                $this->addUsingAlias(ApplicationPeer::DESIGN_ID, $designId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ApplicationPeer::DESIGN_ID, $designId, $comparison);
+    }
+
+    /**
      * Filter the query by a related ApplicationType object
      *
      * @param   ApplicationType|PropelObjectCollection $applicationType The related object(s) to use as filter
@@ -570,6 +628,82 @@ abstract class BaseApplicationQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related Design object
+     *
+     * @param   Design|PropelObjectCollection $design The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 ApplicationQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByDesign($design, $comparison = null)
+    {
+        if ($design instanceof Design) {
+            return $this
+                ->addUsingAlias(ApplicationPeer::DESIGN_ID, $design->getId(), $comparison);
+        } elseif ($design instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(ApplicationPeer::DESIGN_ID, $design->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByDesign() only accepts arguments of type Design or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Design relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ApplicationQuery The current query, for fluid interface
+     */
+    public function joinDesign($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Design');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Design');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Design relation Design object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \keeko\core\entities\DesignQuery A secondary query class using the current class as primary query
+     */
+    public function useDesignQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinDesign($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Design', '\keeko\core\entities\DesignQuery');
+    }
+
+    /**
      * Filter the query by a related ApplicationUri object
      *
      * @param   ApplicationUri|PropelObjectCollection $applicationUri  the related object to use as filter
@@ -641,6 +775,80 @@ abstract class BaseApplicationQuery extends ModelCriteria
         return $this
             ->joinApplicationUri($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'ApplicationUri', '\keeko\core\entities\ApplicationUriQuery');
+    }
+
+    /**
+     * Filter the query by a related Page object
+     *
+     * @param   Page|PropelObjectCollection $page  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 ApplicationQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByPage($page, $comparison = null)
+    {
+        if ($page instanceof Page) {
+            return $this
+                ->addUsingAlias(ApplicationPeer::ID, $page->getApplicationId(), $comparison);
+        } elseif ($page instanceof PropelObjectCollection) {
+            return $this
+                ->usePageQuery()
+                ->filterByPrimaryKeys($page->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPage() only accepts arguments of type Page or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Page relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ApplicationQuery The current query, for fluid interface
+     */
+    public function joinPage($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Page');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Page');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Page relation Page object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \keeko\core\entities\PageQuery A secondary query class using the current class as primary query
+     */
+    public function usePageQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinPage($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Page', '\keeko\core\entities\PageQuery');
     }
 
     /**

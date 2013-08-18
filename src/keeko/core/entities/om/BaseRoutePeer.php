@@ -9,32 +9,32 @@ use \PDOStatement;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
-use keeko\core\entities\DesignPeer;
-use keeko\core\entities\Layout;
-use keeko\core\entities\LayoutPeer;
-use keeko\core\entities\map\LayoutTableMap;
+use keeko\core\entities\PagePeer;
+use keeko\core\entities\Route;
+use keeko\core\entities\RoutePeer;
+use keeko\core\entities\map\RouteTableMap;
 
 /**
- * Base static class for performing query and update operations on the 'keeko_layout' table.
+ * Base static class for performing query and update operations on the 'keeko_route' table.
  *
  *
  *
  * @package propel.generator.keeko.core.entities.om
  */
-abstract class BaseLayoutPeer
+abstract class BaseRoutePeer
 {
 
     /** the default database name for this class */
     const DATABASE_NAME = 'keeko';
 
     /** the table name for this class */
-    const TABLE_NAME = 'keeko_layout';
+    const TABLE_NAME = 'keeko_route';
 
     /** the related Propel class for this table */
-    const OM_CLASS = 'keeko\\core\\entities\\Layout';
+    const OM_CLASS = 'keeko\\core\\entities\\Route';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'LayoutTableMap';
+    const TM_CLASS = 'RouteTableMap';
 
     /** The total number of columns. */
     const NUM_COLUMNS = 4;
@@ -46,25 +46,25 @@ abstract class BaseLayoutPeer
     const NUM_HYDRATE_COLUMNS = 4;
 
     /** the column name for the id field */
-    const ID = 'keeko_layout.id';
+    const ID = 'keeko_route.id';
 
-    /** the column name for the name field */
-    const NAME = 'keeko_layout.name';
+    /** the column name for the slug field */
+    const SLUG = 'keeko_route.slug';
 
-    /** the column name for the title field */
-    const TITLE = 'keeko_layout.title';
+    /** the column name for the redirect_id field */
+    const REDIRECT_ID = 'keeko_route.redirect_id';
 
-    /** the column name for the design_id field */
-    const DESIGN_ID = 'keeko_layout.design_id';
+    /** the column name for the page_id field */
+    const PAGE_ID = 'keeko_route.page_id';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
-     * An identiy map to hold any loaded instances of Layout objects.
+     * An identiy map to hold any loaded instances of Route objects.
      * This must be public so that other peer classes can access this when hydrating from JOIN
      * queries.
-     * @var        array Layout[]
+     * @var        array Route[]
      */
     public static $instances = array();
 
@@ -73,14 +73,14 @@ abstract class BaseLayoutPeer
      * holds an array of fieldnames
      *
      * first dimension keys are the type constants
-     * e.g. LayoutPeer::$fieldNames[LayoutPeer::TYPE_PHPNAME][0] = 'Id'
+     * e.g. RoutePeer::$fieldNames[RoutePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Title', 'DesignId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'title', 'designId', ),
-        BasePeer::TYPE_COLNAME => array (LayoutPeer::ID, LayoutPeer::NAME, LayoutPeer::TITLE, LayoutPeer::DESIGN_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'TITLE', 'DESIGN_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'title', 'design_id', ),
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Slug', 'RedirectId', 'PageId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'slug', 'redirectId', 'pageId', ),
+        BasePeer::TYPE_COLNAME => array (RoutePeer::ID, RoutePeer::SLUG, RoutePeer::REDIRECT_ID, RoutePeer::PAGE_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'SLUG', 'REDIRECT_ID', 'PAGE_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'slug', 'redirect_id', 'page_id', ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
@@ -88,14 +88,14 @@ abstract class BaseLayoutPeer
      * holds an array of keys for quick access to the fieldnames array
      *
      * first dimension keys are the type constants
-     * e.g. LayoutPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
+     * e.g. RoutePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Title' => 2, 'DesignId' => 3, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'designId' => 3, ),
-        BasePeer::TYPE_COLNAME => array (LayoutPeer::ID => 0, LayoutPeer::NAME => 1, LayoutPeer::TITLE => 2, LayoutPeer::DESIGN_ID => 3, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'TITLE' => 2, 'DESIGN_ID' => 3, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'design_id' => 3, ),
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Slug' => 1, 'RedirectId' => 2, 'PageId' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'slug' => 1, 'redirectId' => 2, 'pageId' => 3, ),
+        BasePeer::TYPE_COLNAME => array (RoutePeer::ID => 0, RoutePeer::SLUG => 1, RoutePeer::REDIRECT_ID => 2, RoutePeer::PAGE_ID => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'SLUG' => 1, 'REDIRECT_ID' => 2, 'PAGE_ID' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'slug' => 1, 'redirect_id' => 2, 'page_id' => 3, ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
@@ -111,10 +111,10 @@ abstract class BaseLayoutPeer
      */
     public static function translateFieldName($name, $fromType, $toType)
     {
-        $toNames = LayoutPeer::getFieldNames($toType);
-        $key = isset(LayoutPeer::$fieldKeys[$fromType][$name]) ? LayoutPeer::$fieldKeys[$fromType][$name] : null;
+        $toNames = RoutePeer::getFieldNames($toType);
+        $key = isset(RoutePeer::$fieldKeys[$fromType][$name]) ? RoutePeer::$fieldKeys[$fromType][$name] : null;
         if ($key === null) {
-            throw new PropelException("'$name' could not be found in the field names of type '$fromType'. These are: " . print_r(LayoutPeer::$fieldKeys[$fromType], true));
+            throw new PropelException("'$name' could not be found in the field names of type '$fromType'. These are: " . print_r(RoutePeer::$fieldKeys[$fromType], true));
         }
 
         return $toNames[$key];
@@ -131,11 +131,11 @@ abstract class BaseLayoutPeer
      */
     public static function getFieldNames($type = BasePeer::TYPE_PHPNAME)
     {
-        if (!array_key_exists($type, LayoutPeer::$fieldNames)) {
+        if (!array_key_exists($type, RoutePeer::$fieldNames)) {
             throw new PropelException('Method getFieldNames() expects the parameter $type to be one of the class constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME, BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. ' . $type . ' was given.');
         }
 
-        return LayoutPeer::$fieldNames[$type];
+        return RoutePeer::$fieldNames[$type];
     }
 
     /**
@@ -147,12 +147,12 @@ abstract class BaseLayoutPeer
      *		$c->addJoin(TablePeer::alias("alias1", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
      * </code>
      * @param      string $alias The alias for the current table.
-     * @param      string $column The column name for current table. (i.e. LayoutPeer::COLUMN_NAME).
+     * @param      string $column The column name for current table. (i.e. RoutePeer::COLUMN_NAME).
      * @return string
      */
     public static function alias($alias, $column)
     {
-        return str_replace(LayoutPeer::TABLE_NAME.'.', $alias.'.', $column);
+        return str_replace(RoutePeer::TABLE_NAME.'.', $alias.'.', $column);
     }
 
     /**
@@ -170,15 +170,15 @@ abstract class BaseLayoutPeer
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(LayoutPeer::ID);
-            $criteria->addSelectColumn(LayoutPeer::NAME);
-            $criteria->addSelectColumn(LayoutPeer::TITLE);
-            $criteria->addSelectColumn(LayoutPeer::DESIGN_ID);
+            $criteria->addSelectColumn(RoutePeer::ID);
+            $criteria->addSelectColumn(RoutePeer::SLUG);
+            $criteria->addSelectColumn(RoutePeer::REDIRECT_ID);
+            $criteria->addSelectColumn(RoutePeer::PAGE_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.name');
-            $criteria->addSelectColumn($alias . '.title');
-            $criteria->addSelectColumn($alias . '.design_id');
+            $criteria->addSelectColumn($alias . '.slug');
+            $criteria->addSelectColumn($alias . '.redirect_id');
+            $criteria->addSelectColumn($alias . '.page_id');
         }
     }
 
@@ -198,21 +198,21 @@ abstract class BaseLayoutPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(LayoutPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(RoutePeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            LayoutPeer::addSelectColumns($criteria);
+            RoutePeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-        $criteria->setDbName(LayoutPeer::DATABASE_NAME); // Set the correct dbName
+        $criteria->setDbName(RoutePeer::DATABASE_NAME); // Set the correct dbName
 
         if ($con === null) {
-            $con = Propel::getConnection(LayoutPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
         // BasePeer returns a PDOStatement
         $stmt = BasePeer::doCount($criteria, $con);
@@ -231,7 +231,7 @@ abstract class BaseLayoutPeer
      *
      * @param      Criteria $criteria object used to create the SELECT statement.
      * @param      PropelPDO $con
-     * @return                 Layout
+     * @return                 Route
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -239,7 +239,7 @@ abstract class BaseLayoutPeer
     {
         $critcopy = clone $criteria;
         $critcopy->setLimit(1);
-        $objects = LayoutPeer::doSelect($critcopy, $con);
+        $objects = RoutePeer::doSelect($critcopy, $con);
         if ($objects) {
             return $objects[0];
         }
@@ -257,7 +257,7 @@ abstract class BaseLayoutPeer
      */
     public static function doSelect(Criteria $criteria, PropelPDO $con = null)
     {
-        return LayoutPeer::populateObjects(LayoutPeer::doSelectStmt($criteria, $con));
+        return RoutePeer::populateObjects(RoutePeer::doSelectStmt($criteria, $con));
     }
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
@@ -275,16 +275,16 @@ abstract class BaseLayoutPeer
     public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(LayoutPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         if (!$criteria->hasSelectClause()) {
             $criteria = clone $criteria;
-            LayoutPeer::addSelectColumns($criteria);
+            RoutePeer::addSelectColumns($criteria);
         }
 
         // Set the correct dbName
-        $criteria->setDbName(LayoutPeer::DATABASE_NAME);
+        $criteria->setDbName(RoutePeer::DATABASE_NAME);
 
         // BasePeer returns a PDOStatement
         return BasePeer::doSelect($criteria, $con);
@@ -298,7 +298,7 @@ abstract class BaseLayoutPeer
      * to the cache in order to ensure that the same objects are always returned by doSelect*()
      * and retrieveByPK*() calls.
      *
-     * @param      Layout $obj A Layout object.
+     * @param      Route $obj A Route object.
      * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
@@ -307,7 +307,7 @@ abstract class BaseLayoutPeer
             if ($key === null) {
                 $key = (string) $obj->getId();
             } // if key === null
-            LayoutPeer::$instances[$key] = $obj;
+            RoutePeer::$instances[$key] = $obj;
         }
     }
 
@@ -319,7 +319,7 @@ abstract class BaseLayoutPeer
      * methods in your stub classes -- you may need to explicitly remove objects
      * from the cache in order to prevent returning objects that no longer exist.
      *
-     * @param      mixed $value A Layout object or a primary key value.
+     * @param      mixed $value A Route object or a primary key value.
      *
      * @return void
      * @throws PropelException - if the value is invalid.
@@ -327,17 +327,17 @@ abstract class BaseLayoutPeer
     public static function removeInstanceFromPool($value)
     {
         if (Propel::isInstancePoolingEnabled() && $value !== null) {
-            if (is_object($value) && $value instanceof Layout) {
+            if (is_object($value) && $value instanceof Route) {
                 $key = (string) $value->getId();
             } elseif (is_scalar($value)) {
                 // assume we've been passed a primary key
                 $key = (string) $value;
             } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or Layout object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or Route object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
                 throw $e;
             }
 
-            unset(LayoutPeer::$instances[$key]);
+            unset(RoutePeer::$instances[$key]);
         }
     } // removeInstanceFromPool()
 
@@ -348,14 +348,14 @@ abstract class BaseLayoutPeer
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
      * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-     * @return   Layout Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+     * @return   Route Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
      * @see        getPrimaryKeyHash()
      */
     public static function getInstanceFromPool($key)
     {
         if (Propel::isInstancePoolingEnabled()) {
-            if (isset(LayoutPeer::$instances[$key])) {
-                return LayoutPeer::$instances[$key];
+            if (isset(RoutePeer::$instances[$key])) {
+                return RoutePeer::$instances[$key];
             }
         }
 
@@ -371,16 +371,16 @@ abstract class BaseLayoutPeer
     {
       if ($and_clear_all_references)
       {
-        foreach (LayoutPeer::$instances as $instance)
+        foreach (RoutePeer::$instances as $instance)
         {
           $instance->clearAllReferences(true);
         }
       }
-        LayoutPeer::$instances = array();
+        RoutePeer::$instances = array();
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to keeko_layout
+     * Method to invalidate the instance pool of all tables related to keeko_route
      * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
@@ -434,11 +434,11 @@ abstract class BaseLayoutPeer
         $results = array();
 
         // set the class once to avoid overhead in the loop
-        $cls = LayoutPeer::getOMClass();
+        $cls = RoutePeer::getOMClass();
         // populate the object(s)
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key = LayoutPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj = LayoutPeer::getInstanceFromPool($key))) {
+            $key = RoutePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj = RoutePeer::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
@@ -447,7 +447,7 @@ abstract class BaseLayoutPeer
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                LayoutPeer::addInstanceToPool($obj, $key);
+                RoutePeer::addInstanceToPool($obj, $key);
             } // if key exists
         }
         $stmt->closeCursor();
@@ -461,21 +461,21 @@ abstract class BaseLayoutPeer
      * @param      int $startcol The 0-based offset for reading from the resultset row.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
-     * @return array (Layout object, last column rank)
+     * @return array (Route object, last column rank)
      */
     public static function populateObject($row, $startcol = 0)
     {
-        $key = LayoutPeer::getPrimaryKeyHashFromRow($row, $startcol);
-        if (null !== ($obj = LayoutPeer::getInstanceFromPool($key))) {
+        $key = RoutePeer::getPrimaryKeyHashFromRow($row, $startcol);
+        if (null !== ($obj = RoutePeer::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $startcol, true); // rehydrate
-            $col = $startcol + LayoutPeer::NUM_HYDRATE_COLUMNS;
+            $col = $startcol + RoutePeer::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = LayoutPeer::OM_CLASS;
+            $cls = RoutePeer::OM_CLASS;
             $obj = new $cls();
             $col = $obj->hydrate($row, $startcol);
-            LayoutPeer::addInstanceToPool($obj, $key);
+            RoutePeer::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -483,7 +483,7 @@ abstract class BaseLayoutPeer
 
 
     /**
-     * Returns the number of rows matching criteria, joining the related Design table
+     * Returns the number of rows matching criteria, joining the related Page table
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -491,7 +491,7 @@ abstract class BaseLayoutPeer
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
      * @return int Number of matching rows.
      */
-    public static function doCountJoinDesign(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doCountJoinPage(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         // we're going to modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -499,26 +499,26 @@ abstract class BaseLayoutPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(LayoutPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(RoutePeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            LayoutPeer::addSelectColumns($criteria);
+            RoutePeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(LayoutPeer::DATABASE_NAME);
+        $criteria->setDbName(RoutePeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(LayoutPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(LayoutPeer::DESIGN_ID, DesignPeer::ID, $join_behavior);
+        $criteria->addJoin(RoutePeer::PAGE_ID, PagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -534,61 +534,61 @@ abstract class BaseLayoutPeer
 
 
     /**
-     * Selects a collection of Layout objects pre-filled with their Design objects.
+     * Selects a collection of Route objects pre-filled with their Page objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of Layout objects.
+     * @return array           Array of Route objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doSelectJoinDesign(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doSelectJoinPage(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $criteria = clone $criteria;
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(LayoutPeer::DATABASE_NAME);
+            $criteria->setDbName(RoutePeer::DATABASE_NAME);
         }
 
-        LayoutPeer::addSelectColumns($criteria);
-        $startcol = LayoutPeer::NUM_HYDRATE_COLUMNS;
-        DesignPeer::addSelectColumns($criteria);
+        RoutePeer::addSelectColumns($criteria);
+        $startcol = RoutePeer::NUM_HYDRATE_COLUMNS;
+        PagePeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(LayoutPeer::DESIGN_ID, DesignPeer::ID, $join_behavior);
+        $criteria->addJoin(RoutePeer::PAGE_ID, PagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = LayoutPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = LayoutPeer::getInstanceFromPool($key1))) {
+            $key1 = RoutePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = RoutePeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
 
-                $cls = LayoutPeer::getOMClass();
+                $cls = RoutePeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                LayoutPeer::addInstanceToPool($obj1, $key1);
+                RoutePeer::addInstanceToPool($obj1, $key1);
             } // if $obj1 already loaded
 
-            $key2 = DesignPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            $key2 = PagePeer::getPrimaryKeyHashFromRow($row, $startcol);
             if ($key2 !== null) {
-                $obj2 = DesignPeer::getInstanceFromPool($key2);
+                $obj2 = PagePeer::getInstanceFromPool($key2);
                 if (!$obj2) {
 
-                    $cls = DesignPeer::getOMClass();
+                    $cls = PagePeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol);
-                    DesignPeer::addInstanceToPool($obj2, $key2);
+                    PagePeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 already loaded
 
-                // Add the $obj1 (Layout) to $obj2 (Design)
-                $obj2->addLayout($obj1);
+                // Add the $obj1 (Route) to $obj2 (Page)
+                $obj2->addRoute($obj1);
 
             } // if joined row was not null
 
@@ -617,26 +617,26 @@ abstract class BaseLayoutPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(LayoutPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(RoutePeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            LayoutPeer::addSelectColumns($criteria);
+            RoutePeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(LayoutPeer::DATABASE_NAME);
+        $criteria->setDbName(RoutePeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(LayoutPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(LayoutPeer::DESIGN_ID, DesignPeer::ID, $join_behavior);
+        $criteria->addJoin(RoutePeer::PAGE_ID, PagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -651,12 +651,12 @@ abstract class BaseLayoutPeer
     }
 
     /**
-     * Selects a collection of Layout objects pre-filled with all related objects.
+     * Selects a collection of Route objects pre-filled with all related objects.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of Layout objects.
+     * @return array           Array of Route objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -666,51 +666,275 @@ abstract class BaseLayoutPeer
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(LayoutPeer::DATABASE_NAME);
+            $criteria->setDbName(RoutePeer::DATABASE_NAME);
         }
 
-        LayoutPeer::addSelectColumns($criteria);
-        $startcol2 = LayoutPeer::NUM_HYDRATE_COLUMNS;
+        RoutePeer::addSelectColumns($criteria);
+        $startcol2 = RoutePeer::NUM_HYDRATE_COLUMNS;
 
-        DesignPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + DesignPeer::NUM_HYDRATE_COLUMNS;
+        PagePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + PagePeer::NUM_HYDRATE_COLUMNS;
 
-        $criteria->addJoin(LayoutPeer::DESIGN_ID, DesignPeer::ID, $join_behavior);
+        $criteria->addJoin(RoutePeer::PAGE_ID, PagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = LayoutPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = LayoutPeer::getInstanceFromPool($key1))) {
+            $key1 = RoutePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = RoutePeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = LayoutPeer::getOMClass();
+                $cls = RoutePeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                LayoutPeer::addInstanceToPool($obj1, $key1);
+                RoutePeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
-            // Add objects for joined Design rows
+            // Add objects for joined Page rows
 
-            $key2 = DesignPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+            $key2 = PagePeer::getPrimaryKeyHashFromRow($row, $startcol2);
             if ($key2 !== null) {
-                $obj2 = DesignPeer::getInstanceFromPool($key2);
+                $obj2 = PagePeer::getInstanceFromPool($key2);
                 if (!$obj2) {
 
-                    $cls = DesignPeer::getOMClass();
+                    $cls = PagePeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol2);
-                    DesignPeer::addInstanceToPool($obj2, $key2);
+                    PagePeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 loaded
 
-                // Add the $obj1 (Layout) to the collection in $obj2 (Design)
-                $obj2->addLayout($obj1);
+                // Add the $obj1 (Route) to the collection in $obj2 (Page)
+                $obj2->addRoute($obj1);
             } // if joined row not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related RouteRelatedByRedirectId table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptRouteRelatedByRedirectId(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(RoutePeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            RoutePeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(RoutePeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(RoutePeer::PAGE_ID, PagePeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related Page table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptPage(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(RoutePeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            RoutePeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(RoutePeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Selects a collection of Route objects pre-filled with all related objects except RouteRelatedByRedirectId.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Route objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptRouteRelatedByRedirectId(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(RoutePeer::DATABASE_NAME);
+        }
+
+        RoutePeer::addSelectColumns($criteria);
+        $startcol2 = RoutePeer::NUM_HYDRATE_COLUMNS;
+
+        PagePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + PagePeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(RoutePeer::PAGE_ID, PagePeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = RoutePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = RoutePeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = RoutePeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                RoutePeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined Page rows
+
+                $key2 = PagePeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = PagePeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = PagePeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    PagePeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Route) to the collection in $obj2 (Page)
+                $obj2->addRoute($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Route objects pre-filled with all related objects except Page.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Route objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptPage(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(RoutePeer::DATABASE_NAME);
+        }
+
+        RoutePeer::addSelectColumns($criteria);
+        $startcol2 = RoutePeer::NUM_HYDRATE_COLUMNS;
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = RoutePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = RoutePeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = RoutePeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                RoutePeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
 
             $results[] = $obj1;
         }
@@ -728,7 +952,7 @@ abstract class BaseLayoutPeer
      */
     public static function getTableMap()
     {
-        return Propel::getDatabaseMap(LayoutPeer::DATABASE_NAME)->getTable(LayoutPeer::TABLE_NAME);
+        return Propel::getDatabaseMap(RoutePeer::DATABASE_NAME)->getTable(RoutePeer::TABLE_NAME);
     }
 
     /**
@@ -736,9 +960,9 @@ abstract class BaseLayoutPeer
      */
     public static function buildTableMap()
     {
-      $dbMap = Propel::getDatabaseMap(BaseLayoutPeer::DATABASE_NAME);
-      if (!$dbMap->hasTable(BaseLayoutPeer::TABLE_NAME)) {
-        $dbMap->addTableObject(new LayoutTableMap());
+      $dbMap = Propel::getDatabaseMap(BaseRoutePeer::DATABASE_NAME);
+      if (!$dbMap->hasTable(BaseRoutePeer::TABLE_NAME)) {
+        $dbMap->addTableObject(new RouteTableMap());
       }
     }
 
@@ -750,13 +974,13 @@ abstract class BaseLayoutPeer
      */
     public static function getOMClass($row = 0, $colnum = 0)
     {
-        return LayoutPeer::OM_CLASS;
+        return RoutePeer::OM_CLASS;
     }
 
     /**
-     * Performs an INSERT on the database, given a Layout or Criteria object.
+     * Performs an INSERT on the database, given a Route or Criteria object.
      *
-     * @param      mixed $values Criteria or Layout object containing data that is used to create the INSERT statement.
+     * @param      mixed $values Criteria or Route object containing data that is used to create the INSERT statement.
      * @param      PropelPDO $con the PropelPDO connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -765,22 +989,22 @@ abstract class BaseLayoutPeer
     public static function doInsert($values, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(LayoutPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         if ($values instanceof Criteria) {
             $criteria = clone $values; // rename for clarity
         } else {
-            $criteria = $values->buildCriteria(); // build Criteria from Layout object
+            $criteria = $values->buildCriteria(); // build Criteria from Route object
         }
 
-        if ($criteria->containsKey(LayoutPeer::ID) && $criteria->keyContainsValue(LayoutPeer::ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.LayoutPeer::ID.')');
+        if ($criteria->containsKey(RoutePeer::ID) && $criteria->keyContainsValue(RoutePeer::ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.RoutePeer::ID.')');
         }
 
 
         // Set the correct dbName
-        $criteria->setDbName(LayoutPeer::DATABASE_NAME);
+        $criteria->setDbName(RoutePeer::DATABASE_NAME);
 
         try {
             // use transaction because $criteria could contain info
@@ -797,9 +1021,9 @@ abstract class BaseLayoutPeer
     }
 
     /**
-     * Performs an UPDATE on the database, given a Layout or Criteria object.
+     * Performs an UPDATE on the database, given a Route or Criteria object.
      *
-     * @param      mixed $values Criteria or Layout object containing data that is used to create the UPDATE statement.
+     * @param      mixed $values Criteria or Route object containing data that is used to create the UPDATE statement.
      * @param      PropelPDO $con The connection to use (specify PropelPDO connection object to exert more control over transactions).
      * @return int             The number of affected rows (if supported by underlying database driver).
      * @throws PropelException Any exceptions caught during processing will be
@@ -808,35 +1032,35 @@ abstract class BaseLayoutPeer
     public static function doUpdate($values, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(LayoutPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
-        $selectCriteria = new Criteria(LayoutPeer::DATABASE_NAME);
+        $selectCriteria = new Criteria(RoutePeer::DATABASE_NAME);
 
         if ($values instanceof Criteria) {
             $criteria = clone $values; // rename for clarity
 
-            $comparison = $criteria->getComparison(LayoutPeer::ID);
-            $value = $criteria->remove(LayoutPeer::ID);
+            $comparison = $criteria->getComparison(RoutePeer::ID);
+            $value = $criteria->remove(RoutePeer::ID);
             if ($value) {
-                $selectCriteria->add(LayoutPeer::ID, $value, $comparison);
+                $selectCriteria->add(RoutePeer::ID, $value, $comparison);
             } else {
-                $selectCriteria->setPrimaryTableName(LayoutPeer::TABLE_NAME);
+                $selectCriteria->setPrimaryTableName(RoutePeer::TABLE_NAME);
             }
 
-        } else { // $values is Layout object
+        } else { // $values is Route object
             $criteria = $values->buildCriteria(); // gets full criteria
             $selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
         }
 
         // set the correct dbName
-        $criteria->setDbName(LayoutPeer::DATABASE_NAME);
+        $criteria->setDbName(RoutePeer::DATABASE_NAME);
 
         return BasePeer::doUpdate($selectCriteria, $criteria, $con);
     }
 
     /**
-     * Deletes all rows from the keeko_layout table.
+     * Deletes all rows from the keeko_route table.
      *
      * @param      PropelPDO $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).
@@ -845,19 +1069,19 @@ abstract class BaseLayoutPeer
     public static function doDeleteAll(PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(LayoutPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
         $affectedRows = 0; // initialize var to track total num of affected rows
         try {
             // use transaction because $criteria could contain info
             // for more than one table or we could emulating ON DELETE CASCADE, etc.
             $con->beginTransaction();
-            $affectedRows += BasePeer::doDeleteAll(LayoutPeer::TABLE_NAME, $con, LayoutPeer::DATABASE_NAME);
+            $affectedRows += BasePeer::doDeleteAll(RoutePeer::TABLE_NAME, $con, RoutePeer::DATABASE_NAME);
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            LayoutPeer::clearInstancePool();
-            LayoutPeer::clearRelatedInstancePool();
+            RoutePeer::clearInstancePool();
+            RoutePeer::clearRelatedInstancePool();
             $con->commit();
 
             return $affectedRows;
@@ -868,9 +1092,9 @@ abstract class BaseLayoutPeer
     }
 
     /**
-     * Performs a DELETE on the database, given a Layout or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Route or Criteria object OR a primary key value.
      *
-     * @param      mixed $values Criteria or Layout object or primary key or array of primary keys
+     * @param      mixed $values Criteria or Route object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param      PropelPDO $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -881,32 +1105,32 @@ abstract class BaseLayoutPeer
      public static function doDelete($values, PropelPDO $con = null)
      {
         if ($con === null) {
-            $con = Propel::getConnection(LayoutPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         if ($values instanceof Criteria) {
             // invalidate the cache for all objects of this type, since we have no
             // way of knowing (without running a query) what objects should be invalidated
             // from the cache based on this Criteria.
-            LayoutPeer::clearInstancePool();
+            RoutePeer::clearInstancePool();
             // rename for clarity
             $criteria = clone $values;
-        } elseif ($values instanceof Layout) { // it's a model object
+        } elseif ($values instanceof Route) { // it's a model object
             // invalidate the cache for this single object
-            LayoutPeer::removeInstanceFromPool($values);
+            RoutePeer::removeInstanceFromPool($values);
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(LayoutPeer::DATABASE_NAME);
-            $criteria->add(LayoutPeer::ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(RoutePeer::DATABASE_NAME);
+            $criteria->add(RoutePeer::ID, (array) $values, Criteria::IN);
             // invalidate the cache for this object(s)
             foreach ((array) $values as $singleval) {
-                LayoutPeer::removeInstanceFromPool($singleval);
+                RoutePeer::removeInstanceFromPool($singleval);
             }
         }
 
         // Set the correct dbName
-        $criteria->setDbName(LayoutPeer::DATABASE_NAME);
+        $criteria->setDbName(RoutePeer::DATABASE_NAME);
 
         $affectedRows = 0; // initialize var to track total num of affected rows
 
@@ -916,7 +1140,7 @@ abstract class BaseLayoutPeer
             $con->beginTransaction();
 
             $affectedRows += BasePeer::doDelete($criteria, $con);
-            LayoutPeer::clearRelatedInstancePool();
+            RoutePeer::clearRelatedInstancePool();
             $con->commit();
 
             return $affectedRows;
@@ -927,13 +1151,13 @@ abstract class BaseLayoutPeer
     }
 
     /**
-     * Validates all modified columns of given Layout object.
+     * Validates all modified columns of given Route object.
      * If parameter $columns is either a single column name or an array of column names
      * than only those columns are validated.
      *
      * NOTICE: This does not apply to primary or foreign keys for now.
      *
-     * @param      Layout $obj The object to validate.
+     * @param      Route $obj The object to validate.
      * @param      mixed $cols Column name or array of column names.
      *
      * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
@@ -943,8 +1167,8 @@ abstract class BaseLayoutPeer
         $columns = array();
 
         if ($cols) {
-            $dbMap = Propel::getDatabaseMap(LayoutPeer::DATABASE_NAME);
-            $tableMap = $dbMap->getTable(LayoutPeer::TABLE_NAME);
+            $dbMap = Propel::getDatabaseMap(RoutePeer::DATABASE_NAME);
+            $tableMap = $dbMap->getTable(RoutePeer::TABLE_NAME);
 
             if (! is_array($cols)) {
                 $cols = array($cols);
@@ -960,7 +1184,7 @@ abstract class BaseLayoutPeer
 
         }
 
-        return BasePeer::doValidate(LayoutPeer::DATABASE_NAME, LayoutPeer::TABLE_NAME, $columns);
+        return BasePeer::doValidate(RoutePeer::DATABASE_NAME, RoutePeer::TABLE_NAME, $columns);
     }
 
     /**
@@ -968,23 +1192,23 @@ abstract class BaseLayoutPeer
      *
      * @param      int $pk the primary key.
      * @param      PropelPDO $con the connection to use
-     * @return Layout
+     * @return Route
      */
     public static function retrieveByPK($pk, PropelPDO $con = null)
     {
 
-        if (null !== ($obj = LayoutPeer::getInstanceFromPool((string) $pk))) {
+        if (null !== ($obj = RoutePeer::getInstanceFromPool((string) $pk))) {
             return $obj;
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(LayoutPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria = new Criteria(LayoutPeer::DATABASE_NAME);
-        $criteria->add(LayoutPeer::ID, $pk);
+        $criteria = new Criteria(RoutePeer::DATABASE_NAME);
+        $criteria->add(RoutePeer::ID, $pk);
 
-        $v = LayoutPeer::doSelect($criteria, $con);
+        $v = RoutePeer::doSelect($criteria, $con);
 
         return !empty($v) > 0 ? $v[0] : null;
     }
@@ -994,31 +1218,31 @@ abstract class BaseLayoutPeer
      *
      * @param      array $pks List of primary keys
      * @param      PropelPDO $con the connection to use
-     * @return Layout[]
+     * @return Route[]
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
     public static function retrieveByPKs($pks, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(LayoutPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         $objs = null;
         if (empty($pks)) {
             $objs = array();
         } else {
-            $criteria = new Criteria(LayoutPeer::DATABASE_NAME);
-            $criteria->add(LayoutPeer::ID, $pks, Criteria::IN);
-            $objs = LayoutPeer::doSelect($criteria, $con);
+            $criteria = new Criteria(RoutePeer::DATABASE_NAME);
+            $criteria->add(RoutePeer::ID, $pks, Criteria::IN);
+            $objs = RoutePeer::doSelect($criteria, $con);
         }
 
         return $objs;
     }
 
-} // BaseLayoutPeer
+} // BaseRoutePeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-BaseLayoutPeer::buildTableMap();
+BaseRoutePeer::buildTableMap();
 

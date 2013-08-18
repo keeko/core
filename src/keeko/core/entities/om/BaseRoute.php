@@ -13,31 +13,31 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use keeko\core\entities\Application;
-use keeko\core\entities\ApplicationQuery;
-use keeko\core\entities\Router;
-use keeko\core\entities\RouterPeer;
-use keeko\core\entities\RouterQuery;
+use keeko\core\entities\Page;
+use keeko\core\entities\PageQuery;
+use keeko\core\entities\Route;
+use keeko\core\entities\RoutePeer;
+use keeko\core\entities\RouteQuery;
 
 /**
- * Base class that represents a row from the 'keeko_router' table.
+ * Base class that represents a row from the 'keeko_route' table.
  *
  *
  *
  * @package    propel.generator.keeko.core.entities.om
  */
-abstract class BaseRouter extends BaseObject implements Persistent
+abstract class BaseRoute extends BaseObject implements Persistent
 {
     /**
      * Peer class name
      */
-    const PEER = 'keeko\\core\\entities\\RouterPeer';
+    const PEER = 'keeko\\core\\entities\\RoutePeer';
 
     /**
      * The Peer class.
      * Instance provides a convenient way of calling static methods on a class
      * that calling code may not be able to identify.
-     * @var        RouterPeer
+     * @var        RoutePeer
      */
     protected static $peer;
 
@@ -54,22 +54,38 @@ abstract class BaseRouter extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the title field.
+     * The value for the slug field.
      * @var        string
      */
-    protected $title;
+    protected $slug;
 
     /**
-     * The value for the classname field.
-     * @var        string
+     * The value for the redirect_id field.
+     * @var        int
      */
-    protected $classname;
+    protected $redirect_id;
 
     /**
-     * @var        PropelObjectCollection|Application[] Collection to store aggregation of Application objects.
+     * The value for the page_id field.
+     * @var        int
      */
-    protected $collApplications;
-    protected $collApplicationsPartial;
+    protected $page_id;
+
+    /**
+     * @var        Route
+     */
+    protected $aRouteRelatedByRedirectId;
+
+    /**
+     * @var        Page
+     */
+    protected $aPage;
+
+    /**
+     * @var        PropelObjectCollection|Route[] Collection to store aggregation of Route objects.
+     */
+    protected $collRoutesRelatedById;
+    protected $collRoutesRelatedByIdPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -95,7 +111,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $applicationsScheduledForDeletion = null;
+    protected $routesRelatedByIdScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -108,30 +124,40 @@ abstract class BaseRouter extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [title] column value.
+     * Get the [slug] column value.
      *
      * @return string
      */
-    public function getTitle()
+    public function getSlug()
     {
-        return $this->title;
+        return $this->slug;
     }
 
     /**
-     * Get the [classname] column value.
+     * Get the [redirect_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getClassname()
+    public function getRedirectId()
     {
-        return $this->classname;
+        return $this->redirect_id;
+    }
+
+    /**
+     * Get the [page_id] column value.
+     *
+     * @return int
+     */
+    public function getPageId()
+    {
+        return $this->page_id;
     }
 
     /**
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return Router The current object (for fluent API support)
+     * @return Route The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -141,7 +167,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[] = RouterPeer::ID;
+            $this->modifiedColumns[] = RoutePeer::ID;
         }
 
 
@@ -149,46 +175,75 @@ abstract class BaseRouter extends BaseObject implements Persistent
     } // setId()
 
     /**
-     * Set the value of [title] column.
+     * Set the value of [slug] column.
      *
      * @param string $v new value
-     * @return Router The current object (for fluent API support)
+     * @return Route The current object (for fluent API support)
      */
-    public function setTitle($v)
+    public function setSlug($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
-        if ($this->title !== $v) {
-            $this->title = $v;
-            $this->modifiedColumns[] = RouterPeer::TITLE;
+        if ($this->slug !== $v) {
+            $this->slug = $v;
+            $this->modifiedColumns[] = RoutePeer::SLUG;
         }
 
 
         return $this;
-    } // setTitle()
+    } // setSlug()
 
     /**
-     * Set the value of [classname] column.
+     * Set the value of [redirect_id] column.
      *
-     * @param string $v new value
-     * @return Router The current object (for fluent API support)
+     * @param int $v new value
+     * @return Route The current object (for fluent API support)
      */
-    public function setClassname($v)
+    public function setRedirectId($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->classname !== $v) {
-            $this->classname = $v;
-            $this->modifiedColumns[] = RouterPeer::CLASSNAME;
+        if ($this->redirect_id !== $v) {
+            $this->redirect_id = $v;
+            $this->modifiedColumns[] = RoutePeer::REDIRECT_ID;
+        }
+
+        if ($this->aRouteRelatedByRedirectId !== null && $this->aRouteRelatedByRedirectId->getId() !== $v) {
+            $this->aRouteRelatedByRedirectId = null;
         }
 
 
         return $this;
-    } // setClassname()
+    } // setRedirectId()
+
+    /**
+     * Set the value of [page_id] column.
+     *
+     * @param int $v new value
+     * @return Route The current object (for fluent API support)
+     */
+    public function setPageId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->page_id !== $v) {
+            $this->page_id = $v;
+            $this->modifiedColumns[] = RoutePeer::PAGE_ID;
+        }
+
+        if ($this->aPage !== null && $this->aPage->getId() !== $v) {
+            $this->aPage = null;
+        }
+
+
+        return $this;
+    } // setPageId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -223,8 +278,9 @@ abstract class BaseRouter extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->classname = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->slug = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->redirect_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->page_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -233,10 +289,10 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 3; // 3 = RouterPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = RoutePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException("Error populating Router object", $e);
+            throw new PropelException("Error populating Route object", $e);
         }
     }
 
@@ -256,6 +312,12 @@ abstract class BaseRouter extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
+        if ($this->aRouteRelatedByRedirectId !== null && $this->redirect_id !== $this->aRouteRelatedByRedirectId->getId()) {
+            $this->aRouteRelatedByRedirectId = null;
+        }
+        if ($this->aPage !== null && $this->page_id !== $this->aPage->getId()) {
+            $this->aPage = null;
+        }
     } // ensureConsistency
 
     /**
@@ -279,13 +341,13 @@ abstract class BaseRouter extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(RouterPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $stmt = RouterPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+        $stmt = RoutePeer::doSelectStmt($this->buildPkeyCriteria(), $con);
         $row = $stmt->fetch(PDO::FETCH_NUM);
         $stmt->closeCursor();
         if (!$row) {
@@ -295,7 +357,9 @@ abstract class BaseRouter extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collApplications = null;
+            $this->aRouteRelatedByRedirectId = null;
+            $this->aPage = null;
+            $this->collRoutesRelatedById = null;
 
         } // if (deep)
     }
@@ -317,12 +381,12 @@ abstract class BaseRouter extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(RouterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
         try {
-            $deleteQuery = RouterQuery::create()
+            $deleteQuery = RouteQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -360,7 +424,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(RouterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(RoutePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
@@ -380,7 +444,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                RouterPeer::addInstanceToPool($this);
+                RoutePeer::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -410,6 +474,25 @@ abstract class BaseRouter extends BaseObject implements Persistent
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their coresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aRouteRelatedByRedirectId !== null) {
+                if ($this->aRouteRelatedByRedirectId->isModified() || $this->aRouteRelatedByRedirectId->isNew()) {
+                    $affectedRows += $this->aRouteRelatedByRedirectId->save($con);
+                }
+                $this->setRouteRelatedByRedirectId($this->aRouteRelatedByRedirectId);
+            }
+
+            if ($this->aPage !== null) {
+                if ($this->aPage->isModified() || $this->aPage->isNew()) {
+                    $affectedRows += $this->aPage->save($con);
+                }
+                $this->setPage($this->aPage);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -421,17 +504,18 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 $this->resetModified();
             }
 
-            if ($this->applicationsScheduledForDeletion !== null) {
-                if (!$this->applicationsScheduledForDeletion->isEmpty()) {
-                    ApplicationQuery::create()
-                        ->filterByPrimaryKeys($this->applicationsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->applicationsScheduledForDeletion = null;
+            if ($this->routesRelatedByIdScheduledForDeletion !== null) {
+                if (!$this->routesRelatedByIdScheduledForDeletion->isEmpty()) {
+                    foreach ($this->routesRelatedByIdScheduledForDeletion as $routeRelatedById) {
+                        // need to save related object because we set the relation to null
+                        $routeRelatedById->save($con);
+                    }
+                    $this->routesRelatedByIdScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collApplications !== null) {
-                foreach ($this->collApplications as $referrerFK) {
+            if ($this->collRoutesRelatedById !== null) {
+                foreach ($this->collRoutesRelatedById as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -458,24 +542,27 @@ abstract class BaseRouter extends BaseObject implements Persistent
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[] = RouterPeer::ID;
+        $this->modifiedColumns[] = RoutePeer::ID;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . RouterPeer::ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . RoutePeer::ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(RouterPeer::ID)) {
+        if ($this->isColumnModified(RoutePeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(RouterPeer::TITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`title`';
+        if ($this->isColumnModified(RoutePeer::SLUG)) {
+            $modifiedColumns[':p' . $index++]  = '`slug`';
         }
-        if ($this->isColumnModified(RouterPeer::CLASSNAME)) {
-            $modifiedColumns[':p' . $index++]  = '`classname`';
+        if ($this->isColumnModified(RoutePeer::REDIRECT_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`redirect_id`';
+        }
+        if ($this->isColumnModified(RoutePeer::PAGE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`page_id`';
         }
 
         $sql = sprintf(
-            'INSERT INTO `keeko_router` (%s) VALUES (%s)',
+            'INSERT INTO `keeko_route` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -487,11 +574,14 @@ abstract class BaseRouter extends BaseObject implements Persistent
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`title`':
-                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+                    case '`slug`':
+                        $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
-                    case '`classname`':
-                        $stmt->bindValue($identifier, $this->classname, PDO::PARAM_STR);
+                    case '`redirect_id`':
+                        $stmt->bindValue($identifier, $this->redirect_id, PDO::PARAM_INT);
+                        break;
+                    case '`page_id`':
+                        $stmt->bindValue($identifier, $this->page_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -587,13 +677,31 @@ abstract class BaseRouter extends BaseObject implements Persistent
             $failureMap = array();
 
 
-            if (($retval = RouterPeer::doValidate($this, $columns)) !== true) {
+            // We call the validate method on the following object(s) if they
+            // were passed to this object by their coresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aRouteRelatedByRedirectId !== null) {
+                if (!$this->aRouteRelatedByRedirectId->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aRouteRelatedByRedirectId->getValidationFailures());
+                }
+            }
+
+            if ($this->aPage !== null) {
+                if (!$this->aPage->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aPage->getValidationFailures());
+                }
+            }
+
+
+            if (($retval = RoutePeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
             }
 
 
-                if ($this->collApplications !== null) {
-                    foreach ($this->collApplications as $referrerFK) {
+                if ($this->collRoutesRelatedById !== null) {
+                    foreach ($this->collRoutesRelatedById as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -619,7 +727,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = RouterPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = RoutePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -639,10 +747,13 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getTitle();
+                return $this->getSlug();
                 break;
             case 2:
-                return $this->getClassname();
+                return $this->getRedirectId();
+                break;
+            case 3:
+                return $this->getPageId();
                 break;
             default:
                 return null;
@@ -667,19 +778,26 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Router'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['Route'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Router'][$this->getPrimaryKey()] = true;
-        $keys = RouterPeer::getFieldNames($keyType);
+        $alreadyDumpedObjects['Route'][$this->getPrimaryKey()] = true;
+        $keys = RoutePeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getClassname(),
+            $keys[1] => $this->getSlug(),
+            $keys[2] => $this->getRedirectId(),
+            $keys[3] => $this->getPageId(),
         );
         if ($includeForeignObjects) {
-            if (null !== $this->collApplications) {
-                $result['Applications'] = $this->collApplications->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->aRouteRelatedByRedirectId) {
+                $result['RouteRelatedByRedirectId'] = $this->aRouteRelatedByRedirectId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aPage) {
+                $result['Page'] = $this->aPage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collRoutesRelatedById) {
+                $result['RoutesRelatedById'] = $this->collRoutesRelatedById->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -699,7 +817,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = RouterPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = RoutePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
     }
@@ -719,10 +837,13 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTitle($value);
+                $this->setSlug($value);
                 break;
             case 2:
-                $this->setClassname($value);
+                $this->setRedirectId($value);
+                break;
+            case 3:
+                $this->setPageId($value);
                 break;
         } // switch()
     }
@@ -746,11 +867,12 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
     {
-        $keys = RouterPeer::getFieldNames($keyType);
+        $keys = RoutePeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setClassname($arr[$keys[2]]);
+        if (array_key_exists($keys[1], $arr)) $this->setSlug($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setRedirectId($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setPageId($arr[$keys[3]]);
     }
 
     /**
@@ -760,11 +882,12 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(RouterPeer::DATABASE_NAME);
+        $criteria = new Criteria(RoutePeer::DATABASE_NAME);
 
-        if ($this->isColumnModified(RouterPeer::ID)) $criteria->add(RouterPeer::ID, $this->id);
-        if ($this->isColumnModified(RouterPeer::TITLE)) $criteria->add(RouterPeer::TITLE, $this->title);
-        if ($this->isColumnModified(RouterPeer::CLASSNAME)) $criteria->add(RouterPeer::CLASSNAME, $this->classname);
+        if ($this->isColumnModified(RoutePeer::ID)) $criteria->add(RoutePeer::ID, $this->id);
+        if ($this->isColumnModified(RoutePeer::SLUG)) $criteria->add(RoutePeer::SLUG, $this->slug);
+        if ($this->isColumnModified(RoutePeer::REDIRECT_ID)) $criteria->add(RoutePeer::REDIRECT_ID, $this->redirect_id);
+        if ($this->isColumnModified(RoutePeer::PAGE_ID)) $criteria->add(RoutePeer::PAGE_ID, $this->page_id);
 
         return $criteria;
     }
@@ -779,8 +902,8 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(RouterPeer::DATABASE_NAME);
-        $criteria->add(RouterPeer::ID, $this->id);
+        $criteria = new Criteria(RoutePeer::DATABASE_NAME);
+        $criteria->add(RoutePeer::ID, $this->id);
 
         return $criteria;
     }
@@ -821,15 +944,16 @@ abstract class BaseRouter extends BaseObject implements Persistent
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of Router (or compatible) type.
+     * @param object $copyObj An object of Route (or compatible) type.
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setTitle($this->getTitle());
-        $copyObj->setClassname($this->getClassname());
+        $copyObj->setSlug($this->getSlug());
+        $copyObj->setRedirectId($this->getRedirectId());
+        $copyObj->setPageId($this->getPageId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -838,9 +962,9 @@ abstract class BaseRouter extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
-            foreach ($this->getApplications() as $relObj) {
+            foreach ($this->getRoutesRelatedById() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addApplication($relObj->copy($deepCopy));
+                    $copyObj->addRouteRelatedById($relObj->copy($deepCopy));
                 }
             }
 
@@ -863,7 +987,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      * objects.
      *
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return Router Clone of current object.
+     * @return Route Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -883,15 +1007,119 @@ abstract class BaseRouter extends BaseObject implements Persistent
      * same instance for all member of this class. The method could therefore
      * be static, but this would prevent one from overriding the behavior.
      *
-     * @return RouterPeer
+     * @return RoutePeer
      */
     public function getPeer()
     {
         if (self::$peer === null) {
-            self::$peer = new RouterPeer();
+            self::$peer = new RoutePeer();
         }
 
         return self::$peer;
+    }
+
+    /**
+     * Declares an association between this object and a Route object.
+     *
+     * @param             Route $v
+     * @return Route The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setRouteRelatedByRedirectId(Route $v = null)
+    {
+        if ($v === null) {
+            $this->setRedirectId(NULL);
+        } else {
+            $this->setRedirectId($v->getId());
+        }
+
+        $this->aRouteRelatedByRedirectId = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Route object, it will not be re-added.
+        if ($v !== null) {
+            $v->addRouteRelatedById($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Route object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return Route The associated Route object.
+     * @throws PropelException
+     */
+    public function getRouteRelatedByRedirectId(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aRouteRelatedByRedirectId === null && ($this->redirect_id !== null) && $doQuery) {
+            $this->aRouteRelatedByRedirectId = RouteQuery::create()->findPk($this->redirect_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aRouteRelatedByRedirectId->addRoutesRelatedById($this);
+             */
+        }
+
+        return $this->aRouteRelatedByRedirectId;
+    }
+
+    /**
+     * Declares an association between this object and a Page object.
+     *
+     * @param             Page $v
+     * @return Route The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setPage(Page $v = null)
+    {
+        if ($v === null) {
+            $this->setPageId(NULL);
+        } else {
+            $this->setPageId($v->getId());
+        }
+
+        $this->aPage = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Page object, it will not be re-added.
+        if ($v !== null) {
+            $v->addRoute($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Page object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return Page The associated Page object.
+     * @throws PropelException
+     */
+    public function getPage(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aPage === null && ($this->page_id !== null) && $doQuery) {
+            $this->aPage = PageQuery::create()->findPk($this->page_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aPage->addRoutes($this);
+             */
+        }
+
+        return $this->aPage;
     }
 
 
@@ -905,42 +1133,42 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
-        if ('Application' == $relationName) {
-            $this->initApplications();
+        if ('RouteRelatedById' == $relationName) {
+            $this->initRoutesRelatedById();
         }
     }
 
     /**
-     * Clears out the collApplications collection
+     * Clears out the collRoutesRelatedById collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return Router The current object (for fluent API support)
-     * @see        addApplications()
+     * @return Route The current object (for fluent API support)
+     * @see        addRoutesRelatedById()
      */
-    public function clearApplications()
+    public function clearRoutesRelatedById()
     {
-        $this->collApplications = null; // important to set this to null since that means it is uninitialized
-        $this->collApplicationsPartial = null;
+        $this->collRoutesRelatedById = null; // important to set this to null since that means it is uninitialized
+        $this->collRoutesRelatedByIdPartial = null;
 
         return $this;
     }
 
     /**
-     * reset is the collApplications collection loaded partially
+     * reset is the collRoutesRelatedById collection loaded partially
      *
      * @return void
      */
-    public function resetPartialApplications($v = true)
+    public function resetPartialRoutesRelatedById($v = true)
     {
-        $this->collApplicationsPartial = $v;
+        $this->collRoutesRelatedByIdPartial = $v;
     }
 
     /**
-     * Initializes the collApplications collection.
+     * Initializes the collRoutesRelatedById collection.
      *
-     * By default this just sets the collApplications collection to an empty array (like clearcollApplications());
+     * By default this just sets the collRoutesRelatedById collection to an empty array (like clearcollRoutesRelatedById());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -949,180 +1177,180 @@ abstract class BaseRouter extends BaseObject implements Persistent
      *
      * @return void
      */
-    public function initApplications($overrideExisting = true)
+    public function initRoutesRelatedById($overrideExisting = true)
     {
-        if (null !== $this->collApplications && !$overrideExisting) {
+        if (null !== $this->collRoutesRelatedById && !$overrideExisting) {
             return;
         }
-        $this->collApplications = new PropelObjectCollection();
-        $this->collApplications->setModel('Application');
+        $this->collRoutesRelatedById = new PropelObjectCollection();
+        $this->collRoutesRelatedById->setModel('Route');
     }
 
     /**
-     * Gets an array of Application objects which contain a foreign key that references this object.
+     * Gets an array of Route objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Router is new, it will return
+     * If this Route is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Application[] List of Application objects
+     * @return PropelObjectCollection|Route[] List of Route objects
      * @throws PropelException
      */
-    public function getApplications($criteria = null, PropelPDO $con = null)
+    public function getRoutesRelatedById($criteria = null, PropelPDO $con = null)
     {
-        $partial = $this->collApplicationsPartial && !$this->isNew();
-        if (null === $this->collApplications || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collApplications) {
+        $partial = $this->collRoutesRelatedByIdPartial && !$this->isNew();
+        if (null === $this->collRoutesRelatedById || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collRoutesRelatedById) {
                 // return empty collection
-                $this->initApplications();
+                $this->initRoutesRelatedById();
             } else {
-                $collApplications = ApplicationQuery::create(null, $criteria)
-                    ->filterByRouter($this)
+                $collRoutesRelatedById = RouteQuery::create(null, $criteria)
+                    ->filterByRouteRelatedByRedirectId($this)
                     ->find($con);
                 if (null !== $criteria) {
-                    if (false !== $this->collApplicationsPartial && count($collApplications)) {
-                      $this->initApplications(false);
+                    if (false !== $this->collRoutesRelatedByIdPartial && count($collRoutesRelatedById)) {
+                      $this->initRoutesRelatedById(false);
 
-                      foreach($collApplications as $obj) {
-                        if (false == $this->collApplications->contains($obj)) {
-                          $this->collApplications->append($obj);
+                      foreach($collRoutesRelatedById as $obj) {
+                        if (false == $this->collRoutesRelatedById->contains($obj)) {
+                          $this->collRoutesRelatedById->append($obj);
                         }
                       }
 
-                      $this->collApplicationsPartial = true;
+                      $this->collRoutesRelatedByIdPartial = true;
                     }
 
-                    $collApplications->getInternalIterator()->rewind();
-                    return $collApplications;
+                    $collRoutesRelatedById->getInternalIterator()->rewind();
+                    return $collRoutesRelatedById;
                 }
 
-                if($partial && $this->collApplications) {
-                    foreach($this->collApplications as $obj) {
+                if($partial && $this->collRoutesRelatedById) {
+                    foreach($this->collRoutesRelatedById as $obj) {
                         if($obj->isNew()) {
-                            $collApplications[] = $obj;
+                            $collRoutesRelatedById[] = $obj;
                         }
                     }
                 }
 
-                $this->collApplications = $collApplications;
-                $this->collApplicationsPartial = false;
+                $this->collRoutesRelatedById = $collRoutesRelatedById;
+                $this->collRoutesRelatedByIdPartial = false;
             }
         }
 
-        return $this->collApplications;
+        return $this->collRoutesRelatedById;
     }
 
     /**
-     * Sets a collection of Application objects related by a one-to-many relationship
+     * Sets a collection of RouteRelatedById objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param PropelCollection $applications A Propel collection.
+     * @param PropelCollection $routesRelatedById A Propel collection.
      * @param PropelPDO $con Optional connection object
-     * @return Router The current object (for fluent API support)
+     * @return Route The current object (for fluent API support)
      */
-    public function setApplications(PropelCollection $applications, PropelPDO $con = null)
+    public function setRoutesRelatedById(PropelCollection $routesRelatedById, PropelPDO $con = null)
     {
-        $applicationsToDelete = $this->getApplications(new Criteria(), $con)->diff($applications);
+        $routesRelatedByIdToDelete = $this->getRoutesRelatedById(new Criteria(), $con)->diff($routesRelatedById);
 
-        $this->applicationsScheduledForDeletion = unserialize(serialize($applicationsToDelete));
+        $this->routesRelatedByIdScheduledForDeletion = unserialize(serialize($routesRelatedByIdToDelete));
 
-        foreach ($applicationsToDelete as $applicationRemoved) {
-            $applicationRemoved->setRouter(null);
+        foreach ($routesRelatedByIdToDelete as $routeRelatedByIdRemoved) {
+            $routeRelatedByIdRemoved->setRouteRelatedByRedirectId(null);
         }
 
-        $this->collApplications = null;
-        foreach ($applications as $application) {
-            $this->addApplication($application);
+        $this->collRoutesRelatedById = null;
+        foreach ($routesRelatedById as $routeRelatedById) {
+            $this->addRouteRelatedById($routeRelatedById);
         }
 
-        $this->collApplications = $applications;
-        $this->collApplicationsPartial = false;
+        $this->collRoutesRelatedById = $routesRelatedById;
+        $this->collRoutesRelatedByIdPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related Application objects.
+     * Returns the number of related Route objects.
      *
      * @param Criteria $criteria
      * @param boolean $distinct
      * @param PropelPDO $con
-     * @return int             Count of related Application objects.
+     * @return int             Count of related Route objects.
      * @throws PropelException
      */
-    public function countApplications(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countRoutesRelatedById(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
     {
-        $partial = $this->collApplicationsPartial && !$this->isNew();
-        if (null === $this->collApplications || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collApplications) {
+        $partial = $this->collRoutesRelatedByIdPartial && !$this->isNew();
+        if (null === $this->collRoutesRelatedById || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collRoutesRelatedById) {
                 return 0;
             }
 
             if($partial && !$criteria) {
-                return count($this->getApplications());
+                return count($this->getRoutesRelatedById());
             }
-            $query = ApplicationQuery::create(null, $criteria);
+            $query = RouteQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
 
             return $query
-                ->filterByRouter($this)
+                ->filterByRouteRelatedByRedirectId($this)
                 ->count($con);
         }
 
-        return count($this->collApplications);
+        return count($this->collRoutesRelatedById);
     }
 
     /**
-     * Method called to associate a Application object to this object
-     * through the Application foreign key attribute.
+     * Method called to associate a Route object to this object
+     * through the Route foreign key attribute.
      *
-     * @param    Application $l Application
-     * @return Router The current object (for fluent API support)
+     * @param    Route $l Route
+     * @return Route The current object (for fluent API support)
      */
-    public function addApplication(Application $l)
+    public function addRouteRelatedById(Route $l)
     {
-        if ($this->collApplications === null) {
-            $this->initApplications();
-            $this->collApplicationsPartial = true;
+        if ($this->collRoutesRelatedById === null) {
+            $this->initRoutesRelatedById();
+            $this->collRoutesRelatedByIdPartial = true;
         }
-        if (!in_array($l, $this->collApplications->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddApplication($l);
+        if (!in_array($l, $this->collRoutesRelatedById->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddRouteRelatedById($l);
         }
 
         return $this;
     }
 
     /**
-     * @param	Application $application The application object to add.
+     * @param	RouteRelatedById $routeRelatedById The routeRelatedById object to add.
      */
-    protected function doAddApplication($application)
+    protected function doAddRouteRelatedById($routeRelatedById)
     {
-        $this->collApplications[]= $application;
-        $application->setRouter($this);
+        $this->collRoutesRelatedById[]= $routeRelatedById;
+        $routeRelatedById->setRouteRelatedByRedirectId($this);
     }
 
     /**
-     * @param	Application $application The application object to remove.
-     * @return Router The current object (for fluent API support)
+     * @param	RouteRelatedById $routeRelatedById The routeRelatedById object to remove.
+     * @return Route The current object (for fluent API support)
      */
-    public function removeApplication($application)
+    public function removeRouteRelatedById($routeRelatedById)
     {
-        if ($this->getApplications()->contains($application)) {
-            $this->collApplications->remove($this->collApplications->search($application));
-            if (null === $this->applicationsScheduledForDeletion) {
-                $this->applicationsScheduledForDeletion = clone $this->collApplications;
-                $this->applicationsScheduledForDeletion->clear();
+        if ($this->getRoutesRelatedById()->contains($routeRelatedById)) {
+            $this->collRoutesRelatedById->remove($this->collRoutesRelatedById->search($routeRelatedById));
+            if (null === $this->routesRelatedByIdScheduledForDeletion) {
+                $this->routesRelatedByIdScheduledForDeletion = clone $this->collRoutesRelatedById;
+                $this->routesRelatedByIdScheduledForDeletion->clear();
             }
-            $this->applicationsScheduledForDeletion[]= clone $application;
-            $application->setRouter(null);
+            $this->routesRelatedByIdScheduledForDeletion[]= $routeRelatedById;
+            $routeRelatedById->setRouteRelatedByRedirectId(null);
         }
 
         return $this;
@@ -1132,50 +1360,25 @@ abstract class BaseRouter extends BaseObject implements Persistent
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Router is new, it will return
-     * an empty collection; or if this Router has previously
-     * been saved, it will retrieve related Applications from storage.
+     * Otherwise if this Route is new, it will return
+     * an empty collection; or if this Route has previously
+     * been saved, it will retrieve related RoutesRelatedById from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Router.
+     * actually need in Route.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Application[] List of Application objects
+     * @return PropelObjectCollection|Route[] List of Route objects
      */
-    public function getApplicationsJoinApplicationType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getRoutesRelatedByIdJoinPage($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
-        $query = ApplicationQuery::create(null, $criteria);
-        $query->joinWith('ApplicationType', $join_behavior);
+        $query = RouteQuery::create(null, $criteria);
+        $query->joinWith('Page', $join_behavior);
 
-        return $this->getApplications($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Router is new, it will return
-     * an empty collection; or if this Router has previously
-     * been saved, it will retrieve related Applications from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Router.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Application[] List of Application objects
-     */
-    public function getApplicationsJoinDesign($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = ApplicationQuery::create(null, $criteria);
-        $query->joinWith('Design', $join_behavior);
-
-        return $this->getApplications($query, $con);
+        return $this->getRoutesRelatedById($query, $con);
     }
 
     /**
@@ -1184,8 +1387,9 @@ abstract class BaseRouter extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->title = null;
-        $this->classname = null;
+        $this->slug = null;
+        $this->redirect_id = null;
+        $this->page_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1208,19 +1412,27 @@ abstract class BaseRouter extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collApplications) {
-                foreach ($this->collApplications as $o) {
+            if ($this->collRoutesRelatedById) {
+                foreach ($this->collRoutesRelatedById as $o) {
                     $o->clearAllReferences($deep);
                 }
+            }
+            if ($this->aRouteRelatedByRedirectId instanceof Persistent) {
+              $this->aRouteRelatedByRedirectId->clearAllReferences($deep);
+            }
+            if ($this->aPage instanceof Persistent) {
+              $this->aPage->clearAllReferences($deep);
             }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->collApplications instanceof PropelCollection) {
-            $this->collApplications->clearIterator();
+        if ($this->collRoutesRelatedById instanceof PropelCollection) {
+            $this->collRoutesRelatedById->clearIterator();
         }
-        $this->collApplications = null;
+        $this->collRoutesRelatedById = null;
+        $this->aRouteRelatedByRedirectId = null;
+        $this->aPage = null;
     }
 
     /**
@@ -1230,7 +1442,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function __toString()
     {
-        return (string) $this->exportTo(RouterPeer::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(RoutePeer::DEFAULT_STRING_FORMAT);
     }
 
     /**

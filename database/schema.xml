@@ -137,9 +137,10 @@
 	<table name="package">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
-		<column name="title" type="VARCHAR" size="255" />
-		<column name="installed_version" type="VARCHAR" size="50" />
+		<column name="name" type="VARCHAR" />
+		<column name="title" type="VARCHAR" />
 		<column name="description" type="LONGVARCHAR" />
+		<column name="installed_version" type="VARCHAR" size="50" />
 	</table>
 
 	<table name="application_type">
@@ -165,12 +166,12 @@
 	</table>
 
 	<table name="application">
-		<column name="id" type="INTEGER" size="10" primaryKey="true"
+		<column name="id" type="INTEGER" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="title" type="VARCHAR" size="255" />
-		<column name="application_type_id" type="INTEGER" size="10"
-			required="true" />
+		<column name="application_type_id" type="INTEGER" required="true" />
 		<column name="router_id" type="INTEGER" size="10" required="true" />
+		<column name="design_id" type="INTEGER" required="true"/>
 
 		<foreign-key foreignTable="application_type" onDelete="restrict">
 			<reference local="application_type_id" foreign="id" />
@@ -178,6 +179,10 @@
 
 		<foreign-key foreignTable="router" onDelete="restrict">
 			<reference local="router_id" foreign="id" />
+		</foreign-key>
+		
+		<foreign-key foreignTable="design" onDelete="restrict">
+			<reference local="design_id" foreign="id" />
 		</foreign-key>
 
 		<behavior name="extra_properties">
@@ -230,7 +235,7 @@
 		<column name="id" type="INTEGER" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="slug" type="VARCHAR"/>
-		<column name="redirect_id" type="VARCHAR" required="false"/>
+		<column name="redirect_id" type="INTEGER" required="false"/>
 		<column name="page_id" type="INTEGER" required="false"/>
 		
 		<foreign-key foreignTable="route">
@@ -243,17 +248,12 @@
 	</table>
 	
 	<table name="design">
-		<column name="id" type="INTEGER" size="10" primaryKey="true"
+		<column name="id" type="INTEGER" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="package_id" type="INTEGER" />
-		<column name="application_type_id" type="INTEGER" />
 
 		<foreign-key foreignTable="package">
 			<reference local="package_id" foreign="id" />
-		</foreign-key>
-		
-		<foreign-key foreignTable="application_type">
-			<reference local="application_type_id" foreign="id" />
 		</foreign-key>
 
 		<behavior name="delegate">
@@ -264,6 +264,7 @@
 	<table name="layout">
 		<column name="id" type="INTEGER" primaryKey="true"
 			required="true" autoIncrement="true" />
+		<column name="name" type="VARCHAR" />
 		<column name="title" type="VARCHAR" />
 		<column name="design_id" type="INTEGER" />
 
@@ -275,6 +276,7 @@
 	<table name="block">
 		<column name="id" type="INTEGER" primaryKey="true"
 			required="true" autoIncrement="true" />
+		<column name="name" type="VARCHAR" />
 		<column name="title" type="VARCHAR" />
 		<column name="layout_id" type="INTEGER" />
 

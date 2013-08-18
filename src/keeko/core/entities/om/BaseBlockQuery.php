@@ -23,10 +23,12 @@ use keeko\core\entities\Layout;
  *
  *
  * @method BlockQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method BlockQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method BlockQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method BlockQuery orderByLayoutId($order = Criteria::ASC) Order by the layout_id column
  *
  * @method BlockQuery groupById() Group by the id column
+ * @method BlockQuery groupByName() Group by the name column
  * @method BlockQuery groupByTitle() Group by the title column
  * @method BlockQuery groupByLayoutId() Group by the layout_id column
  *
@@ -41,10 +43,12 @@ use keeko\core\entities\Layout;
  * @method Block findOne(PropelPDO $con = null) Return the first Block matching the query
  * @method Block findOneOrCreate(PropelPDO $con = null) Return the first Block matching the query, or a new Block object populated from the query conditions when no match is found
  *
+ * @method Block findOneByName(string $name) Return the first Block filtered by the name column
  * @method Block findOneByTitle(string $title) Return the first Block filtered by the title column
  * @method Block findOneByLayoutId(int $layout_id) Return the first Block filtered by the layout_id column
  *
  * @method array findById(int $id) Return Block objects filtered by the id column
+ * @method array findByName(string $name) Return Block objects filtered by the name column
  * @method array findByTitle(string $title) Return Block objects filtered by the title column
  * @method array findByLayoutId(int $layout_id) Return Block objects filtered by the layout_id column
  *
@@ -150,7 +154,7 @@ abstract class BaseBlockQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `title`, `layout_id` FROM `keeko_block` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `name`, `title`, `layout_id` FROM `keeko_block` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -279,6 +283,35 @@ abstract class BaseBlockQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(BlockPeer::ID, $id, $comparison);
+    }
+
+    /**
+     * Filter the query on the name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $name The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return BlockQuery The current query, for fluid interface
+     */
+    public function filterByName($name = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($name)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $name)) {
+                $name = str_replace('*', '%', $name);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(BlockPeer::NAME, $name, $comparison);
     }
 
     /**

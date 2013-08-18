@@ -33,10 +33,14 @@ abstract class AbstractApplication implements ApplicationInterface {
 	 */
 	public function run(Request $request, ApplicationRouter $appRouter) {
 		// get params
-		$params = $this->application->getExtraProperties();
+// 		$params = $this->application->getExtraProperties(); // see: https://github.com/Carpe-Hora/ExtraPropertiesBehavior/issues/12
+		$params = [];
+		foreach ($this->application->getExtraProperties() as $key => $value) {
+			$params[strtolower($key)] = $value;
+		}
 		$params['application'] = $this->application;
 		$params['basepath'] = $appRouter->getPrefix();
-		
+
 		/* @var $router RouteMatcherInterface */
 		$routing = $this->application->getRouter()->getClassname();
 		$this->router = new $routing($params);
