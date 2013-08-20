@@ -12,7 +12,7 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use keeko\core\entities\ApplicationType;
+use keeko\core\entities\Application;
 use keeko\core\entities\Design;
 use keeko\core\entities\Module;
 use keeko\core\entities\Package;
@@ -40,9 +40,9 @@ use keeko\core\entities\PackageQuery;
  * @method PackageQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method PackageQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method PackageQuery leftJoinApplicationType($relationAlias = null) Adds a LEFT JOIN clause to the query using the ApplicationType relation
- * @method PackageQuery rightJoinApplicationType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ApplicationType relation
- * @method PackageQuery innerJoinApplicationType($relationAlias = null) Adds a INNER JOIN clause to the query using the ApplicationType relation
+ * @method PackageQuery leftJoinApplication($relationAlias = null) Adds a LEFT JOIN clause to the query using the Application relation
+ * @method PackageQuery rightJoinApplication($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Application relation
+ * @method PackageQuery innerJoinApplication($relationAlias = null) Adds a INNER JOIN clause to the query using the Application relation
  *
  * @method PackageQuery leftJoinDesign($relationAlias = null) Adds a LEFT JOIN clause to the query using the Design relation
  * @method PackageQuery rightJoinDesign($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Design relation
@@ -416,41 +416,41 @@ abstract class BasePackageQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related ApplicationType object
+     * Filter the query by a related Application object
      *
-     * @param   ApplicationType|PropelObjectCollection $applicationType  the related object to use as filter
+     * @param   Application|PropelObjectCollection $application  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 PackageQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByApplicationType($applicationType, $comparison = null)
+    public function filterByApplication($application, $comparison = null)
     {
-        if ($applicationType instanceof ApplicationType) {
+        if ($application instanceof Application) {
             return $this
-                ->addUsingAlias(PackagePeer::ID, $applicationType->getPackageId(), $comparison);
-        } elseif ($applicationType instanceof PropelObjectCollection) {
+                ->addUsingAlias(PackagePeer::ID, $application->getPackageId(), $comparison);
+        } elseif ($application instanceof PropelObjectCollection) {
             return $this
-                ->useApplicationTypeQuery()
-                ->filterByPrimaryKeys($applicationType->getPrimaryKeys())
+                ->useApplicationQuery()
+                ->filterByPrimaryKeys($application->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByApplicationType() only accepts arguments of type ApplicationType or PropelCollection');
+            throw new PropelException('filterByApplication() only accepts arguments of type Application or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the ApplicationType relation
+     * Adds a JOIN clause to the query using the Application relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return PackageQuery The current query, for fluid interface
      */
-    public function joinApplicationType($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinApplication($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('ApplicationType');
+        $relationMap = $tableMap->getRelation('Application');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -465,14 +465,14 @@ abstract class BasePackageQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'ApplicationType');
+            $this->addJoinObject($join, 'Application');
         }
 
         return $this;
     }
 
     /**
-     * Use the ApplicationType relation ApplicationType object
+     * Use the Application relation Application object
      *
      * @see       useQuery()
      *
@@ -480,13 +480,13 @@ abstract class BasePackageQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \keeko\core\entities\ApplicationTypeQuery A secondary query class using the current class as primary query
+     * @return   \keeko\core\entities\ApplicationQuery A secondary query class using the current class as primary query
      */
-    public function useApplicationTypeQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useApplicationQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinApplicationType($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'ApplicationType', '\keeko\core\entities\ApplicationTypeQuery');
+            ->joinApplication($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Application', '\keeko\core\entities\ApplicationQuery');
     }
 
     /**

@@ -13,8 +13,8 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use keeko\core\entities\ApplicationType;
-use keeko\core\entities\ApplicationTypeQuery;
+use keeko\core\entities\Application;
+use keeko\core\entities\ApplicationQuery;
 use keeko\core\entities\Design;
 use keeko\core\entities\DesignQuery;
 use keeko\core\entities\Module;
@@ -82,10 +82,10 @@ abstract class BasePackage extends BaseObject implements Persistent
     protected $installed_version;
 
     /**
-     * @var        PropelObjectCollection|ApplicationType[] Collection to store aggregation of ApplicationType objects.
+     * @var        PropelObjectCollection|Application[] Collection to store aggregation of Application objects.
      */
-    protected $collApplicationTypes;
-    protected $collApplicationTypesPartial;
+    protected $collApplications;
+    protected $collApplicationsPartial;
 
     /**
      * @var        PropelObjectCollection|Design[] Collection to store aggregation of Design objects.
@@ -123,7 +123,7 @@ abstract class BasePackage extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $applicationTypesScheduledForDeletion = null;
+    protected $applicationsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -399,7 +399,7 @@ abstract class BasePackage extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collApplicationTypes = null;
+            $this->collApplications = null;
 
             $this->collDesigns = null;
 
@@ -529,18 +529,18 @@ abstract class BasePackage extends BaseObject implements Persistent
                 $this->resetModified();
             }
 
-            if ($this->applicationTypesScheduledForDeletion !== null) {
-                if (!$this->applicationTypesScheduledForDeletion->isEmpty()) {
-                    foreach ($this->applicationTypesScheduledForDeletion as $applicationType) {
+            if ($this->applicationsScheduledForDeletion !== null) {
+                if (!$this->applicationsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->applicationsScheduledForDeletion as $application) {
                         // need to save related object because we set the relation to null
-                        $applicationType->save($con);
+                        $application->save($con);
                     }
-                    $this->applicationTypesScheduledForDeletion = null;
+                    $this->applicationsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collApplicationTypes !== null) {
-                foreach ($this->collApplicationTypes as $referrerFK) {
+            if ($this->collApplications !== null) {
+                foreach ($this->collApplications as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -749,8 +749,8 @@ abstract class BasePackage extends BaseObject implements Persistent
             }
 
 
-                if ($this->collApplicationTypes !== null) {
-                    foreach ($this->collApplicationTypes as $referrerFK) {
+                if ($this->collApplications !== null) {
+                    foreach ($this->collApplications as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -859,8 +859,8 @@ abstract class BasePackage extends BaseObject implements Persistent
             $keys[4] => $this->getInstalledVersion(),
         );
         if ($includeForeignObjects) {
-            if (null !== $this->collApplicationTypes) {
-                $result['ApplicationTypes'] = $this->collApplicationTypes->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collApplications) {
+                $result['Applications'] = $this->collApplications->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collDesigns) {
                 $result['Designs'] = $this->collDesigns->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1037,9 +1037,9 @@ abstract class BasePackage extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
-            foreach ($this->getApplicationTypes() as $relObj) {
+            foreach ($this->getApplications() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addApplicationType($relObj->copy($deepCopy));
+                    $copyObj->addApplication($relObj->copy($deepCopy));
                 }
             }
 
@@ -1116,8 +1116,8 @@ abstract class BasePackage extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
-        if ('ApplicationType' == $relationName) {
-            $this->initApplicationTypes();
+        if ('Application' == $relationName) {
+            $this->initApplications();
         }
         if ('Design' == $relationName) {
             $this->initDesigns();
@@ -1128,36 +1128,36 @@ abstract class BasePackage extends BaseObject implements Persistent
     }
 
     /**
-     * Clears out the collApplicationTypes collection
+     * Clears out the collApplications collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return Package The current object (for fluent API support)
-     * @see        addApplicationTypes()
+     * @see        addApplications()
      */
-    public function clearApplicationTypes()
+    public function clearApplications()
     {
-        $this->collApplicationTypes = null; // important to set this to null since that means it is uninitialized
-        $this->collApplicationTypesPartial = null;
+        $this->collApplications = null; // important to set this to null since that means it is uninitialized
+        $this->collApplicationsPartial = null;
 
         return $this;
     }
 
     /**
-     * reset is the collApplicationTypes collection loaded partially
+     * reset is the collApplications collection loaded partially
      *
      * @return void
      */
-    public function resetPartialApplicationTypes($v = true)
+    public function resetPartialApplications($v = true)
     {
-        $this->collApplicationTypesPartial = $v;
+        $this->collApplicationsPartial = $v;
     }
 
     /**
-     * Initializes the collApplicationTypes collection.
+     * Initializes the collApplications collection.
      *
-     * By default this just sets the collApplicationTypes collection to an empty array (like clearcollApplicationTypes());
+     * By default this just sets the collApplications collection to an empty array (like clearcollApplications());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1166,17 +1166,17 @@ abstract class BasePackage extends BaseObject implements Persistent
      *
      * @return void
      */
-    public function initApplicationTypes($overrideExisting = true)
+    public function initApplications($overrideExisting = true)
     {
-        if (null !== $this->collApplicationTypes && !$overrideExisting) {
+        if (null !== $this->collApplications && !$overrideExisting) {
             return;
         }
-        $this->collApplicationTypes = new PropelObjectCollection();
-        $this->collApplicationTypes->setModel('ApplicationType');
+        $this->collApplications = new PropelObjectCollection();
+        $this->collApplications->setModel('Application');
     }
 
     /**
-     * Gets an array of ApplicationType objects which contain a foreign key that references this object.
+     * Gets an array of Application objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -1186,105 +1186,105 @@ abstract class BasePackage extends BaseObject implements Persistent
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|ApplicationType[] List of ApplicationType objects
+     * @return PropelObjectCollection|Application[] List of Application objects
      * @throws PropelException
      */
-    public function getApplicationTypes($criteria = null, PropelPDO $con = null)
+    public function getApplications($criteria = null, PropelPDO $con = null)
     {
-        $partial = $this->collApplicationTypesPartial && !$this->isNew();
-        if (null === $this->collApplicationTypes || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collApplicationTypes) {
+        $partial = $this->collApplicationsPartial && !$this->isNew();
+        if (null === $this->collApplications || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collApplications) {
                 // return empty collection
-                $this->initApplicationTypes();
+                $this->initApplications();
             } else {
-                $collApplicationTypes = ApplicationTypeQuery::create(null, $criteria)
+                $collApplications = ApplicationQuery::create(null, $criteria)
                     ->filterByPackage($this)
                     ->find($con);
                 if (null !== $criteria) {
-                    if (false !== $this->collApplicationTypesPartial && count($collApplicationTypes)) {
-                      $this->initApplicationTypes(false);
+                    if (false !== $this->collApplicationsPartial && count($collApplications)) {
+                      $this->initApplications(false);
 
-                      foreach($collApplicationTypes as $obj) {
-                        if (false == $this->collApplicationTypes->contains($obj)) {
-                          $this->collApplicationTypes->append($obj);
+                      foreach($collApplications as $obj) {
+                        if (false == $this->collApplications->contains($obj)) {
+                          $this->collApplications->append($obj);
                         }
                       }
 
-                      $this->collApplicationTypesPartial = true;
+                      $this->collApplicationsPartial = true;
                     }
 
-                    $collApplicationTypes->getInternalIterator()->rewind();
-                    return $collApplicationTypes;
+                    $collApplications->getInternalIterator()->rewind();
+                    return $collApplications;
                 }
 
-                if($partial && $this->collApplicationTypes) {
-                    foreach($this->collApplicationTypes as $obj) {
+                if($partial && $this->collApplications) {
+                    foreach($this->collApplications as $obj) {
                         if($obj->isNew()) {
-                            $collApplicationTypes[] = $obj;
+                            $collApplications[] = $obj;
                         }
                     }
                 }
 
-                $this->collApplicationTypes = $collApplicationTypes;
-                $this->collApplicationTypesPartial = false;
+                $this->collApplications = $collApplications;
+                $this->collApplicationsPartial = false;
             }
         }
 
-        return $this->collApplicationTypes;
+        return $this->collApplications;
     }
 
     /**
-     * Sets a collection of ApplicationType objects related by a one-to-many relationship
+     * Sets a collection of Application objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param PropelCollection $applicationTypes A Propel collection.
+     * @param PropelCollection $applications A Propel collection.
      * @param PropelPDO $con Optional connection object
      * @return Package The current object (for fluent API support)
      */
-    public function setApplicationTypes(PropelCollection $applicationTypes, PropelPDO $con = null)
+    public function setApplications(PropelCollection $applications, PropelPDO $con = null)
     {
-        $applicationTypesToDelete = $this->getApplicationTypes(new Criteria(), $con)->diff($applicationTypes);
+        $applicationsToDelete = $this->getApplications(new Criteria(), $con)->diff($applications);
 
-        $this->applicationTypesScheduledForDeletion = unserialize(serialize($applicationTypesToDelete));
+        $this->applicationsScheduledForDeletion = unserialize(serialize($applicationsToDelete));
 
-        foreach ($applicationTypesToDelete as $applicationTypeRemoved) {
-            $applicationTypeRemoved->setPackage(null);
+        foreach ($applicationsToDelete as $applicationRemoved) {
+            $applicationRemoved->setPackage(null);
         }
 
-        $this->collApplicationTypes = null;
-        foreach ($applicationTypes as $applicationType) {
-            $this->addApplicationType($applicationType);
+        $this->collApplications = null;
+        foreach ($applications as $application) {
+            $this->addApplication($application);
         }
 
-        $this->collApplicationTypes = $applicationTypes;
-        $this->collApplicationTypesPartial = false;
+        $this->collApplications = $applications;
+        $this->collApplicationsPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related ApplicationType objects.
+     * Returns the number of related Application objects.
      *
      * @param Criteria $criteria
      * @param boolean $distinct
      * @param PropelPDO $con
-     * @return int             Count of related ApplicationType objects.
+     * @return int             Count of related Application objects.
      * @throws PropelException
      */
-    public function countApplicationTypes(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countApplications(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
     {
-        $partial = $this->collApplicationTypesPartial && !$this->isNew();
-        if (null === $this->collApplicationTypes || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collApplicationTypes) {
+        $partial = $this->collApplicationsPartial && !$this->isNew();
+        if (null === $this->collApplications || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collApplications) {
                 return 0;
             }
 
             if($partial && !$criteria) {
-                return count($this->getApplicationTypes());
+                return count($this->getApplications());
             }
-            $query = ApplicationTypeQuery::create(null, $criteria);
+            $query = ApplicationQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
@@ -1294,55 +1294,105 @@ abstract class BasePackage extends BaseObject implements Persistent
                 ->count($con);
         }
 
-        return count($this->collApplicationTypes);
+        return count($this->collApplications);
     }
 
     /**
-     * Method called to associate a ApplicationType object to this object
-     * through the ApplicationType foreign key attribute.
+     * Method called to associate a Application object to this object
+     * through the Application foreign key attribute.
      *
-     * @param    ApplicationType $l ApplicationType
+     * @param    Application $l Application
      * @return Package The current object (for fluent API support)
      */
-    public function addApplicationType(ApplicationType $l)
+    public function addApplication(Application $l)
     {
-        if ($this->collApplicationTypes === null) {
-            $this->initApplicationTypes();
-            $this->collApplicationTypesPartial = true;
+        if ($this->collApplications === null) {
+            $this->initApplications();
+            $this->collApplicationsPartial = true;
         }
-        if (!in_array($l, $this->collApplicationTypes->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddApplicationType($l);
+        if (!in_array($l, $this->collApplications->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddApplication($l);
         }
 
         return $this;
     }
 
     /**
-     * @param	ApplicationType $applicationType The applicationType object to add.
+     * @param	Application $application The application object to add.
      */
-    protected function doAddApplicationType($applicationType)
+    protected function doAddApplication($application)
     {
-        $this->collApplicationTypes[]= $applicationType;
-        $applicationType->setPackage($this);
+        $this->collApplications[]= $application;
+        $application->setPackage($this);
     }
 
     /**
-     * @param	ApplicationType $applicationType The applicationType object to remove.
+     * @param	Application $application The application object to remove.
      * @return Package The current object (for fluent API support)
      */
-    public function removeApplicationType($applicationType)
+    public function removeApplication($application)
     {
-        if ($this->getApplicationTypes()->contains($applicationType)) {
-            $this->collApplicationTypes->remove($this->collApplicationTypes->search($applicationType));
-            if (null === $this->applicationTypesScheduledForDeletion) {
-                $this->applicationTypesScheduledForDeletion = clone $this->collApplicationTypes;
-                $this->applicationTypesScheduledForDeletion->clear();
+        if ($this->getApplications()->contains($application)) {
+            $this->collApplications->remove($this->collApplications->search($application));
+            if (null === $this->applicationsScheduledForDeletion) {
+                $this->applicationsScheduledForDeletion = clone $this->collApplications;
+                $this->applicationsScheduledForDeletion->clear();
             }
-            $this->applicationTypesScheduledForDeletion[]= $applicationType;
-            $applicationType->setPackage(null);
+            $this->applicationsScheduledForDeletion[]= $application;
+            $application->setPackage(null);
         }
 
         return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Package is new, it will return
+     * an empty collection; or if this Package has previously
+     * been saved, it will retrieve related Applications from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Package.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Application[] List of Application objects
+     */
+    public function getApplicationsJoinRouter($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = ApplicationQuery::create(null, $criteria);
+        $query->joinWith('Router', $join_behavior);
+
+        return $this->getApplications($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Package is new, it will return
+     * an empty collection; or if this Package has previously
+     * been saved, it will retrieve related Applications from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Package.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Application[] List of Application objects
+     */
+    public function getApplicationsJoinDesign($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = ApplicationQuery::create(null, $criteria);
+        $query->joinWith('Design', $join_behavior);
+
+        return $this->getApplications($query, $con);
     }
 
     /**
@@ -1813,8 +1863,8 @@ abstract class BasePackage extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collApplicationTypes) {
-                foreach ($this->collApplicationTypes as $o) {
+            if ($this->collApplications) {
+                foreach ($this->collApplications as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -1832,10 +1882,10 @@ abstract class BasePackage extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->collApplicationTypes instanceof PropelCollection) {
-            $this->collApplicationTypes->clearIterator();
+        if ($this->collApplications instanceof PropelCollection) {
+            $this->collApplications->clearIterator();
         }
-        $this->collApplicationTypes = null;
+        $this->collApplications = null;
         if ($this->collDesigns instanceof PropelCollection) {
             $this->collDesigns->clearIterator();
         }

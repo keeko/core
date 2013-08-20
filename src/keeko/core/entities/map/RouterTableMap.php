@@ -43,8 +43,9 @@ class RouterTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->addColumn('title', 'Title', 'VARCHAR', false, 255, null);
-        $this->addColumn('classname', 'Classname', 'VARCHAR', false, 255, null);
+        $this->addColumn('classname', 'Classname', 'VARCHAR', true, 255, null);
         // validators
     } // initialize()
 

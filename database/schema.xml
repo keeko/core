@@ -143,38 +143,24 @@
 		<column name="installed_version" type="VARCHAR" size="50" />
 	</table>
 
-	<table name="application_type">
-		<column name="id" type="INTEGER" size="10" primaryKey="true"
-			required="true" autoIncrement="true" />
-		<column name="classname" type="VARCHAR" size="255" />
-		<column name="package_id" type="INTEGER" />
-
-		<foreign-key foreignTable="package">
-			<reference local="package_id" foreign="id" />
-		</foreign-key>
-
-		<behavior name="delegate">
-			<parameter name="to" value="package" />
-		</behavior>
-	</table>
-
 	<table name="router">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
+		<column name="name" type="VARCHAR" required="true"/>
 		<column name="title" type="VARCHAR" size="255" />
-		<column name="classname" type="VARCHAR" size="255" />
+		<column name="classname" type="VARCHAR" size="255" required="true" />
 	</table>
 
 	<table name="application">
 		<column name="id" type="INTEGER" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="title" type="VARCHAR" size="255" />
-		<column name="application_type_id" type="INTEGER" required="true" />
 		<column name="router_id" type="INTEGER" size="10" required="true" />
 		<column name="design_id" type="INTEGER" required="true"/>
+		<column name="package_id" type="INTEGER" />
 
-		<foreign-key foreignTable="application_type" onDelete="restrict">
-			<reference local="application_type_id" foreign="id" />
+		<foreign-key foreignTable="package">
+			<reference local="package_id" foreign="id" />
 		</foreign-key>
 
 		<foreign-key foreignTable="router" onDelete="restrict">
@@ -185,8 +171,13 @@
 			<reference local="design_id" foreign="id" />
 		</foreign-key>
 
+		<behavior name="delegate">
+			<parameter name="to" value="package" />
+		</behavior>
+
 		<behavior name="extra_properties">
 			<parameter name="properties_table" value="application_params" />
+			<parameter name="normalize" value="false" />
 		</behavior>
 	</table>
 

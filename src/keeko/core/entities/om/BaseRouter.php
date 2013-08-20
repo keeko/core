@@ -54,6 +54,12 @@ abstract class BaseRouter extends BaseObject implements Persistent
     protected $id;
 
     /**
+     * The value for the name field.
+     * @var        string
+     */
+    protected $name;
+
+    /**
      * The value for the title field.
      * @var        string
      */
@@ -108,6 +114,16 @@ abstract class BaseRouter extends BaseObject implements Persistent
     }
 
     /**
+     * Get the [name] column value.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Get the [title] column value.
      *
      * @return string
@@ -147,6 +163,27 @@ abstract class BaseRouter extends BaseObject implements Persistent
 
         return $this;
     } // setId()
+
+    /**
+     * Set the value of [name] column.
+     *
+     * @param string $v new value
+     * @return Router The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[] = RouterPeer::NAME;
+        }
+
+
+        return $this;
+    } // setName()
 
     /**
      * Set the value of [title] column.
@@ -223,8 +260,9 @@ abstract class BaseRouter extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->classname = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->classname = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -233,7 +271,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 3; // 3 = RouterPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = RouterPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Router object", $e);
@@ -467,6 +505,9 @@ abstract class BaseRouter extends BaseObject implements Persistent
         if ($this->isColumnModified(RouterPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
+        if ($this->isColumnModified(RouterPeer::NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`name`';
+        }
         if ($this->isColumnModified(RouterPeer::TITLE)) {
             $modifiedColumns[':p' . $index++]  = '`title`';
         }
@@ -486,6 +527,9 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 switch ($columnName) {
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case '`name`':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
                     case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
@@ -639,9 +683,12 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getTitle();
+                return $this->getName();
                 break;
             case 2:
+                return $this->getTitle();
+                break;
+            case 3:
                 return $this->getClassname();
                 break;
             default:
@@ -674,8 +721,9 @@ abstract class BaseRouter extends BaseObject implements Persistent
         $keys = RouterPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getClassname(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getTitle(),
+            $keys[3] => $this->getClassname(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->collApplications) {
@@ -719,9 +767,12 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTitle($value);
+                $this->setName($value);
                 break;
             case 2:
+                $this->setTitle($value);
+                break;
+            case 3:
                 $this->setClassname($value);
                 break;
         } // switch()
@@ -749,8 +800,9 @@ abstract class BaseRouter extends BaseObject implements Persistent
         $keys = RouterPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setClassname($arr[$keys[2]]);
+        if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setClassname($arr[$keys[3]]);
     }
 
     /**
@@ -763,6 +815,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
         $criteria = new Criteria(RouterPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(RouterPeer::ID)) $criteria->add(RouterPeer::ID, $this->id);
+        if ($this->isColumnModified(RouterPeer::NAME)) $criteria->add(RouterPeer::NAME, $this->name);
         if ($this->isColumnModified(RouterPeer::TITLE)) $criteria->add(RouterPeer::TITLE, $this->title);
         if ($this->isColumnModified(RouterPeer::CLASSNAME)) $criteria->add(RouterPeer::CLASSNAME, $this->classname);
 
@@ -828,6 +881,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setName($this->getName());
         $copyObj->setTitle($this->getTitle());
         $copyObj->setClassname($this->getClassname());
 
@@ -1145,10 +1199,10 @@ abstract class BaseRouter extends BaseObject implements Persistent
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return PropelObjectCollection|Application[] List of Application objects
      */
-    public function getApplicationsJoinApplicationType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getApplicationsJoinPackage($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $query = ApplicationQuery::create(null, $criteria);
-        $query->joinWith('ApplicationType', $join_behavior);
+        $query->joinWith('Package', $join_behavior);
 
         return $this->getApplications($query, $con);
     }
@@ -1184,6 +1238,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
+        $this->name = null;
         $this->title = null;
         $this->classname = null;
         $this->alreadyInSave = false;

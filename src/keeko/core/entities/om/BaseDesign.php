@@ -1239,10 +1239,10 @@ abstract class BaseDesign extends BaseObject implements Persistent
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return PropelObjectCollection|Application[] List of Application objects
      */
-    public function getApplicationsJoinApplicationType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getApplicationsJoinPackage($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $query = ApplicationQuery::create(null, $criteria);
-        $query->joinWith('ApplicationType', $join_behavior);
+        $query->joinWith('Package', $join_behavior);
 
         return $this->getApplications($query, $con);
     }

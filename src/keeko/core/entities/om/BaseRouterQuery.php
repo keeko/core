@@ -23,10 +23,12 @@ use keeko\core\entities\RouterQuery;
  *
  *
  * @method RouterQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method RouterQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method RouterQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method RouterQuery orderByClassname($order = Criteria::ASC) Order by the classname column
  *
  * @method RouterQuery groupById() Group by the id column
+ * @method RouterQuery groupByName() Group by the name column
  * @method RouterQuery groupByTitle() Group by the title column
  * @method RouterQuery groupByClassname() Group by the classname column
  *
@@ -41,10 +43,12 @@ use keeko\core\entities\RouterQuery;
  * @method Router findOne(PropelPDO $con = null) Return the first Router matching the query
  * @method Router findOneOrCreate(PropelPDO $con = null) Return the first Router matching the query, or a new Router object populated from the query conditions when no match is found
  *
+ * @method Router findOneByName(string $name) Return the first Router filtered by the name column
  * @method Router findOneByTitle(string $title) Return the first Router filtered by the title column
  * @method Router findOneByClassname(string $classname) Return the first Router filtered by the classname column
  *
  * @method array findById(int $id) Return Router objects filtered by the id column
+ * @method array findByName(string $name) Return Router objects filtered by the name column
  * @method array findByTitle(string $title) Return Router objects filtered by the title column
  * @method array findByClassname(string $classname) Return Router objects filtered by the classname column
  *
@@ -150,7 +154,7 @@ abstract class BaseRouterQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `title`, `classname` FROM `keeko_router` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `name`, `title`, `classname` FROM `keeko_router` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -279,6 +283,35 @@ abstract class BaseRouterQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(RouterPeer::ID, $id, $comparison);
+    }
+
+    /**
+     * Filter the query on the name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $name The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return RouterQuery The current query, for fluid interface
+     */
+    public function filterByName($name = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($name)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $name)) {
+                $name = str_replace('*', '%', $name);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(RouterPeer::NAME, $name, $comparison);
     }
 
     /**

@@ -25,6 +25,7 @@ class KeekoInstaller {
 		
 		// routers
 		$mar = new Router();
+		$mar->setName('module-action-router');
 		$mar->setTitle('Module-Action-Router');
 		$mar->setClassname('\\keeko\\core\\routing\\ModuleActionRouter');
 		$mar->save();
@@ -60,21 +61,10 @@ class KeekoInstaller {
 		$design->save();
 		
 		
-		// apps
-		// website
-		$website = new ApplicationType();
-		$website->setTitle('keeko/website-app');
-		$website->setDescription('- description -');
-		$website->setInstalledVersion('dev-master');
-		$website->setClassname('\\keeko\\applications\\website\\WebsiteApplication');
-		$website->save();
-		
-		// gateways
 		// admin
 		$admin = new Application();
 		$admin->setDesign($design);
 		$admin->setTitle('Admin');
-		$admin->setApplicationType($website);
 		$admin->setRouter($mar);
 		$admin->setProperty('module', 'admin');
 		$admin->save();

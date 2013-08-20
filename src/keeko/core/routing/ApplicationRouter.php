@@ -10,6 +10,7 @@ class ApplicationRouter implements RouteMatcherInterface {
 
 	private $destination;
 	private $prefix;
+	private $uri;
 
 	public function __construct() {
 	}
@@ -20,6 +21,14 @@ class ApplicationRouter implements RouteMatcherInterface {
 
 	public function getPrefix() {
 		return $this->prefix;
+	}
+	
+	/**
+	 * 
+	 * @return ApplicationUri
+	 */
+	public function getUri() {
+		return $this->uri;
 	}
 
 	/**
@@ -43,6 +52,7 @@ class ApplicationRouter implements RouteMatcherInterface {
 			if ($pos = strpos($request->getRequestUri(), $uri->getBasepath()) !== false) {
 				$this->destination = substr($request->getRequestUri(), strlen($uri->getBasepath()));
 				$this->prefix = str_replace($request->getBasePath(), '', $uri->getBasePath());
+				$this->uri = $uri;
 				break;
 			}
 		}
