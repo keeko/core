@@ -19,6 +19,8 @@ use keeko\core\entities\ApplicationExtraProperty;
 use keeko\core\entities\ApplicationExtraPropertyQuery;
 use keeko\core\entities\ApplicationPeer;
 use keeko\core\entities\ApplicationQuery;
+use keeko\core\entities\ApplicationType;
+use keeko\core\entities\ApplicationTypeQuery;
 use keeko\core\entities\ApplicationUri;
 use keeko\core\entities\ApplicationUriQuery;
 use keeko\core\entities\Design;
@@ -71,6 +73,12 @@ abstract class BaseApplication extends BaseObject implements Persistent
     protected $title;
 
     /**
+     * The value for the application_type_id field.
+     * @var        int
+     */
+    protected $application_type_id;
+
+    /**
      * The value for the router_id field.
      * @var        int
      */
@@ -87,6 +95,11 @@ abstract class BaseApplication extends BaseObject implements Persistent
      * @var        int
      */
     protected $package_id;
+
+    /**
+     * @var        ApplicationType
+     */
+    protected $aApplicationType;
 
     /**
      * @var        Package
@@ -186,6 +199,16 @@ abstract class BaseApplication extends BaseObject implements Persistent
     }
 
     /**
+     * Get the [application_type_id] column value.
+     *
+     * @return int
+     */
+    public function getApplicationTypeId()
+    {
+        return $this->application_type_id;
+    }
+
+    /**
      * Get the [router_id] column value.
      *
      * @return int
@@ -256,6 +279,31 @@ abstract class BaseApplication extends BaseObject implements Persistent
 
         return $this;
     } // setTitle()
+
+    /**
+     * Set the value of [application_type_id] column.
+     *
+     * @param int $v new value
+     * @return Application The current object (for fluent API support)
+     */
+    public function setApplicationTypeId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->application_type_id !== $v) {
+            $this->application_type_id = $v;
+            $this->modifiedColumns[] = ApplicationPeer::APPLICATION_TYPE_ID;
+        }
+
+        if ($this->aApplicationType !== null && $this->aApplicationType->getId() !== $v) {
+            $this->aApplicationType = null;
+        }
+
+
+        return $this;
+    } // setApplicationTypeId()
 
     /**
      * Set the value of [router_id] column.
@@ -366,9 +414,10 @@ abstract class BaseApplication extends BaseObject implements Persistent
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->router_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
-            $this->design_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
-            $this->package_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+            $this->application_type_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->router_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+            $this->design_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+            $this->package_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -377,7 +426,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 5; // 5 = ApplicationPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = ApplicationPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Application object", $e);
@@ -400,6 +449,9 @@ abstract class BaseApplication extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
+        if ($this->aApplicationType !== null && $this->application_type_id !== $this->aApplicationType->getId()) {
+            $this->aApplicationType = null;
+        }
         if ($this->aRouter !== null && $this->router_id !== $this->aRouter->getId()) {
             $this->aRouter = null;
         }
@@ -448,6 +500,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aApplicationType = null;
             $this->aPackage = null;
             $this->aRouter = null;
             $this->aDesign = null;
@@ -575,6 +628,13 @@ abstract class BaseApplication extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aApplicationType !== null) {
+                if ($this->aApplicationType->isModified() || $this->aApplicationType->isNew()) {
+                    $affectedRows += $this->aApplicationType->save($con);
+                }
+                $this->setApplicationType($this->aApplicationType);
+            }
+
             if ($this->aPackage !== null) {
                 if ($this->aPackage->isModified() || $this->aPackage->isNew()) {
                     $affectedRows += $this->aPackage->save($con);
@@ -691,6 +751,9 @@ abstract class BaseApplication extends BaseObject implements Persistent
         if ($this->isColumnModified(ApplicationPeer::TITLE)) {
             $modifiedColumns[':p' . $index++]  = '`title`';
         }
+        if ($this->isColumnModified(ApplicationPeer::APPLICATION_TYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`application_type_id`';
+        }
         if ($this->isColumnModified(ApplicationPeer::ROUTER_ID)) {
             $modifiedColumns[':p' . $index++]  = '`router_id`';
         }
@@ -716,6 +779,9 @@ abstract class BaseApplication extends BaseObject implements Persistent
                         break;
                     case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+                        break;
+                    case '`application_type_id`':
+                        $stmt->bindValue($identifier, $this->application_type_id, PDO::PARAM_INT);
                         break;
                     case '`router_id`':
                         $stmt->bindValue($identifier, $this->router_id, PDO::PARAM_INT);
@@ -825,6 +891,12 @@ abstract class BaseApplication extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aApplicationType !== null) {
+                if (!$this->aApplicationType->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aApplicationType->getValidationFailures());
+                }
+            }
+
             if ($this->aPackage !== null) {
                 if (!$this->aPackage->validate($columns)) {
                     $failureMap = array_merge($failureMap, $this->aPackage->getValidationFailures());
@@ -915,12 +987,15 @@ abstract class BaseApplication extends BaseObject implements Persistent
                 return $this->getTitle();
                 break;
             case 2:
-                return $this->getRouterId();
+                return $this->getApplicationTypeId();
                 break;
             case 3:
-                return $this->getDesignId();
+                return $this->getRouterId();
                 break;
             case 4:
+                return $this->getDesignId();
+                break;
+            case 5:
                 return $this->getPackageId();
                 break;
             default:
@@ -954,11 +1029,15 @@ abstract class BaseApplication extends BaseObject implements Persistent
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getRouterId(),
-            $keys[3] => $this->getDesignId(),
-            $keys[4] => $this->getPackageId(),
+            $keys[2] => $this->getApplicationTypeId(),
+            $keys[3] => $this->getRouterId(),
+            $keys[4] => $this->getDesignId(),
+            $keys[5] => $this->getPackageId(),
         );
         if ($includeForeignObjects) {
+            if (null !== $this->aApplicationType) {
+                $result['ApplicationType'] = $this->aApplicationType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aPackage) {
                 $result['Package'] = $this->aPackage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
@@ -1018,12 +1097,15 @@ abstract class BaseApplication extends BaseObject implements Persistent
                 $this->setTitle($value);
                 break;
             case 2:
-                $this->setRouterId($value);
+                $this->setApplicationTypeId($value);
                 break;
             case 3:
-                $this->setDesignId($value);
+                $this->setRouterId($value);
                 break;
             case 4:
+                $this->setDesignId($value);
+                break;
+            case 5:
                 $this->setPackageId($value);
                 break;
         } // switch()
@@ -1052,9 +1134,10 @@ abstract class BaseApplication extends BaseObject implements Persistent
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setRouterId($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDesignId($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setPackageId($arr[$keys[4]]);
+        if (array_key_exists($keys[2], $arr)) $this->setApplicationTypeId($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setRouterId($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDesignId($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setPackageId($arr[$keys[5]]);
     }
 
     /**
@@ -1068,6 +1151,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
 
         if ($this->isColumnModified(ApplicationPeer::ID)) $criteria->add(ApplicationPeer::ID, $this->id);
         if ($this->isColumnModified(ApplicationPeer::TITLE)) $criteria->add(ApplicationPeer::TITLE, $this->title);
+        if ($this->isColumnModified(ApplicationPeer::APPLICATION_TYPE_ID)) $criteria->add(ApplicationPeer::APPLICATION_TYPE_ID, $this->application_type_id);
         if ($this->isColumnModified(ApplicationPeer::ROUTER_ID)) $criteria->add(ApplicationPeer::ROUTER_ID, $this->router_id);
         if ($this->isColumnModified(ApplicationPeer::DESIGN_ID)) $criteria->add(ApplicationPeer::DESIGN_ID, $this->design_id);
         if ($this->isColumnModified(ApplicationPeer::PACKAGE_ID)) $criteria->add(ApplicationPeer::PACKAGE_ID, $this->package_id);
@@ -1135,6 +1219,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setTitle($this->getTitle());
+        $copyObj->setApplicationTypeId($this->getApplicationTypeId());
         $copyObj->setRouterId($this->getRouterId());
         $copyObj->setDesignId($this->getDesignId());
         $copyObj->setPackageId($this->getPackageId());
@@ -1212,6 +1297,58 @@ abstract class BaseApplication extends BaseObject implements Persistent
         }
 
         return self::$peer;
+    }
+
+    /**
+     * Declares an association between this object and a ApplicationType object.
+     *
+     * @param             ApplicationType $v
+     * @return Application The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setApplicationType(ApplicationType $v = null)
+    {
+        if ($v === null) {
+            $this->setApplicationTypeId(NULL);
+        } else {
+            $this->setApplicationTypeId($v->getId());
+        }
+
+        $this->aApplicationType = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ApplicationType object, it will not be re-added.
+        if ($v !== null) {
+            $v->addApplication($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ApplicationType object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return ApplicationType The associated ApplicationType object.
+     * @throws PropelException
+     */
+    public function getApplicationType(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aApplicationType === null && ($this->application_type_id !== null) && $doQuery) {
+            $this->aApplicationType = ApplicationTypeQuery::create()->findPk($this->application_type_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aApplicationType->addApplications($this);
+             */
+        }
+
+        return $this->aApplicationType;
     }
 
     /**
@@ -2128,6 +2265,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     {
         $this->id = null;
         $this->title = null;
+        $this->application_type_id = null;
         $this->router_id = null;
         $this->design_id = null;
         $this->package_id = null;
@@ -2168,6 +2306,9 @@ abstract class BaseApplication extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->aApplicationType instanceof Persistent) {
+              $this->aApplicationType->clearAllReferences($deep);
+            }
             if ($this->aPackage instanceof Persistent) {
               $this->aPackage->clearAllReferences($deep);
             }
@@ -2193,6 +2334,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
             $this->collApplicationExtraPropertys->clearIterator();
         }
         $this->collApplicationExtraPropertys = null;
+        $this->aApplicationType = null;
         $this->aPackage = null;
         $this->aRouter = null;
         $this->aDesign = null;

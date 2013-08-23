@@ -66,10 +66,10 @@ abstract class BaseRouter extends BaseObject implements Persistent
     protected $title;
 
     /**
-     * The value for the classname field.
+     * The value for the class_name field.
      * @var        string
      */
-    protected $classname;
+    protected $class_name;
 
     /**
      * @var        PropelObjectCollection|Application[] Collection to store aggregation of Application objects.
@@ -134,13 +134,13 @@ abstract class BaseRouter extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [classname] column value.
+     * Get the [class_name] column value.
      *
      * @return string
      */
-    public function getClassname()
+    public function getClassName()
     {
-        return $this->classname;
+        return $this->class_name;
     }
 
     /**
@@ -207,25 +207,25 @@ abstract class BaseRouter extends BaseObject implements Persistent
     } // setTitle()
 
     /**
-     * Set the value of [classname] column.
+     * Set the value of [class_name] column.
      *
      * @param string $v new value
      * @return Router The current object (for fluent API support)
      */
-    public function setClassname($v)
+    public function setClassName($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
-        if ($this->classname !== $v) {
-            $this->classname = $v;
-            $this->modifiedColumns[] = RouterPeer::CLASSNAME;
+        if ($this->class_name !== $v) {
+            $this->class_name = $v;
+            $this->modifiedColumns[] = RouterPeer::CLASS_NAME;
         }
 
 
         return $this;
-    } // setClassname()
+    } // setClassName()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -262,7 +262,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->classname = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->class_name = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -511,8 +511,8 @@ abstract class BaseRouter extends BaseObject implements Persistent
         if ($this->isColumnModified(RouterPeer::TITLE)) {
             $modifiedColumns[':p' . $index++]  = '`title`';
         }
-        if ($this->isColumnModified(RouterPeer::CLASSNAME)) {
-            $modifiedColumns[':p' . $index++]  = '`classname`';
+        if ($this->isColumnModified(RouterPeer::CLASS_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`class_name`';
         }
 
         $sql = sprintf(
@@ -534,8 +534,8 @@ abstract class BaseRouter extends BaseObject implements Persistent
                     case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
-                    case '`classname`':
-                        $stmt->bindValue($identifier, $this->classname, PDO::PARAM_STR);
+                    case '`class_name`':
+                        $stmt->bindValue($identifier, $this->class_name, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -689,7 +689,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 return $this->getTitle();
                 break;
             case 3:
-                return $this->getClassname();
+                return $this->getClassName();
                 break;
             default:
                 return null;
@@ -723,7 +723,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
             $keys[2] => $this->getTitle(),
-            $keys[3] => $this->getClassname(),
+            $keys[3] => $this->getClassName(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->collApplications) {
@@ -773,7 +773,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 $this->setTitle($value);
                 break;
             case 3:
-                $this->setClassname($value);
+                $this->setClassName($value);
                 break;
         } // switch()
     }
@@ -802,7 +802,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setClassname($arr[$keys[3]]);
+        if (array_key_exists($keys[3], $arr)) $this->setClassName($arr[$keys[3]]);
     }
 
     /**
@@ -817,7 +817,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
         if ($this->isColumnModified(RouterPeer::ID)) $criteria->add(RouterPeer::ID, $this->id);
         if ($this->isColumnModified(RouterPeer::NAME)) $criteria->add(RouterPeer::NAME, $this->name);
         if ($this->isColumnModified(RouterPeer::TITLE)) $criteria->add(RouterPeer::TITLE, $this->title);
-        if ($this->isColumnModified(RouterPeer::CLASSNAME)) $criteria->add(RouterPeer::CLASSNAME, $this->classname);
+        if ($this->isColumnModified(RouterPeer::CLASS_NAME)) $criteria->add(RouterPeer::CLASS_NAME, $this->class_name);
 
         return $criteria;
     }
@@ -883,7 +883,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
     {
         $copyObj->setName($this->getName());
         $copyObj->setTitle($this->getTitle());
-        $copyObj->setClassname($this->getClassname());
+        $copyObj->setClassName($this->getClassName());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1199,6 +1199,31 @@ abstract class BaseRouter extends BaseObject implements Persistent
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return PropelObjectCollection|Application[] List of Application objects
      */
+    public function getApplicationsJoinApplicationType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = ApplicationQuery::create(null, $criteria);
+        $query->joinWith('ApplicationType', $join_behavior);
+
+        return $this->getApplications($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Router is new, it will return
+     * an empty collection; or if this Router has previously
+     * been saved, it will retrieve related Applications from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Router.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Application[] List of Application objects
+     */
     public function getApplicationsJoinPackage($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $query = ApplicationQuery::create(null, $criteria);
@@ -1240,7 +1265,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
         $this->id = null;
         $this->name = null;
         $this->title = null;
-        $this->classname = null;
+        $this->class_name = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

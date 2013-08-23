@@ -24,13 +24,15 @@ use keeko\core\entities\Package;
  *
  *
  * @method ModuleQuery orderById($order = Criteria::ASC) Order by the id column
- * @method ModuleQuery orderByClassname($order = Criteria::ASC) Order by the classname column
+ * @method ModuleQuery orderByClassName($order = Criteria::ASC) Order by the class_name column
  * @method ModuleQuery orderByActivatedVersion($order = Criteria::ASC) Order by the activated_version column
+ * @method ModuleQuery orderByDefaultAction($order = Criteria::ASC) Order by the default_action column
  * @method ModuleQuery orderByPackageId($order = Criteria::ASC) Order by the package_id column
  *
  * @method ModuleQuery groupById() Group by the id column
- * @method ModuleQuery groupByClassname() Group by the classname column
+ * @method ModuleQuery groupByClassName() Group by the class_name column
  * @method ModuleQuery groupByActivatedVersion() Group by the activated_version column
+ * @method ModuleQuery groupByDefaultAction() Group by the default_action column
  * @method ModuleQuery groupByPackageId() Group by the package_id column
  *
  * @method ModuleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -48,13 +50,15 @@ use keeko\core\entities\Package;
  * @method Module findOne(PropelPDO $con = null) Return the first Module matching the query
  * @method Module findOneOrCreate(PropelPDO $con = null) Return the first Module matching the query, or a new Module object populated from the query conditions when no match is found
  *
- * @method Module findOneByClassname(string $classname) Return the first Module filtered by the classname column
+ * @method Module findOneByClassName(string $class_name) Return the first Module filtered by the class_name column
  * @method Module findOneByActivatedVersion(string $activated_version) Return the first Module filtered by the activated_version column
+ * @method Module findOneByDefaultAction(string $default_action) Return the first Module filtered by the default_action column
  * @method Module findOneByPackageId(int $package_id) Return the first Module filtered by the package_id column
  *
  * @method array findById(int $id) Return Module objects filtered by the id column
- * @method array findByClassname(string $classname) Return Module objects filtered by the classname column
+ * @method array findByClassName(string $class_name) Return Module objects filtered by the class_name column
  * @method array findByActivatedVersion(string $activated_version) Return Module objects filtered by the activated_version column
+ * @method array findByDefaultAction(string $default_action) Return Module objects filtered by the default_action column
  * @method array findByPackageId(int $package_id) Return Module objects filtered by the package_id column
  *
  * @package    propel.generator.keeko.core.entities.om
@@ -159,7 +163,7 @@ abstract class BaseModuleQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `classname`, `activated_version`, `package_id` FROM `keeko_module` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `class_name`, `activated_version`, `default_action`, `package_id` FROM `keeko_module` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -291,32 +295,32 @@ abstract class BaseModuleQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the classname column
+     * Filter the query on the class_name column
      *
      * Example usage:
      * <code>
-     * $query->filterByClassname('fooValue');   // WHERE classname = 'fooValue'
-     * $query->filterByClassname('%fooValue%'); // WHERE classname LIKE '%fooValue%'
+     * $query->filterByClassName('fooValue');   // WHERE class_name = 'fooValue'
+     * $query->filterByClassName('%fooValue%'); // WHERE class_name LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $classname The value to use as filter.
+     * @param     string $className The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ModuleQuery The current query, for fluid interface
      */
-    public function filterByClassname($classname = null, $comparison = null)
+    public function filterByClassName($className = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($classname)) {
+            if (is_array($className)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $classname)) {
-                $classname = str_replace('*', '%', $classname);
+            } elseif (preg_match('/[\%\*]/', $className)) {
+                $className = str_replace('*', '%', $className);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(ModulePeer::CLASSNAME, $classname, $comparison);
+        return $this->addUsingAlias(ModulePeer::CLASS_NAME, $className, $comparison);
     }
 
     /**
@@ -346,6 +350,35 @@ abstract class BaseModuleQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ModulePeer::ACTIVATED_VERSION, $activatedVersion, $comparison);
+    }
+
+    /**
+     * Filter the query on the default_action column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDefaultAction('fooValue');   // WHERE default_action = 'fooValue'
+     * $query->filterByDefaultAction('%fooValue%'); // WHERE default_action LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $defaultAction The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ModuleQuery The current query, for fluid interface
+     */
+    public function filterByDefaultAction($defaultAction = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($defaultAction)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $defaultAction)) {
+                $defaultAction = str_replace('*', '%', $defaultAction);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ModulePeer::DEFAULT_ACTION, $defaultAction, $comparison);
     }
 
     /**

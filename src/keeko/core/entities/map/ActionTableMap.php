@@ -43,8 +43,11 @@ class ActionTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', true, 255, null);
+        $this->addColumn('description', 'Description', 'VARCHAR', false, 255, null);
+        $this->addColumn('api', 'Api', 'BOOLEAN', true, 1, false);
         $this->addForeignKey('module_id', 'ModuleId', 'INTEGER', 'keeko_module', 'id', true, 10, null);
-        $this->addColumn('name', 'Name', 'VARCHAR', false, 32, null);
         // validators
     } // initialize()
 

@@ -7,7 +7,7 @@ use \TableMap;
 
 
 /**
- * This class defines the structure of the 'keeko_router' table.
+ * This class defines the structure of the 'keeko_application_type' table.
  *
  *
  *
@@ -18,13 +18,13 @@ use \TableMap;
  *
  * @package    propel.generator.keeko.core.entities.map
  */
-class RouterTableMap extends TableMap
+class ApplicationTypeTableMap extends TableMap
 {
 
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.entities.map.RouterTableMap';
+    const CLASS_NAME = 'keeko.core.entities.map.ApplicationTypeTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -36,16 +36,15 @@ class RouterTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_router');
-        $this->setPhpName('Router');
-        $this->setClassname('keeko\\core\\entities\\Router');
+        $this->setName('keeko_application_type');
+        $this->setPhpName('ApplicationType');
+        $this->setClassname('keeko\\core\\entities\\ApplicationType');
         $this->setPackage('keeko.core.entities');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->addColumn('title', 'Title', 'VARCHAR', false, 255, null);
-        $this->addColumn('class_name', 'ClassName', 'VARCHAR', true, 255, null);
         // validators
     } // initialize()
 
@@ -54,7 +53,7 @@ class RouterTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Application', 'keeko\\core\\entities\\Application', RelationMap::ONE_TO_MANY, array('id' => 'router_id', ), 'RESTRICT', null, 'Applications');
+        $this->addRelation('Application', 'keeko\\core\\entities\\Application', RelationMap::ONE_TO_MANY, array('id' => 'application_type_id', ), null, null, 'Applications');
     } // buildRelations()
 
-} // RouterTableMap
+} // ApplicationTypeTableMap

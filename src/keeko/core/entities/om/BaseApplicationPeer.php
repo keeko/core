@@ -12,6 +12,7 @@ use \PropelPDO;
 use keeko\core\entities\Application;
 use keeko\core\entities\ApplicationExtraPropertyPeer;
 use keeko\core\entities\ApplicationPeer;
+use keeko\core\entities\ApplicationTypePeer;
 use keeko\core\entities\DesignPeer;
 use keeko\core\entities\PackagePeer;
 use keeko\core\entities\RouterPeer;
@@ -40,19 +41,22 @@ abstract class BaseApplicationPeer
     const TM_CLASS = 'ApplicationTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 6;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /** the column name for the id field */
     const ID = 'keeko_application.id';
 
     /** the column name for the title field */
     const TITLE = 'keeko_application.title';
+
+    /** the column name for the application_type_id field */
+    const APPLICATION_TYPE_ID = 'keeko_application.application_type_id';
 
     /** the column name for the router_id field */
     const ROUTER_ID = 'keeko_application.router_id';
@@ -82,12 +86,12 @@ abstract class BaseApplicationPeer
      * e.g. ApplicationPeer::$fieldNames[ApplicationPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'RouterId', 'DesignId', 'PackageId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'routerId', 'designId', 'packageId', ),
-        BasePeer::TYPE_COLNAME => array (ApplicationPeer::ID, ApplicationPeer::TITLE, ApplicationPeer::ROUTER_ID, ApplicationPeer::DESIGN_ID, ApplicationPeer::PACKAGE_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'ROUTER_ID', 'DESIGN_ID', 'PACKAGE_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'router_id', 'design_id', 'package_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'ApplicationTypeId', 'RouterId', 'DesignId', 'PackageId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'applicationTypeId', 'routerId', 'designId', 'packageId', ),
+        BasePeer::TYPE_COLNAME => array (ApplicationPeer::ID, ApplicationPeer::TITLE, ApplicationPeer::APPLICATION_TYPE_ID, ApplicationPeer::ROUTER_ID, ApplicationPeer::DESIGN_ID, ApplicationPeer::PACKAGE_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'APPLICATION_TYPE_ID', 'ROUTER_ID', 'DESIGN_ID', 'PACKAGE_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'application_type_id', 'router_id', 'design_id', 'package_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -97,12 +101,12 @@ abstract class BaseApplicationPeer
      * e.g. ApplicationPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'RouterId' => 2, 'DesignId' => 3, 'PackageId' => 4, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'routerId' => 2, 'designId' => 3, 'packageId' => 4, ),
-        BasePeer::TYPE_COLNAME => array (ApplicationPeer::ID => 0, ApplicationPeer::TITLE => 1, ApplicationPeer::ROUTER_ID => 2, ApplicationPeer::DESIGN_ID => 3, ApplicationPeer::PACKAGE_ID => 4, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'ROUTER_ID' => 2, 'DESIGN_ID' => 3, 'PACKAGE_ID' => 4, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'router_id' => 2, 'design_id' => 3, 'package_id' => 4, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'ApplicationTypeId' => 2, 'RouterId' => 3, 'DesignId' => 4, 'PackageId' => 5, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'applicationTypeId' => 2, 'routerId' => 3, 'designId' => 4, 'packageId' => 5, ),
+        BasePeer::TYPE_COLNAME => array (ApplicationPeer::ID => 0, ApplicationPeer::TITLE => 1, ApplicationPeer::APPLICATION_TYPE_ID => 2, ApplicationPeer::ROUTER_ID => 3, ApplicationPeer::DESIGN_ID => 4, ApplicationPeer::PACKAGE_ID => 5, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'APPLICATION_TYPE_ID' => 2, 'ROUTER_ID' => 3, 'DESIGN_ID' => 4, 'PACKAGE_ID' => 5, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'application_type_id' => 2, 'router_id' => 3, 'design_id' => 4, 'package_id' => 5, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -178,12 +182,14 @@ abstract class BaseApplicationPeer
         if (null === $alias) {
             $criteria->addSelectColumn(ApplicationPeer::ID);
             $criteria->addSelectColumn(ApplicationPeer::TITLE);
+            $criteria->addSelectColumn(ApplicationPeer::APPLICATION_TYPE_ID);
             $criteria->addSelectColumn(ApplicationPeer::ROUTER_ID);
             $criteria->addSelectColumn(ApplicationPeer::DESIGN_ID);
             $criteria->addSelectColumn(ApplicationPeer::PACKAGE_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.application_type_id');
             $criteria->addSelectColumn($alias . '.router_id');
             $criteria->addSelectColumn($alias . '.design_id');
             $criteria->addSelectColumn($alias . '.package_id');
@@ -494,6 +500,57 @@ abstract class BaseApplicationPeer
 
 
     /**
+     * Returns the number of rows matching criteria, joining the related ApplicationType table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinApplicationType(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(ApplicationPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            ApplicationPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(ApplicationPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(ApplicationPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(ApplicationPeer::APPLICATION_TYPE_ID, ApplicationTypePeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
      * Returns the number of rows matching criteria, joining the related Package table
      *
      * @param      Criteria $criteria
@@ -643,6 +700,73 @@ abstract class BaseApplicationPeer
         $stmt->closeCursor();
 
         return $count;
+    }
+
+
+    /**
+     * Selects a collection of Application objects pre-filled with their ApplicationType objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Application objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinApplicationType(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(ApplicationPeer::DATABASE_NAME);
+        }
+
+        ApplicationPeer::addSelectColumns($criteria);
+        $startcol = ApplicationPeer::NUM_HYDRATE_COLUMNS;
+        ApplicationTypePeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(ApplicationPeer::APPLICATION_TYPE_ID, ApplicationTypePeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = ApplicationPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = ApplicationPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = ApplicationPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                ApplicationPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = ApplicationTypePeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = ApplicationTypePeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = ApplicationTypePeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    ApplicationTypePeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (Application) to $obj2 (ApplicationType)
+                $obj2->addApplication($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
     }
 
 
@@ -883,6 +1007,8 @@ abstract class BaseApplicationPeer
             $con = Propel::getConnection(ApplicationPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
+        $criteria->addJoin(ApplicationPeer::APPLICATION_TYPE_ID, ApplicationTypePeer::ID, $join_behavior);
+
         $criteria->addJoin(ApplicationPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
 
         $criteria->addJoin(ApplicationPeer::ROUTER_ID, RouterPeer::ID, $join_behavior);
@@ -923,14 +1049,19 @@ abstract class BaseApplicationPeer
         ApplicationPeer::addSelectColumns($criteria);
         $startcol2 = ApplicationPeer::NUM_HYDRATE_COLUMNS;
 
+        ApplicationTypePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + ApplicationTypePeer::NUM_HYDRATE_COLUMNS;
+
         PackagePeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + PackagePeer::NUM_HYDRATE_COLUMNS;
+        $startcol4 = $startcol3 + PackagePeer::NUM_HYDRATE_COLUMNS;
 
         RouterPeer::addSelectColumns($criteria);
-        $startcol4 = $startcol3 + RouterPeer::NUM_HYDRATE_COLUMNS;
+        $startcol5 = $startcol4 + RouterPeer::NUM_HYDRATE_COLUMNS;
 
         DesignPeer::addSelectColumns($criteria);
-        $startcol5 = $startcol4 + DesignPeer::NUM_HYDRATE_COLUMNS;
+        $startcol6 = $startcol5 + DesignPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(ApplicationPeer::APPLICATION_TYPE_ID, ApplicationTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(ApplicationPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
 
@@ -955,58 +1086,76 @@ abstract class BaseApplicationPeer
                 ApplicationPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
-            // Add objects for joined Package rows
+            // Add objects for joined ApplicationType rows
 
-            $key2 = PackagePeer::getPrimaryKeyHashFromRow($row, $startcol2);
+            $key2 = ApplicationTypePeer::getPrimaryKeyHashFromRow($row, $startcol2);
             if ($key2 !== null) {
-                $obj2 = PackagePeer::getInstanceFromPool($key2);
+                $obj2 = ApplicationTypePeer::getInstanceFromPool($key2);
                 if (!$obj2) {
 
-                    $cls = PackagePeer::getOMClass();
+                    $cls = ApplicationTypePeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol2);
-                    PackagePeer::addInstanceToPool($obj2, $key2);
+                    ApplicationTypePeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 loaded
 
-                // Add the $obj1 (Application) to the collection in $obj2 (Package)
+                // Add the $obj1 (Application) to the collection in $obj2 (ApplicationType)
                 $obj2->addApplication($obj1);
+            } // if joined row not null
+
+            // Add objects for joined Package rows
+
+            $key3 = PackagePeer::getPrimaryKeyHashFromRow($row, $startcol3);
+            if ($key3 !== null) {
+                $obj3 = PackagePeer::getInstanceFromPool($key3);
+                if (!$obj3) {
+
+                    $cls = PackagePeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    PackagePeer::addInstanceToPool($obj3, $key3);
+                } // if obj3 loaded
+
+                // Add the $obj1 (Application) to the collection in $obj3 (Package)
+                $obj3->addApplication($obj1);
             } // if joined row not null
 
             // Add objects for joined Router rows
 
-            $key3 = RouterPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-            if ($key3 !== null) {
-                $obj3 = RouterPeer::getInstanceFromPool($key3);
-                if (!$obj3) {
+            $key4 = RouterPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+            if ($key4 !== null) {
+                $obj4 = RouterPeer::getInstanceFromPool($key4);
+                if (!$obj4) {
 
                     $cls = RouterPeer::getOMClass();
 
-                    $obj3 = new $cls();
-                    $obj3->hydrate($row, $startcol3);
-                    RouterPeer::addInstanceToPool($obj3, $key3);
-                } // if obj3 loaded
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    RouterPeer::addInstanceToPool($obj4, $key4);
+                } // if obj4 loaded
 
-                // Add the $obj1 (Application) to the collection in $obj3 (Router)
-                $obj3->addApplication($obj1);
+                // Add the $obj1 (Application) to the collection in $obj4 (Router)
+                $obj4->addApplication($obj1);
             } // if joined row not null
 
             // Add objects for joined Design rows
 
-            $key4 = DesignPeer::getPrimaryKeyHashFromRow($row, $startcol4);
-            if ($key4 !== null) {
-                $obj4 = DesignPeer::getInstanceFromPool($key4);
-                if (!$obj4) {
+            $key5 = DesignPeer::getPrimaryKeyHashFromRow($row, $startcol5);
+            if ($key5 !== null) {
+                $obj5 = DesignPeer::getInstanceFromPool($key5);
+                if (!$obj5) {
 
                     $cls = DesignPeer::getOMClass();
 
-                    $obj4 = new $cls();
-                    $obj4->hydrate($row, $startcol4);
-                    DesignPeer::addInstanceToPool($obj4, $key4);
-                } // if obj4 loaded
+                    $obj5 = new $cls();
+                    $obj5->hydrate($row, $startcol5);
+                    DesignPeer::addInstanceToPool($obj5, $key5);
+                } // if obj5 loaded
 
-                // Add the $obj1 (Application) to the collection in $obj4 (Design)
-                $obj4->addApplication($obj1);
+                // Add the $obj1 (Application) to the collection in $obj5 (Design)
+                $obj5->addApplication($obj1);
             } // if joined row not null
 
             $results[] = $obj1;
@@ -1014,6 +1163,61 @@ abstract class BaseApplicationPeer
         $stmt->closeCursor();
 
         return $results;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related ApplicationType table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptApplicationType(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(ApplicationPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            ApplicationPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(ApplicationPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(ApplicationPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(ApplicationPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
+
+        $criteria->addJoin(ApplicationPeer::ROUTER_ID, RouterPeer::ID, $join_behavior);
+
+        $criteria->addJoin(ApplicationPeer::DESIGN_ID, DesignPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
     }
 
 
@@ -1052,6 +1256,8 @@ abstract class BaseApplicationPeer
         if ($con === null) {
             $con = Propel::getConnection(ApplicationPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
+
+        $criteria->addJoin(ApplicationPeer::APPLICATION_TYPE_ID, ApplicationTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(ApplicationPeer::ROUTER_ID, RouterPeer::ID, $join_behavior);
 
@@ -1106,6 +1312,8 @@ abstract class BaseApplicationPeer
             $con = Propel::getConnection(ApplicationPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
+        $criteria->addJoin(ApplicationPeer::APPLICATION_TYPE_ID, ApplicationTypePeer::ID, $join_behavior);
+
         $criteria->addJoin(ApplicationPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
 
         $criteria->addJoin(ApplicationPeer::DESIGN_ID, DesignPeer::ID, $join_behavior);
@@ -1159,6 +1367,8 @@ abstract class BaseApplicationPeer
             $con = Propel::getConnection(ApplicationPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
+        $criteria->addJoin(ApplicationPeer::APPLICATION_TYPE_ID, ApplicationTypePeer::ID, $join_behavior);
+
         $criteria->addJoin(ApplicationPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
 
         $criteria->addJoin(ApplicationPeer::ROUTER_ID, RouterPeer::ID, $join_behavior);
@@ -1177,7 +1387,7 @@ abstract class BaseApplicationPeer
 
 
     /**
-     * Selects a collection of Application objects pre-filled with all related objects except Package.
+     * Selects a collection of Application objects pre-filled with all related objects except ApplicationType.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
@@ -1186,203 +1396,7 @@ abstract class BaseApplicationPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doSelectJoinAllExceptPackage(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $criteria = clone $criteria;
-
-        // Set the correct dbName if it has not been overridden
-        // $criteria->getDbName() will return the same object if not set to another value
-        // so == check is okay and faster
-        if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(ApplicationPeer::DATABASE_NAME);
-        }
-
-        ApplicationPeer::addSelectColumns($criteria);
-        $startcol2 = ApplicationPeer::NUM_HYDRATE_COLUMNS;
-
-        RouterPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + RouterPeer::NUM_HYDRATE_COLUMNS;
-
-        DesignPeer::addSelectColumns($criteria);
-        $startcol4 = $startcol3 + DesignPeer::NUM_HYDRATE_COLUMNS;
-
-        $criteria->addJoin(ApplicationPeer::ROUTER_ID, RouterPeer::ID, $join_behavior);
-
-        $criteria->addJoin(ApplicationPeer::DESIGN_ID, DesignPeer::ID, $join_behavior);
-
-
-        $stmt = BasePeer::doSelect($criteria, $con);
-        $results = array();
-
-        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = ApplicationPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = ApplicationPeer::getInstanceFromPool($key1))) {
-                // We no longer rehydrate the object, since this can cause data loss.
-                // See http://www.propelorm.org/ticket/509
-                // $obj1->hydrate($row, 0, true); // rehydrate
-            } else {
-                $cls = ApplicationPeer::getOMClass();
-
-                $obj1 = new $cls();
-                $obj1->hydrate($row);
-                ApplicationPeer::addInstanceToPool($obj1, $key1);
-            } // if obj1 already loaded
-
-                // Add objects for joined Router rows
-
-                $key2 = RouterPeer::getPrimaryKeyHashFromRow($row, $startcol2);
-                if ($key2 !== null) {
-                    $obj2 = RouterPeer::getInstanceFromPool($key2);
-                    if (!$obj2) {
-
-                        $cls = RouterPeer::getOMClass();
-
-                    $obj2 = new $cls();
-                    $obj2->hydrate($row, $startcol2);
-                    RouterPeer::addInstanceToPool($obj2, $key2);
-                } // if $obj2 already loaded
-
-                // Add the $obj1 (Application) to the collection in $obj2 (Router)
-                $obj2->addApplication($obj1);
-
-            } // if joined row is not null
-
-                // Add objects for joined Design rows
-
-                $key3 = DesignPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-                if ($key3 !== null) {
-                    $obj3 = DesignPeer::getInstanceFromPool($key3);
-                    if (!$obj3) {
-
-                        $cls = DesignPeer::getOMClass();
-
-                    $obj3 = new $cls();
-                    $obj3->hydrate($row, $startcol3);
-                    DesignPeer::addInstanceToPool($obj3, $key3);
-                } // if $obj3 already loaded
-
-                // Add the $obj1 (Application) to the collection in $obj3 (Design)
-                $obj3->addApplication($obj1);
-
-            } // if joined row is not null
-
-            $results[] = $obj1;
-        }
-        $stmt->closeCursor();
-
-        return $results;
-    }
-
-
-    /**
-     * Selects a collection of Application objects pre-filled with all related objects except Router.
-     *
-     * @param      Criteria  $criteria
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of Application objects.
-     * @throws PropelException Any exceptions caught during processing will be
-     *		 rethrown wrapped into a PropelException.
-     */
-    public static function doSelectJoinAllExceptRouter(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $criteria = clone $criteria;
-
-        // Set the correct dbName if it has not been overridden
-        // $criteria->getDbName() will return the same object if not set to another value
-        // so == check is okay and faster
-        if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(ApplicationPeer::DATABASE_NAME);
-        }
-
-        ApplicationPeer::addSelectColumns($criteria);
-        $startcol2 = ApplicationPeer::NUM_HYDRATE_COLUMNS;
-
-        PackagePeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + PackagePeer::NUM_HYDRATE_COLUMNS;
-
-        DesignPeer::addSelectColumns($criteria);
-        $startcol4 = $startcol3 + DesignPeer::NUM_HYDRATE_COLUMNS;
-
-        $criteria->addJoin(ApplicationPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
-
-        $criteria->addJoin(ApplicationPeer::DESIGN_ID, DesignPeer::ID, $join_behavior);
-
-
-        $stmt = BasePeer::doSelect($criteria, $con);
-        $results = array();
-
-        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = ApplicationPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = ApplicationPeer::getInstanceFromPool($key1))) {
-                // We no longer rehydrate the object, since this can cause data loss.
-                // See http://www.propelorm.org/ticket/509
-                // $obj1->hydrate($row, 0, true); // rehydrate
-            } else {
-                $cls = ApplicationPeer::getOMClass();
-
-                $obj1 = new $cls();
-                $obj1->hydrate($row);
-                ApplicationPeer::addInstanceToPool($obj1, $key1);
-            } // if obj1 already loaded
-
-                // Add objects for joined Package rows
-
-                $key2 = PackagePeer::getPrimaryKeyHashFromRow($row, $startcol2);
-                if ($key2 !== null) {
-                    $obj2 = PackagePeer::getInstanceFromPool($key2);
-                    if (!$obj2) {
-
-                        $cls = PackagePeer::getOMClass();
-
-                    $obj2 = new $cls();
-                    $obj2->hydrate($row, $startcol2);
-                    PackagePeer::addInstanceToPool($obj2, $key2);
-                } // if $obj2 already loaded
-
-                // Add the $obj1 (Application) to the collection in $obj2 (Package)
-                $obj2->addApplication($obj1);
-
-            } // if joined row is not null
-
-                // Add objects for joined Design rows
-
-                $key3 = DesignPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-                if ($key3 !== null) {
-                    $obj3 = DesignPeer::getInstanceFromPool($key3);
-                    if (!$obj3) {
-
-                        $cls = DesignPeer::getOMClass();
-
-                    $obj3 = new $cls();
-                    $obj3->hydrate($row, $startcol3);
-                    DesignPeer::addInstanceToPool($obj3, $key3);
-                } // if $obj3 already loaded
-
-                // Add the $obj1 (Application) to the collection in $obj3 (Design)
-                $obj3->addApplication($obj1);
-
-            } // if joined row is not null
-
-            $results[] = $obj1;
-        }
-        $stmt->closeCursor();
-
-        return $results;
-    }
-
-
-    /**
-     * Selects a collection of Application objects pre-filled with all related objects except Design.
-     *
-     * @param      Criteria  $criteria
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of Application objects.
-     * @throws PropelException Any exceptions caught during processing will be
-     *		 rethrown wrapped into a PropelException.
-     */
-    public static function doSelectJoinAllExceptDesign(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doSelectJoinAllExceptApplicationType(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $criteria = clone $criteria;
 
@@ -1402,9 +1416,14 @@ abstract class BaseApplicationPeer
         RouterPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + RouterPeer::NUM_HYDRATE_COLUMNS;
 
+        DesignPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + DesignPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(ApplicationPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
 
         $criteria->addJoin(ApplicationPeer::ROUTER_ID, RouterPeer::ID, $join_behavior);
+
+        $criteria->addJoin(ApplicationPeer::DESIGN_ID, DesignPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -1459,6 +1478,391 @@ abstract class BaseApplicationPeer
 
                 // Add the $obj1 (Application) to the collection in $obj3 (Router)
                 $obj3->addApplication($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Design rows
+
+                $key4 = DesignPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = DesignPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = DesignPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    DesignPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Application) to the collection in $obj4 (Design)
+                $obj4->addApplication($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Application objects pre-filled with all related objects except Package.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Application objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptPackage(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(ApplicationPeer::DATABASE_NAME);
+        }
+
+        ApplicationPeer::addSelectColumns($criteria);
+        $startcol2 = ApplicationPeer::NUM_HYDRATE_COLUMNS;
+
+        ApplicationTypePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + ApplicationTypePeer::NUM_HYDRATE_COLUMNS;
+
+        RouterPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + RouterPeer::NUM_HYDRATE_COLUMNS;
+
+        DesignPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + DesignPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(ApplicationPeer::APPLICATION_TYPE_ID, ApplicationTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(ApplicationPeer::ROUTER_ID, RouterPeer::ID, $join_behavior);
+
+        $criteria->addJoin(ApplicationPeer::DESIGN_ID, DesignPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = ApplicationPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = ApplicationPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = ApplicationPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                ApplicationPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined ApplicationType rows
+
+                $key2 = ApplicationTypePeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = ApplicationTypePeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = ApplicationTypePeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    ApplicationTypePeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Application) to the collection in $obj2 (ApplicationType)
+                $obj2->addApplication($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Router rows
+
+                $key3 = RouterPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = RouterPeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = RouterPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    RouterPeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (Application) to the collection in $obj3 (Router)
+                $obj3->addApplication($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Design rows
+
+                $key4 = DesignPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = DesignPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = DesignPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    DesignPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Application) to the collection in $obj4 (Design)
+                $obj4->addApplication($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Application objects pre-filled with all related objects except Router.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Application objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptRouter(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(ApplicationPeer::DATABASE_NAME);
+        }
+
+        ApplicationPeer::addSelectColumns($criteria);
+        $startcol2 = ApplicationPeer::NUM_HYDRATE_COLUMNS;
+
+        ApplicationTypePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + ApplicationTypePeer::NUM_HYDRATE_COLUMNS;
+
+        PackagePeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + PackagePeer::NUM_HYDRATE_COLUMNS;
+
+        DesignPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + DesignPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(ApplicationPeer::APPLICATION_TYPE_ID, ApplicationTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(ApplicationPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
+
+        $criteria->addJoin(ApplicationPeer::DESIGN_ID, DesignPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = ApplicationPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = ApplicationPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = ApplicationPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                ApplicationPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined ApplicationType rows
+
+                $key2 = ApplicationTypePeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = ApplicationTypePeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = ApplicationTypePeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    ApplicationTypePeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Application) to the collection in $obj2 (ApplicationType)
+                $obj2->addApplication($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Package rows
+
+                $key3 = PackagePeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = PackagePeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = PackagePeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    PackagePeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (Application) to the collection in $obj3 (Package)
+                $obj3->addApplication($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Design rows
+
+                $key4 = DesignPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = DesignPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = DesignPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    DesignPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Application) to the collection in $obj4 (Design)
+                $obj4->addApplication($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Application objects pre-filled with all related objects except Design.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Application objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptDesign(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(ApplicationPeer::DATABASE_NAME);
+        }
+
+        ApplicationPeer::addSelectColumns($criteria);
+        $startcol2 = ApplicationPeer::NUM_HYDRATE_COLUMNS;
+
+        ApplicationTypePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + ApplicationTypePeer::NUM_HYDRATE_COLUMNS;
+
+        PackagePeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + PackagePeer::NUM_HYDRATE_COLUMNS;
+
+        RouterPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + RouterPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(ApplicationPeer::APPLICATION_TYPE_ID, ApplicationTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(ApplicationPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
+
+        $criteria->addJoin(ApplicationPeer::ROUTER_ID, RouterPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = ApplicationPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = ApplicationPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = ApplicationPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                ApplicationPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined ApplicationType rows
+
+                $key2 = ApplicationTypePeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = ApplicationTypePeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = ApplicationTypePeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    ApplicationTypePeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Application) to the collection in $obj2 (ApplicationType)
+                $obj2->addApplication($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Package rows
+
+                $key3 = PackagePeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = PackagePeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = PackagePeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    PackagePeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (Application) to the collection in $obj3 (Package)
+                $obj3->addApplication($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Router rows
+
+                $key4 = RouterPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = RouterPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = RouterPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    RouterPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Application) to the collection in $obj4 (Router)
+                $obj4->addApplication($obj1);
 
             } // if joined row is not null
 

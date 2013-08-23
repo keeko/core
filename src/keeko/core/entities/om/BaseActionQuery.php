@@ -25,12 +25,18 @@ use keeko\core\entities\Module;
  *
  *
  * @method ActionQuery orderById($order = Criteria::ASC) Order by the id column
- * @method ActionQuery orderByModuleId($order = Criteria::ASC) Order by the module_id column
  * @method ActionQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method ActionQuery orderByTitle($order = Criteria::ASC) Order by the title column
+ * @method ActionQuery orderByDescription($order = Criteria::ASC) Order by the description column
+ * @method ActionQuery orderByApi($order = Criteria::ASC) Order by the api column
+ * @method ActionQuery orderByModuleId($order = Criteria::ASC) Order by the module_id column
  *
  * @method ActionQuery groupById() Group by the id column
- * @method ActionQuery groupByModuleId() Group by the module_id column
  * @method ActionQuery groupByName() Group by the name column
+ * @method ActionQuery groupByTitle() Group by the title column
+ * @method ActionQuery groupByDescription() Group by the description column
+ * @method ActionQuery groupByApi() Group by the api column
+ * @method ActionQuery groupByModuleId() Group by the module_id column
  *
  * @method ActionQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method ActionQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -51,12 +57,18 @@ use keeko\core\entities\Module;
  * @method Action findOne(PropelPDO $con = null) Return the first Action matching the query
  * @method Action findOneOrCreate(PropelPDO $con = null) Return the first Action matching the query, or a new Action object populated from the query conditions when no match is found
  *
- * @method Action findOneByModuleId(int $module_id) Return the first Action filtered by the module_id column
  * @method Action findOneByName(string $name) Return the first Action filtered by the name column
+ * @method Action findOneByTitle(string $title) Return the first Action filtered by the title column
+ * @method Action findOneByDescription(string $description) Return the first Action filtered by the description column
+ * @method Action findOneByApi(boolean $api) Return the first Action filtered by the api column
+ * @method Action findOneByModuleId(int $module_id) Return the first Action filtered by the module_id column
  *
  * @method array findById(int $id) Return Action objects filtered by the id column
- * @method array findByModuleId(int $module_id) Return Action objects filtered by the module_id column
  * @method array findByName(string $name) Return Action objects filtered by the name column
+ * @method array findByTitle(string $title) Return Action objects filtered by the title column
+ * @method array findByDescription(string $description) Return Action objects filtered by the description column
+ * @method array findByApi(boolean $api) Return Action objects filtered by the api column
+ * @method array findByModuleId(int $module_id) Return Action objects filtered by the module_id column
  *
  * @package    propel.generator.keeko.core.entities.om
  */
@@ -160,7 +172,7 @@ abstract class BaseActionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `module_id`, `name` FROM `keeko_action` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `name`, `title`, `description`, `api`, `module_id` FROM `keeko_action` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -292,6 +304,120 @@ abstract class BaseActionQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $name The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ActionQuery The current query, for fluid interface
+     */
+    public function filterByName($name = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($name)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $name)) {
+                $name = str_replace('*', '%', $name);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ActionPeer::NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the title column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByTitle('fooValue');   // WHERE title = 'fooValue'
+     * $query->filterByTitle('%fooValue%'); // WHERE title LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $title The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ActionQuery The current query, for fluid interface
+     */
+    public function filterByTitle($title = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($title)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $title)) {
+                $title = str_replace('*', '%', $title);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ActionPeer::TITLE, $title, $comparison);
+    }
+
+    /**
+     * Filter the query on the description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDescription('fooValue');   // WHERE description = 'fooValue'
+     * $query->filterByDescription('%fooValue%'); // WHERE description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $description The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ActionQuery The current query, for fluid interface
+     */
+    public function filterByDescription($description = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($description)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $description)) {
+                $description = str_replace('*', '%', $description);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ActionPeer::DESCRIPTION, $description, $comparison);
+    }
+
+    /**
+     * Filter the query on the api column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByApi(true); // WHERE api = true
+     * $query->filterByApi('yes'); // WHERE api = true
+     * </code>
+     *
+     * @param     boolean|string $api The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ActionQuery The current query, for fluid interface
+     */
+    public function filterByApi($api = null, $comparison = null)
+    {
+        if (is_string($api)) {
+            $api = in_array(strtolower($api), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(ActionPeer::API, $api, $comparison);
+    }
+
+    /**
      * Filter the query on the module_id column
      *
      * Example usage:
@@ -333,35 +459,6 @@ abstract class BaseActionQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ActionPeer::MODULE_ID, $moduleId, $comparison);
-    }
-
-    /**
-     * Filter the query on the name column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
-     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $name The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ActionQuery The current query, for fluid interface
-     */
-    public function filterByName($name = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($name)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $name)) {
-                $name = str_replace('*', '%', $name);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(ActionPeer::NAME, $name, $comparison);
     }
 
     /**

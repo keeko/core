@@ -53,8 +53,8 @@ abstract class BaseRouterPeer
     /** the column name for the title field */
     const TITLE = 'keeko_router.title';
 
-    /** the column name for the classname field */
-    const CLASSNAME = 'keeko_router.classname';
+    /** the column name for the class_name field */
+    const CLASS_NAME = 'keeko_router.class_name';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -75,11 +75,11 @@ abstract class BaseRouterPeer
      * e.g. RouterPeer::$fieldNames[RouterPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Title', 'Classname', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'title', 'classname', ),
-        BasePeer::TYPE_COLNAME => array (RouterPeer::ID, RouterPeer::NAME, RouterPeer::TITLE, RouterPeer::CLASSNAME, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'TITLE', 'CLASSNAME', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'title', 'classname', ),
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Title', 'ClassName', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'title', 'className', ),
+        BasePeer::TYPE_COLNAME => array (RouterPeer::ID, RouterPeer::NAME, RouterPeer::TITLE, RouterPeer::CLASS_NAME, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'TITLE', 'CLASS_NAME', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'title', 'class_name', ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
@@ -90,11 +90,11 @@ abstract class BaseRouterPeer
      * e.g. RouterPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Title' => 2, 'Classname' => 3, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'classname' => 3, ),
-        BasePeer::TYPE_COLNAME => array (RouterPeer::ID => 0, RouterPeer::NAME => 1, RouterPeer::TITLE => 2, RouterPeer::CLASSNAME => 3, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'TITLE' => 2, 'CLASSNAME' => 3, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'classname' => 3, ),
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Title' => 2, 'ClassName' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'className' => 3, ),
+        BasePeer::TYPE_COLNAME => array (RouterPeer::ID => 0, RouterPeer::NAME => 1, RouterPeer::TITLE => 2, RouterPeer::CLASS_NAME => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'TITLE' => 2, 'CLASS_NAME' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'class_name' => 3, ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
@@ -172,12 +172,12 @@ abstract class BaseRouterPeer
             $criteria->addSelectColumn(RouterPeer::ID);
             $criteria->addSelectColumn(RouterPeer::NAME);
             $criteria->addSelectColumn(RouterPeer::TITLE);
-            $criteria->addSelectColumn(RouterPeer::CLASSNAME);
+            $criteria->addSelectColumn(RouterPeer::CLASS_NAME);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.title');
-            $criteria->addSelectColumn($alias . '.classname');
+            $criteria->addSelectColumn($alias . '.class_name');
         }
     }
 

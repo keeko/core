@@ -43,8 +43,9 @@ class ModuleTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
-        $this->addColumn('classname', 'Classname', 'VARCHAR', false, 255, null);
+        $this->addColumn('class_name', 'ClassName', 'VARCHAR', true, 255, null);
         $this->addColumn('activated_version', 'ActivatedVersion', 'VARCHAR', false, 50, null);
+        $this->addColumn('default_action', 'DefaultAction', 'VARCHAR', false, 255, null);
         $this->addForeignKey('package_id', 'PackageId', 'INTEGER', 'keeko_package', 'id', false, null, null);
         // validators
     } // initialize()

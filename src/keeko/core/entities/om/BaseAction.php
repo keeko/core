@@ -58,16 +58,35 @@ abstract class BaseAction extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the module_id field.
-     * @var        int
-     */
-    protected $module_id;
-
-    /**
      * The value for the name field.
      * @var        string
      */
     protected $name;
+
+    /**
+     * The value for the title field.
+     * @var        string
+     */
+    protected $title;
+
+    /**
+     * The value for the description field.
+     * @var        string
+     */
+    protected $description;
+
+    /**
+     * The value for the api field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $api;
+
+    /**
+     * The value for the module_id field.
+     * @var        int
+     */
+    protected $module_id;
 
     /**
      * @var        Module
@@ -119,6 +138,27 @@ abstract class BaseAction extends BaseObject implements Persistent
     protected $groupActionsScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see        __construct()
+     */
+    public function applyDefaultValues()
+    {
+        $this->api = false;
+    }
+
+    /**
+     * Initializes internal state of BaseAction object.
+     * @see        applyDefaults()
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->applyDefaultValues();
+    }
+
+    /**
      * Get the [id] column value.
      *
      * @return int
@@ -129,16 +169,6 @@ abstract class BaseAction extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [module_id] column value.
-     *
-     * @return int
-     */
-    public function getModuleId()
-    {
-        return $this->module_id;
-    }
-
-    /**
      * Get the [name] column value.
      *
      * @return string
@@ -146,6 +176,46 @@ abstract class BaseAction extends BaseObject implements Persistent
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get the [title] column value.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Get the [description] column value.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Get the [api] column value.
+     *
+     * @return boolean
+     */
+    public function getApi()
+    {
+        return $this->api;
+    }
+
+    /**
+     * Get the [module_id] column value.
+     *
+     * @return int
+     */
+    public function getModuleId()
+    {
+        return $this->module_id;
     }
 
     /**
@@ -168,6 +238,98 @@ abstract class BaseAction extends BaseObject implements Persistent
 
         return $this;
     } // setId()
+
+    /**
+     * Set the value of [name] column.
+     *
+     * @param string $v new value
+     * @return Action The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[] = ActionPeer::NAME;
+        }
+
+
+        return $this;
+    } // setName()
+
+    /**
+     * Set the value of [title] column.
+     *
+     * @param string $v new value
+     * @return Action The current object (for fluent API support)
+     */
+    public function setTitle($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->title !== $v) {
+            $this->title = $v;
+            $this->modifiedColumns[] = ActionPeer::TITLE;
+        }
+
+
+        return $this;
+    } // setTitle()
+
+    /**
+     * Set the value of [description] column.
+     *
+     * @param string $v new value
+     * @return Action The current object (for fluent API support)
+     */
+    public function setDescription($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->description !== $v) {
+            $this->description = $v;
+            $this->modifiedColumns[] = ActionPeer::DESCRIPTION;
+        }
+
+
+        return $this;
+    } // setDescription()
+
+    /**
+     * Sets the value of the [api] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return Action The current object (for fluent API support)
+     */
+    public function setApi($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->api !== $v) {
+            $this->api = $v;
+            $this->modifiedColumns[] = ActionPeer::API;
+        }
+
+
+        return $this;
+    } // setApi()
 
     /**
      * Set the value of [module_id] column.
@@ -195,27 +357,6 @@ abstract class BaseAction extends BaseObject implements Persistent
     } // setModuleId()
 
     /**
-     * Set the value of [name] column.
-     *
-     * @param string $v new value
-     * @return Action The current object (for fluent API support)
-     */
-    public function setName($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->name !== $v) {
-            $this->name = $v;
-            $this->modifiedColumns[] = ActionPeer::NAME;
-        }
-
-
-        return $this;
-    } // setName()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -225,6 +366,10 @@ abstract class BaseAction extends BaseObject implements Persistent
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->api !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return true
         return true;
     } // hasOnlyDefaultValues()
@@ -248,8 +393,11 @@ abstract class BaseAction extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->module_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
-            $this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->api = ($row[$startcol + 4] !== null) ? (boolean) $row[$startcol + 4] : null;
+            $this->module_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -258,7 +406,7 @@ abstract class BaseAction extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 3; // 3 = ActionPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = ActionPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Action object", $e);
@@ -528,11 +676,20 @@ abstract class BaseAction extends BaseObject implements Persistent
         if ($this->isColumnModified(ActionPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(ActionPeer::MODULE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`module_id`';
-        }
         if ($this->isColumnModified(ActionPeer::NAME)) {
             $modifiedColumns[':p' . $index++]  = '`name`';
+        }
+        if ($this->isColumnModified(ActionPeer::TITLE)) {
+            $modifiedColumns[':p' . $index++]  = '`title`';
+        }
+        if ($this->isColumnModified(ActionPeer::DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = '`description`';
+        }
+        if ($this->isColumnModified(ActionPeer::API)) {
+            $modifiedColumns[':p' . $index++]  = '`api`';
+        }
+        if ($this->isColumnModified(ActionPeer::MODULE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`module_id`';
         }
 
         $sql = sprintf(
@@ -548,11 +705,20 @@ abstract class BaseAction extends BaseObject implements Persistent
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`module_id`':
-                        $stmt->bindValue($identifier, $this->module_id, PDO::PARAM_INT);
-                        break;
                     case '`name`':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case '`title`':
+                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+                        break;
+                    case '`description`':
+                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
+                        break;
+                    case '`api`':
+                        $stmt->bindValue($identifier, (int) $this->api, PDO::PARAM_INT);
+                        break;
+                    case '`module_id`':
+                        $stmt->bindValue($identifier, $this->module_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -720,10 +886,19 @@ abstract class BaseAction extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getModuleId();
+                return $this->getName();
                 break;
             case 2:
-                return $this->getName();
+                return $this->getTitle();
+                break;
+            case 3:
+                return $this->getDescription();
+                break;
+            case 4:
+                return $this->getApi();
+                break;
+            case 5:
+                return $this->getModuleId();
                 break;
             default:
                 return null;
@@ -755,8 +930,11 @@ abstract class BaseAction extends BaseObject implements Persistent
         $keys = ActionPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getModuleId(),
-            $keys[2] => $this->getName(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getTitle(),
+            $keys[3] => $this->getDescription(),
+            $keys[4] => $this->getApi(),
+            $keys[5] => $this->getModuleId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aModule) {
@@ -806,10 +984,19 @@ abstract class BaseAction extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setModuleId($value);
+                $this->setName($value);
                 break;
             case 2:
-                $this->setName($value);
+                $this->setTitle($value);
+                break;
+            case 3:
+                $this->setDescription($value);
+                break;
+            case 4:
+                $this->setApi($value);
+                break;
+            case 5:
+                $this->setModuleId($value);
                 break;
         } // switch()
     }
@@ -836,8 +1023,11 @@ abstract class BaseAction extends BaseObject implements Persistent
         $keys = ActionPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setModuleId($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
+        if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setApi($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setModuleId($arr[$keys[5]]);
     }
 
     /**
@@ -850,8 +1040,11 @@ abstract class BaseAction extends BaseObject implements Persistent
         $criteria = new Criteria(ActionPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(ActionPeer::ID)) $criteria->add(ActionPeer::ID, $this->id);
-        if ($this->isColumnModified(ActionPeer::MODULE_ID)) $criteria->add(ActionPeer::MODULE_ID, $this->module_id);
         if ($this->isColumnModified(ActionPeer::NAME)) $criteria->add(ActionPeer::NAME, $this->name);
+        if ($this->isColumnModified(ActionPeer::TITLE)) $criteria->add(ActionPeer::TITLE, $this->title);
+        if ($this->isColumnModified(ActionPeer::DESCRIPTION)) $criteria->add(ActionPeer::DESCRIPTION, $this->description);
+        if ($this->isColumnModified(ActionPeer::API)) $criteria->add(ActionPeer::API, $this->api);
+        if ($this->isColumnModified(ActionPeer::MODULE_ID)) $criteria->add(ActionPeer::MODULE_ID, $this->module_id);
 
         return $criteria;
     }
@@ -915,8 +1108,11 @@ abstract class BaseAction extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setModuleId($this->getModuleId());
         $copyObj->setName($this->getName());
+        $copyObj->setTitle($this->getTitle());
+        $copyObj->setDescription($this->getDescription());
+        $copyObj->setApi($this->getApi());
+        $copyObj->setModuleId($this->getModuleId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1550,12 +1746,16 @@ abstract class BaseAction extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->module_id = null;
         $this->name = null;
+        $this->title = null;
+        $this->description = null;
+        $this->api = null;
+        $this->module_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

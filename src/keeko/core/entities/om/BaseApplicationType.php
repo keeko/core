@@ -13,33 +13,31 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use keeko\core\entities\Action;
-use keeko\core\entities\ActionQuery;
-use keeko\core\entities\Module;
-use keeko\core\entities\ModulePeer;
-use keeko\core\entities\ModuleQuery;
-use keeko\core\entities\Package;
-use keeko\core\entities\PackageQuery;
+use keeko\core\entities\Application;
+use keeko\core\entities\ApplicationQuery;
+use keeko\core\entities\ApplicationType;
+use keeko\core\entities\ApplicationTypePeer;
+use keeko\core\entities\ApplicationTypeQuery;
 
 /**
- * Base class that represents a row from the 'keeko_module' table.
+ * Base class that represents a row from the 'keeko_application_type' table.
  *
  *
  *
  * @package    propel.generator.keeko.core.entities.om
  */
-abstract class BaseModule extends BaseObject implements Persistent
+abstract class BaseApplicationType extends BaseObject implements Persistent
 {
     /**
      * Peer class name
      */
-    const PEER = 'keeko\\core\\entities\\ModulePeer';
+    const PEER = 'keeko\\core\\entities\\ApplicationTypePeer';
 
     /**
      * The Peer class.
      * Instance provides a convenient way of calling static methods on a class
      * that calling code may not be able to identify.
-     * @var        ModulePeer
+     * @var        ApplicationTypePeer
      */
     protected static $peer;
 
@@ -56,39 +54,22 @@ abstract class BaseModule extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the class_name field.
+     * The value for the name field.
      * @var        string
      */
-    protected $class_name;
+    protected $name;
 
     /**
-     * The value for the activated_version field.
+     * The value for the title field.
      * @var        string
      */
-    protected $activated_version;
+    protected $title;
 
     /**
-     * The value for the default_action field.
-     * @var        string
+     * @var        PropelObjectCollection|Application[] Collection to store aggregation of Application objects.
      */
-    protected $default_action;
-
-    /**
-     * The value for the package_id field.
-     * @var        int
-     */
-    protected $package_id;
-
-    /**
-     * @var        Package
-     */
-    protected $aPackage;
-
-    /**
-     * @var        PropelObjectCollection|Action[] Collection to store aggregation of Action objects.
-     */
-    protected $collActions;
-    protected $collActionsPartial;
+    protected $collApplications;
+    protected $collApplicationsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -114,7 +95,7 @@ abstract class BaseModule extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $actionsScheduledForDeletion = null;
+    protected $applicationsScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -127,50 +108,30 @@ abstract class BaseModule extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [class_name] column value.
+     * Get the [name] column value.
      *
      * @return string
      */
-    public function getClassName()
+    public function getName()
     {
-        return $this->class_name;
+        return $this->name;
     }
 
     /**
-     * Get the [activated_version] column value.
+     * Get the [title] column value.
      *
      * @return string
      */
-    public function getActivatedVersion()
+    public function getTitle()
     {
-        return $this->activated_version;
-    }
-
-    /**
-     * Get the [default_action] column value.
-     *
-     * @return string
-     */
-    public function getDefaultAction()
-    {
-        return $this->default_action;
-    }
-
-    /**
-     * Get the [package_id] column value.
-     *
-     * @return int
-     */
-    public function getPackageId()
-    {
-        return $this->package_id;
+        return $this->title;
     }
 
     /**
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return Module The current object (for fluent API support)
+     * @return ApplicationType The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -180,7 +141,7 @@ abstract class BaseModule extends BaseObject implements Persistent
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[] = ModulePeer::ID;
+            $this->modifiedColumns[] = ApplicationTypePeer::ID;
         }
 
 
@@ -188,92 +149,46 @@ abstract class BaseModule extends BaseObject implements Persistent
     } // setId()
 
     /**
-     * Set the value of [class_name] column.
+     * Set the value of [name] column.
      *
      * @param string $v new value
-     * @return Module The current object (for fluent API support)
+     * @return ApplicationType The current object (for fluent API support)
      */
-    public function setClassName($v)
+    public function setName($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
-        if ($this->class_name !== $v) {
-            $this->class_name = $v;
-            $this->modifiedColumns[] = ModulePeer::CLASS_NAME;
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[] = ApplicationTypePeer::NAME;
         }
 
 
         return $this;
-    } // setClassName()
+    } // setName()
 
     /**
-     * Set the value of [activated_version] column.
+     * Set the value of [title] column.
      *
      * @param string $v new value
-     * @return Module The current object (for fluent API support)
+     * @return ApplicationType The current object (for fluent API support)
      */
-    public function setActivatedVersion($v)
+    public function setTitle($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
-        if ($this->activated_version !== $v) {
-            $this->activated_version = $v;
-            $this->modifiedColumns[] = ModulePeer::ACTIVATED_VERSION;
+        if ($this->title !== $v) {
+            $this->title = $v;
+            $this->modifiedColumns[] = ApplicationTypePeer::TITLE;
         }
 
 
         return $this;
-    } // setActivatedVersion()
-
-    /**
-     * Set the value of [default_action] column.
-     *
-     * @param string $v new value
-     * @return Module The current object (for fluent API support)
-     */
-    public function setDefaultAction($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->default_action !== $v) {
-            $this->default_action = $v;
-            $this->modifiedColumns[] = ModulePeer::DEFAULT_ACTION;
-        }
-
-
-        return $this;
-    } // setDefaultAction()
-
-    /**
-     * Set the value of [package_id] column.
-     *
-     * @param int $v new value
-     * @return Module The current object (for fluent API support)
-     */
-    public function setPackageId($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (int) $v;
-        }
-
-        if ($this->package_id !== $v) {
-            $this->package_id = $v;
-            $this->modifiedColumns[] = ModulePeer::PACKAGE_ID;
-        }
-
-        if ($this->aPackage !== null && $this->aPackage->getId() !== $v) {
-            $this->aPackage = null;
-        }
-
-
-        return $this;
-    } // setPackageId()
+    } // setTitle()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -308,10 +223,8 @@ abstract class BaseModule extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->class_name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->activated_version = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->default_action = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->package_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -320,10 +233,10 @@ abstract class BaseModule extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 5; // 5 = ModulePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = ApplicationTypePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException("Error populating Module object", $e);
+            throw new PropelException("Error populating ApplicationType object", $e);
         }
     }
 
@@ -343,9 +256,6 @@ abstract class BaseModule extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
-        if ($this->aPackage !== null && $this->package_id !== $this->aPackage->getId()) {
-            $this->aPackage = null;
-        }
     } // ensureConsistency
 
     /**
@@ -369,13 +279,13 @@ abstract class BaseModule extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(ModulePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(ApplicationTypePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $stmt = ModulePeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+        $stmt = ApplicationTypePeer::doSelectStmt($this->buildPkeyCriteria(), $con);
         $row = $stmt->fetch(PDO::FETCH_NUM);
         $stmt->closeCursor();
         if (!$row) {
@@ -385,8 +295,7 @@ abstract class BaseModule extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aPackage = null;
-            $this->collActions = null;
+            $this->collApplications = null;
 
         } // if (deep)
     }
@@ -408,12 +317,12 @@ abstract class BaseModule extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(ModulePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(ApplicationTypePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
         try {
-            $deleteQuery = ModuleQuery::create()
+            $deleteQuery = ApplicationTypeQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -451,7 +360,7 @@ abstract class BaseModule extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(ModulePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(ApplicationTypePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
@@ -471,7 +380,7 @@ abstract class BaseModule extends BaseObject implements Persistent
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                ModulePeer::addInstanceToPool($this);
+                ApplicationTypePeer::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -501,18 +410,6 @@ abstract class BaseModule extends BaseObject implements Persistent
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
-            // We call the save method on the following object(s) if they
-            // were passed to this object by their coresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            if ($this->aPackage !== null) {
-                if ($this->aPackage->isModified() || $this->aPackage->isNew()) {
-                    $affectedRows += $this->aPackage->save($con);
-                }
-                $this->setPackage($this->aPackage);
-            }
-
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -524,17 +421,17 @@ abstract class BaseModule extends BaseObject implements Persistent
                 $this->resetModified();
             }
 
-            if ($this->actionsScheduledForDeletion !== null) {
-                if (!$this->actionsScheduledForDeletion->isEmpty()) {
-                    ActionQuery::create()
-                        ->filterByPrimaryKeys($this->actionsScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->applicationsScheduledForDeletion !== null) {
+                if (!$this->applicationsScheduledForDeletion->isEmpty()) {
+                    ApplicationQuery::create()
+                        ->filterByPrimaryKeys($this->applicationsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->actionsScheduledForDeletion = null;
+                    $this->applicationsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collActions !== null) {
-                foreach ($this->collActions as $referrerFK) {
+            if ($this->collApplications !== null) {
+                foreach ($this->collApplications as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -561,30 +458,24 @@ abstract class BaseModule extends BaseObject implements Persistent
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[] = ModulePeer::ID;
+        $this->modifiedColumns[] = ApplicationTypePeer::ID;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . ModulePeer::ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . ApplicationTypePeer::ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(ModulePeer::ID)) {
+        if ($this->isColumnModified(ApplicationTypePeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(ModulePeer::CLASS_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`class_name`';
+        if ($this->isColumnModified(ApplicationTypePeer::NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`name`';
         }
-        if ($this->isColumnModified(ModulePeer::ACTIVATED_VERSION)) {
-            $modifiedColumns[':p' . $index++]  = '`activated_version`';
-        }
-        if ($this->isColumnModified(ModulePeer::DEFAULT_ACTION)) {
-            $modifiedColumns[':p' . $index++]  = '`default_action`';
-        }
-        if ($this->isColumnModified(ModulePeer::PACKAGE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`package_id`';
+        if ($this->isColumnModified(ApplicationTypePeer::TITLE)) {
+            $modifiedColumns[':p' . $index++]  = '`title`';
         }
 
         $sql = sprintf(
-            'INSERT INTO `keeko_module` (%s) VALUES (%s)',
+            'INSERT INTO `keeko_application_type` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -596,17 +487,11 @@ abstract class BaseModule extends BaseObject implements Persistent
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`class_name`':
-                        $stmt->bindValue($identifier, $this->class_name, PDO::PARAM_STR);
+                    case '`name`':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case '`activated_version`':
-                        $stmt->bindValue($identifier, $this->activated_version, PDO::PARAM_STR);
-                        break;
-                    case '`default_action`':
-                        $stmt->bindValue($identifier, $this->default_action, PDO::PARAM_STR);
-                        break;
-                    case '`package_id`':
-                        $stmt->bindValue($identifier, $this->package_id, PDO::PARAM_INT);
+                    case '`title`':
+                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -702,25 +587,13 @@ abstract class BaseModule extends BaseObject implements Persistent
             $failureMap = array();
 
 
-            // We call the validate method on the following object(s) if they
-            // were passed to this object by their coresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            if ($this->aPackage !== null) {
-                if (!$this->aPackage->validate($columns)) {
-                    $failureMap = array_merge($failureMap, $this->aPackage->getValidationFailures());
-                }
-            }
-
-
-            if (($retval = ModulePeer::doValidate($this, $columns)) !== true) {
+            if (($retval = ApplicationTypePeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
             }
 
 
-                if ($this->collActions !== null) {
-                    foreach ($this->collActions as $referrerFK) {
+                if ($this->collApplications !== null) {
+                    foreach ($this->collApplications as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -746,7 +619,7 @@ abstract class BaseModule extends BaseObject implements Persistent
      */
     public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = ModulePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = ApplicationTypePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -766,16 +639,10 @@ abstract class BaseModule extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getClassName();
+                return $this->getName();
                 break;
             case 2:
-                return $this->getActivatedVersion();
-                break;
-            case 3:
-                return $this->getDefaultAction();
-                break;
-            case 4:
-                return $this->getPackageId();
+                return $this->getTitle();
                 break;
             default:
                 return null;
@@ -800,24 +667,19 @@ abstract class BaseModule extends BaseObject implements Persistent
      */
     public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Module'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['ApplicationType'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Module'][$this->getPrimaryKey()] = true;
-        $keys = ModulePeer::getFieldNames($keyType);
+        $alreadyDumpedObjects['ApplicationType'][$this->getPrimaryKey()] = true;
+        $keys = ApplicationTypePeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getClassName(),
-            $keys[2] => $this->getActivatedVersion(),
-            $keys[3] => $this->getDefaultAction(),
-            $keys[4] => $this->getPackageId(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getTitle(),
         );
         if ($includeForeignObjects) {
-            if (null !== $this->aPackage) {
-                $result['Package'] = $this->aPackage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->collActions) {
-                $result['Actions'] = $this->collActions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collApplications) {
+                $result['Applications'] = $this->collApplications->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -837,7 +699,7 @@ abstract class BaseModule extends BaseObject implements Persistent
      */
     public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = ModulePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = ApplicationTypePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
     }
@@ -857,16 +719,10 @@ abstract class BaseModule extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setClassName($value);
+                $this->setName($value);
                 break;
             case 2:
-                $this->setActivatedVersion($value);
-                break;
-            case 3:
-                $this->setDefaultAction($value);
-                break;
-            case 4:
-                $this->setPackageId($value);
+                $this->setTitle($value);
                 break;
         } // switch()
     }
@@ -890,13 +746,11 @@ abstract class BaseModule extends BaseObject implements Persistent
      */
     public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
     {
-        $keys = ModulePeer::getFieldNames($keyType);
+        $keys = ApplicationTypePeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setClassName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setActivatedVersion($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDefaultAction($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setPackageId($arr[$keys[4]]);
+        if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
     }
 
     /**
@@ -906,13 +760,11 @@ abstract class BaseModule extends BaseObject implements Persistent
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(ModulePeer::DATABASE_NAME);
+        $criteria = new Criteria(ApplicationTypePeer::DATABASE_NAME);
 
-        if ($this->isColumnModified(ModulePeer::ID)) $criteria->add(ModulePeer::ID, $this->id);
-        if ($this->isColumnModified(ModulePeer::CLASS_NAME)) $criteria->add(ModulePeer::CLASS_NAME, $this->class_name);
-        if ($this->isColumnModified(ModulePeer::ACTIVATED_VERSION)) $criteria->add(ModulePeer::ACTIVATED_VERSION, $this->activated_version);
-        if ($this->isColumnModified(ModulePeer::DEFAULT_ACTION)) $criteria->add(ModulePeer::DEFAULT_ACTION, $this->default_action);
-        if ($this->isColumnModified(ModulePeer::PACKAGE_ID)) $criteria->add(ModulePeer::PACKAGE_ID, $this->package_id);
+        if ($this->isColumnModified(ApplicationTypePeer::ID)) $criteria->add(ApplicationTypePeer::ID, $this->id);
+        if ($this->isColumnModified(ApplicationTypePeer::NAME)) $criteria->add(ApplicationTypePeer::NAME, $this->name);
+        if ($this->isColumnModified(ApplicationTypePeer::TITLE)) $criteria->add(ApplicationTypePeer::TITLE, $this->title);
 
         return $criteria;
     }
@@ -927,8 +779,8 @@ abstract class BaseModule extends BaseObject implements Persistent
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(ModulePeer::DATABASE_NAME);
-        $criteria->add(ModulePeer::ID, $this->id);
+        $criteria = new Criteria(ApplicationTypePeer::DATABASE_NAME);
+        $criteria->add(ApplicationTypePeer::ID, $this->id);
 
         return $criteria;
     }
@@ -969,17 +821,15 @@ abstract class BaseModule extends BaseObject implements Persistent
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of Module (or compatible) type.
+     * @param object $copyObj An object of ApplicationType (or compatible) type.
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setClassName($this->getClassName());
-        $copyObj->setActivatedVersion($this->getActivatedVersion());
-        $copyObj->setDefaultAction($this->getDefaultAction());
-        $copyObj->setPackageId($this->getPackageId());
+        $copyObj->setName($this->getName());
+        $copyObj->setTitle($this->getTitle());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -988,9 +838,9 @@ abstract class BaseModule extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
-            foreach ($this->getActions() as $relObj) {
+            foreach ($this->getApplications() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addAction($relObj->copy($deepCopy));
+                    $copyObj->addApplication($relObj->copy($deepCopy));
                 }
             }
 
@@ -1013,7 +863,7 @@ abstract class BaseModule extends BaseObject implements Persistent
      * objects.
      *
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return Module Clone of current object.
+     * @return ApplicationType Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1033,67 +883,15 @@ abstract class BaseModule extends BaseObject implements Persistent
      * same instance for all member of this class. The method could therefore
      * be static, but this would prevent one from overriding the behavior.
      *
-     * @return ModulePeer
+     * @return ApplicationTypePeer
      */
     public function getPeer()
     {
         if (self::$peer === null) {
-            self::$peer = new ModulePeer();
+            self::$peer = new ApplicationTypePeer();
         }
 
         return self::$peer;
-    }
-
-    /**
-     * Declares an association between this object and a Package object.
-     *
-     * @param             Package $v
-     * @return Module The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setPackage(Package $v = null)
-    {
-        if ($v === null) {
-            $this->setPackageId(NULL);
-        } else {
-            $this->setPackageId($v->getId());
-        }
-
-        $this->aPackage = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the Package object, it will not be re-added.
-        if ($v !== null) {
-            $v->addModule($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated Package object
-     *
-     * @param PropelPDO $con Optional Connection object.
-     * @param $doQuery Executes a query to get the object if required
-     * @return Package The associated Package object.
-     * @throws PropelException
-     */
-    public function getPackage(PropelPDO $con = null, $doQuery = true)
-    {
-        if ($this->aPackage === null && ($this->package_id !== null) && $doQuery) {
-            $this->aPackage = PackageQuery::create()->findPk($this->package_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aPackage->addModules($this);
-             */
-        }
-
-        return $this->aPackage;
     }
 
 
@@ -1107,42 +905,42 @@ abstract class BaseModule extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
-        if ('Action' == $relationName) {
-            $this->initActions();
+        if ('Application' == $relationName) {
+            $this->initApplications();
         }
     }
 
     /**
-     * Clears out the collActions collection
+     * Clears out the collApplications collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return Module The current object (for fluent API support)
-     * @see        addActions()
+     * @return ApplicationType The current object (for fluent API support)
+     * @see        addApplications()
      */
-    public function clearActions()
+    public function clearApplications()
     {
-        $this->collActions = null; // important to set this to null since that means it is uninitialized
-        $this->collActionsPartial = null;
+        $this->collApplications = null; // important to set this to null since that means it is uninitialized
+        $this->collApplicationsPartial = null;
 
         return $this;
     }
 
     /**
-     * reset is the collActions collection loaded partially
+     * reset is the collApplications collection loaded partially
      *
      * @return void
      */
-    public function resetPartialActions($v = true)
+    public function resetPartialApplications($v = true)
     {
-        $this->collActionsPartial = $v;
+        $this->collApplicationsPartial = $v;
     }
 
     /**
-     * Initializes the collActions collection.
+     * Initializes the collApplications collection.
      *
-     * By default this just sets the collActions collection to an empty array (like clearcollActions());
+     * By default this just sets the collApplications collection to an empty array (like clearcollApplications());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1151,183 +949,258 @@ abstract class BaseModule extends BaseObject implements Persistent
      *
      * @return void
      */
-    public function initActions($overrideExisting = true)
+    public function initApplications($overrideExisting = true)
     {
-        if (null !== $this->collActions && !$overrideExisting) {
+        if (null !== $this->collApplications && !$overrideExisting) {
             return;
         }
-        $this->collActions = new PropelObjectCollection();
-        $this->collActions->setModel('Action');
+        $this->collApplications = new PropelObjectCollection();
+        $this->collApplications->setModel('Application');
     }
 
     /**
-     * Gets an array of Action objects which contain a foreign key that references this object.
+     * Gets an array of Application objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Module is new, it will return
+     * If this ApplicationType is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Action[] List of Action objects
+     * @return PropelObjectCollection|Application[] List of Application objects
      * @throws PropelException
      */
-    public function getActions($criteria = null, PropelPDO $con = null)
+    public function getApplications($criteria = null, PropelPDO $con = null)
     {
-        $partial = $this->collActionsPartial && !$this->isNew();
-        if (null === $this->collActions || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collActions) {
+        $partial = $this->collApplicationsPartial && !$this->isNew();
+        if (null === $this->collApplications || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collApplications) {
                 // return empty collection
-                $this->initActions();
+                $this->initApplications();
             } else {
-                $collActions = ActionQuery::create(null, $criteria)
-                    ->filterByModule($this)
+                $collApplications = ApplicationQuery::create(null, $criteria)
+                    ->filterByApplicationType($this)
                     ->find($con);
                 if (null !== $criteria) {
-                    if (false !== $this->collActionsPartial && count($collActions)) {
-                      $this->initActions(false);
+                    if (false !== $this->collApplicationsPartial && count($collApplications)) {
+                      $this->initApplications(false);
 
-                      foreach($collActions as $obj) {
-                        if (false == $this->collActions->contains($obj)) {
-                          $this->collActions->append($obj);
+                      foreach($collApplications as $obj) {
+                        if (false == $this->collApplications->contains($obj)) {
+                          $this->collApplications->append($obj);
                         }
                       }
 
-                      $this->collActionsPartial = true;
+                      $this->collApplicationsPartial = true;
                     }
 
-                    $collActions->getInternalIterator()->rewind();
-                    return $collActions;
+                    $collApplications->getInternalIterator()->rewind();
+                    return $collApplications;
                 }
 
-                if($partial && $this->collActions) {
-                    foreach($this->collActions as $obj) {
+                if($partial && $this->collApplications) {
+                    foreach($this->collApplications as $obj) {
                         if($obj->isNew()) {
-                            $collActions[] = $obj;
+                            $collApplications[] = $obj;
                         }
                     }
                 }
 
-                $this->collActions = $collActions;
-                $this->collActionsPartial = false;
+                $this->collApplications = $collApplications;
+                $this->collApplicationsPartial = false;
             }
         }
 
-        return $this->collActions;
+        return $this->collApplications;
     }
 
     /**
-     * Sets a collection of Action objects related by a one-to-many relationship
+     * Sets a collection of Application objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param PropelCollection $actions A Propel collection.
+     * @param PropelCollection $applications A Propel collection.
      * @param PropelPDO $con Optional connection object
-     * @return Module The current object (for fluent API support)
+     * @return ApplicationType The current object (for fluent API support)
      */
-    public function setActions(PropelCollection $actions, PropelPDO $con = null)
+    public function setApplications(PropelCollection $applications, PropelPDO $con = null)
     {
-        $actionsToDelete = $this->getActions(new Criteria(), $con)->diff($actions);
+        $applicationsToDelete = $this->getApplications(new Criteria(), $con)->diff($applications);
 
-        $this->actionsScheduledForDeletion = unserialize(serialize($actionsToDelete));
+        $this->applicationsScheduledForDeletion = unserialize(serialize($applicationsToDelete));
 
-        foreach ($actionsToDelete as $actionRemoved) {
-            $actionRemoved->setModule(null);
+        foreach ($applicationsToDelete as $applicationRemoved) {
+            $applicationRemoved->setApplicationType(null);
         }
 
-        $this->collActions = null;
-        foreach ($actions as $action) {
-            $this->addAction($action);
+        $this->collApplications = null;
+        foreach ($applications as $application) {
+            $this->addApplication($application);
         }
 
-        $this->collActions = $actions;
-        $this->collActionsPartial = false;
+        $this->collApplications = $applications;
+        $this->collApplicationsPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related Action objects.
+     * Returns the number of related Application objects.
      *
      * @param Criteria $criteria
      * @param boolean $distinct
      * @param PropelPDO $con
-     * @return int             Count of related Action objects.
+     * @return int             Count of related Application objects.
      * @throws PropelException
      */
-    public function countActions(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countApplications(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
     {
-        $partial = $this->collActionsPartial && !$this->isNew();
-        if (null === $this->collActions || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collActions) {
+        $partial = $this->collApplicationsPartial && !$this->isNew();
+        if (null === $this->collApplications || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collApplications) {
                 return 0;
             }
 
             if($partial && !$criteria) {
-                return count($this->getActions());
+                return count($this->getApplications());
             }
-            $query = ActionQuery::create(null, $criteria);
+            $query = ApplicationQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
 
             return $query
-                ->filterByModule($this)
+                ->filterByApplicationType($this)
                 ->count($con);
         }
 
-        return count($this->collActions);
+        return count($this->collApplications);
     }
 
     /**
-     * Method called to associate a Action object to this object
-     * through the Action foreign key attribute.
+     * Method called to associate a Application object to this object
+     * through the Application foreign key attribute.
      *
-     * @param    Action $l Action
-     * @return Module The current object (for fluent API support)
+     * @param    Application $l Application
+     * @return ApplicationType The current object (for fluent API support)
      */
-    public function addAction(Action $l)
+    public function addApplication(Application $l)
     {
-        if ($this->collActions === null) {
-            $this->initActions();
-            $this->collActionsPartial = true;
+        if ($this->collApplications === null) {
+            $this->initApplications();
+            $this->collApplicationsPartial = true;
         }
-        if (!in_array($l, $this->collActions->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddAction($l);
+        if (!in_array($l, $this->collApplications->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddApplication($l);
         }
 
         return $this;
     }
 
     /**
-     * @param	Action $action The action object to add.
+     * @param	Application $application The application object to add.
      */
-    protected function doAddAction($action)
+    protected function doAddApplication($application)
     {
-        $this->collActions[]= $action;
-        $action->setModule($this);
+        $this->collApplications[]= $application;
+        $application->setApplicationType($this);
     }
 
     /**
-     * @param	Action $action The action object to remove.
-     * @return Module The current object (for fluent API support)
+     * @param	Application $application The application object to remove.
+     * @return ApplicationType The current object (for fluent API support)
      */
-    public function removeAction($action)
+    public function removeApplication($application)
     {
-        if ($this->getActions()->contains($action)) {
-            $this->collActions->remove($this->collActions->search($action));
-            if (null === $this->actionsScheduledForDeletion) {
-                $this->actionsScheduledForDeletion = clone $this->collActions;
-                $this->actionsScheduledForDeletion->clear();
+        if ($this->getApplications()->contains($application)) {
+            $this->collApplications->remove($this->collApplications->search($application));
+            if (null === $this->applicationsScheduledForDeletion) {
+                $this->applicationsScheduledForDeletion = clone $this->collApplications;
+                $this->applicationsScheduledForDeletion->clear();
             }
-            $this->actionsScheduledForDeletion[]= clone $action;
-            $action->setModule(null);
+            $this->applicationsScheduledForDeletion[]= clone $application;
+            $application->setApplicationType(null);
         }
 
         return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this ApplicationType is new, it will return
+     * an empty collection; or if this ApplicationType has previously
+     * been saved, it will retrieve related Applications from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in ApplicationType.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Application[] List of Application objects
+     */
+    public function getApplicationsJoinPackage($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = ApplicationQuery::create(null, $criteria);
+        $query->joinWith('Package', $join_behavior);
+
+        return $this->getApplications($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this ApplicationType is new, it will return
+     * an empty collection; or if this ApplicationType has previously
+     * been saved, it will retrieve related Applications from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in ApplicationType.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Application[] List of Application objects
+     */
+    public function getApplicationsJoinRouter($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = ApplicationQuery::create(null, $criteria);
+        $query->joinWith('Router', $join_behavior);
+
+        return $this->getApplications($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this ApplicationType is new, it will return
+     * an empty collection; or if this ApplicationType has previously
+     * been saved, it will retrieve related Applications from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in ApplicationType.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Application[] List of Application objects
+     */
+    public function getApplicationsJoinDesign($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = ApplicationQuery::create(null, $criteria);
+        $query->joinWith('Design', $join_behavior);
+
+        return $this->getApplications($query, $con);
     }
 
     /**
@@ -1336,10 +1209,8 @@ abstract class BaseModule extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->class_name = null;
-        $this->activated_version = null;
-        $this->default_action = null;
-        $this->package_id = null;
+        $this->name = null;
+        $this->title = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1362,23 +1233,19 @@ abstract class BaseModule extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collActions) {
-                foreach ($this->collActions as $o) {
+            if ($this->collApplications) {
+                foreach ($this->collApplications as $o) {
                     $o->clearAllReferences($deep);
                 }
-            }
-            if ($this->aPackage instanceof Persistent) {
-              $this->aPackage->clearAllReferences($deep);
             }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->collActions instanceof PropelCollection) {
-            $this->collActions->clearIterator();
+        if ($this->collApplications instanceof PropelCollection) {
+            $this->collApplications->clearIterator();
         }
-        $this->collActions = null;
-        $this->aPackage = null;
+        $this->collApplications = null;
     }
 
     /**
@@ -1388,7 +1255,7 @@ abstract class BaseModule extends BaseObject implements Persistent
      */
     public function __toString()
     {
-        return (string) $this->exportTo(ModulePeer::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(ApplicationTypePeer::DEFAULT_STRING_FORMAT);
     }
 
     /**
@@ -1399,26 +1266,6 @@ abstract class BaseModule extends BaseObject implements Persistent
     public function isAlreadyInSave()
     {
         return $this->alreadyInSave;
-    }
-
-    /**
-     * Catches calls to virtual methods
-     */
-    public function __call($name, $params)
-    {
-
-        // delegate behavior
-
-        if (is_callable(array('keeko\core\entities\Package', $name))) {
-            if (!$delegate = $this->getPackage()) {
-                $delegate = new Package();
-                $this->setPackage($delegate);
-            }
-
-            return call_user_func_array(array($delegate, $name), $params);
-        }
-
-        return parent::__call($name, $params);
     }
 
 }

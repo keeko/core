@@ -7,6 +7,7 @@ use keeko\core\routing\RouterInterface;
 use keeko\core\routing\ApplicationRouter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use keeko\core\module\ModuleManager;
 
 class KeekoApplication {
 
@@ -17,14 +18,33 @@ class KeekoApplication {
 	protected $localization;
 	
 	/* @var $router RouterInterface */
-	protected $router; 
+	protected $router;
+
+	/* @var $moduleManager ModuleManager */
+	protected $moduleManager;
+
+	/**
+	 * Creates a new Keeko Application
+	 * 
+	 */
+	public function __construct() {
+		$this->moduleManager = new ModuleManager();
+	}	
 	
 	public function setApplication(Application $application) {
 		$this->application = $application;
 	}
 	
+	public function getApplication() {
+		return $this->application;
+	}
+	
 	public function setLocalization(Localization $localization) { 
 		$this->localization = $localization;
+	}
+	
+	public function getLocalization() {
+		return $this->localization;
 	}
 	 
 	/* (non-PHPdoc)

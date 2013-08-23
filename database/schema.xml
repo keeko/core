@@ -148,16 +148,28 @@
 			required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" required="true"/>
 		<column name="title" type="VARCHAR" size="255" />
-		<column name="classname" type="VARCHAR" size="255" required="true" />
+		<column name="class_name" type="VARCHAR" size="255" required="true" />
+	</table>
+	
+	<table name="application_type">
+		<column name="id" type="INTEGER" size="10" primaryKey="true"
+			required="true" autoIncrement="true" />
+		<column name="name" type="VARCHAR" required="true"/>
+		<column name="title" type="VARCHAR" size="255" />
 	</table>
 
 	<table name="application">
 		<column name="id" type="INTEGER" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="title" type="VARCHAR" size="255" />
+		<column name="application_type_id" type="INTEGER" size="10" required="true" />
 		<column name="router_id" type="INTEGER" size="10" required="true" />
 		<column name="design_id" type="INTEGER" required="true"/>
 		<column name="package_id" type="INTEGER" />
+
+		<foreign-key foreignTable="application_type">
+			<reference local="application_type_id" foreign="id" />
+		</foreign-key>
 
 		<foreign-key foreignTable="package">
 			<reference local="package_id" foreign="id" />
@@ -324,8 +336,9 @@
 	<table name="module">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
-		<column name="classname" type="VARCHAR" size="255" />
+		<column name="class_name" type="VARCHAR" size="255" required="true" />
 		<column name="activated_version" type="VARCHAR" size="50" />
+		<column name="default_action" type="VARCHAR" />
 		<column name="package_id" type="INTEGER" />
 
 		<foreign-key foreignTable="package">
@@ -340,8 +353,13 @@
 	<table name="action">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
+		<column name="name" type="VARCHAR" required="true"/>
+		<column name="title" type="VARCHAR" required="true"/>
+		<column name="description" type="VARCHAR" size="255" />
+		<column name="api" type="BOOLEAN" required="true" default="false" />
 		<column name="module_id" type="INTEGER" size="10" required="true" />
-		<column name="name" type="VARCHAR" size="32" />
+		
+		
 		<foreign-key foreignTable="module" onDelete="cascade">
 			<reference local="module_id" foreign="id" />
 		</foreign-key>

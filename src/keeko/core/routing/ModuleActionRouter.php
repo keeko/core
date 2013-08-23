@@ -43,7 +43,9 @@ class ModuleActionRouter implements RouterInterface {
 	private function setDefaultOptions(OptionsResolverInterface $resolver) {
 		$resolver->setDefaults([
 			'param-separator' => '?',
-			'param-delimiter' => '&'
+			'param-delimiter' => '&',
+			'param-true' => 'on',
+			'param-false' => 'off'
 		]);
 		$resolver->setOptional(['application']);
 		$resolver->setRequired(['module', 'basepath']);
@@ -69,41 +71,46 @@ class ModuleActionRouter implements RouterInterface {
 
 		$data = $this->matcher->match($destination);
 
-		// read params
+		// unserialize params
 		if (array_key_exists('params', $data)) {
-			$parts = explode($this->options['param-delimiter'], $data['params']);
-			$params = array();
-			foreach ($parts as $part) {
-				$kv = explode('=', $part);
-				if ($kv[0] != '') {
-					$params[$kv[0]] = count($kv) > 1
-						? $kv[1] == 'on' ? true : ($kv[1] == 'off' ? false : $kv[1])
-						: true;
-				}
-			}
-			$data['params'] = $params;
+			$data['params'] = $this->unserializeParams($data['params']);
 		}
 
 		return $data;
 	}
+	
+	/**
+	 * Unserializes Parameters
+	 * 
+	 * @param string $params
+	 * @return Array the unserialized array
+	 */
+	public function unserializeParams($params) {
+		$parts = explode($this->options['param-delimiter'], $params);
+		$params = [];
+		foreach ($parts as $part) {
+			$kv = explode('=', $part);
+			if ($kv[0] != '') {
+				$params[$kv[0]] = count($kv) > 1
+					? $kv[1] == $this->options['param-true'] 
+						? true 
+						: ($kv[1] == $this->options['param-false'] ? false : $kv[1])
+					: true;
+			}
+		}
 
+		return $params;
+	}
+
+	/*
+	 * (non-PHPdoc)
+	 * @see \keeko\core\routing\RouteGeneratorInterface::match()
+	 */
 	public function generate($data) {
 
 		// params route
 		if (array_key_exists('params', $data)) {
-
-			// stringify params
-			$params = '';
-			foreach ($data['params'] as $key => $val) {
-				$params .= $key;
-				if (is_bool($val) === true) {
-					$params .= '=' . $val ? 'on' : 'off';
-				} else if ($val != '') {
-					$params .= '=' . $val;
-				}
-				$params .= $this->options['param-delimiter'];
-			}
-			$data['params'] = $data;
+			$data['params'] = $this->serializeParams($data['params']);
 			return $this->generator->generate('params', $data);
 		}
 
@@ -116,5 +123,25 @@ class ModuleActionRouter implements RouterInterface {
 		if (array_key_exists('module', $data)) {
 			return $this->generator->generate('module', $data);
 		}
+	}
+	
+	/**
+	 * Serializes Parameters
+	 * 
+	 * @param Array $params
+	 * @return string the serialized params
+	 */
+	public function serializeParams($params) {
+		$serialized = '';
+		foreach ($params as $key => $val) {
+			$serialized .= $key;
+			if (is_bool($val) === true) {
+				$serialized .= '=' . $val ? $this->options['param-true'] : $this->options['param-false'];
+			} else if ($val != '') {
+				$serialized .= '=' . $val;
+			}
+			$serialized .= $this->options['param-delimiter'];
+		}
+		return $serialized;
 	}
 }

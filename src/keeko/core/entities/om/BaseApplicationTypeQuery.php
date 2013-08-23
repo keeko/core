@@ -13,75 +13,71 @@ use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
 use keeko\core\entities\Application;
-use keeko\core\entities\Router;
-use keeko\core\entities\RouterPeer;
-use keeko\core\entities\RouterQuery;
+use keeko\core\entities\ApplicationType;
+use keeko\core\entities\ApplicationTypePeer;
+use keeko\core\entities\ApplicationTypeQuery;
 
 /**
- * Base class that represents a query for the 'keeko_router' table.
+ * Base class that represents a query for the 'keeko_application_type' table.
  *
  *
  *
- * @method RouterQuery orderById($order = Criteria::ASC) Order by the id column
- * @method RouterQuery orderByName($order = Criteria::ASC) Order by the name column
- * @method RouterQuery orderByTitle($order = Criteria::ASC) Order by the title column
- * @method RouterQuery orderByClassName($order = Criteria::ASC) Order by the class_name column
+ * @method ApplicationTypeQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method ApplicationTypeQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method ApplicationTypeQuery orderByTitle($order = Criteria::ASC) Order by the title column
  *
- * @method RouterQuery groupById() Group by the id column
- * @method RouterQuery groupByName() Group by the name column
- * @method RouterQuery groupByTitle() Group by the title column
- * @method RouterQuery groupByClassName() Group by the class_name column
+ * @method ApplicationTypeQuery groupById() Group by the id column
+ * @method ApplicationTypeQuery groupByName() Group by the name column
+ * @method ApplicationTypeQuery groupByTitle() Group by the title column
  *
- * @method RouterQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method RouterQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method RouterQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method ApplicationTypeQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method ApplicationTypeQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method ApplicationTypeQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method RouterQuery leftJoinApplication($relationAlias = null) Adds a LEFT JOIN clause to the query using the Application relation
- * @method RouterQuery rightJoinApplication($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Application relation
- * @method RouterQuery innerJoinApplication($relationAlias = null) Adds a INNER JOIN clause to the query using the Application relation
+ * @method ApplicationTypeQuery leftJoinApplication($relationAlias = null) Adds a LEFT JOIN clause to the query using the Application relation
+ * @method ApplicationTypeQuery rightJoinApplication($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Application relation
+ * @method ApplicationTypeQuery innerJoinApplication($relationAlias = null) Adds a INNER JOIN clause to the query using the Application relation
  *
- * @method Router findOne(PropelPDO $con = null) Return the first Router matching the query
- * @method Router findOneOrCreate(PropelPDO $con = null) Return the first Router matching the query, or a new Router object populated from the query conditions when no match is found
+ * @method ApplicationType findOne(PropelPDO $con = null) Return the first ApplicationType matching the query
+ * @method ApplicationType findOneOrCreate(PropelPDO $con = null) Return the first ApplicationType matching the query, or a new ApplicationType object populated from the query conditions when no match is found
  *
- * @method Router findOneByName(string $name) Return the first Router filtered by the name column
- * @method Router findOneByTitle(string $title) Return the first Router filtered by the title column
- * @method Router findOneByClassName(string $class_name) Return the first Router filtered by the class_name column
+ * @method ApplicationType findOneByName(string $name) Return the first ApplicationType filtered by the name column
+ * @method ApplicationType findOneByTitle(string $title) Return the first ApplicationType filtered by the title column
  *
- * @method array findById(int $id) Return Router objects filtered by the id column
- * @method array findByName(string $name) Return Router objects filtered by the name column
- * @method array findByTitle(string $title) Return Router objects filtered by the title column
- * @method array findByClassName(string $class_name) Return Router objects filtered by the class_name column
+ * @method array findById(int $id) Return ApplicationType objects filtered by the id column
+ * @method array findByName(string $name) Return ApplicationType objects filtered by the name column
+ * @method array findByTitle(string $title) Return ApplicationType objects filtered by the title column
  *
  * @package    propel.generator.keeko.core.entities.om
  */
-abstract class BaseRouterQuery extends ModelCriteria
+abstract class BaseApplicationTypeQuery extends ModelCriteria
 {
     /**
-     * Initializes internal state of BaseRouterQuery object.
+     * Initializes internal state of BaseApplicationTypeQuery object.
      *
      * @param     string $dbName The dabase name
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'keeko', $modelName = 'keeko\\core\\entities\\Router', $modelAlias = null)
+    public function __construct($dbName = 'keeko', $modelName = 'keeko\\core\\entities\\ApplicationType', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
     /**
-     * Returns a new RouterQuery object.
+     * Returns a new ApplicationTypeQuery object.
      *
      * @param     string $modelAlias The alias of a model in the query
-     * @param   RouterQuery|Criteria $criteria Optional Criteria to build the query from
+     * @param   ApplicationTypeQuery|Criteria $criteria Optional Criteria to build the query from
      *
-     * @return RouterQuery
+     * @return ApplicationTypeQuery
      */
     public static function create($modelAlias = null, $criteria = null)
     {
-        if ($criteria instanceof RouterQuery) {
+        if ($criteria instanceof ApplicationTypeQuery) {
             return $criteria;
         }
-        $query = new RouterQuery();
+        $query = new ApplicationTypeQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -104,19 +100,19 @@ abstract class BaseRouterQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param     PropelPDO $con an optional connection object
      *
-     * @return   Router|Router[]|mixed the result, formatted by the current formatter
+     * @return   ApplicationType|ApplicationType[]|mixed the result, formatted by the current formatter
      */
     public function findPk($key, $con = null)
     {
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = RouterPeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
+        if ((null !== ($obj = ApplicationTypePeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
             // the object is alredy in the instance pool
             return $obj;
         }
         if ($con === null) {
-            $con = Propel::getConnection(RouterPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(ApplicationTypePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
         $this->basePreSelect($con);
         if ($this->formatter || $this->modelAlias || $this->with || $this->select
@@ -134,7 +130,7 @@ abstract class BaseRouterQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     PropelPDO $con A connection object
      *
-     * @return                 Router A model object, or null if the key is not found
+     * @return                 ApplicationType A model object, or null if the key is not found
      * @throws PropelException
      */
      public function findOneById($key, $con = null)
@@ -149,12 +145,12 @@ abstract class BaseRouterQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     PropelPDO $con A connection object
      *
-     * @return                 Router A model object, or null if the key is not found
+     * @return                 ApplicationType A model object, or null if the key is not found
      * @throws PropelException
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `name`, `title`, `class_name` FROM `keeko_router` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `name`, `title` FROM `keeko_application_type` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -165,9 +161,9 @@ abstract class BaseRouterQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $obj = new Router();
+            $obj = new ApplicationType();
             $obj->hydrate($row);
-            RouterPeer::addInstanceToPool($obj, (string) $key);
+            ApplicationTypePeer::addInstanceToPool($obj, (string) $key);
         }
         $stmt->closeCursor();
 
@@ -180,7 +176,7 @@ abstract class BaseRouterQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     PropelPDO $con A connection object
      *
-     * @return Router|Router[]|mixed the result, formatted by the current formatter
+     * @return ApplicationType|ApplicationType[]|mixed the result, formatted by the current formatter
      */
     protected function findPkComplex($key, $con)
     {
@@ -201,7 +197,7 @@ abstract class BaseRouterQuery extends ModelCriteria
      * @param     array $keys Primary keys to use for the query
      * @param     PropelPDO $con an optional connection object
      *
-     * @return PropelObjectCollection|Router[]|mixed the list of results, formatted by the current formatter
+     * @return PropelObjectCollection|ApplicationType[]|mixed the list of results, formatted by the current formatter
      */
     public function findPks($keys, $con = null)
     {
@@ -222,12 +218,12 @@ abstract class BaseRouterQuery extends ModelCriteria
      *
      * @param     mixed $key Primary key to use for the query
      *
-     * @return RouterQuery The current query, for fluid interface
+     * @return ApplicationTypeQuery The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(RouterPeer::ID, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(ApplicationTypePeer::ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -235,12 +231,12 @@ abstract class BaseRouterQuery extends ModelCriteria
      *
      * @param     array $keys The list of primary key to use for the query
      *
-     * @return RouterQuery The current query, for fluid interface
+     * @return ApplicationTypeQuery The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(RouterPeer::ID, $keys, Criteria::IN);
+        return $this->addUsingAlias(ApplicationTypePeer::ID, $keys, Criteria::IN);
     }
 
     /**
@@ -260,18 +256,18 @@ abstract class BaseRouterQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return RouterQuery The current query, for fluid interface
+     * @return ApplicationTypeQuery The current query, for fluid interface
      */
     public function filterById($id = null, $comparison = null)
     {
         if (is_array($id)) {
             $useMinMax = false;
             if (isset($id['min'])) {
-                $this->addUsingAlias(RouterPeer::ID, $id['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(ApplicationTypePeer::ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($id['max'])) {
-                $this->addUsingAlias(RouterPeer::ID, $id['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(ApplicationTypePeer::ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -282,7 +278,7 @@ abstract class BaseRouterQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(RouterPeer::ID, $id, $comparison);
+        return $this->addUsingAlias(ApplicationTypePeer::ID, $id, $comparison);
     }
 
     /**
@@ -298,7 +294,7 @@ abstract class BaseRouterQuery extends ModelCriteria
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return RouterQuery The current query, for fluid interface
+     * @return ApplicationTypeQuery The current query, for fluid interface
      */
     public function filterByName($name = null, $comparison = null)
     {
@@ -311,7 +307,7 @@ abstract class BaseRouterQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(RouterPeer::NAME, $name, $comparison);
+        return $this->addUsingAlias(ApplicationTypePeer::NAME, $name, $comparison);
     }
 
     /**
@@ -327,7 +323,7 @@ abstract class BaseRouterQuery extends ModelCriteria
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return RouterQuery The current query, for fluid interface
+     * @return ApplicationTypeQuery The current query, for fluid interface
      */
     public function filterByTitle($title = null, $comparison = null)
     {
@@ -340,36 +336,7 @@ abstract class BaseRouterQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(RouterPeer::TITLE, $title, $comparison);
-    }
-
-    /**
-     * Filter the query on the class_name column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByClassName('fooValue');   // WHERE class_name = 'fooValue'
-     * $query->filterByClassName('%fooValue%'); // WHERE class_name LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $className The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return RouterQuery The current query, for fluid interface
-     */
-    public function filterByClassName($className = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($className)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $className)) {
-                $className = str_replace('*', '%', $className);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(RouterPeer::CLASS_NAME, $className, $comparison);
+        return $this->addUsingAlias(ApplicationTypePeer::TITLE, $title, $comparison);
     }
 
     /**
@@ -378,14 +345,14 @@ abstract class BaseRouterQuery extends ModelCriteria
      * @param   Application|PropelObjectCollection $application  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return                 RouterQuery The current query, for fluid interface
+     * @return                 ApplicationTypeQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
     public function filterByApplication($application, $comparison = null)
     {
         if ($application instanceof Application) {
             return $this
-                ->addUsingAlias(RouterPeer::ID, $application->getRouterId(), $comparison);
+                ->addUsingAlias(ApplicationTypePeer::ID, $application->getApplicationTypeId(), $comparison);
         } elseif ($application instanceof PropelObjectCollection) {
             return $this
                 ->useApplicationQuery()
@@ -402,7 +369,7 @@ abstract class BaseRouterQuery extends ModelCriteria
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return RouterQuery The current query, for fluid interface
+     * @return ApplicationTypeQuery The current query, for fluid interface
      */
     public function joinApplication($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
@@ -449,14 +416,14 @@ abstract class BaseRouterQuery extends ModelCriteria
     /**
      * Exclude object from result
      *
-     * @param   Router $router Object to remove from the list of results
+     * @param   ApplicationType $applicationType Object to remove from the list of results
      *
-     * @return RouterQuery The current query, for fluid interface
+     * @return ApplicationTypeQuery The current query, for fluid interface
      */
-    public function prune($router = null)
+    public function prune($applicationType = null)
     {
-        if ($router) {
-            $this->addUsingAlias(RouterPeer::ID, $router->getId(), Criteria::NOT_EQUAL);
+        if ($applicationType) {
+            $this->addUsingAlias(ApplicationTypePeer::ID, $applicationType->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;

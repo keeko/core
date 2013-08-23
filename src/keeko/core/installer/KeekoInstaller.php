@@ -27,7 +27,7 @@ class KeekoInstaller {
 		$mar = new Router();
 		$mar->setName('module-action-router');
 		$mar->setTitle('Module-Action-Router');
-		$mar->setClassname('\\keeko\\core\\routing\\ModuleActionRouter');
+		$mar->setClassName('\\keeko\\core\\routing\\ModuleActionRouter');
 		$mar->save();
 		
 		// localization
@@ -60,20 +60,32 @@ class KeekoInstaller {
 		
 		$design->save();
 		
+		// app types
+		
+		$website = new ApplicationType();
+		$website->setName('website');
+		$website->setTitle('Website');
+		$website->save();
+		
+		$webapp = new ApplicationType();
+		$webapp->setName('webapp');
+		$webapp->setTitle('Webapp');
+		$webapp->save();
 		
 		// admin
-		$admin = new Application();
-		$admin->setDesign($design);
-		$admin->setTitle('Admin');
-		$admin->setRouter($mar);
-		$admin->setProperty('module', 'admin');
-		$admin->save();
+		$api = new Application();
+		$api->setApplicationType($website);
+		$api->setDesign($design);
+		$api->setTitle('API');
+		$api->setRouter($mar);
+		$api->setProperty('module', 'admin');
+		$api->save();
 		
 		$uri = new ApplicationUri();
-		$uri->setApplication($admin);
+		$uri->setApplication($api);
 		$uri->setLocalization($de);
 		$uri->setHttphost('localhost');
-		$uri->setBasepath('/keeko/public/admin');
+		$uri->setBasepath('/keeko/public/api');
 		$uri->save();
 	}
 	

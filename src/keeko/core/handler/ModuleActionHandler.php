@@ -9,7 +9,7 @@ class ModuleActionHandler implements ContentHandlerInterface {
 	 * @see \keeko\core\handler\ContentHandlerInterface::getAdditionalContent()
 	 */
 	public function getContents($match) {
-		return ['main' => 'Hello World'];
+		return ['main' => print_r($match, true)];
 	}
 
 	

@@ -37,22 +37,31 @@ abstract class BaseActionPeer
     const TM_CLASS = 'ActionTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 6;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /** the column name for the id field */
     const ID = 'keeko_action.id';
 
-    /** the column name for the module_id field */
-    const MODULE_ID = 'keeko_action.module_id';
-
     /** the column name for the name field */
     const NAME = 'keeko_action.name';
+
+    /** the column name for the title field */
+    const TITLE = 'keeko_action.title';
+
+    /** the column name for the description field */
+    const DESCRIPTION = 'keeko_action.description';
+
+    /** the column name for the api field */
+    const API = 'keeko_action.api';
+
+    /** the column name for the module_id field */
+    const MODULE_ID = 'keeko_action.module_id';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -73,12 +82,12 @@ abstract class BaseActionPeer
      * e.g. ActionPeer::$fieldNames[ActionPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'ModuleId', 'Name', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'moduleId', 'name', ),
-        BasePeer::TYPE_COLNAME => array (ActionPeer::ID, ActionPeer::MODULE_ID, ActionPeer::NAME, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'MODULE_ID', 'NAME', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'module_id', 'name', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Title', 'Description', 'Api', 'ModuleId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'title', 'description', 'api', 'moduleId', ),
+        BasePeer::TYPE_COLNAME => array (ActionPeer::ID, ActionPeer::NAME, ActionPeer::TITLE, ActionPeer::DESCRIPTION, ActionPeer::API, ActionPeer::MODULE_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'TITLE', 'DESCRIPTION', 'API', 'MODULE_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'title', 'description', 'api', 'module_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -88,12 +97,12 @@ abstract class BaseActionPeer
      * e.g. ActionPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'ModuleId' => 1, 'Name' => 2, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'moduleId' => 1, 'name' => 2, ),
-        BasePeer::TYPE_COLNAME => array (ActionPeer::ID => 0, ActionPeer::MODULE_ID => 1, ActionPeer::NAME => 2, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'MODULE_ID' => 1, 'NAME' => 2, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'module_id' => 1, 'name' => 2, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Title' => 2, 'Description' => 3, 'Api' => 4, 'ModuleId' => 5, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'api' => 4, 'moduleId' => 5, ),
+        BasePeer::TYPE_COLNAME => array (ActionPeer::ID => 0, ActionPeer::NAME => 1, ActionPeer::TITLE => 2, ActionPeer::DESCRIPTION => 3, ActionPeer::API => 4, ActionPeer::MODULE_ID => 5, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'TITLE' => 2, 'DESCRIPTION' => 3, 'API' => 4, 'MODULE_ID' => 5, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'api' => 4, 'module_id' => 5, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -168,12 +177,18 @@ abstract class BaseActionPeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(ActionPeer::ID);
-            $criteria->addSelectColumn(ActionPeer::MODULE_ID);
             $criteria->addSelectColumn(ActionPeer::NAME);
+            $criteria->addSelectColumn(ActionPeer::TITLE);
+            $criteria->addSelectColumn(ActionPeer::DESCRIPTION);
+            $criteria->addSelectColumn(ActionPeer::API);
+            $criteria->addSelectColumn(ActionPeer::MODULE_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.module_id');
             $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.api');
+            $criteria->addSelectColumn($alias . '.module_id');
         }
     }
 
