@@ -13,6 +13,7 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use \PropelQuery;
 use keeko\core\entities\Application;
 use keeko\core\entities\ApplicationQuery;
 use keeko\core\entities\Design;
@@ -82,22 +83,26 @@ abstract class BasePackage extends BaseObject implements Persistent
     protected $installed_version;
 
     /**
+     * The value for the descendant_class field.
+     * @var        string
+     */
+    protected $descendant_class;
+
+    /**
      * @var        PropelObjectCollection|Application[] Collection to store aggregation of Application objects.
      */
     protected $collApplications;
     protected $collApplicationsPartial;
 
     /**
-     * @var        PropelObjectCollection|Design[] Collection to store aggregation of Design objects.
+     * @var        Design one-to-one related Design object
      */
-    protected $collDesigns;
-    protected $collDesignsPartial;
+    protected $singleDesign;
 
     /**
-     * @var        PropelObjectCollection|Module[] Collection to store aggregation of Module objects.
+     * @var        Module one-to-one related Module object
      */
-    protected $collModules;
-    protected $collModulesPartial;
+    protected $singleModule;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -185,6 +190,16 @@ abstract class BasePackage extends BaseObject implements Persistent
     public function getInstalledVersion()
     {
         return $this->installed_version;
+    }
+
+    /**
+     * Get the [descendant_class] column value.
+     *
+     * @return string
+     */
+    public function getDescendantClass()
+    {
+        return $this->descendant_class;
     }
 
     /**
@@ -293,6 +308,27 @@ abstract class BasePackage extends BaseObject implements Persistent
     } // setInstalledVersion()
 
     /**
+     * Set the value of [descendant_class] column.
+     *
+     * @param string $v new value
+     * @return Package The current object (for fluent API support)
+     */
+    public function setDescendantClass($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->descendant_class !== $v) {
+            $this->descendant_class = $v;
+            $this->modifiedColumns[] = PackagePeer::DESCENDANT_CLASS;
+        }
+
+
+        return $this;
+    } // setDescendantClass()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -329,6 +365,7 @@ abstract class BasePackage extends BaseObject implements Persistent
             $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->installed_version = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->descendant_class = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -337,7 +374,7 @@ abstract class BasePackage extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 5; // 5 = PackagePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = PackagePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Package object", $e);
@@ -401,9 +438,9 @@ abstract class BasePackage extends BaseObject implements Persistent
 
             $this->collApplications = null;
 
-            $this->collDesigns = null;
+            $this->singleDesign = null;
 
-            $this->collModules = null;
+            $this->singleModule = null;
 
         } // if (deep)
     }
@@ -549,37 +586,31 @@ abstract class BasePackage extends BaseObject implements Persistent
 
             if ($this->designsScheduledForDeletion !== null) {
                 if (!$this->designsScheduledForDeletion->isEmpty()) {
-                    foreach ($this->designsScheduledForDeletion as $design) {
-                        // need to save related object because we set the relation to null
-                        $design->save($con);
-                    }
+                    DesignQuery::create()
+                        ->filterByPrimaryKeys($this->designsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
                     $this->designsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collDesigns !== null) {
-                foreach ($this->collDesigns as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
+            if ($this->singleDesign !== null) {
+                if (!$this->singleDesign->isDeleted() && ($this->singleDesign->isNew() || $this->singleDesign->isModified())) {
+                        $affectedRows += $this->singleDesign->save($con);
                 }
             }
 
             if ($this->modulesScheduledForDeletion !== null) {
                 if (!$this->modulesScheduledForDeletion->isEmpty()) {
-                    foreach ($this->modulesScheduledForDeletion as $module) {
-                        // need to save related object because we set the relation to null
-                        $module->save($con);
-                    }
+                    ModuleQuery::create()
+                        ->filterByPrimaryKeys($this->modulesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
                     $this->modulesScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collModules !== null) {
-                foreach ($this->collModules as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
+            if ($this->singleModule !== null) {
+                if (!$this->singleModule->isDeleted() && ($this->singleModule->isNew() || $this->singleModule->isModified())) {
+                        $affectedRows += $this->singleModule->save($con);
                 }
             }
 
@@ -624,6 +655,9 @@ abstract class BasePackage extends BaseObject implements Persistent
         if ($this->isColumnModified(PackagePeer::INSTALLED_VERSION)) {
             $modifiedColumns[':p' . $index++]  = '`installed_version`';
         }
+        if ($this->isColumnModified(PackagePeer::DESCENDANT_CLASS)) {
+            $modifiedColumns[':p' . $index++]  = '`descendant_class`';
+        }
 
         $sql = sprintf(
             'INSERT INTO `keeko_package` (%s) VALUES (%s)',
@@ -649,6 +683,9 @@ abstract class BasePackage extends BaseObject implements Persistent
                         break;
                     case '`installed_version`':
                         $stmt->bindValue($identifier, $this->installed_version, PDO::PARAM_STR);
+                        break;
+                    case '`descendant_class`':
+                        $stmt->bindValue($identifier, $this->descendant_class, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -757,19 +794,15 @@ abstract class BasePackage extends BaseObject implements Persistent
                     }
                 }
 
-                if ($this->collDesigns !== null) {
-                    foreach ($this->collDesigns as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
+                if ($this->singleDesign !== null) {
+                    if (!$this->singleDesign->validate($columns)) {
+                        $failureMap = array_merge($failureMap, $this->singleDesign->getValidationFailures());
                     }
                 }
 
-                if ($this->collModules !== null) {
-                    foreach ($this->collModules as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
+                if ($this->singleModule !== null) {
+                    if (!$this->singleModule->validate($columns)) {
+                        $failureMap = array_merge($failureMap, $this->singleModule->getValidationFailures());
                     }
                 }
 
@@ -823,6 +856,9 @@ abstract class BasePackage extends BaseObject implements Persistent
             case 4:
                 return $this->getInstalledVersion();
                 break;
+            case 5:
+                return $this->getDescendantClass();
+                break;
             default:
                 return null;
                 break;
@@ -857,16 +893,17 @@ abstract class BasePackage extends BaseObject implements Persistent
             $keys[2] => $this->getTitle(),
             $keys[3] => $this->getDescription(),
             $keys[4] => $this->getInstalledVersion(),
+            $keys[5] => $this->getDescendantClass(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->collApplications) {
                 $result['Applications'] = $this->collApplications->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collDesigns) {
-                $result['Designs'] = $this->collDesigns->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->singleDesign) {
+                $result['Design'] = $this->singleDesign->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collModules) {
-                $result['Modules'] = $this->collModules->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->singleModule) {
+                $result['Module'] = $this->singleModule->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
             }
         }
 
@@ -917,6 +954,9 @@ abstract class BasePackage extends BaseObject implements Persistent
             case 4:
                 $this->setInstalledVersion($value);
                 break;
+            case 5:
+                $this->setDescendantClass($value);
+                break;
         } // switch()
     }
 
@@ -946,6 +986,7 @@ abstract class BasePackage extends BaseObject implements Persistent
         if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setInstalledVersion($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setDescendantClass($arr[$keys[5]]);
     }
 
     /**
@@ -962,6 +1003,7 @@ abstract class BasePackage extends BaseObject implements Persistent
         if ($this->isColumnModified(PackagePeer::TITLE)) $criteria->add(PackagePeer::TITLE, $this->title);
         if ($this->isColumnModified(PackagePeer::DESCRIPTION)) $criteria->add(PackagePeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(PackagePeer::INSTALLED_VERSION)) $criteria->add(PackagePeer::INSTALLED_VERSION, $this->installed_version);
+        if ($this->isColumnModified(PackagePeer::DESCENDANT_CLASS)) $criteria->add(PackagePeer::DESCENDANT_CLASS, $this->descendant_class);
 
         return $criteria;
     }
@@ -1029,6 +1071,7 @@ abstract class BasePackage extends BaseObject implements Persistent
         $copyObj->setTitle($this->getTitle());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setInstalledVersion($this->getInstalledVersion());
+        $copyObj->setDescendantClass($this->getDescendantClass());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1043,16 +1086,14 @@ abstract class BasePackage extends BaseObject implements Persistent
                 }
             }
 
-            foreach ($this->getDesigns() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addDesign($relObj->copy($deepCopy));
-                }
+            $relObj = $this->getDesign();
+            if ($relObj) {
+                $copyObj->setDesign($relObj->copy($deepCopy));
             }
 
-            foreach ($this->getModules() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addModule($relObj->copy($deepCopy));
-                }
+            $relObj = $this->getModule();
+            if ($relObj) {
+                $copyObj->setModule($relObj->copy($deepCopy));
             }
 
             //unflag object copy
@@ -1118,12 +1159,6 @@ abstract class BasePackage extends BaseObject implements Persistent
     {
         if ('Application' == $relationName) {
             $this->initApplications();
-        }
-        if ('Design' == $relationName) {
-            $this->initDesigns();
-        }
-        if ('Module' == $relationName) {
-            $this->initModules();
         }
     }
 
@@ -1421,436 +1456,72 @@ abstract class BasePackage extends BaseObject implements Persistent
     }
 
     /**
-     * Clears out the collDesigns collection
+     * Gets a single Design object, which is related to this object by a one-to-one relationship.
      *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return Package The current object (for fluent API support)
-     * @see        addDesigns()
-     */
-    public function clearDesigns()
-    {
-        $this->collDesigns = null; // important to set this to null since that means it is uninitialized
-        $this->collDesignsPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collDesigns collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialDesigns($v = true)
-    {
-        $this->collDesignsPartial = $v;
-    }
-
-    /**
-     * Initializes the collDesigns collection.
-     *
-     * By default this just sets the collDesigns collection to an empty array (like clearcollDesigns());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initDesigns($overrideExisting = true)
-    {
-        if (null !== $this->collDesigns && !$overrideExisting) {
-            return;
-        }
-        $this->collDesigns = new PropelObjectCollection();
-        $this->collDesigns->setModel('Design');
-    }
-
-    /**
-     * Gets an array of Design objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Package is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Design[] List of Design objects
+     * @return Design
      * @throws PropelException
      */
-    public function getDesigns($criteria = null, PropelPDO $con = null)
+    public function getDesign(PropelPDO $con = null)
     {
-        $partial = $this->collDesignsPartial && !$this->isNew();
-        if (null === $this->collDesigns || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collDesigns) {
-                // return empty collection
-                $this->initDesigns();
-            } else {
-                $collDesigns = DesignQuery::create(null, $criteria)
-                    ->filterByPackage($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collDesignsPartial && count($collDesigns)) {
-                      $this->initDesigns(false);
 
-                      foreach($collDesigns as $obj) {
-                        if (false == $this->collDesigns->contains($obj)) {
-                          $this->collDesigns->append($obj);
-                        }
-                      }
-
-                      $this->collDesignsPartial = true;
-                    }
-
-                    $collDesigns->getInternalIterator()->rewind();
-                    return $collDesigns;
-                }
-
-                if($partial && $this->collDesigns) {
-                    foreach($this->collDesigns as $obj) {
-                        if($obj->isNew()) {
-                            $collDesigns[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collDesigns = $collDesigns;
-                $this->collDesignsPartial = false;
-            }
+        if ($this->singleDesign === null && !$this->isNew()) {
+            $this->singleDesign = DesignQuery::create()->findPk($this->getPrimaryKey(), $con);
         }
 
-        return $this->collDesigns;
+        return $this->singleDesign;
     }
 
     /**
-     * Sets a collection of Design objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
+     * Sets a single Design object as related to this object by a one-to-one relationship.
      *
-     * @param PropelCollection $designs A Propel collection.
-     * @param PropelPDO $con Optional connection object
+     * @param             Design $v Design
      * @return Package The current object (for fluent API support)
-     */
-    public function setDesigns(PropelCollection $designs, PropelPDO $con = null)
-    {
-        $designsToDelete = $this->getDesigns(new Criteria(), $con)->diff($designs);
-
-        $this->designsScheduledForDeletion = unserialize(serialize($designsToDelete));
-
-        foreach ($designsToDelete as $designRemoved) {
-            $designRemoved->setPackage(null);
-        }
-
-        $this->collDesigns = null;
-        foreach ($designs as $design) {
-            $this->addDesign($design);
-        }
-
-        $this->collDesigns = $designs;
-        $this->collDesignsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Design objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related Design objects.
      * @throws PropelException
      */
-    public function countDesigns(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function setDesign(Design $v = null)
     {
-        $partial = $this->collDesignsPartial && !$this->isNew();
-        if (null === $this->collDesigns || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collDesigns) {
-                return 0;
-            }
+        $this->singleDesign = $v;
 
-            if($partial && !$criteria) {
-                return count($this->getDesigns());
-            }
-            $query = DesignQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByPackage($this)
-                ->count($con);
-        }
-
-        return count($this->collDesigns);
-    }
-
-    /**
-     * Method called to associate a Design object to this object
-     * through the Design foreign key attribute.
-     *
-     * @param    Design $l Design
-     * @return Package The current object (for fluent API support)
-     */
-    public function addDesign(Design $l)
-    {
-        if ($this->collDesigns === null) {
-            $this->initDesigns();
-            $this->collDesignsPartial = true;
-        }
-        if (!in_array($l, $this->collDesigns->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddDesign($l);
+        // Make sure that that the passed-in Design isn't already associated with this object
+        if ($v !== null && $v->getPackage(null, false) === null) {
+            $v->setPackage($this);
         }
 
         return $this;
     }
 
     /**
-     * @param	Design $design The design object to add.
-     */
-    protected function doAddDesign($design)
-    {
-        $this->collDesigns[]= $design;
-        $design->setPackage($this);
-    }
-
-    /**
-     * @param	Design $design The design object to remove.
-     * @return Package The current object (for fluent API support)
-     */
-    public function removeDesign($design)
-    {
-        if ($this->getDesigns()->contains($design)) {
-            $this->collDesigns->remove($this->collDesigns->search($design));
-            if (null === $this->designsScheduledForDeletion) {
-                $this->designsScheduledForDeletion = clone $this->collDesigns;
-                $this->designsScheduledForDeletion->clear();
-            }
-            $this->designsScheduledForDeletion[]= $design;
-            $design->setPackage(null);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Clears out the collModules collection
+     * Gets a single Module object, which is related to this object by a one-to-one relationship.
      *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return Package The current object (for fluent API support)
-     * @see        addModules()
-     */
-    public function clearModules()
-    {
-        $this->collModules = null; // important to set this to null since that means it is uninitialized
-        $this->collModulesPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collModules collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialModules($v = true)
-    {
-        $this->collModulesPartial = $v;
-    }
-
-    /**
-     * Initializes the collModules collection.
-     *
-     * By default this just sets the collModules collection to an empty array (like clearcollModules());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initModules($overrideExisting = true)
-    {
-        if (null !== $this->collModules && !$overrideExisting) {
-            return;
-        }
-        $this->collModules = new PropelObjectCollection();
-        $this->collModules->setModel('Module');
-    }
-
-    /**
-     * Gets an array of Module objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Package is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Module[] List of Module objects
+     * @return Module
      * @throws PropelException
      */
-    public function getModules($criteria = null, PropelPDO $con = null)
+    public function getModule(PropelPDO $con = null)
     {
-        $partial = $this->collModulesPartial && !$this->isNew();
-        if (null === $this->collModules || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collModules) {
-                // return empty collection
-                $this->initModules();
-            } else {
-                $collModules = ModuleQuery::create(null, $criteria)
-                    ->filterByPackage($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collModulesPartial && count($collModules)) {
-                      $this->initModules(false);
 
-                      foreach($collModules as $obj) {
-                        if (false == $this->collModules->contains($obj)) {
-                          $this->collModules->append($obj);
-                        }
-                      }
-
-                      $this->collModulesPartial = true;
-                    }
-
-                    $collModules->getInternalIterator()->rewind();
-                    return $collModules;
-                }
-
-                if($partial && $this->collModules) {
-                    foreach($this->collModules as $obj) {
-                        if($obj->isNew()) {
-                            $collModules[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collModules = $collModules;
-                $this->collModulesPartial = false;
-            }
+        if ($this->singleModule === null && !$this->isNew()) {
+            $this->singleModule = ModuleQuery::create()->findPk($this->getPrimaryKey(), $con);
         }
 
-        return $this->collModules;
+        return $this->singleModule;
     }
 
     /**
-     * Sets a collection of Module objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
+     * Sets a single Module object as related to this object by a one-to-one relationship.
      *
-     * @param PropelCollection $modules A Propel collection.
-     * @param PropelPDO $con Optional connection object
+     * @param             Module $v Module
      * @return Package The current object (for fluent API support)
-     */
-    public function setModules(PropelCollection $modules, PropelPDO $con = null)
-    {
-        $modulesToDelete = $this->getModules(new Criteria(), $con)->diff($modules);
-
-        $this->modulesScheduledForDeletion = unserialize(serialize($modulesToDelete));
-
-        foreach ($modulesToDelete as $moduleRemoved) {
-            $moduleRemoved->setPackage(null);
-        }
-
-        $this->collModules = null;
-        foreach ($modules as $module) {
-            $this->addModule($module);
-        }
-
-        $this->collModules = $modules;
-        $this->collModulesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Module objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related Module objects.
      * @throws PropelException
      */
-    public function countModules(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function setModule(Module $v = null)
     {
-        $partial = $this->collModulesPartial && !$this->isNew();
-        if (null === $this->collModules || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collModules) {
-                return 0;
-            }
+        $this->singleModule = $v;
 
-            if($partial && !$criteria) {
-                return count($this->getModules());
-            }
-            $query = ModuleQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByPackage($this)
-                ->count($con);
-        }
-
-        return count($this->collModules);
-    }
-
-    /**
-     * Method called to associate a Module object to this object
-     * through the Module foreign key attribute.
-     *
-     * @param    Module $l Module
-     * @return Package The current object (for fluent API support)
-     */
-    public function addModule(Module $l)
-    {
-        if ($this->collModules === null) {
-            $this->initModules();
-            $this->collModulesPartial = true;
-        }
-        if (!in_array($l, $this->collModules->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddModule($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	Module $module The module object to add.
-     */
-    protected function doAddModule($module)
-    {
-        $this->collModules[]= $module;
-        $module->setPackage($this);
-    }
-
-    /**
-     * @param	Module $module The module object to remove.
-     * @return Package The current object (for fluent API support)
-     */
-    public function removeModule($module)
-    {
-        if ($this->getModules()->contains($module)) {
-            $this->collModules->remove($this->collModules->search($module));
-            if (null === $this->modulesScheduledForDeletion) {
-                $this->modulesScheduledForDeletion = clone $this->collModules;
-                $this->modulesScheduledForDeletion->clear();
-            }
-            $this->modulesScheduledForDeletion[]= $module;
-            $module->setPackage(null);
+        // Make sure that that the passed-in Module isn't already associated with this object
+        if ($v !== null && $v->getPackage(null, false) === null) {
+            $v->setPackage($this);
         }
 
         return $this;
@@ -1866,6 +1537,7 @@ abstract class BasePackage extends BaseObject implements Persistent
         $this->title = null;
         $this->description = null;
         $this->installed_version = null;
+        $this->descendant_class = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1893,15 +1565,11 @@ abstract class BasePackage extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collDesigns) {
-                foreach ($this->collDesigns as $o) {
-                    $o->clearAllReferences($deep);
-                }
+            if ($this->singleDesign) {
+                $this->singleDesign->clearAllReferences($deep);
             }
-            if ($this->collModules) {
-                foreach ($this->collModules as $o) {
-                    $o->clearAllReferences($deep);
-                }
+            if ($this->singleModule) {
+                $this->singleModule->clearAllReferences($deep);
             }
 
             $this->alreadyInClearAllReferencesDeep = false;
@@ -1911,14 +1579,14 @@ abstract class BasePackage extends BaseObject implements Persistent
             $this->collApplications->clearIterator();
         }
         $this->collApplications = null;
-        if ($this->collDesigns instanceof PropelCollection) {
-            $this->collDesigns->clearIterator();
+        if ($this->singleDesign instanceof PropelCollection) {
+            $this->singleDesign->clearIterator();
         }
-        $this->collDesigns = null;
-        if ($this->collModules instanceof PropelCollection) {
-            $this->collModules->clearIterator();
+        $this->singleDesign = null;
+        if ($this->singleModule instanceof PropelCollection) {
+            $this->singleModule->clearIterator();
         }
-        $this->collModules = null;
+        $this->singleModule = null;
     }
 
     /**
@@ -1939,6 +1607,34 @@ abstract class BasePackage extends BaseObject implements Persistent
     public function isAlreadyInSave()
     {
         return $this->alreadyInSave;
+    }
+
+    // concrete_inheritance_parent behavior
+
+    /**
+     * Whether or not this object is the parent of a child object
+     *
+     * @return    bool
+     */
+    public function hasChildObject()
+    {
+        return $this->getDescendantClass() !== null;
+    }
+
+    /**
+     * Get the child object of this object
+     *
+     * @return    mixed
+     */
+    public function getChildObject()
+    {
+        if (!$this->hasChildObject()) {
+            return null;
+        }
+        $childObjectClass = $this->getDescendantClass();
+        $childObject = PropelQuery::from($childObjectClass)->findPk($this->getPrimaryKey());
+
+        return $childObject->hasChildObject() ? $childObject->getChildObject() : $childObject;
     }
 
 }

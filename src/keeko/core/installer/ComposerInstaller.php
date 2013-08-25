@@ -1,8 +1,6 @@
 <?php
 namespace keeko\core\installer;
 
-// require '../../../../../src/bootstrap.php';
-
 use Composer\Script\Event;
 use Composer\Script\PackageEvent;
 use Composer\DependencyResolver\Operation\InstallOperation;
@@ -29,8 +27,6 @@ class ComposerInstaller {
 		}
 		
 		$operation = $event->getOperation();
-		$event->getIO()->write('Package installieren ('.$operation->getPackage()->getName().'), in: ' . getcwd(), true);
-		
 		if ($operation instanceof InstallOperation) {
 			/* @var $operation InstallOperation */
 			$package = $operation->getPackage();
@@ -55,8 +51,6 @@ class ComposerInstaller {
 		}
 		
 		$operation = $event->getOperation();
-		$event->getIO()->write('Package updaten ('.$operation->getTargetPackage()->getName().'), in: ' . getcwd(), true);
-	
 		if ($operation instanceof UpdateOperation) {
 			/* @var $operation UpdateOperation */
 			$initial = $operation->getInitialPackage();
@@ -82,15 +76,9 @@ class ComposerInstaller {
 		}
 		
 		$operation = $event->getOperation();
-		$event->getIO()->write('Package deinstallieren, hihihi', true);
-
 		if ($operation instanceof UninstallOperation) {
 			/* @var $operation UninstallOperation */
 			$package = $operation->getPackage();
-			
-			if ($package instanceof CompletePackageInterface) {
-				$event->getIO()->write('Package deinstallieren, ist CompletePackageInterface', true);
-			}
 
 			switch ($package->getType()) {
 			case 'keeko-app':
@@ -107,7 +95,7 @@ class ComposerInstaller {
 	}
 	
 	private static function bootstrap() {
-		$autoload = rtrim(getcwd(), '/\\') . '/vendor/composer/autoload.php';
+		$autoload = rtrim(getcwd(), '/\\') . '/vendor/autoload.php';
 		
 		if (file_exists($autoload)) {
 			require_once rtrim(getcwd(), '/\\') . '/src/bootstrap.php';

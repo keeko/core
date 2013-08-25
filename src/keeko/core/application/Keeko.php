@@ -9,18 +9,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use keeko\core\module\ModuleManager;
 
-class KeekoApplication {
+class Keeko {
 
-	/* @var $application Application */
+	/** @var Application */
 	protected $application;
 	
-	/* @var $localization Localization */
+	/** @var Localization */
 	protected $localization;
 	
-	/* @var $router RouterInterface */
+	/** @var RouterInterface */
 	protected $router;
 
-	/* @var $moduleManager ModuleManager */
+	/** @var ModuleManager */
 	protected $moduleManager;
 
 	/**
@@ -28,14 +28,18 @@ class KeekoApplication {
 	 * 
 	 */
 	public function __construct() {
-		$this->moduleManager = new ModuleManager();
+		$this->moduleManager = new ModuleManager($this);
 	}	
 	
-	public function setApplication(Application $application) {
+	public function setEntity(Application $application) {
 		$this->application = $application;
 	}
 	
-	public function getApplication() {
+	/**
+	 * 
+	 * @return Application
+	 */
+	public function getEntity() {
 		return $this->application;
 	}
 	
@@ -43,13 +47,22 @@ class KeekoApplication {
 		$this->localization = $localization;
 	}
 	
+	/**
+	 * 
+	 * @return Localization
+	 */
 	public function getLocalization() {
 		return $this->localization;
 	}
-	 
-	/* (non-PHPdoc)
-	 * @see \keeko\core\application\ApplicationInterface::run()
+	
+	/**
+	 * 
+	 * @return ModuleManager
 	 */
+	public function getModuleManager() {
+		return $this->moduleManager;
+	}
+
 	public function run(Request $request, ApplicationRouter $appRouter) {
 		// get params
 		$params = $this->application->getExtraProperties(); // see: https://github.com/Carpe-Hora/ExtraPropertiesBehavior/issues/12
@@ -68,6 +81,7 @@ class KeekoApplication {
 		
 		try {
 			$handler = $this->router->getHandler();
+			$handler->setKeeko($this);
 			$match = $this->router->match($appRouter->getDestination());
 
 			// get design
@@ -81,13 +95,14 @@ class KeekoApplication {
 			$layoutDir = $designPath . '/templates';
 
 			// get contents
-			$contents = $handler->getContents($match);
+			$blocks = $handler->getContents($match);
 
 			$loader = new \Twig_Loader_Filesystem($layoutDir);
 			$twig = new \Twig_Environment($loader);
 
 			$root = str_replace($appRouter->getPrefix(), '', $appRouter->getUri()->getBasepath());
-			$response->setContent($twig->render($layout . '.twig', array_merge($contents, [
+			$response->setContent($twig->render($layout . '.twig', [
+				'blocks' => $blocks,
 				'paths' => [
 					'prefix' => $appRouter->getPrefix(),
 					'destination' => $appRouter->getDestination(),
@@ -95,7 +110,7 @@ class KeekoApplication {
 					'root' => $root,
 					'design' => $root . '/_keeko/designs/' . $design->getName()
 				]
-			])));
+			]));
 
 		} catch (ResourceNotFoundException $e) {
 			$response->setStatusCode(404);

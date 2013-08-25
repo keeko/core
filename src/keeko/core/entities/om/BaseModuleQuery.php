@@ -4,7 +4,6 @@ namespace keeko\core\entities\om;
 
 use \Criteria;
 use \Exception;
-use \ModelCriteria;
 use \ModelJoin;
 use \PDO;
 use \Propel;
@@ -17,23 +16,30 @@ use keeko\core\entities\Module;
 use keeko\core\entities\ModulePeer;
 use keeko\core\entities\ModuleQuery;
 use keeko\core\entities\Package;
+use keeko\core\entities\PackageQuery;
 
 /**
  * Base class that represents a query for the 'keeko_module' table.
  *
  *
  *
- * @method ModuleQuery orderById($order = Criteria::ASC) Order by the id column
  * @method ModuleQuery orderByClassName($order = Criteria::ASC) Order by the class_name column
  * @method ModuleQuery orderByActivatedVersion($order = Criteria::ASC) Order by the activated_version column
  * @method ModuleQuery orderByDefaultAction($order = Criteria::ASC) Order by the default_action column
- * @method ModuleQuery orderByPackageId($order = Criteria::ASC) Order by the package_id column
+ * @method ModuleQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method ModuleQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method ModuleQuery orderByTitle($order = Criteria::ASC) Order by the title column
+ * @method ModuleQuery orderByDescription($order = Criteria::ASC) Order by the description column
+ * @method ModuleQuery orderByInstalledVersion($order = Criteria::ASC) Order by the installed_version column
  *
- * @method ModuleQuery groupById() Group by the id column
  * @method ModuleQuery groupByClassName() Group by the class_name column
  * @method ModuleQuery groupByActivatedVersion() Group by the activated_version column
  * @method ModuleQuery groupByDefaultAction() Group by the default_action column
- * @method ModuleQuery groupByPackageId() Group by the package_id column
+ * @method ModuleQuery groupById() Group by the id column
+ * @method ModuleQuery groupByName() Group by the name column
+ * @method ModuleQuery groupByTitle() Group by the title column
+ * @method ModuleQuery groupByDescription() Group by the description column
+ * @method ModuleQuery groupByInstalledVersion() Group by the installed_version column
  *
  * @method ModuleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method ModuleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -53,17 +59,23 @@ use keeko\core\entities\Package;
  * @method Module findOneByClassName(string $class_name) Return the first Module filtered by the class_name column
  * @method Module findOneByActivatedVersion(string $activated_version) Return the first Module filtered by the activated_version column
  * @method Module findOneByDefaultAction(string $default_action) Return the first Module filtered by the default_action column
- * @method Module findOneByPackageId(int $package_id) Return the first Module filtered by the package_id column
+ * @method Module findOneByName(string $name) Return the first Module filtered by the name column
+ * @method Module findOneByTitle(string $title) Return the first Module filtered by the title column
+ * @method Module findOneByDescription(string $description) Return the first Module filtered by the description column
+ * @method Module findOneByInstalledVersion(string $installed_version) Return the first Module filtered by the installed_version column
  *
- * @method array findById(int $id) Return Module objects filtered by the id column
  * @method array findByClassName(string $class_name) Return Module objects filtered by the class_name column
  * @method array findByActivatedVersion(string $activated_version) Return Module objects filtered by the activated_version column
  * @method array findByDefaultAction(string $default_action) Return Module objects filtered by the default_action column
- * @method array findByPackageId(int $package_id) Return Module objects filtered by the package_id column
+ * @method array findById(int $id) Return Module objects filtered by the id column
+ * @method array findByName(string $name) Return Module objects filtered by the name column
+ * @method array findByTitle(string $title) Return Module objects filtered by the title column
+ * @method array findByDescription(string $description) Return Module objects filtered by the description column
+ * @method array findByInstalledVersion(string $installed_version) Return Module objects filtered by the installed_version column
  *
  * @package    propel.generator.keeko.core.entities.om
  */
-abstract class BaseModuleQuery extends ModelCriteria
+abstract class BaseModuleQuery extends PackageQuery
 {
     /**
      * Initializes internal state of BaseModuleQuery object.
@@ -163,7 +175,7 @@ abstract class BaseModuleQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `class_name`, `activated_version`, `default_action`, `package_id` FROM `keeko_module` WHERE `id` = :p0';
+        $sql = 'SELECT `class_name`, `activated_version`, `default_action`, `id`, `name`, `title`, `description`, `installed_version` FROM `keeko_module` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -250,48 +262,6 @@ abstract class BaseModuleQuery extends ModelCriteria
     {
 
         return $this->addUsingAlias(ModulePeer::ID, $keys, Criteria::IN);
-    }
-
-    /**
-     * Filter the query on the id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterById(1234); // WHERE id = 1234
-     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
-     * $query->filterById(array('min' => 12)); // WHERE id >= 12
-     * $query->filterById(array('max' => 12)); // WHERE id <= 12
-     * </code>
-     *
-     * @param     mixed $id The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ModuleQuery The current query, for fluid interface
-     */
-    public function filterById($id = null, $comparison = null)
-    {
-        if (is_array($id)) {
-            $useMinMax = false;
-            if (isset($id['min'])) {
-                $this->addUsingAlias(ModulePeer::ID, $id['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($id['max'])) {
-                $this->addUsingAlias(ModulePeer::ID, $id['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(ModulePeer::ID, $id, $comparison);
     }
 
     /**
@@ -382,19 +352,19 @@ abstract class BaseModuleQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the package_id column
+     * Filter the query on the id column
      *
      * Example usage:
      * <code>
-     * $query->filterByPackageId(1234); // WHERE package_id = 1234
-     * $query->filterByPackageId(array(12, 34)); // WHERE package_id IN (12, 34)
-     * $query->filterByPackageId(array('min' => 12)); // WHERE package_id >= 12
-     * $query->filterByPackageId(array('max' => 12)); // WHERE package_id <= 12
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id >= 12
+     * $query->filterById(array('max' => 12)); // WHERE id <= 12
      * </code>
      *
      * @see       filterByPackage()
      *
-     * @param     mixed $packageId The value to use as filter.
+     * @param     mixed $id The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -402,16 +372,16 @@ abstract class BaseModuleQuery extends ModelCriteria
      *
      * @return ModuleQuery The current query, for fluid interface
      */
-    public function filterByPackageId($packageId = null, $comparison = null)
+    public function filterById($id = null, $comparison = null)
     {
-        if (is_array($packageId)) {
+        if (is_array($id)) {
             $useMinMax = false;
-            if (isset($packageId['min'])) {
-                $this->addUsingAlias(ModulePeer::PACKAGE_ID, $packageId['min'], Criteria::GREATER_EQUAL);
+            if (isset($id['min'])) {
+                $this->addUsingAlias(ModulePeer::ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($packageId['max'])) {
-                $this->addUsingAlias(ModulePeer::PACKAGE_ID, $packageId['max'], Criteria::LESS_EQUAL);
+            if (isset($id['max'])) {
+                $this->addUsingAlias(ModulePeer::ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -422,7 +392,123 @@ abstract class BaseModuleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ModulePeer::PACKAGE_ID, $packageId, $comparison);
+        return $this->addUsingAlias(ModulePeer::ID, $id, $comparison);
+    }
+
+    /**
+     * Filter the query on the name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $name The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ModuleQuery The current query, for fluid interface
+     */
+    public function filterByName($name = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($name)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $name)) {
+                $name = str_replace('*', '%', $name);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ModulePeer::NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the title column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByTitle('fooValue');   // WHERE title = 'fooValue'
+     * $query->filterByTitle('%fooValue%'); // WHERE title LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $title The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ModuleQuery The current query, for fluid interface
+     */
+    public function filterByTitle($title = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($title)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $title)) {
+                $title = str_replace('*', '%', $title);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ModulePeer::TITLE, $title, $comparison);
+    }
+
+    /**
+     * Filter the query on the description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDescription('fooValue');   // WHERE description = 'fooValue'
+     * $query->filterByDescription('%fooValue%'); // WHERE description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $description The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ModuleQuery The current query, for fluid interface
+     */
+    public function filterByDescription($description = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($description)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $description)) {
+                $description = str_replace('*', '%', $description);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ModulePeer::DESCRIPTION, $description, $comparison);
+    }
+
+    /**
+     * Filter the query on the installed_version column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByInstalledVersion('fooValue');   // WHERE installed_version = 'fooValue'
+     * $query->filterByInstalledVersion('%fooValue%'); // WHERE installed_version LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $installedVersion The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ModuleQuery The current query, for fluid interface
+     */
+    public function filterByInstalledVersion($installedVersion = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($installedVersion)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $installedVersion)) {
+                $installedVersion = str_replace('*', '%', $installedVersion);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ModulePeer::INSTALLED_VERSION, $installedVersion, $comparison);
     }
 
     /**
@@ -438,14 +524,14 @@ abstract class BaseModuleQuery extends ModelCriteria
     {
         if ($package instanceof Package) {
             return $this
-                ->addUsingAlias(ModulePeer::PACKAGE_ID, $package->getId(), $comparison);
+                ->addUsingAlias(ModulePeer::ID, $package->getId(), $comparison);
         } elseif ($package instanceof PropelObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(ModulePeer::PACKAGE_ID, $package->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(ModulePeer::ID, $package->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
             throw new PropelException('filterByPackage() only accepts arguments of type Package or PropelCollection');
         }
@@ -459,7 +545,7 @@ abstract class BaseModuleQuery extends ModelCriteria
      *
      * @return ModuleQuery The current query, for fluid interface
      */
-    public function joinPackage($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinPackage($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Package');
@@ -494,7 +580,7 @@ abstract class BaseModuleQuery extends ModelCriteria
      *
      * @return   \keeko\core\entities\PackageQuery A secondary query class using the current class as primary query
      */
-    public function usePackageQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function usePackageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinPackage($relationAlias, $joinType)

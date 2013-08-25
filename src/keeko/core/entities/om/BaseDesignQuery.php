@@ -4,7 +4,6 @@ namespace keeko\core\entities\om;
 
 use \Criteria;
 use \Exception;
-use \ModelCriteria;
 use \ModelJoin;
 use \PDO;
 use \Propel;
@@ -18,6 +17,7 @@ use keeko\core\entities\DesignPeer;
 use keeko\core\entities\DesignQuery;
 use keeko\core\entities\Layout;
 use keeko\core\entities\Package;
+use keeko\core\entities\PackageQuery;
 
 /**
  * Base class that represents a query for the 'keeko_design' table.
@@ -25,10 +25,16 @@ use keeko\core\entities\Package;
  *
  *
  * @method DesignQuery orderById($order = Criteria::ASC) Order by the id column
- * @method DesignQuery orderByPackageId($order = Criteria::ASC) Order by the package_id column
+ * @method DesignQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method DesignQuery orderByTitle($order = Criteria::ASC) Order by the title column
+ * @method DesignQuery orderByDescription($order = Criteria::ASC) Order by the description column
+ * @method DesignQuery orderByInstalledVersion($order = Criteria::ASC) Order by the installed_version column
  *
  * @method DesignQuery groupById() Group by the id column
- * @method DesignQuery groupByPackageId() Group by the package_id column
+ * @method DesignQuery groupByName() Group by the name column
+ * @method DesignQuery groupByTitle() Group by the title column
+ * @method DesignQuery groupByDescription() Group by the description column
+ * @method DesignQuery groupByInstalledVersion() Group by the installed_version column
  *
  * @method DesignQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method DesignQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -49,14 +55,20 @@ use keeko\core\entities\Package;
  * @method Design findOne(PropelPDO $con = null) Return the first Design matching the query
  * @method Design findOneOrCreate(PropelPDO $con = null) Return the first Design matching the query, or a new Design object populated from the query conditions when no match is found
  *
- * @method Design findOneByPackageId(int $package_id) Return the first Design filtered by the package_id column
+ * @method Design findOneByName(string $name) Return the first Design filtered by the name column
+ * @method Design findOneByTitle(string $title) Return the first Design filtered by the title column
+ * @method Design findOneByDescription(string $description) Return the first Design filtered by the description column
+ * @method Design findOneByInstalledVersion(string $installed_version) Return the first Design filtered by the installed_version column
  *
  * @method array findById(int $id) Return Design objects filtered by the id column
- * @method array findByPackageId(int $package_id) Return Design objects filtered by the package_id column
+ * @method array findByName(string $name) Return Design objects filtered by the name column
+ * @method array findByTitle(string $title) Return Design objects filtered by the title column
+ * @method array findByDescription(string $description) Return Design objects filtered by the description column
+ * @method array findByInstalledVersion(string $installed_version) Return Design objects filtered by the installed_version column
  *
  * @package    propel.generator.keeko.core.entities.om
  */
-abstract class BaseDesignQuery extends ModelCriteria
+abstract class BaseDesignQuery extends PackageQuery
 {
     /**
      * Initializes internal state of BaseDesignQuery object.
@@ -156,7 +168,7 @@ abstract class BaseDesignQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `package_id` FROM `keeko_design` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `name`, `title`, `description`, `installed_version` FROM `keeko_design` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -256,6 +268,8 @@ abstract class BaseDesignQuery extends ModelCriteria
      * $query->filterById(array('max' => 12)); // WHERE id <= 12
      * </code>
      *
+     * @see       filterByPackage()
+     *
      * @param     mixed $id The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -288,47 +302,119 @@ abstract class BaseDesignQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the package_id column
+     * Filter the query on the name column
      *
      * Example usage:
      * <code>
-     * $query->filterByPackageId(1234); // WHERE package_id = 1234
-     * $query->filterByPackageId(array(12, 34)); // WHERE package_id IN (12, 34)
-     * $query->filterByPackageId(array('min' => 12)); // WHERE package_id >= 12
-     * $query->filterByPackageId(array('max' => 12)); // WHERE package_id <= 12
+     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
      * </code>
      *
-     * @see       filterByPackage()
-     *
-     * @param     mixed $packageId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $name The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return DesignQuery The current query, for fluid interface
      */
-    public function filterByPackageId($packageId = null, $comparison = null)
+    public function filterByName($name = null, $comparison = null)
     {
-        if (is_array($packageId)) {
-            $useMinMax = false;
-            if (isset($packageId['min'])) {
-                $this->addUsingAlias(DesignPeer::PACKAGE_ID, $packageId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($packageId['max'])) {
-                $this->addUsingAlias(DesignPeer::PACKAGE_ID, $packageId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
+        if (null === $comparison) {
+            if (is_array($name)) {
                 $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $name)) {
+                $name = str_replace('*', '%', $name);
+                $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(DesignPeer::PACKAGE_ID, $packageId, $comparison);
+        return $this->addUsingAlias(DesignPeer::NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the title column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByTitle('fooValue');   // WHERE title = 'fooValue'
+     * $query->filterByTitle('%fooValue%'); // WHERE title LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $title The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return DesignQuery The current query, for fluid interface
+     */
+    public function filterByTitle($title = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($title)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $title)) {
+                $title = str_replace('*', '%', $title);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(DesignPeer::TITLE, $title, $comparison);
+    }
+
+    /**
+     * Filter the query on the description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDescription('fooValue');   // WHERE description = 'fooValue'
+     * $query->filterByDescription('%fooValue%'); // WHERE description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $description The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return DesignQuery The current query, for fluid interface
+     */
+    public function filterByDescription($description = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($description)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $description)) {
+                $description = str_replace('*', '%', $description);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(DesignPeer::DESCRIPTION, $description, $comparison);
+    }
+
+    /**
+     * Filter the query on the installed_version column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByInstalledVersion('fooValue');   // WHERE installed_version = 'fooValue'
+     * $query->filterByInstalledVersion('%fooValue%'); // WHERE installed_version LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $installedVersion The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return DesignQuery The current query, for fluid interface
+     */
+    public function filterByInstalledVersion($installedVersion = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($installedVersion)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $installedVersion)) {
+                $installedVersion = str_replace('*', '%', $installedVersion);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(DesignPeer::INSTALLED_VERSION, $installedVersion, $comparison);
     }
 
     /**
@@ -344,14 +430,14 @@ abstract class BaseDesignQuery extends ModelCriteria
     {
         if ($package instanceof Package) {
             return $this
-                ->addUsingAlias(DesignPeer::PACKAGE_ID, $package->getId(), $comparison);
+                ->addUsingAlias(DesignPeer::ID, $package->getId(), $comparison);
         } elseif ($package instanceof PropelObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(DesignPeer::PACKAGE_ID, $package->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(DesignPeer::ID, $package->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
             throw new PropelException('filterByPackage() only accepts arguments of type Package or PropelCollection');
         }
@@ -365,7 +451,7 @@ abstract class BaseDesignQuery extends ModelCriteria
      *
      * @return DesignQuery The current query, for fluid interface
      */
-    public function joinPackage($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinPackage($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Package');
@@ -400,7 +486,7 @@ abstract class BaseDesignQuery extends ModelCriteria
      *
      * @return   \keeko\core\entities\PackageQuery A secondary query class using the current class as primary query
      */
-    public function usePackageQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function usePackageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinPackage($relationAlias, $joinType)

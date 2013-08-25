@@ -1,29 +1,40 @@
 <?php
 namespace keeko\core\installer;
 
-use Composer\Package\PackageInterface;
 use keeko\core\entities\Module;
 use keeko\core\entities\ModuleQuery;
+use Composer\IO\IOInterface;
+use Composer\Package\CompletePackageInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ModuleInstaller extends AbstractPackageInstaller {
 	
 	public function install(IOInterface $io, CompletePackageInterface $package) {
+		$io->write('[Keeko] Install Module: ' . $package->getName());
+		
 		$extra = $package->getExtra();
 		
-		$io->write('[Keeko] Install Module: ' . $package->getName());		
-
-		if (array_key_exists('keeko', $extra) && array_key_exists('app', $extra['keeko'])) {
+		if (array_key_exists('keeko', $extra) && array_key_exists('module', $extra['keeko'])) {
 			$params = $extra['keeko']['module'];
 				
-			// options
-			$resolver = new OptionsResolver();
-			$resolver->setRequired(['class', 'title', 'defaultAction']);
-			$options = $resolver->resolve($params);
-				
+			// check params
+			$missing = [];
+			$required = ['class', 'title', 'defaultAction'];
+			foreach ($required as $key) {
+				if (!array_key_exists($key, $params)) {
+					$missing[] = $key;
+				}
+			}
+			
+			if (count($missing)) {
+				throw new \Exception('Missing parameters for module: ' . implode(', ', $missing));
+			}
+
+			// create entity
 			$module = new Module();
-			$module->setClassName($options['class']);
-			$module->setTitle($options['title']);
-			$module->setDefaultAction($options['defaultAction']);
+			$module->setClassName($params['class']);
+			$module->setTitle($params['title']);
+			$module->setDefaultAction($params['defaultAction']);
 			$this->updatePackage($module, $package);
 		}
 	}
@@ -38,15 +49,17 @@ class ModuleInstaller extends AbstractPackageInstaller {
 			// call something like $module->update($initial->getPrettyVersion(), $target->getPrettyVersion());
 			$io->write(sprintf('[Keeko] Update Module: %s from %s to %s', 
 				$package->getName(), $initial->getPrettyVersion(), $target->getPrettyVersion()));
+			
+			// TODO: Run ModuleManager->update($name)
 		}
 	}
 	
 	public function uninstall(IOInterface $io, CompletePackageInterface $package) {
-		// retrieve module
-		$module = ModuleQuery::create()->findOneByName($target->getName());
-
 		$io->write('[Keeko] Uninstall Module: ' . $package->getName());
-
+		
+		// retrieve module
+		$module = ModuleQuery::create()->findOneByName($package->getName());
+		
 		// delete if found
 		if ($module !== null) {
 			$module->delete();

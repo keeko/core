@@ -2,8 +2,16 @@
 namespace keeko\core\handler;
 
 use keeko\core\application\ApplicationContentInterface;
+use keeko\core\application\Keeko;
 
 interface ContentHandlerInterface {
+	
+	/**
+	 * Sets the Keeko application
+	 * 
+	 * @param Keeko $application
+	 */
+	public function setKeeko(Keeko $application);
 
 	/**
 	 * Returns an associative array with keys for layout blocks

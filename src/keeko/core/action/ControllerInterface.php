@@ -1,7 +1,8 @@
 <?php
 namespace keeko\core\action;
 
+use keeko\core\application\ApplicationContentInterface;
 
-interface ControllerInterface {
+interface ControllerInterface extends ActionInterface, ApplicationContentInterface {
 
 }

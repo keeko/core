@@ -47,6 +47,7 @@ class PackageTableMap extends TableMap
         $this->addColumn('title', 'Title', 'VARCHAR', false, 255, null);
         $this->addColumn('description', 'Description', 'LONGVARCHAR', false, null, null);
         $this->addColumn('installed_version', 'InstalledVersion', 'VARCHAR', false, 50, null);
+        $this->addColumn('descendant_class', 'DescendantClass', 'VARCHAR', false, 100, null);
         // validators
     } // initialize()
 
@@ -56,8 +57,23 @@ class PackageTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Application', 'keeko\\core\\entities\\Application', RelationMap::ONE_TO_MANY, array('id' => 'package_id', ), null, null, 'Applications');
-        $this->addRelation('Design', 'keeko\\core\\entities\\Design', RelationMap::ONE_TO_MANY, array('id' => 'package_id', ), null, null, 'Designs');
-        $this->addRelation('Module', 'keeko\\core\\entities\\Module', RelationMap::ONE_TO_MANY, array('id' => 'package_id', ), null, null, 'Modules');
+        $this->addRelation('Design', 'keeko\\core\\entities\\Design', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('Module', 'keeko\\core\\entities\\Module', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'concrete_inheritance_parent' =>  array (
+  'descendant_column' => 'descendant_class',
+),
+        );
+    } // getBehaviors()
 
 } // PackageTableMap

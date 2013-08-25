@@ -2,7 +2,6 @@
 
 namespace keeko\core\entities\om;
 
-use \BaseObject;
 use \BasePeer;
 use \Criteria;
 use \Exception;
@@ -28,7 +27,7 @@ use keeko\core\entities\PackageQuery;
  *
  * @package    propel.generator.keeko.core.entities.om
  */
-abstract class BaseModule extends BaseObject implements Persistent
+abstract class BaseModule extends Package implements Persistent
 {
     /**
      * Peer class name
@@ -50,12 +49,6 @@ abstract class BaseModule extends BaseObject implements Persistent
     protected $startCopy = false;
 
     /**
-     * The value for the id field.
-     * @var        int
-     */
-    protected $id;
-
-    /**
      * The value for the class_name field.
      * @var        string
      */
@@ -74,10 +67,34 @@ abstract class BaseModule extends BaseObject implements Persistent
     protected $default_action;
 
     /**
-     * The value for the package_id field.
+     * The value for the id field.
      * @var        int
      */
-    protected $package_id;
+    protected $id;
+
+    /**
+     * The value for the name field.
+     * @var        string
+     */
+    protected $name;
+
+    /**
+     * The value for the title field.
+     * @var        string
+     */
+    protected $title;
+
+    /**
+     * The value for the description field.
+     * @var        string
+     */
+    protected $description;
+
+    /**
+     * The value for the installed_version field.
+     * @var        string
+     */
+    protected $installed_version;
 
     /**
      * @var        Package
@@ -117,16 +134,6 @@ abstract class BaseModule extends BaseObject implements Persistent
     protected $actionsScheduledForDeletion = null;
 
     /**
-     * Get the [id] column value.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Get the [class_name] column value.
      *
      * @return string
@@ -157,35 +164,54 @@ abstract class BaseModule extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [package_id] column value.
+     * Get the [id] column value.
      *
      * @return int
      */
-    public function getPackageId()
+    public function getId()
     {
-        return $this->package_id;
+        return $this->id;
     }
 
     /**
-     * Set the value of [id] column.
+     * Get the [name] column value.
      *
-     * @param int $v new value
-     * @return Module The current object (for fluent API support)
+     * @return string
      */
-    public function setId($v)
+    public function getName()
     {
-        if ($v !== null && is_numeric($v)) {
-            $v = (int) $v;
-        }
+        return $this->name;
+    }
 
-        if ($this->id !== $v) {
-            $this->id = $v;
-            $this->modifiedColumns[] = ModulePeer::ID;
-        }
+    /**
+     * Get the [title] column value.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 
+    /**
+     * Get the [description] column value.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
-        return $this;
-    } // setId()
+    /**
+     * Get the [installed_version] column value.
+     *
+     * @return string
+     */
+    public function getInstalledVersion()
+    {
+        return $this->installed_version;
+    }
 
     /**
      * Set the value of [class_name] column.
@@ -251,20 +277,20 @@ abstract class BaseModule extends BaseObject implements Persistent
     } // setDefaultAction()
 
     /**
-     * Set the value of [package_id] column.
+     * Set the value of [id] column.
      *
      * @param int $v new value
      * @return Module The current object (for fluent API support)
      */
-    public function setPackageId($v)
+    public function setId($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
-        if ($this->package_id !== $v) {
-            $this->package_id = $v;
-            $this->modifiedColumns[] = ModulePeer::PACKAGE_ID;
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[] = ModulePeer::ID;
         }
 
         if ($this->aPackage !== null && $this->aPackage->getId() !== $v) {
@@ -273,7 +299,91 @@ abstract class BaseModule extends BaseObject implements Persistent
 
 
         return $this;
-    } // setPackageId()
+    } // setId()
+
+    /**
+     * Set the value of [name] column.
+     *
+     * @param string $v new value
+     * @return Module The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[] = ModulePeer::NAME;
+        }
+
+
+        return $this;
+    } // setName()
+
+    /**
+     * Set the value of [title] column.
+     *
+     * @param string $v new value
+     * @return Module The current object (for fluent API support)
+     */
+    public function setTitle($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->title !== $v) {
+            $this->title = $v;
+            $this->modifiedColumns[] = ModulePeer::TITLE;
+        }
+
+
+        return $this;
+    } // setTitle()
+
+    /**
+     * Set the value of [description] column.
+     *
+     * @param string $v new value
+     * @return Module The current object (for fluent API support)
+     */
+    public function setDescription($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->description !== $v) {
+            $this->description = $v;
+            $this->modifiedColumns[] = ModulePeer::DESCRIPTION;
+        }
+
+
+        return $this;
+    } // setDescription()
+
+    /**
+     * Set the value of [installed_version] column.
+     *
+     * @param string $v new value
+     * @return Module The current object (for fluent API support)
+     */
+    public function setInstalledVersion($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->installed_version !== $v) {
+            $this->installed_version = $v;
+            $this->modifiedColumns[] = ModulePeer::INSTALLED_VERSION;
+        }
+
+
+        return $this;
+    } // setInstalledVersion()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -307,11 +417,14 @@ abstract class BaseModule extends BaseObject implements Persistent
     {
         try {
 
-            $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->class_name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->activated_version = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->default_action = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->package_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+            $this->class_name = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
+            $this->activated_version = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->default_action = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+            $this->name = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->title = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->description = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->installed_version = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -320,7 +433,7 @@ abstract class BaseModule extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 5; // 5 = ModulePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = ModulePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Module object", $e);
@@ -343,7 +456,7 @@ abstract class BaseModule extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
-        if ($this->aPackage !== null && $this->package_id !== $this->aPackage->getId()) {
+        if ($this->aPackage !== null && $this->id !== $this->aPackage->getId()) {
             $this->aPackage = null;
         }
     } // ensureConsistency
@@ -419,6 +532,9 @@ abstract class BaseModule extends BaseObject implements Persistent
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
+                // concrete_inheritance behavior
+                $this->getParentOrCreate($con)->delete($con);
+
                 $con->commit();
                 $this->setDeleted(true);
             } else {
@@ -458,6 +574,11 @@ abstract class BaseModule extends BaseObject implements Persistent
         $isInsert = $this->isNew();
         try {
             $ret = $this->preSave($con);
+            // concrete_inheritance behavior
+            $parent = $this->getSyncParent($con);
+            $parent->save($con);
+            $this->setPrimaryKey($parent->getPrimaryKey());
+
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -561,15 +682,8 @@ abstract class BaseModule extends BaseObject implements Persistent
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[] = ModulePeer::ID;
-        if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . ModulePeer::ID . ')');
-        }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(ModulePeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`id`';
-        }
         if ($this->isColumnModified(ModulePeer::CLASS_NAME)) {
             $modifiedColumns[':p' . $index++]  = '`class_name`';
         }
@@ -579,8 +693,20 @@ abstract class BaseModule extends BaseObject implements Persistent
         if ($this->isColumnModified(ModulePeer::DEFAULT_ACTION)) {
             $modifiedColumns[':p' . $index++]  = '`default_action`';
         }
-        if ($this->isColumnModified(ModulePeer::PACKAGE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`package_id`';
+        if ($this->isColumnModified(ModulePeer::ID)) {
+            $modifiedColumns[':p' . $index++]  = '`id`';
+        }
+        if ($this->isColumnModified(ModulePeer::NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`name`';
+        }
+        if ($this->isColumnModified(ModulePeer::TITLE)) {
+            $modifiedColumns[':p' . $index++]  = '`title`';
+        }
+        if ($this->isColumnModified(ModulePeer::DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = '`description`';
+        }
+        if ($this->isColumnModified(ModulePeer::INSTALLED_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = '`installed_version`';
         }
 
         $sql = sprintf(
@@ -593,9 +719,6 @@ abstract class BaseModule extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`id`':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
                     case '`class_name`':
                         $stmt->bindValue($identifier, $this->class_name, PDO::PARAM_STR);
                         break;
@@ -605,8 +728,20 @@ abstract class BaseModule extends BaseObject implements Persistent
                     case '`default_action`':
                         $stmt->bindValue($identifier, $this->default_action, PDO::PARAM_STR);
                         break;
-                    case '`package_id`':
-                        $stmt->bindValue($identifier, $this->package_id, PDO::PARAM_INT);
+                    case '`id`':
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case '`name`':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case '`title`':
+                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+                        break;
+                    case '`description`':
+                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
+                        break;
+                    case '`installed_version`':
+                        $stmt->bindValue($identifier, $this->installed_version, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -615,13 +750,6 @@ abstract class BaseModule extends BaseObject implements Persistent
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), $e);
         }
-
-        try {
-            $pk = $con->lastInsertId();
-        } catch (Exception $e) {
-            throw new PropelException('Unable to get autoincrement id.', $e);
-        }
-        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -763,19 +891,28 @@ abstract class BaseModule extends BaseObject implements Persistent
     {
         switch ($pos) {
             case 0:
-                return $this->getId();
-                break;
-            case 1:
                 return $this->getClassName();
                 break;
-            case 2:
+            case 1:
                 return $this->getActivatedVersion();
                 break;
-            case 3:
+            case 2:
                 return $this->getDefaultAction();
                 break;
+            case 3:
+                return $this->getId();
+                break;
             case 4:
-                return $this->getPackageId();
+                return $this->getName();
+                break;
+            case 5:
+                return $this->getTitle();
+                break;
+            case 6:
+                return $this->getDescription();
+                break;
+            case 7:
+                return $this->getInstalledVersion();
                 break;
             default:
                 return null;
@@ -806,11 +943,14 @@ abstract class BaseModule extends BaseObject implements Persistent
         $alreadyDumpedObjects['Module'][$this->getPrimaryKey()] = true;
         $keys = ModulePeer::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getId(),
-            $keys[1] => $this->getClassName(),
-            $keys[2] => $this->getActivatedVersion(),
-            $keys[3] => $this->getDefaultAction(),
-            $keys[4] => $this->getPackageId(),
+            $keys[0] => $this->getClassName(),
+            $keys[1] => $this->getActivatedVersion(),
+            $keys[2] => $this->getDefaultAction(),
+            $keys[3] => $this->getId(),
+            $keys[4] => $this->getName(),
+            $keys[5] => $this->getTitle(),
+            $keys[6] => $this->getDescription(),
+            $keys[7] => $this->getInstalledVersion(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aPackage) {
@@ -854,19 +994,28 @@ abstract class BaseModule extends BaseObject implements Persistent
     {
         switch ($pos) {
             case 0:
-                $this->setId($value);
-                break;
-            case 1:
                 $this->setClassName($value);
                 break;
-            case 2:
+            case 1:
                 $this->setActivatedVersion($value);
                 break;
-            case 3:
+            case 2:
                 $this->setDefaultAction($value);
                 break;
+            case 3:
+                $this->setId($value);
+                break;
             case 4:
-                $this->setPackageId($value);
+                $this->setName($value);
+                break;
+            case 5:
+                $this->setTitle($value);
+                break;
+            case 6:
+                $this->setDescription($value);
+                break;
+            case 7:
+                $this->setInstalledVersion($value);
                 break;
         } // switch()
     }
@@ -892,11 +1041,14 @@ abstract class BaseModule extends BaseObject implements Persistent
     {
         $keys = ModulePeer::getFieldNames($keyType);
 
-        if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setClassName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setActivatedVersion($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDefaultAction($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setPackageId($arr[$keys[4]]);
+        if (array_key_exists($keys[0], $arr)) $this->setClassName($arr[$keys[0]]);
+        if (array_key_exists($keys[1], $arr)) $this->setActivatedVersion($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setDefaultAction($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setId($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setName($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setTitle($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setDescription($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setInstalledVersion($arr[$keys[7]]);
     }
 
     /**
@@ -908,11 +1060,14 @@ abstract class BaseModule extends BaseObject implements Persistent
     {
         $criteria = new Criteria(ModulePeer::DATABASE_NAME);
 
-        if ($this->isColumnModified(ModulePeer::ID)) $criteria->add(ModulePeer::ID, $this->id);
         if ($this->isColumnModified(ModulePeer::CLASS_NAME)) $criteria->add(ModulePeer::CLASS_NAME, $this->class_name);
         if ($this->isColumnModified(ModulePeer::ACTIVATED_VERSION)) $criteria->add(ModulePeer::ACTIVATED_VERSION, $this->activated_version);
         if ($this->isColumnModified(ModulePeer::DEFAULT_ACTION)) $criteria->add(ModulePeer::DEFAULT_ACTION, $this->default_action);
-        if ($this->isColumnModified(ModulePeer::PACKAGE_ID)) $criteria->add(ModulePeer::PACKAGE_ID, $this->package_id);
+        if ($this->isColumnModified(ModulePeer::ID)) $criteria->add(ModulePeer::ID, $this->id);
+        if ($this->isColumnModified(ModulePeer::NAME)) $criteria->add(ModulePeer::NAME, $this->name);
+        if ($this->isColumnModified(ModulePeer::TITLE)) $criteria->add(ModulePeer::TITLE, $this->title);
+        if ($this->isColumnModified(ModulePeer::DESCRIPTION)) $criteria->add(ModulePeer::DESCRIPTION, $this->description);
+        if ($this->isColumnModified(ModulePeer::INSTALLED_VERSION)) $criteria->add(ModulePeer::INSTALLED_VERSION, $this->installed_version);
 
         return $criteria;
     }
@@ -979,7 +1134,10 @@ abstract class BaseModule extends BaseObject implements Persistent
         $copyObj->setClassName($this->getClassName());
         $copyObj->setActivatedVersion($this->getActivatedVersion());
         $copyObj->setDefaultAction($this->getDefaultAction());
-        $copyObj->setPackageId($this->getPackageId());
+        $copyObj->setName($this->getName());
+        $copyObj->setTitle($this->getTitle());
+        $copyObj->setDescription($this->getDescription());
+        $copyObj->setInstalledVersion($this->getInstalledVersion());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -992,6 +1150,11 @@ abstract class BaseModule extends BaseObject implements Persistent
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addAction($relObj->copy($deepCopy));
                 }
+            }
+
+            $relObj = $this->getPackage();
+            if ($relObj) {
+                $copyObj->setPackage($relObj->copy($deepCopy));
             }
 
             //unflag object copy
@@ -1054,17 +1217,16 @@ abstract class BaseModule extends BaseObject implements Persistent
     public function setPackage(Package $v = null)
     {
         if ($v === null) {
-            $this->setPackageId(NULL);
+            $this->setId(NULL);
         } else {
-            $this->setPackageId($v->getId());
+            $this->setId($v->getId());
         }
 
         $this->aPackage = $v;
 
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the Package object, it will not be re-added.
+        // Add binding for other direction of this 1:1 relationship.
         if ($v !== null) {
-            $v->addModule($this);
+            $v->setModule($this);
         }
 
 
@@ -1082,15 +1244,10 @@ abstract class BaseModule extends BaseObject implements Persistent
      */
     public function getPackage(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aPackage === null && ($this->package_id !== null) && $doQuery) {
-            $this->aPackage = PackageQuery::create()->findPk($this->package_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aPackage->addModules($this);
-             */
+        if ($this->aPackage === null && ($this->id !== null) && $doQuery) {
+            $this->aPackage = PackageQuery::create()->findPk($this->id, $con);
+            // Because this foreign key represents a one-to-one relationship, we will create a bi-directional association.
+            $this->aPackage->setModule($this);
         }
 
         return $this->aPackage;
@@ -1335,11 +1492,14 @@ abstract class BaseModule extends BaseObject implements Persistent
      */
     public function clear()
     {
-        $this->id = null;
         $this->class_name = null;
         $this->activated_version = null;
         $this->default_action = null;
-        $this->package_id = null;
+        $this->id = null;
+        $this->name = null;
+        $this->title = null;
+        $this->description = null;
+        $this->installed_version = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1401,24 +1561,54 @@ abstract class BaseModule extends BaseObject implements Persistent
         return $this->alreadyInSave;
     }
 
+    // concrete_inheritance behavior
+
     /**
-     * Catches calls to virtual methods
+     * Get or Create the parent Package object of the current object
+     *
+     * @return    Package The parent object
      */
-    public function __call($name, $params)
+    public function getParentOrCreate($con = null)
     {
+        if ($this->isNew()) {
+            if ($this->isPrimaryKeyNull()) {
+                //this prevent issue with deep copy & save parent object
+                if (null === ($parent = $this->getPackage($con))) {
+                    $parent = new Package();
+                }
+                $parent->setDescendantClass('keeko\core\entities\Module');
 
-        // delegate behavior
+                return $parent;
+            } else {
+                $parent = PackageQuery::create()->findPk($this->getPrimaryKey(), $con);
+                if (null === $parent || null !== $parent->getDescendantClass()) {
+                    $parent = new Package();
+                    $parent->setPrimaryKey($this->getPrimaryKey());
+                    $parent->setDescendantClass('keeko\core\entities\Module');
+                }
 
-        if (is_callable(array('keeko\core\entities\Package', $name))) {
-            if (!$delegate = $this->getPackage()) {
-                $delegate = new Package();
-                $this->setPackage($delegate);
+                return $parent;
             }
-
-            return call_user_func_array(array($delegate, $name), $params);
         }
 
-        return parent::__call($name, $params);
+        return PackageQuery::create()->findPk($this->getPrimaryKey(), $con);
+    }
+
+    /**
+     * Create or Update the parent Package object
+     * And return its primary key
+     *
+     * @return    int The primary key of the parent object
+     */
+    public function getSyncParent($con = null)
+    {
+        $parent = $this->getParentOrCreate($con);
+        $parent->setName($this->getName());
+        $parent->setTitle($this->getTitle());
+        $parent->setDescription($this->getDescription());
+        $parent->setInstalledVersion($this->getInstalledVersion());
+
+        return $parent;
     }
 
 }

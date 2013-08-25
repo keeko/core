@@ -29,12 +29,14 @@ use keeko\core\entities\PackageQuery;
  * @method PackageQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method PackageQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method PackageQuery orderByInstalledVersion($order = Criteria::ASC) Order by the installed_version column
+ * @method PackageQuery orderByDescendantClass($order = Criteria::ASC) Order by the descendant_class column
  *
  * @method PackageQuery groupById() Group by the id column
  * @method PackageQuery groupByName() Group by the name column
  * @method PackageQuery groupByTitle() Group by the title column
  * @method PackageQuery groupByDescription() Group by the description column
  * @method PackageQuery groupByInstalledVersion() Group by the installed_version column
+ * @method PackageQuery groupByDescendantClass() Group by the descendant_class column
  *
  * @method PackageQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method PackageQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -59,12 +61,14 @@ use keeko\core\entities\PackageQuery;
  * @method Package findOneByTitle(string $title) Return the first Package filtered by the title column
  * @method Package findOneByDescription(string $description) Return the first Package filtered by the description column
  * @method Package findOneByInstalledVersion(string $installed_version) Return the first Package filtered by the installed_version column
+ * @method Package findOneByDescendantClass(string $descendant_class) Return the first Package filtered by the descendant_class column
  *
  * @method array findById(int $id) Return Package objects filtered by the id column
  * @method array findByName(string $name) Return Package objects filtered by the name column
  * @method array findByTitle(string $title) Return Package objects filtered by the title column
  * @method array findByDescription(string $description) Return Package objects filtered by the description column
  * @method array findByInstalledVersion(string $installed_version) Return Package objects filtered by the installed_version column
+ * @method array findByDescendantClass(string $descendant_class) Return Package objects filtered by the descendant_class column
  *
  * @package    propel.generator.keeko.core.entities.om
  */
@@ -168,7 +172,7 @@ abstract class BasePackageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `name`, `title`, `description`, `installed_version` FROM `keeko_package` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `name`, `title`, `description`, `installed_version`, `descendant_class` FROM `keeko_package` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -416,6 +420,35 @@ abstract class BasePackageQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the descendant_class column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDescendantClass('fooValue');   // WHERE descendant_class = 'fooValue'
+     * $query->filterByDescendantClass('%fooValue%'); // WHERE descendant_class LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $descendantClass The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PackageQuery The current query, for fluid interface
+     */
+    public function filterByDescendantClass($descendantClass = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($descendantClass)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $descendantClass)) {
+                $descendantClass = str_replace('*', '%', $descendantClass);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PackagePeer::DESCENDANT_CLASS, $descendantClass, $comparison);
+    }
+
+    /**
      * Filter the query by a related Application object
      *
      * @param   Application|PropelObjectCollection $application  the related object to use as filter
@@ -502,7 +535,7 @@ abstract class BasePackageQuery extends ModelCriteria
     {
         if ($design instanceof Design) {
             return $this
-                ->addUsingAlias(PackagePeer::ID, $design->getPackageId(), $comparison);
+                ->addUsingAlias(PackagePeer::ID, $design->getId(), $comparison);
         } elseif ($design instanceof PropelObjectCollection) {
             return $this
                 ->useDesignQuery()
@@ -521,7 +554,7 @@ abstract class BasePackageQuery extends ModelCriteria
      *
      * @return PackageQuery The current query, for fluid interface
      */
-    public function joinDesign($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinDesign($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Design');
@@ -556,7 +589,7 @@ abstract class BasePackageQuery extends ModelCriteria
      *
      * @return   \keeko\core\entities\DesignQuery A secondary query class using the current class as primary query
      */
-    public function useDesignQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useDesignQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinDesign($relationAlias, $joinType)
@@ -576,7 +609,7 @@ abstract class BasePackageQuery extends ModelCriteria
     {
         if ($module instanceof Module) {
             return $this
-                ->addUsingAlias(PackagePeer::ID, $module->getPackageId(), $comparison);
+                ->addUsingAlias(PackagePeer::ID, $module->getId(), $comparison);
         } elseif ($module instanceof PropelObjectCollection) {
             return $this
                 ->useModuleQuery()
@@ -595,7 +628,7 @@ abstract class BasePackageQuery extends ModelCriteria
      *
      * @return PackageQuery The current query, for fluid interface
      */
-    public function joinModule($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinModule($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Module');
@@ -630,7 +663,7 @@ abstract class BasePackageQuery extends ModelCriteria
      *
      * @return   \keeko\core\entities\ModuleQuery A secondary query class using the current class as primary query
      */
-    public function useModuleQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useModuleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinModule($relationAlias, $joinType)

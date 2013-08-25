@@ -2,7 +2,6 @@
 
 namespace keeko\core\entities\om;
 
-use \BaseObject;
 use \BasePeer;
 use \Criteria;
 use \Exception;
@@ -30,7 +29,7 @@ use keeko\core\entities\PackageQuery;
  *
  * @package    propel.generator.keeko.core.entities.om
  */
-abstract class BaseDesign extends BaseObject implements Persistent
+abstract class BaseDesign extends Package implements Persistent
 {
     /**
      * Peer class name
@@ -58,10 +57,28 @@ abstract class BaseDesign extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the package_id field.
-     * @var        int
+     * The value for the name field.
+     * @var        string
      */
-    protected $package_id;
+    protected $name;
+
+    /**
+     * The value for the title field.
+     * @var        string
+     */
+    protected $title;
+
+    /**
+     * The value for the description field.
+     * @var        string
+     */
+    protected $description;
+
+    /**
+     * The value for the installed_version field.
+     * @var        string
+     */
+    protected $installed_version;
 
     /**
      * @var        Package
@@ -123,13 +140,43 @@ abstract class BaseDesign extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [package_id] column value.
+     * Get the [name] column value.
      *
-     * @return int
+     * @return string
      */
-    public function getPackageId()
+    public function getName()
     {
-        return $this->package_id;
+        return $this->name;
+    }
+
+    /**
+     * Get the [title] column value.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Get the [description] column value.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Get the [installed_version] column value.
+     *
+     * @return string
+     */
+    public function getInstalledVersion()
+    {
+        return $this->installed_version;
     }
 
     /**
@@ -149,34 +196,97 @@ abstract class BaseDesign extends BaseObject implements Persistent
             $this->modifiedColumns[] = DesignPeer::ID;
         }
 
-
-        return $this;
-    } // setId()
-
-    /**
-     * Set the value of [package_id] column.
-     *
-     * @param int $v new value
-     * @return Design The current object (for fluent API support)
-     */
-    public function setPackageId($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (int) $v;
-        }
-
-        if ($this->package_id !== $v) {
-            $this->package_id = $v;
-            $this->modifiedColumns[] = DesignPeer::PACKAGE_ID;
-        }
-
         if ($this->aPackage !== null && $this->aPackage->getId() !== $v) {
             $this->aPackage = null;
         }
 
 
         return $this;
-    } // setPackageId()
+    } // setId()
+
+    /**
+     * Set the value of [name] column.
+     *
+     * @param string $v new value
+     * @return Design The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[] = DesignPeer::NAME;
+        }
+
+
+        return $this;
+    } // setName()
+
+    /**
+     * Set the value of [title] column.
+     *
+     * @param string $v new value
+     * @return Design The current object (for fluent API support)
+     */
+    public function setTitle($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->title !== $v) {
+            $this->title = $v;
+            $this->modifiedColumns[] = DesignPeer::TITLE;
+        }
+
+
+        return $this;
+    } // setTitle()
+
+    /**
+     * Set the value of [description] column.
+     *
+     * @param string $v new value
+     * @return Design The current object (for fluent API support)
+     */
+    public function setDescription($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->description !== $v) {
+            $this->description = $v;
+            $this->modifiedColumns[] = DesignPeer::DESCRIPTION;
+        }
+
+
+        return $this;
+    } // setDescription()
+
+    /**
+     * Set the value of [installed_version] column.
+     *
+     * @param string $v new value
+     * @return Design The current object (for fluent API support)
+     */
+    public function setInstalledVersion($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->installed_version !== $v) {
+            $this->installed_version = $v;
+            $this->modifiedColumns[] = DesignPeer::INSTALLED_VERSION;
+        }
+
+
+        return $this;
+    } // setInstalledVersion()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -211,7 +321,10 @@ abstract class BaseDesign extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->package_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->installed_version = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -220,7 +333,7 @@ abstract class BaseDesign extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 2; // 2 = DesignPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = DesignPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Design object", $e);
@@ -243,7 +356,7 @@ abstract class BaseDesign extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
-        if ($this->aPackage !== null && $this->package_id !== $this->aPackage->getId()) {
+        if ($this->aPackage !== null && $this->id !== $this->aPackage->getId()) {
             $this->aPackage = null;
         }
     } // ensureConsistency
@@ -321,6 +434,9 @@ abstract class BaseDesign extends BaseObject implements Persistent
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
+                // concrete_inheritance behavior
+                $this->getParentOrCreate($con)->delete($con);
+
                 $con->commit();
                 $this->setDeleted(true);
             } else {
@@ -360,6 +476,11 @@ abstract class BaseDesign extends BaseObject implements Persistent
         $isInsert = $this->isNew();
         try {
             $ret = $this->preSave($con);
+            // concrete_inheritance behavior
+            $parent = $this->getSyncParent($con);
+            $parent->save($con);
+            $this->setPrimaryKey($parent->getPrimaryKey());
+
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -481,17 +602,22 @@ abstract class BaseDesign extends BaseObject implements Persistent
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[] = DesignPeer::ID;
-        if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . DesignPeer::ID . ')');
-        }
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(DesignPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(DesignPeer::PACKAGE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`package_id`';
+        if ($this->isColumnModified(DesignPeer::NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`name`';
+        }
+        if ($this->isColumnModified(DesignPeer::TITLE)) {
+            $modifiedColumns[':p' . $index++]  = '`title`';
+        }
+        if ($this->isColumnModified(DesignPeer::DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = '`description`';
+        }
+        if ($this->isColumnModified(DesignPeer::INSTALLED_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = '`installed_version`';
         }
 
         $sql = sprintf(
@@ -507,8 +633,17 @@ abstract class BaseDesign extends BaseObject implements Persistent
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`package_id`':
-                        $stmt->bindValue($identifier, $this->package_id, PDO::PARAM_INT);
+                    case '`name`':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case '`title`':
+                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+                        break;
+                    case '`description`':
+                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
+                        break;
+                    case '`installed_version`':
+                        $stmt->bindValue($identifier, $this->installed_version, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -517,13 +652,6 @@ abstract class BaseDesign extends BaseObject implements Persistent
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), $e);
         }
-
-        try {
-            $pk = $con->lastInsertId();
-        } catch (Exception $e) {
-            throw new PropelException('Unable to get autoincrement id.', $e);
-        }
-        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -676,7 +804,16 @@ abstract class BaseDesign extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getPackageId();
+                return $this->getName();
+                break;
+            case 2:
+                return $this->getTitle();
+                break;
+            case 3:
+                return $this->getDescription();
+                break;
+            case 4:
+                return $this->getInstalledVersion();
                 break;
             default:
                 return null;
@@ -708,7 +845,10 @@ abstract class BaseDesign extends BaseObject implements Persistent
         $keys = DesignPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getPackageId(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getTitle(),
+            $keys[3] => $this->getDescription(),
+            $keys[4] => $this->getInstalledVersion(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aPackage) {
@@ -758,7 +898,16 @@ abstract class BaseDesign extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setPackageId($value);
+                $this->setName($value);
+                break;
+            case 2:
+                $this->setTitle($value);
+                break;
+            case 3:
+                $this->setDescription($value);
+                break;
+            case 4:
+                $this->setInstalledVersion($value);
                 break;
         } // switch()
     }
@@ -785,7 +934,10 @@ abstract class BaseDesign extends BaseObject implements Persistent
         $keys = DesignPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setPackageId($arr[$keys[1]]);
+        if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setInstalledVersion($arr[$keys[4]]);
     }
 
     /**
@@ -798,7 +950,10 @@ abstract class BaseDesign extends BaseObject implements Persistent
         $criteria = new Criteria(DesignPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(DesignPeer::ID)) $criteria->add(DesignPeer::ID, $this->id);
-        if ($this->isColumnModified(DesignPeer::PACKAGE_ID)) $criteria->add(DesignPeer::PACKAGE_ID, $this->package_id);
+        if ($this->isColumnModified(DesignPeer::NAME)) $criteria->add(DesignPeer::NAME, $this->name);
+        if ($this->isColumnModified(DesignPeer::TITLE)) $criteria->add(DesignPeer::TITLE, $this->title);
+        if ($this->isColumnModified(DesignPeer::DESCRIPTION)) $criteria->add(DesignPeer::DESCRIPTION, $this->description);
+        if ($this->isColumnModified(DesignPeer::INSTALLED_VERSION)) $criteria->add(DesignPeer::INSTALLED_VERSION, $this->installed_version);
 
         return $criteria;
     }
@@ -862,7 +1017,10 @@ abstract class BaseDesign extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setPackageId($this->getPackageId());
+        $copyObj->setName($this->getName());
+        $copyObj->setTitle($this->getTitle());
+        $copyObj->setDescription($this->getDescription());
+        $copyObj->setInstalledVersion($this->getInstalledVersion());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -881,6 +1039,11 @@ abstract class BaseDesign extends BaseObject implements Persistent
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addLayout($relObj->copy($deepCopy));
                 }
+            }
+
+            $relObj = $this->getPackage();
+            if ($relObj) {
+                $copyObj->setPackage($relObj->copy($deepCopy));
             }
 
             //unflag object copy
@@ -943,17 +1106,16 @@ abstract class BaseDesign extends BaseObject implements Persistent
     public function setPackage(Package $v = null)
     {
         if ($v === null) {
-            $this->setPackageId(NULL);
+            $this->setId(NULL);
         } else {
-            $this->setPackageId($v->getId());
+            $this->setId($v->getId());
         }
 
         $this->aPackage = $v;
 
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the Package object, it will not be re-added.
+        // Add binding for other direction of this 1:1 relationship.
         if ($v !== null) {
-            $v->addDesign($this);
+            $v->setDesign($this);
         }
 
 
@@ -971,15 +1133,10 @@ abstract class BaseDesign extends BaseObject implements Persistent
      */
     public function getPackage(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aPackage === null && ($this->package_id !== null) && $doQuery) {
-            $this->aPackage = PackageQuery::create()->findPk($this->package_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aPackage->addDesigns($this);
-             */
+        if ($this->aPackage === null && ($this->id !== null) && $doQuery) {
+            $this->aPackage = PackageQuery::create()->findPk($this->id, $con);
+            // Because this foreign key represents a one-to-one relationship, we will create a bi-directional association.
+            $this->aPackage->setDesign($this);
         }
 
         return $this->aPackage;
@@ -1521,7 +1678,10 @@ abstract class BaseDesign extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->package_id = null;
+        $this->name = null;
+        $this->title = null;
+        $this->description = null;
+        $this->installed_version = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1592,24 +1752,54 @@ abstract class BaseDesign extends BaseObject implements Persistent
         return $this->alreadyInSave;
     }
 
+    // concrete_inheritance behavior
+
     /**
-     * Catches calls to virtual methods
+     * Get or Create the parent Package object of the current object
+     *
+     * @return    Package The parent object
      */
-    public function __call($name, $params)
+    public function getParentOrCreate($con = null)
     {
+        if ($this->isNew()) {
+            if ($this->isPrimaryKeyNull()) {
+                //this prevent issue with deep copy & save parent object
+                if (null === ($parent = $this->getPackage($con))) {
+                    $parent = new Package();
+                }
+                $parent->setDescendantClass('keeko\core\entities\Design');
 
-        // delegate behavior
+                return $parent;
+            } else {
+                $parent = PackageQuery::create()->findPk($this->getPrimaryKey(), $con);
+                if (null === $parent || null !== $parent->getDescendantClass()) {
+                    $parent = new Package();
+                    $parent->setPrimaryKey($this->getPrimaryKey());
+                    $parent->setDescendantClass('keeko\core\entities\Design');
+                }
 
-        if (is_callable(array('keeko\core\entities\Package', $name))) {
-            if (!$delegate = $this->getPackage()) {
-                $delegate = new Package();
-                $this->setPackage($delegate);
+                return $parent;
             }
-
-            return call_user_func_array(array($delegate, $name), $params);
         }
 
-        return parent::__call($name, $params);
+        return PackageQuery::create()->findPk($this->getPrimaryKey(), $con);
+    }
+
+    /**
+     * Create or Update the parent Package object
+     * And return its primary key
+     *
+     * @return    int The primary key of the parent object
+     */
+    public function getSyncParent($con = null)
+    {
+        $parent = $this->getParentOrCreate($con);
+        $parent->setName($this->getName());
+        $parent->setTitle($this->getTitle());
+        $parent->setDescription($this->getDescription());
+        $parent->setInstalledVersion($this->getInstalledVersion());
+
+        return $parent;
     }
 
 }

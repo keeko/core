@@ -9,6 +9,8 @@ use keeko\core\entities\ApplicationUri;
 use keeko\core\entities\Design;
 use keeko\core\entities\Layout;
 use keeko\core\entities\Block;
+use keeko\core\module\ModuleManager;
+use keeko\core\entities\Module;
 
 class KeekoInstaller {
 
@@ -60,8 +62,18 @@ class KeekoInstaller {
 		
 		$design->save();
 		
-		// app types
+		// modules
+		$user = new Module();
+		$user->setClassName('\\keeko\\user\\UserModule');
+		$user->setTitle('User Management');
+		$user->setDefaultAction('users');
+		$user->setName('keeko/user');
+		$user->setInstalledVersion('dev-master');
+		$user->setActivatedVersion('dev-master');
+		$user->save();
 		
+		
+		// app types
 		$website = new ApplicationType();
 		$website->setName('website');
 		$website->setTitle('Website');
@@ -78,7 +90,8 @@ class KeekoInstaller {
 		$api->setDesign($design);
 		$api->setTitle('API');
 		$api->setRouter($mar);
-		$api->setProperty('module', 'admin');
+		$api->setProperty('module', 'keeko/user');
+		$api->setProperty('action', 'users');
 		$api->save();
 		
 		$uri = new ApplicationUri();

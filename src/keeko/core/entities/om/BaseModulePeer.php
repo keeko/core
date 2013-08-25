@@ -22,7 +22,7 @@ use keeko\core\entities\map\ModuleTableMap;
  *
  * @package propel.generator.keeko.core.entities.om
  */
-abstract class BaseModulePeer
+abstract class BaseModulePeer extends PackagePeer
 {
 
     /** the default database name for this class */
@@ -38,16 +38,13 @@ abstract class BaseModulePeer
     const TM_CLASS = 'ModuleTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 8;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 5;
-
-    /** the column name for the id field */
-    const ID = 'keeko_module.id';
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /** the column name for the class_name field */
     const CLASS_NAME = 'keeko_module.class_name';
@@ -58,8 +55,20 @@ abstract class BaseModulePeer
     /** the column name for the default_action field */
     const DEFAULT_ACTION = 'keeko_module.default_action';
 
-    /** the column name for the package_id field */
-    const PACKAGE_ID = 'keeko_module.package_id';
+    /** the column name for the id field */
+    const ID = 'keeko_module.id';
+
+    /** the column name for the name field */
+    const NAME = 'keeko_module.name';
+
+    /** the column name for the title field */
+    const TITLE = 'keeko_module.title';
+
+    /** the column name for the description field */
+    const DESCRIPTION = 'keeko_module.description';
+
+    /** the column name for the installed_version field */
+    const INSTALLED_VERSION = 'keeko_module.installed_version';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -80,12 +89,12 @@ abstract class BaseModulePeer
      * e.g. ModulePeer::$fieldNames[ModulePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'ClassName', 'ActivatedVersion', 'DefaultAction', 'PackageId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'className', 'activatedVersion', 'defaultAction', 'packageId', ),
-        BasePeer::TYPE_COLNAME => array (ModulePeer::ID, ModulePeer::CLASS_NAME, ModulePeer::ACTIVATED_VERSION, ModulePeer::DEFAULT_ACTION, ModulePeer::PACKAGE_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'CLASS_NAME', 'ACTIVATED_VERSION', 'DEFAULT_ACTION', 'PACKAGE_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'class_name', 'activated_version', 'default_action', 'package_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('ClassName', 'ActivatedVersion', 'DefaultAction', 'Id', 'Name', 'Title', 'Description', 'InstalledVersion', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('className', 'activatedVersion', 'defaultAction', 'id', 'name', 'title', 'description', 'installedVersion', ),
+        BasePeer::TYPE_COLNAME => array (ModulePeer::CLASS_NAME, ModulePeer::ACTIVATED_VERSION, ModulePeer::DEFAULT_ACTION, ModulePeer::ID, ModulePeer::NAME, ModulePeer::TITLE, ModulePeer::DESCRIPTION, ModulePeer::INSTALLED_VERSION, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('CLASS_NAME', 'ACTIVATED_VERSION', 'DEFAULT_ACTION', 'ID', 'NAME', 'TITLE', 'DESCRIPTION', 'INSTALLED_VERSION', ),
+        BasePeer::TYPE_FIELDNAME => array ('class_name', 'activated_version', 'default_action', 'id', 'name', 'title', 'description', 'installed_version', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -95,12 +104,12 @@ abstract class BaseModulePeer
      * e.g. ModulePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'ClassName' => 1, 'ActivatedVersion' => 2, 'DefaultAction' => 3, 'PackageId' => 4, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'className' => 1, 'activatedVersion' => 2, 'defaultAction' => 3, 'packageId' => 4, ),
-        BasePeer::TYPE_COLNAME => array (ModulePeer::ID => 0, ModulePeer::CLASS_NAME => 1, ModulePeer::ACTIVATED_VERSION => 2, ModulePeer::DEFAULT_ACTION => 3, ModulePeer::PACKAGE_ID => 4, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'CLASS_NAME' => 1, 'ACTIVATED_VERSION' => 2, 'DEFAULT_ACTION' => 3, 'PACKAGE_ID' => 4, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'class_name' => 1, 'activated_version' => 2, 'default_action' => 3, 'package_id' => 4, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('ClassName' => 0, 'ActivatedVersion' => 1, 'DefaultAction' => 2, 'Id' => 3, 'Name' => 4, 'Title' => 5, 'Description' => 6, 'InstalledVersion' => 7, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('className' => 0, 'activatedVersion' => 1, 'defaultAction' => 2, 'id' => 3, 'name' => 4, 'title' => 5, 'description' => 6, 'installedVersion' => 7, ),
+        BasePeer::TYPE_COLNAME => array (ModulePeer::CLASS_NAME => 0, ModulePeer::ACTIVATED_VERSION => 1, ModulePeer::DEFAULT_ACTION => 2, ModulePeer::ID => 3, ModulePeer::NAME => 4, ModulePeer::TITLE => 5, ModulePeer::DESCRIPTION => 6, ModulePeer::INSTALLED_VERSION => 7, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('CLASS_NAME' => 0, 'ACTIVATED_VERSION' => 1, 'DEFAULT_ACTION' => 2, 'ID' => 3, 'NAME' => 4, 'TITLE' => 5, 'DESCRIPTION' => 6, 'INSTALLED_VERSION' => 7, ),
+        BasePeer::TYPE_FIELDNAME => array ('class_name' => 0, 'activated_version' => 1, 'default_action' => 2, 'id' => 3, 'name' => 4, 'title' => 5, 'description' => 6, 'installed_version' => 7, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -174,17 +183,23 @@ abstract class BaseModulePeer
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(ModulePeer::ID);
             $criteria->addSelectColumn(ModulePeer::CLASS_NAME);
             $criteria->addSelectColumn(ModulePeer::ACTIVATED_VERSION);
             $criteria->addSelectColumn(ModulePeer::DEFAULT_ACTION);
-            $criteria->addSelectColumn(ModulePeer::PACKAGE_ID);
+            $criteria->addSelectColumn(ModulePeer::ID);
+            $criteria->addSelectColumn(ModulePeer::NAME);
+            $criteria->addSelectColumn(ModulePeer::TITLE);
+            $criteria->addSelectColumn(ModulePeer::DESCRIPTION);
+            $criteria->addSelectColumn(ModulePeer::INSTALLED_VERSION);
         } else {
-            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.class_name');
             $criteria->addSelectColumn($alias . '.activated_version');
             $criteria->addSelectColumn($alias . '.default_action');
-            $criteria->addSelectColumn($alias . '.package_id');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.installed_version');
         }
     }
 
@@ -409,11 +424,11 @@ abstract class BaseModulePeer
     public static function getPrimaryKeyHashFromRow($row, $startcol = 0)
     {
         // If the PK cannot be derived from the row, return null.
-        if ($row[$startcol] === null) {
+        if ($row[$startcol + 3] === null) {
             return null;
         }
 
-        return (string) $row[$startcol];
+        return (string) $row[$startcol + 3];
     }
 
     /**
@@ -428,7 +443,7 @@ abstract class BaseModulePeer
     public static function getPrimaryKeyFromRow($row, $startcol = 0)
     {
 
-        return (int) $row[$startcol];
+        return (int) $row[$startcol + 3];
     }
 
     /**
@@ -527,7 +542,7 @@ abstract class BaseModulePeer
             $con = Propel::getConnection(ModulePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(ModulePeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
+        $criteria->addJoin(ModulePeer::ID, PackagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -564,7 +579,7 @@ abstract class BaseModulePeer
         $startcol = ModulePeer::NUM_HYDRATE_COLUMNS;
         PackagePeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(ModulePeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
+        $criteria->addJoin(ModulePeer::ID, PackagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -597,7 +612,8 @@ abstract class BaseModulePeer
                 } // if obj2 already loaded
 
                 // Add the $obj1 (Module) to $obj2 (Package)
-                $obj2->addModule($obj1);
+                // one to one relationship
+                $obj1->setPackage($obj2);
 
             } // if joined row was not null
 
@@ -645,7 +661,7 @@ abstract class BaseModulePeer
             $con = Propel::getConnection(ModulePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(ModulePeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
+        $criteria->addJoin(ModulePeer::ID, PackagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -684,7 +700,7 @@ abstract class BaseModulePeer
         PackagePeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + PackagePeer::NUM_HYDRATE_COLUMNS;
 
-        $criteria->addJoin(ModulePeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
+        $criteria->addJoin(ModulePeer::ID, PackagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -718,7 +734,7 @@ abstract class BaseModulePeer
                 } // if obj2 loaded
 
                 // Add the $obj1 (Module) to the collection in $obj2 (Package)
-                $obj2->addModule($obj1);
+                $obj1->setPackage($obj2);
             } // if joined row not null
 
             $results[] = $obj1;
@@ -781,10 +797,6 @@ abstract class BaseModulePeer
             $criteria = clone $values; // rename for clarity
         } else {
             $criteria = $values->buildCriteria(); // build Criteria from Module object
-        }
-
-        if ($criteria->containsKey(ModulePeer::ID) && $criteria->keyContainsValue(ModulePeer::ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.ModulePeer::ID.')');
         }
 
 

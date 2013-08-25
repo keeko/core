@@ -40,13 +40,16 @@ class ModuleTableMap extends TableMap
         $this->setPhpName('Module');
         $this->setClassname('keeko\\core\\entities\\Module');
         $this->setPackage('keeko.core.entities');
-        $this->setUseIdGenerator(true);
+        $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
         $this->addColumn('class_name', 'ClassName', 'VARCHAR', true, 255, null);
         $this->addColumn('activated_version', 'ActivatedVersion', 'VARCHAR', false, 50, null);
         $this->addColumn('default_action', 'DefaultAction', 'VARCHAR', false, 255, null);
-        $this->addForeignKey('package_id', 'PackageId', 'INTEGER', 'keeko_package', 'id', false, null, null);
+        $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'keeko_package', 'id', true, null, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', false, 255, null);
+        $this->addColumn('description', 'Description', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('installed_version', 'InstalledVersion', 'VARCHAR', false, 50, null);
         // validators
     } // initialize()
 
@@ -55,7 +58,7 @@ class ModuleTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Package', 'keeko\\core\\entities\\Package', RelationMap::MANY_TO_ONE, array('package_id' => 'id', ), null, null);
+        $this->addRelation('Package', 'keeko\\core\\entities\\Package', RelationMap::MANY_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
         $this->addRelation('Action', 'keeko\\core\\entities\\Action', RelationMap::ONE_TO_MANY, array('id' => 'module_id', ), 'CASCADE', null, 'Actions');
     } // buildRelations()
 
@@ -68,8 +71,11 @@ class ModuleTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'delegate' =>  array (
-  'to' => 'package',
+            'concrete_inheritance' =>  array (
+  'extends' => 'package',
+  'descendant_column' => 'descendant_class',
+  'copy_data_to_parent' => 'true',
+  'schema' => '',
 ),
         );
     } // getBehaviors()

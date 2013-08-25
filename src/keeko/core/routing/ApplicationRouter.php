@@ -7,34 +7,32 @@ use keeko\core\entities\ApplicationUriQuery;
 use keeko\core\entities\ApplicationUri;
 
 class ApplicationRouter implements RouteMatcherInterface {
-
 	private $destination;
 	private $prefix;
 	private $uri;
-
+	
 	public function __construct() {
 	}
-
+	
 	public function getDestination() {
 		return $this->destination;
 	}
-
+	
 	public function getPrefix() {
 		return $this->prefix;
 	}
 	
 	/**
-	 * 
+	 *
 	 * @return ApplicationUri
 	 */
 	public function getUri() {
 		return $this->uri;
 	}
-
+	
 	/**
 	 *
-	 *
-	 * @param Request $request
+	 * @param Request $request        	
 	 * @throws AppException
 	 * @return ApplicationUri
 	 */
@@ -47,7 +45,7 @@ class ApplicationRouter implements RouteMatcherInterface {
 			->joinApplication()
 			->filterByHttphost($request->getHttpHost())
 			->find();
-
+		
 		foreach ($uris as $uri) {
 			if ($pos = strpos($request->getRequestUri(), $uri->getBasepath()) !== false) {
 				$this->destination = substr($request->getRequestUri(), strlen($uri->getBasepath()));
@@ -56,11 +54,11 @@ class ApplicationRouter implements RouteMatcherInterface {
 				break;
 			}
 		}
-
+		
 		if (is_null($uri)) {
 			throw new AppException(sprintf('No app found on %s', $request->getUri()), 404);
 		}
-
+		
 		return $uri;
 	}
 }

@@ -21,7 +21,7 @@ use keeko\core\entities\map\DesignTableMap;
  *
  * @package propel.generator.keeko.core.entities.om
  */
-abstract class BaseDesignPeer
+abstract class BaseDesignPeer extends PackagePeer
 {
 
     /** the default database name for this class */
@@ -37,19 +37,28 @@ abstract class BaseDesignPeer
     const TM_CLASS = 'DesignTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 2;
+    const NUM_COLUMNS = 5;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 2;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /** the column name for the id field */
     const ID = 'keeko_design.id';
 
-    /** the column name for the package_id field */
-    const PACKAGE_ID = 'keeko_design.package_id';
+    /** the column name for the name field */
+    const NAME = 'keeko_design.name';
+
+    /** the column name for the title field */
+    const TITLE = 'keeko_design.title';
+
+    /** the column name for the description field */
+    const DESCRIPTION = 'keeko_design.description';
+
+    /** the column name for the installed_version field */
+    const INSTALLED_VERSION = 'keeko_design.installed_version';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -70,12 +79,12 @@ abstract class BaseDesignPeer
      * e.g. DesignPeer::$fieldNames[DesignPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'PackageId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'packageId', ),
-        BasePeer::TYPE_COLNAME => array (DesignPeer::ID, DesignPeer::PACKAGE_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'PACKAGE_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'package_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Title', 'Description', 'InstalledVersion', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'title', 'description', 'installedVersion', ),
+        BasePeer::TYPE_COLNAME => array (DesignPeer::ID, DesignPeer::NAME, DesignPeer::TITLE, DesignPeer::DESCRIPTION, DesignPeer::INSTALLED_VERSION, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'TITLE', 'DESCRIPTION', 'INSTALLED_VERSION', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'title', 'description', 'installed_version', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
     /**
@@ -85,12 +94,12 @@ abstract class BaseDesignPeer
      * e.g. DesignPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'PackageId' => 1, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'packageId' => 1, ),
-        BasePeer::TYPE_COLNAME => array (DesignPeer::ID => 0, DesignPeer::PACKAGE_ID => 1, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'PACKAGE_ID' => 1, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'package_id' => 1, ),
-        BasePeer::TYPE_NUM => array (0, 1, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Title' => 2, 'Description' => 3, 'InstalledVersion' => 4, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'installedVersion' => 4, ),
+        BasePeer::TYPE_COLNAME => array (DesignPeer::ID => 0, DesignPeer::NAME => 1, DesignPeer::TITLE => 2, DesignPeer::DESCRIPTION => 3, DesignPeer::INSTALLED_VERSION => 4, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'TITLE' => 2, 'DESCRIPTION' => 3, 'INSTALLED_VERSION' => 4, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'installed_version' => 4, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
     /**
@@ -165,10 +174,16 @@ abstract class BaseDesignPeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(DesignPeer::ID);
-            $criteria->addSelectColumn(DesignPeer::PACKAGE_ID);
+            $criteria->addSelectColumn(DesignPeer::NAME);
+            $criteria->addSelectColumn(DesignPeer::TITLE);
+            $criteria->addSelectColumn(DesignPeer::DESCRIPTION);
+            $criteria->addSelectColumn(DesignPeer::INSTALLED_VERSION);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.package_id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.installed_version');
         }
     }
 
@@ -508,7 +523,7 @@ abstract class BaseDesignPeer
             $con = Propel::getConnection(DesignPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(DesignPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
+        $criteria->addJoin(DesignPeer::ID, PackagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -545,7 +560,7 @@ abstract class BaseDesignPeer
         $startcol = DesignPeer::NUM_HYDRATE_COLUMNS;
         PackagePeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(DesignPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
+        $criteria->addJoin(DesignPeer::ID, PackagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -578,7 +593,8 @@ abstract class BaseDesignPeer
                 } // if obj2 already loaded
 
                 // Add the $obj1 (Design) to $obj2 (Package)
-                $obj2->addDesign($obj1);
+                // one to one relationship
+                $obj1->setPackage($obj2);
 
             } // if joined row was not null
 
@@ -626,7 +642,7 @@ abstract class BaseDesignPeer
             $con = Propel::getConnection(DesignPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(DesignPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
+        $criteria->addJoin(DesignPeer::ID, PackagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -665,7 +681,7 @@ abstract class BaseDesignPeer
         PackagePeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + PackagePeer::NUM_HYDRATE_COLUMNS;
 
-        $criteria->addJoin(DesignPeer::PACKAGE_ID, PackagePeer::ID, $join_behavior);
+        $criteria->addJoin(DesignPeer::ID, PackagePeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -699,7 +715,7 @@ abstract class BaseDesignPeer
                 } // if obj2 loaded
 
                 // Add the $obj1 (Design) to the collection in $obj2 (Package)
-                $obj2->addDesign($obj1);
+                $obj1->setPackage($obj2);
             } // if joined row not null
 
             $results[] = $obj1;
@@ -762,10 +778,6 @@ abstract class BaseDesignPeer
             $criteria = clone $values; // rename for clarity
         } else {
             $criteria = $values->buildCriteria(); // build Criteria from Design object
-        }
-
-        if ($criteria->containsKey(DesignPeer::ID) && $criteria->keyContainsValue(DesignPeer::ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.DesignPeer::ID.')');
         }
 
 

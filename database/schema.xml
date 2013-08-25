@@ -251,7 +251,10 @@
 	</table>
 	
 	<table name="design">
-		<column name="id" type="INTEGER" primaryKey="true"
+		<behavior name="concrete_inheritance">
+			<parameter name="extends" value="package" />
+		</behavior>
+		<!-- <column name="id" type="INTEGER" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="package_id" type="INTEGER" />
 
@@ -261,7 +264,7 @@
 
 		<behavior name="delegate">
 			<parameter name="to" value="package" />
-		</behavior>
+		</behavior>-->
 	</table>
 	
 	<table name="layout">
@@ -334,20 +337,23 @@
 	</table>
 
 	<table name="module">
-		<column name="id" type="INTEGER" size="10" primaryKey="true"
-			required="true" autoIncrement="true" />
+		<behavior name="concrete_inheritance">
+			<parameter name="extends" value="package" />
+		</behavior>
 		<column name="class_name" type="VARCHAR" size="255" required="true" />
 		<column name="activated_version" type="VARCHAR" size="50" />
 		<column name="default_action" type="VARCHAR" />
+		
+		
+		<!-- <column name="id" type="INTEGER" size="10" primaryKey="true"
+			required="true" autoIncrement="true" />
 		<column name="package_id" type="INTEGER" />
-
 		<foreign-key foreignTable="package">
 			<reference local="package_id" foreign="id" />
 		</foreign-key>
-
 		<behavior name="delegate">
 			<parameter name="to" value="package" />
-		</behavior>
+		</behavior>-->
 	</table>
 
 	<table name="action">

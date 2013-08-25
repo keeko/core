@@ -6,11 +6,17 @@ use keeko\core\exceptions\ModuleException;
 use keeko\core\entities\ModuleQuery;
 use keeko\core\PackageManager;
 use keeko\core\entities\Action;
+use keeko\core\application\Keeko;
 
 class ModuleManager {
 
+	/**
+	 * 
+	 * @var Keeko
+	 */
+	private $keeko;
 	private $loadedModules = [];
-	private $availableModules = [];
+	private $activatedModules = [];
 	private $installedModules = [];
 	
 	private $packageManager;
@@ -27,23 +33,28 @@ class ModuleManager {
 // 		}
 // 	}
 	
-	public function __construct() {
+	public function __construct(Keeko $keeko = null) {
 		$modules = ModuleQuery::create()->find();
 		
 		foreach ($modules as $module) {
 			if ($module->getActivatedVersion() !== null) {
-				$this->availableModules[$module->getName()] = $module;
+				$this->activatedModules[$module->getName()] = $module;
 			} else {
 				$this->installedModules[$module->getName()] = $module;
 			}
 		}
 		
 		$this->packageManager = new PackageManager();
+		$this->keeko = $keeko;
 	}
 
-	public function getInstalledModules() {
-		return $this->installedModules;
-	}
+// 	public function getInstalledModules() {
+// 		return $this->installedModules;
+// 	}
+	
+// 	public function getActivatedModules() {
+// 		return $this->activatedModules;
+// 	}
 
 	/**
 	 * Loads a module and returns the associated class or returns if already loaded
@@ -57,12 +68,12 @@ class ModuleManager {
 			return $this->loadedModules[$packageName];
 		}
 		
-		// check installetion
-		if (!array_key_exists($packageName, $this->installedModules)) {
-			throw new ModuleException(sprintf('Module (%s) not installed', $packageName), 501);
+		// check activation
+		if (!array_key_exists($packageName, $this->activatedModules)) {
+			throw new ModuleException(sprintf('Module (%s) not activated', $packageName), 501);
 		}
 		
-		$module = $this->installedModules[$packageName];
+		$entity = $this->activatedModules[$packageName];
 
 		// check environment
 // 		$descriptor = $this->getModuleDescriptor($packageName);
@@ -71,25 +82,27 @@ class ModuleManager {
 // 		}
 
 
-		if ($module->getInstalledVersion() > $module->getActivatedVersion()) {
+		if ($entity->getInstalledVersion() > $entity->getActivatedVersion()) {
 			throw new ModuleException(sprintf('Module Version Mismatch (%s). Module needs updated by the Administrator', $packageName), 500);
 		}
 
 		// load
-		$className = $module->getClassName();
+		$className = $entity->getClassName();
 // 		$namespace = implode('\\', array_slice(explode('\\', $module->getClassname()), 0, -1));
 // 		$this->classLoader->add($namespace, $descriptor->getDirectory() . 'src');
 		
+		/* @var $mod ModuleInterface */
 		$mod = new $className();
-		$mod->setModule($module);
+		$mod->setEntity($entity);
+		$mod->setKeeko($this->keeko);
 		$this->loadedModules[$packageName] = $mod;
 
 		return $mod;
 	}
 	
 	public function activate($packageName) {
-		if (array_key_exists($packageName, $this->availableModules) 
-				&& !array_key_exists($packageName, $this->installedModules)) {
+		if (array_key_exists($packageName, $this->installedModules) 
+				&& !array_key_exists($packageName, $this->activatedModules)) {
 			
 			$module = ModuleQuery::create()->findOneByName($packageName);
 			$package = $this->packageManager->getModulePackage($packageName);
@@ -122,8 +135,8 @@ class ModuleManager {
 	}
 	
 	public function deactivate($packageName) {
-		if (array_key_exists($packageName, $this->installedModules)
-				&& !array_key_exists($packageName, $this->availableModules)) {
+		if (array_key_exists($packageName, $this->activatedModules)
+				&& !array_key_exists($packageName, $this->installedModules)) {
 			ModuleQuery::create()->filterByName($packageName)->delete();
 		}
 	}

@@ -47,7 +47,7 @@ class ModuleActionRouter implements RouterInterface {
 			'param-true' => 'on',
 			'param-false' => 'off'
 		]);
-		$resolver->setOptional(['application']);
+		$resolver->setOptional(['application', 'action']);
 		$resolver->setRequired(['module', 'basepath']);
 	}
 	

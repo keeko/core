@@ -9,6 +9,8 @@ use \PDOStatement;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
+use keeko\core\entities\DesignPeer;
+use keeko\core\entities\ModulePeer;
 use keeko\core\entities\Package;
 use keeko\core\entities\PackagePeer;
 use keeko\core\entities\map\PackageTableMap;
@@ -36,13 +38,13 @@ abstract class BasePackagePeer
     const TM_CLASS = 'PackageTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 6;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /** the column name for the id field */
     const ID = 'keeko_package.id';
@@ -58,6 +60,9 @@ abstract class BasePackagePeer
 
     /** the column name for the installed_version field */
     const INSTALLED_VERSION = 'keeko_package.installed_version';
+
+    /** the column name for the descendant_class field */
+    const DESCENDANT_CLASS = 'keeko_package.descendant_class';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -78,12 +83,12 @@ abstract class BasePackagePeer
      * e.g. PackagePeer::$fieldNames[PackagePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Title', 'Description', 'InstalledVersion', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'title', 'description', 'installedVersion', ),
-        BasePeer::TYPE_COLNAME => array (PackagePeer::ID, PackagePeer::NAME, PackagePeer::TITLE, PackagePeer::DESCRIPTION, PackagePeer::INSTALLED_VERSION, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'TITLE', 'DESCRIPTION', 'INSTALLED_VERSION', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'title', 'description', 'installed_version', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Title', 'Description', 'InstalledVersion', 'DescendantClass', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'title', 'description', 'installedVersion', 'descendantClass', ),
+        BasePeer::TYPE_COLNAME => array (PackagePeer::ID, PackagePeer::NAME, PackagePeer::TITLE, PackagePeer::DESCRIPTION, PackagePeer::INSTALLED_VERSION, PackagePeer::DESCENDANT_CLASS, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'TITLE', 'DESCRIPTION', 'INSTALLED_VERSION', 'DESCENDANT_CLASS', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'title', 'description', 'installed_version', 'descendant_class', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -93,12 +98,12 @@ abstract class BasePackagePeer
      * e.g. PackagePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Title' => 2, 'Description' => 3, 'InstalledVersion' => 4, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'installedVersion' => 4, ),
-        BasePeer::TYPE_COLNAME => array (PackagePeer::ID => 0, PackagePeer::NAME => 1, PackagePeer::TITLE => 2, PackagePeer::DESCRIPTION => 3, PackagePeer::INSTALLED_VERSION => 4, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'TITLE' => 2, 'DESCRIPTION' => 3, 'INSTALLED_VERSION' => 4, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'installed_version' => 4, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Title' => 2, 'Description' => 3, 'InstalledVersion' => 4, 'DescendantClass' => 5, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'installedVersion' => 4, 'descendantClass' => 5, ),
+        BasePeer::TYPE_COLNAME => array (PackagePeer::ID => 0, PackagePeer::NAME => 1, PackagePeer::TITLE => 2, PackagePeer::DESCRIPTION => 3, PackagePeer::INSTALLED_VERSION => 4, PackagePeer::DESCENDANT_CLASS => 5, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'TITLE' => 2, 'DESCRIPTION' => 3, 'INSTALLED_VERSION' => 4, 'DESCENDANT_CLASS' => 5, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'installed_version' => 4, 'descendant_class' => 5, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -177,12 +182,14 @@ abstract class BasePackagePeer
             $criteria->addSelectColumn(PackagePeer::TITLE);
             $criteria->addSelectColumn(PackagePeer::DESCRIPTION);
             $criteria->addSelectColumn(PackagePeer::INSTALLED_VERSION);
+            $criteria->addSelectColumn(PackagePeer::DESCENDANT_CLASS);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.title');
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.installed_version');
+            $criteria->addSelectColumn($alias . '.descendant_class');
         }
     }
 
@@ -389,6 +396,12 @@ abstract class BasePackagePeer
      */
     public static function clearRelatedInstancePool()
     {
+        // Invalidate objects in DesignPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        DesignPeer::clearInstancePool();
+        // Invalidate objects in ModulePeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        ModulePeer::clearInstancePool();
     }
 
     /**

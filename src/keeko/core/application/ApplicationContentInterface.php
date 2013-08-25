@@ -8,10 +8,7 @@ interface ApplicationContentInterface {
 
 	/**
 	 * 
-	 * @param Request $request
-	 * @param Response $response
-	 * 
-	 * @return Response
+	 * @return string
 	 */
-	public function run(Request $request, Response $response);
+	public function run();
 }
