@@ -7,6 +7,7 @@ use keeko\core\entities\ModuleQuery;
 use keeko\core\PackageManager;
 use keeko\core\entities\Action;
 use keeko\core\application\Keeko;
+use keeko\core\entities\Module;
 
 class ModuleManager {
 
@@ -109,29 +110,34 @@ class ModuleManager {
 			
 			// install actions
 			$extra = $package->getExtra();
-			
-			if (array_key_exists('actions', $extra['module'])) {
-				foreach ($extra['module']['actions'] as $name => $options) {
-					$a = new Action();
-					$a->setName($name);
-					$a->setModule($module);
-					
-					if (array_key_exists('title', $options)) {
-						$a->setTitle($options['title']);
-					}
-					
-					if (array_key_exists('description', $options)) {
-						$a->setDescription($options['description']);
-					}
-					
-					if (array_key_exists('api', $options)) {
-						$a->setApi($options['api']);
-					}
-					
-					$a->save();
-				}
+			$this->installActions($module, $extra['module']);
+		}
+	}
+	
+	private function installActions(Module $module, $data) {
+		if (!array_key_exists('actions', $data)) {
+			return;
+		}
+		
+		foreach ($data['actions'] as $name => $options) {
+			$a = new Action();
+			$a->setName($name);
+			$a->setModule($module);
+
+			if (array_key_exists('title', $options)) {
+				$a->setTitle($options['title']);
 			}
-		}		
+
+			if (array_key_exists('description', $options)) {
+				$a->setDescription($options['description']);
+			}
+
+			if (array_key_exists('api', $options)) {
+				$a->setApi($options['api']);
+			}
+
+			$a->save();
+		}
 	}
 	
 	public function deactivate($packageName) {

@@ -72,7 +72,7 @@ abstract class AbstractModule implements ModuleInterface {
 	
 		$className = NameGenerator::toStudlyCase($name);
 		$namespace = $this->module->getName();
-		$actionName = str_replace('/', '\\', sprintf('%s/action/%s', $namespace, $className));
+		$actionName = str_replace('/', '\\', sprintf('%s/actions/%s', $namespace, $className));
 	
 		if (!class_exists($actionName)) {
 			throw new ModuleException(sprintf('No Action (%s) found in Module (%s)', $name, $namespace));
@@ -92,7 +92,7 @@ abstract class AbstractModule implements ModuleInterface {
 		$appType = $this->application->getEntity()->getApplicationType()->getName();
 		$className = NameGenerator::toStudlyCase($name);
 		$namespace = $this->module->getName();
-		$controllerName = str_replace('/', '\\', sprintf('/%s/controller/%s/%sController', $namespace, $appType, $className));
+		$controllerName = str_replace('/', '\\', sprintf('/%s/controllers/%s/%sController', $namespace, $appType, $className));
 		
 		if (!class_exists($controllerName)) {
 			throw new ModuleException(sprintf('No Controller for Action (%s) in Module (%s) for Application Type (%s) found', $name, $namespace, $appType));

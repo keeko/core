@@ -16,35 +16,40 @@ class DesignInstaller extends AbstractPackageInstaller {
 		
 		$io->write('[Keeko] Install Design: ' . $package->getName());
 		
-		if (array_key_exists('keeko', $extra)) {
-			$keeko = $extra['keeko'];
-			
-			$design = new Design();
-			
-			// install layouts
-			if (array_key_exists('layouts', $keeko['layouts'])) {
-				foreach ($keeko['layouts'] as $name => $props) {
-					$layout = new Layout();
-					$layout->setName($name);
-					$layout->setDesign($design);
-					
-					if (array_key_exists('title', $props)) {
-						$layout->setTitle($props['title']);
-					}
-					
-					// install blocks
-					if (array_key_exists('blocks', $props)) {
-						foreach ($props['blocks'] as $name => $title) {
-							$block = new Block();
-							$block->setName($name);
-							$block->setTitle($title);
-							$block->setLayout($layout);
-						}
-					}
+		if (!array_key_exists('keeko', $extra)) {
+			return;
+		}
+
+		$keeko = $extra['keeko'];
+		$design = new Design();
+		
+		$this->installLayouts($design, $keeko);
+		$this->updatePackage($design, $package);
+	}
+	
+	private function installLayouts(Design $design, $keeko) {
+		if (!array_key_exists('layouts', $keeko['layouts'])) {
+			return;
+		}
+		
+		foreach ($keeko['layouts'] as $name => $props) {
+			$layout = new Layout();
+			$layout->setName($name);
+			$layout->setDesign($design);
+	
+			if (array_key_exists('title', $props)) {
+				$layout->setTitle($props['title']);
+			}
+	
+			// install blocks
+			if (array_key_exists('blocks', $props)) {
+				foreach ($props['blocks'] as $name => $title) {
+					$block = new Block();
+					$block->setName($name);
+					$block->setTitle($title);
+					$block->setLayout($layout);
 				}
 			}
-
-			$this->updatePackage($design, $package);
 		}
 	}
 	
