@@ -7,13 +7,10 @@
 			"homepage" : "http://gos.si"
 		}
 	],
-	"license" : [
-		"MIT"
-	],
+	"license" : "MIT",
 	"require" : {
 		"keeko/composer-installer" : "*",
 		"composer/composer" : "dev-master",
-		"CarpeHora/ExtraPropertiesBehavior" : "~1",
 		"symfony/config" : "~2",
 		"symfony/http-foundation" : "~2",
 		"symfony/routing" : "~2",

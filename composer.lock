@@ -3,65 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b0cff62d912bfdc86f6efb835deaf1ca",
+    "hash": "ede2b14a9276baa54c5c64ec3c4f998e",
     "packages": [
-        {
-            "name": "CarpeHora/ExtraPropertiesBehavior",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Carpe-Hora/ExtraPropertiesBehavior.git",
-                "reference": "04d5b4b0386f8ad29333ffeb9e5efb378d1b443a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Carpe-Hora/ExtraPropertiesBehavior/zipball/04d5b4b0386f8ad29333ffeb9e5efb378d1b443a",
-                "reference": "04d5b4b0386f8ad29333ffeb9e5efb378d1b443a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.4",
-                "propel/propel1": ">=1.6.4"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Julien Muetton",
-                    "email": "julien_muetton@carpe-hora.com",
-                    "homepage": "http://www.carpe-hora.com"
-                }
-            ],
-            "description": "ExtraPropertiesBehavior is a propel behavior to store key/value extra fields in a propel model.",
-            "homepage": "http://carpe-hora.github.com/ExtraPropertiesBehavior/",
-            "keywords": [
-                "Behavior",
-                "ExtraProperties",
-                "Key value",
-                "propel"
-            ],
-            "time": "2013-08-26 10:00:53"
-        },
         {
             "name": "composer/composer",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "f346274f9a04ab60eec05d9c760168ad45c23a2a"
+                "reference": "43fde9177ededc627d3f6392f996b093410e1036"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/f346274f9a04ab60eec05d9c760168ad45c23a2a",
-                "reference": "f346274f9a04ab60eec05d9c760168ad45c23a2a",
+                "url": "https://api.github.com/repos/composer/composer/zipball/43fde9177ededc627d3f6392f996b093410e1036",
+                "reference": "43fde9177ededc627d3f6392f996b093410e1036",
                 "shasum": ""
             },
             "require": {
@@ -117,7 +72,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2013-12-02 20:31:02"
+            "time": "2013-12-05 15:29:59"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -217,58 +172,6 @@
             "time": "2013-08-24 16:35:37"
         },
         {
-            "name": "phing/phing",
-            "version": "2.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phingofficial/phing.git",
-                "reference": "3f7d71bf561bafea39087250f777b349438cc32e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phingofficial/phing/zipball/3f7d71bf561bafea39087250f777b349438cc32e",
-                "reference": "3f7d71bf561bafea39087250f777b349438cc32e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.0"
-            },
-            "bin": [
-                "bin/phing"
-            ],
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "classes/phing/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                "classes"
-            ],
-            "license": [
-                "LGPL3"
-            ],
-            "authors": [
-                {
-                    "name": "Michiel Rook",
-                    "email": "mrook@php.net"
-                },
-                {
-                    "name": "Phing Community",
-                    "homepage": "http://www.phing.info/trac/wiki/Development/Contributors"
-                }
-            ],
-            "description": "PHing Is Not GNU make; it's a PHP project build system or build tool based on Apache Ant.",
-            "homepage": "http://www.phing.info/",
-            "keywords": [
-                "build",
-                "task",
-                "tool"
-            ],
-            "time": "2013-08-26 21:13:03"
-        },
-        {
             "name": "propel/propel",
             "version": "dev-master",
             "source": {
@@ -332,69 +235,6 @@
                 "persistence"
             ],
             "time": "2013-12-02 08:46:27"
-        },
-        {
-            "name": "propel/propel1",
-            "version": "1.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/propelorm/Propel.git",
-                "reference": "09058f1443bc287e550b9342a4379aac2e0a0b8f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/propelorm/Propel/zipball/09058f1443bc287e550b9342a4379aac2e0a0b8f",
-                "reference": "09058f1443bc287e550b9342a4379aac2e0a0b8f",
-                "shasum": ""
-            },
-            "require": {
-                "phing/phing": "~2.4",
-                "php": ">=5.2.4"
-            },
-            "require-dev": {
-                "pear-pear.php.net/pear_packagefilemanager2": "@stable"
-            },
-            "bin": [
-                "generator/bin/propel-gen",
-                "generator/bin/propel-gen.bat"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.7-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "runtime/lib",
-                    "generator/lib"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                "runtime/lib",
-                "generator/lib"
-            ],
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "William Durand",
-                    "email": "william.durand1@gmail.com",
-                    "homepage": "http://www.willdurand.fr"
-                }
-            ],
-            "description": "Propel is an open-source Object-Relational Mapping (ORM) for PHP5.",
-            "homepage": "http://www.propelorm.org/",
-            "keywords": [
-                "Active Record",
-                "database",
-                "mapping",
-                "orm",
-                "persistence"
-            ],
-            "time": "2013-10-21 12:52:56"
         },
         {
             "name": "psr/log",
