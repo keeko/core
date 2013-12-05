@@ -48,7 +48,7 @@ abstract class AbstractModule implements ModuleInterface {
 	}
 
 	/* (non-PHPdoc)
-	 * @see \keeko\core\module\ModuleInterface::setApplication()
+	 * @see \keeko\core\module\ModuleInterface::setKeeko()
 	 */
 	public function setKeeko(Keeko $application) {
 		$this->application = $application;
@@ -56,7 +56,7 @@ abstract class AbstractModule implements ModuleInterface {
 	
 	
 	/* (non-PHPdoc)
-	 * @see \keeko\core\module\ModuleInterface::getApplication()
+	 * @see \keeko\core\module\ModuleInterface::getKeeko()
 	 */
 	public function getKeeko() {
 		return $this->application;
@@ -98,7 +98,10 @@ abstract class AbstractModule implements ModuleInterface {
 			throw new ModuleException(sprintf('No Controller for Action (%s) in Module (%s) for Application Type (%s) found', $name, $namespace, $appType));
 		}
 		
-		return new $controllerName();
+		$controller = new $controllerName();
+		$controller->setModule($this);
+		
+		return $controller;
 	}
 	
 	/**

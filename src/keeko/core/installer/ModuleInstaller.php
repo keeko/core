@@ -19,7 +19,7 @@ class ModuleInstaller extends AbstractPackageInstaller {
 				
 			// check params
 			$missing = [];
-			$required = ['class', 'title', 'defaultAction'];
+			$required = ['class', 'title', 'default-action'];
 			foreach ($required as $key) {
 				if (!array_key_exists($key, $params)) {
 					$missing[] = $key;
@@ -34,7 +34,7 @@ class ModuleInstaller extends AbstractPackageInstaller {
 			$module = new Module();
 			$module->setClassName($params['class']);
 			$module->setTitle($params['title']);
-			$module->setDefaultAction($params['defaultAction']);
+			$module->setDefaultAction($params['default-action']);
 			$this->updatePackage($module, $package);
 		}
 	}

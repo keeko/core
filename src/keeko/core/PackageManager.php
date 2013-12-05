@@ -4,6 +4,7 @@ namespace keeko\core;
 use Composer\Package\Loader\JsonLoader;
 use Composer\Package\Loader\ArrayLoader;
 use keeko\core\exceptions\ModuleException;
+
 class PackageManager {
 
 	public function getModulePackage($packageName) {

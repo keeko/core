@@ -5,14 +5,27 @@ use keeko\core\action\ActionInterface;
 use keeko\core\entities\Action;
 use keeko\core\module\ModuleInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use keeko\core\entities\Module;
 
 trait ActionTrait {
 
-	/* @var $action Action */
+	/**
+	 * 
+	 * @var Action
+	 */
 	protected $action;
 	
-	/* @var $module ModuleInterface */
+	/**
+	 * 
+	 * @var Module
+	 */
 	protected $module;
+	
+	/**
+	 * 
+	 * @var \Twig_Environment
+	 */
+	protected $twig;
 	
 	protected $params = [];
 	
@@ -41,8 +54,11 @@ trait ActionTrait {
 	 */
 	public function setModule(ModuleInterface $module) {
 		$this->module = $module;
-		$this->root = sprintf('%s/%s/templates/%s', KEEKO_PATH_MODULES, $module->getEntity()->getName(),
+		$templatePath = sprintf('%s/%s/templates/%s', KEEKO_PATH_MODULES, $module->getEntity()->getName(),
 			$module->getKeeko()->getEntity()->getApplicationType()->getName());
+		
+		$loader = new \Twig_Loader_Filesystem($templatePath);
+		$this->twig = new \Twig_Environment($loader);
 	}
 
 }

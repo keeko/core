@@ -10,5 +10,5 @@ interface ApplicationContentInterface {
 	 * 
 	 * @return string
 	 */
-	public function run();
+	public function run(Request $request, Response $response);
 }
