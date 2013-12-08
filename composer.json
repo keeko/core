@@ -18,8 +18,9 @@
 		"symfony/options-resolver" : "~2",
 		"symfony/finder" : "~2",
 		"symfony/yaml" : "~2",
-		"propel/propel" : "~2@dev",
-		"symfony/filesystem" : "~2"
+		"symfony/filesystem" : "~2",
+		"propel/propel1" : "~1",
+		"CarpeHora/ExtraPropertiesBehavior" : "~1"
 	},
 	"autoload" : {
 		"psr-0" : {
