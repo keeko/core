@@ -56,7 +56,7 @@ class DesignTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Package', 'keeko\\core\\entities\\Package', RelationMap::MANY_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('Application', 'keeko\\core\\entities\\Application', RelationMap::ONE_TO_MANY, array('id' => 'design_id', ), 'RESTRICT', null, 'Applications');
+        $this->addRelation('Application', 'keeko\\core\\entities\\Application', RelationMap::ONE_TO_MANY, array('id' => 'design_id', ), null, null, 'Applications');
         $this->addRelation('Layout', 'keeko\\core\\entities\\Layout', RelationMap::ONE_TO_MANY, array('id' => 'design_id', ), null, null, 'Layouts');
     } // buildRelations()
 
@@ -74,6 +74,7 @@ class DesignTableMap extends TableMap
   'descendant_column' => 'descendant_class',
   'copy_data_to_parent' => 'true',
   'schema' => '',
+  'excluded_parent_behavior' => 'nested_set',
 ),
         );
     } // getBehaviors()

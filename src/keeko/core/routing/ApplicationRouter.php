@@ -47,7 +47,7 @@ class ApplicationRouter implements RouteMatcherInterface {
 			->find();
 		
 		foreach ($uris as $uri) {
-			if ($pos = strpos($request->getRequestUri(), $uri->getBasepath()) !== false) {
+			if (strpos($request->getRequestUri(), $uri->getBasepath()) !== false) {
 				$this->destination = substr($request->getRequestUri(), strlen($uri->getBasepath()));
 				$this->prefix = str_replace($request->getBasePath(), '', $uri->getBasePath());
 				$this->uri = $uri;

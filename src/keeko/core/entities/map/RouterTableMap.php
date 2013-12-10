@@ -54,7 +54,7 @@ class RouterTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Application', 'keeko\\core\\entities\\Application', RelationMap::ONE_TO_MANY, array('id' => 'router_id', ), 'RESTRICT', null, 'Applications');
+        $this->addRelation('Application', 'keeko\\core\\entities\\Application', RelationMap::ONE_TO_MANY, array('id' => 'router_id', ), null, null, 'Applications');
     } // buildRelations()
 
 } // RouterTableMap

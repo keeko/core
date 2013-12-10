@@ -158,8 +158,14 @@ abstract class BaseUserQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'keeko', $modelName = 'keeko\\core\\entities\\User', $modelAlias = null)
+    public function __construct($dbName = null, $modelName = null, $modelAlias = null)
     {
+        if (null === $dbName) {
+            $dbName = 'keeko';
+        }
+        if (null === $modelName) {
+            $modelName = 'keeko\\core\\entities\\User';
+        }
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
@@ -176,10 +182,8 @@ abstract class BaseUserQuery extends ModelCriteria
         if ($criteria instanceof UserQuery) {
             return $criteria;
         }
-        $query = new UserQuery();
-        if (null !== $modelAlias) {
-            $query->setModelAlias($modelAlias);
-        }
+        $query = new UserQuery(null, null, $modelAlias);
+
         if ($criteria instanceof Criteria) {
             $query->mergeWith($criteria);
         }
@@ -207,7 +211,7 @@ abstract class BaseUserQuery extends ModelCriteria
             return null;
         }
         if ((null !== ($obj = UserPeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
-            // the object is alredy in the instance pool
+            // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {
@@ -707,7 +711,7 @@ abstract class BaseUserQuery extends ModelCriteria
      * <code>
      * $query->filterByBirthday('2011-03-14'); // WHERE birthday = '2011-03-14'
      * $query->filterByBirthday('now'); // WHERE birthday = '2011-03-14'
-     * $query->filterByBirthday(array('max' => 'yesterday')); // WHERE birthday > '2011-03-13'
+     * $query->filterByBirthday(array('max' => 'yesterday')); // WHERE birthday < '2011-03-13'
      * </code>
      *
      * @param     mixed $birthday The value to use as filter.
@@ -937,7 +941,7 @@ abstract class BaseUserQuery extends ModelCriteria
      * <code>
      * $query->filterByPasswordRecoverTime('2011-03-14'); // WHERE password_recover_time = '2011-03-14'
      * $query->filterByPasswordRecoverTime('now'); // WHERE password_recover_time = '2011-03-14'
-     * $query->filterByPasswordRecoverTime(array('max' => 'yesterday')); // WHERE password_recover_time > '2011-03-13'
+     * $query->filterByPasswordRecoverTime(array('max' => 'yesterday')); // WHERE password_recover_time < '2011-03-13'
      * </code>
      *
      * @param     mixed $passwordRecoverTime The value to use as filter.
@@ -1106,7 +1110,7 @@ abstract class BaseUserQuery extends ModelCriteria
      * <code>
      * $query->filterByCreated('2011-03-14'); // WHERE created = '2011-03-14'
      * $query->filterByCreated('now'); // WHERE created = '2011-03-14'
-     * $query->filterByCreated(array('max' => 'yesterday')); // WHERE created > '2011-03-13'
+     * $query->filterByCreated(array('max' => 'yesterday')); // WHERE created < '2011-03-13'
      * </code>
      *
      * @param     mixed $created The value to use as filter.
@@ -1149,7 +1153,7 @@ abstract class BaseUserQuery extends ModelCriteria
      * <code>
      * $query->filterByUpdated('2011-03-14'); // WHERE updated = '2011-03-14'
      * $query->filterByUpdated('now'); // WHERE updated = '2011-03-14'
-     * $query->filterByUpdated(array('max' => 'yesterday')); // WHERE updated > '2011-03-13'
+     * $query->filterByUpdated(array('max' => 'yesterday')); // WHERE updated < '2011-03-13'
      * </code>
      *
      * @param     mixed $updated The value to use as filter.

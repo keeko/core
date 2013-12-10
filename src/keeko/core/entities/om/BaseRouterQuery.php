@@ -63,8 +63,14 @@ abstract class BaseRouterQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'keeko', $modelName = 'keeko\\core\\entities\\Router', $modelAlias = null)
+    public function __construct($dbName = null, $modelName = null, $modelAlias = null)
     {
+        if (null === $dbName) {
+            $dbName = 'keeko';
+        }
+        if (null === $modelName) {
+            $modelName = 'keeko\\core\\entities\\Router';
+        }
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
@@ -81,10 +87,8 @@ abstract class BaseRouterQuery extends ModelCriteria
         if ($criteria instanceof RouterQuery) {
             return $criteria;
         }
-        $query = new RouterQuery();
-        if (null !== $modelAlias) {
-            $query->setModelAlias($modelAlias);
-        }
+        $query = new RouterQuery(null, null, $modelAlias);
+
         if ($criteria instanceof Criteria) {
             $query->mergeWith($criteria);
         }
@@ -112,7 +116,7 @@ abstract class BaseRouterQuery extends ModelCriteria
             return null;
         }
         if ((null !== ($obj = RouterPeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
-            // the object is alredy in the instance pool
+            // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {

@@ -58,9 +58,9 @@ class ApplicationTableMap extends TableMap
     {
         $this->addRelation('ApplicationType', 'keeko\\core\\entities\\ApplicationType', RelationMap::MANY_TO_ONE, array('application_type_id' => 'id', ), null, null);
         $this->addRelation('Package', 'keeko\\core\\entities\\Package', RelationMap::MANY_TO_ONE, array('package_id' => 'id', ), null, null);
-        $this->addRelation('Router', 'keeko\\core\\entities\\Router', RelationMap::MANY_TO_ONE, array('router_id' => 'id', ), 'RESTRICT', null);
-        $this->addRelation('Design', 'keeko\\core\\entities\\Design', RelationMap::MANY_TO_ONE, array('design_id' => 'id', ), 'RESTRICT', null);
-        $this->addRelation('ApplicationUri', 'keeko\\core\\entities\\ApplicationUri', RelationMap::ONE_TO_MANY, array('id' => 'application_id', ), 'RESTRICT', null, 'ApplicationUris');
+        $this->addRelation('Router', 'keeko\\core\\entities\\Router', RelationMap::MANY_TO_ONE, array('router_id' => 'id', ), null, null);
+        $this->addRelation('Design', 'keeko\\core\\entities\\Design', RelationMap::MANY_TO_ONE, array('design_id' => 'id', ), null, null);
+        $this->addRelation('ApplicationUri', 'keeko\\core\\entities\\ApplicationUri', RelationMap::ONE_TO_MANY, array('id' => 'application_id', ), null, null, 'ApplicationUris');
         $this->addRelation('Page', 'keeko\\core\\entities\\Page', RelationMap::ONE_TO_MANY, array('id' => 'application_id', ), null, null, 'Pages');
         $this->addRelation('ApplicationExtraProperty', 'keeko\\core\\entities\\ApplicationExtraProperty', RelationMap::ONE_TO_MANY, array('id' => 'keeko_application_id', ), 'CASCADE', null, 'ApplicationExtraPropertys');
     } // buildRelations()
@@ -79,6 +79,7 @@ class ApplicationTableMap extends TableMap
 ),
             'extra_properties' =>  array (
   'properties_table' => 'application_params',
+  'property_name' => 'property',
   'property_name_column' => 'property_name',
   'property_value_column' => 'property_value',
   'default_properties' => '',

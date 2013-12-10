@@ -35,7 +35,7 @@ abstract class BaseApplicationUriPeer
     const OM_CLASS = 'keeko\\core\\entities\\ApplicationUri';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'ApplicationUriTableMap';
+    const TM_CLASS = 'keeko\\core\\entities\\map\\ApplicationUriTableMap';
 
     /** The total number of columns. */
     const NUM_COLUMNS = 6;
@@ -68,7 +68,7 @@ abstract class BaseApplicationUriPeer
     const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
-     * An identiy map to hold any loaded instances of ApplicationUri objects.
+     * An identity map to hold any loaded instances of ApplicationUri objects.
      * This must be public so that other peer classes can access this when hydrating from JOIN
      * queries.
      * @var        array ApplicationUri[]
@@ -242,7 +242,7 @@ abstract class BaseApplicationUriPeer
      *
      * @param      Criteria $criteria object used to create the SELECT statement.
      * @param      PropelPDO $con
-     * @return                 ApplicationUri
+     * @return ApplicationUri
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -309,7 +309,7 @@ abstract class BaseApplicationUriPeer
      * to the cache in order to ensure that the same objects are always returned by doSelect*()
      * and retrieveByPK*() calls.
      *
-     * @param      ApplicationUri $obj A ApplicationUri object.
+     * @param ApplicationUri $obj A ApplicationUri object.
      * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
@@ -359,7 +359,7 @@ abstract class BaseApplicationUriPeer
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
      * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-     * @return   ApplicationUri Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+     * @return ApplicationUri Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
      * @see        getPrimaryKeyHash()
      */
     public static function getInstanceFromPool($key)
@@ -380,10 +380,8 @@ abstract class BaseApplicationUriPeer
      */
     public static function clearInstancePool($and_clear_all_references = false)
     {
-      if ($and_clear_all_references)
-      {
-        foreach (ApplicationUriPeer::$instances as $instance)
-        {
+      if ($and_clear_all_references) {
+        foreach (ApplicationUriPeer::$instances as $instance) {
           $instance->clearAllReferences(true);
         }
       }
@@ -1142,7 +1140,7 @@ abstract class BaseApplicationUriPeer
     {
       $dbMap = Propel::getDatabaseMap(BaseApplicationUriPeer::DATABASE_NAME);
       if (!$dbMap->hasTable(BaseApplicationUriPeer::TABLE_NAME)) {
-        $dbMap->addTableObject(new ApplicationUriTableMap());
+        $dbMap->addTableObject(new \keeko\core\entities\map\ApplicationUriTableMap());
       }
     }
 
@@ -1192,7 +1190,7 @@ abstract class BaseApplicationUriPeer
             $con->beginTransaction();
             $pk = BasePeer::doInsert($criteria, $con);
             $con->commit();
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -1265,7 +1263,7 @@ abstract class BaseApplicationUriPeer
             $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -1324,7 +1322,7 @@ abstract class BaseApplicationUriPeer
             $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -1337,7 +1335,7 @@ abstract class BaseApplicationUriPeer
      *
      * NOTICE: This does not apply to primary or foreign keys for now.
      *
-     * @param      ApplicationUri $obj The object to validate.
+     * @param ApplicationUri $obj The object to validate.
      * @param      mixed $cols Column name or array of column names.
      *
      * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
@@ -1370,7 +1368,7 @@ abstract class BaseApplicationUriPeer
     /**
      * Retrieve a single object by pkey.
      *
-     * @param      int $pk the primary key.
+     * @param int $pk the primary key.
      * @param      PropelPDO $con the connection to use
      * @return ApplicationUri
      */

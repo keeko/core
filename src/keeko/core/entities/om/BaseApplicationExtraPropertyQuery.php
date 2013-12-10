@@ -63,8 +63,14 @@ abstract class BaseApplicationExtraPropertyQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'keeko', $modelName = 'keeko\\core\\entities\\ApplicationExtraProperty', $modelAlias = null)
+    public function __construct($dbName = null, $modelName = null, $modelAlias = null)
     {
+        if (null === $dbName) {
+            $dbName = 'keeko';
+        }
+        if (null === $modelName) {
+            $modelName = 'keeko\\core\\entities\\ApplicationExtraProperty';
+        }
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
@@ -81,10 +87,8 @@ abstract class BaseApplicationExtraPropertyQuery extends ModelCriteria
         if ($criteria instanceof ApplicationExtraPropertyQuery) {
             return $criteria;
         }
-        $query = new ApplicationExtraPropertyQuery();
-        if (null !== $modelAlias) {
-            $query->setModelAlias($modelAlias);
-        }
+        $query = new ApplicationExtraPropertyQuery(null, null, $modelAlias);
+
         if ($criteria instanceof Criteria) {
             $query->mergeWith($criteria);
         }
@@ -112,7 +116,7 @@ abstract class BaseApplicationExtraPropertyQuery extends ModelCriteria
             return null;
         }
         if ((null !== ($obj = ApplicationExtraPropertyPeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
-            // the object is alredy in the instance pool
+            // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {

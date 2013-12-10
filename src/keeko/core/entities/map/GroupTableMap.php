@@ -57,9 +57,9 @@ class GroupTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('User', 'keeko\\core\\entities\\User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), 'RESTRICT', null);
-        $this->addRelation('GroupUser', 'keeko\\core\\entities\\GroupUser', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), 'RESTRICT', null, 'GroupUsers');
-        $this->addRelation('GroupAction', 'keeko\\core\\entities\\GroupAction', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), 'RESTRICT', null, 'GroupActions');
+        $this->addRelation('User', 'keeko\\core\\entities\\User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), null, null);
+        $this->addRelation('GroupUser', 'keeko\\core\\entities\\GroupUser', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), null, null, 'GroupUsers');
+        $this->addRelation('GroupAction', 'keeko\\core\\entities\\GroupAction', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), null, null, 'GroupActions');
     } // buildRelations()
 
 } // GroupTableMap

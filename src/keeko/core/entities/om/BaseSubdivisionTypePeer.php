@@ -33,7 +33,7 @@ abstract class BaseSubdivisionTypePeer
     const OM_CLASS = 'keeko\\core\\entities\\SubdivisionType';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'SubdivisionTypeTableMap';
+    const TM_CLASS = 'keeko\\core\\entities\\map\\SubdivisionTypeTableMap';
 
     /** The total number of columns. */
     const NUM_COLUMNS = 2;
@@ -54,7 +54,7 @@ abstract class BaseSubdivisionTypePeer
     const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
-     * An identiy map to hold any loaded instances of SubdivisionType objects.
+     * An identity map to hold any loaded instances of SubdivisionType objects.
      * This must be public so that other peer classes can access this when hydrating from JOIN
      * queries.
      * @var        array SubdivisionType[]
@@ -220,7 +220,7 @@ abstract class BaseSubdivisionTypePeer
      *
      * @param      Criteria $criteria object used to create the SELECT statement.
      * @param      PropelPDO $con
-     * @return                 SubdivisionType
+     * @return SubdivisionType
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -287,7 +287,7 @@ abstract class BaseSubdivisionTypePeer
      * to the cache in order to ensure that the same objects are always returned by doSelect*()
      * and retrieveByPK*() calls.
      *
-     * @param      SubdivisionType $obj A SubdivisionType object.
+     * @param SubdivisionType $obj A SubdivisionType object.
      * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
@@ -337,7 +337,7 @@ abstract class BaseSubdivisionTypePeer
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
      * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-     * @return   SubdivisionType Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+     * @return SubdivisionType Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
      * @see        getPrimaryKeyHash()
      */
     public static function getInstanceFromPool($key)
@@ -358,10 +358,8 @@ abstract class BaseSubdivisionTypePeer
      */
     public static function clearInstancePool($and_clear_all_references = false)
     {
-      if ($and_clear_all_references)
-      {
-        foreach (SubdivisionTypePeer::$instances as $instance)
-        {
+      if ($and_clear_all_references) {
+        foreach (SubdivisionTypePeer::$instances as $instance) {
           $instance->clearAllReferences(true);
         }
       }
@@ -489,7 +487,7 @@ abstract class BaseSubdivisionTypePeer
     {
       $dbMap = Propel::getDatabaseMap(BaseSubdivisionTypePeer::DATABASE_NAME);
       if (!$dbMap->hasTable(BaseSubdivisionTypePeer::TABLE_NAME)) {
-        $dbMap->addTableObject(new SubdivisionTypeTableMap());
+        $dbMap->addTableObject(new \keeko\core\entities\map\SubdivisionTypeTableMap());
       }
     }
 
@@ -539,7 +537,7 @@ abstract class BaseSubdivisionTypePeer
             $con->beginTransaction();
             $pk = BasePeer::doInsert($criteria, $con);
             $con->commit();
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -612,7 +610,7 @@ abstract class BaseSubdivisionTypePeer
             $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -671,7 +669,7 @@ abstract class BaseSubdivisionTypePeer
             $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -684,7 +682,7 @@ abstract class BaseSubdivisionTypePeer
      *
      * NOTICE: This does not apply to primary or foreign keys for now.
      *
-     * @param      SubdivisionType $obj The object to validate.
+     * @param SubdivisionType $obj The object to validate.
      * @param      mixed $cols Column name or array of column names.
      *
      * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
@@ -717,7 +715,7 @@ abstract class BaseSubdivisionTypePeer
     /**
      * Retrieve a single object by pkey.
      *
-     * @param      int $pk the primary key.
+     * @param int $pk the primary key.
      * @param      PropelPDO $con the connection to use
      * @return SubdivisionType
      */

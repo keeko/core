@@ -3,20 +3,65 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ede2b14a9276baa54c5c64ec3c4f998e",
+    "hash": "a1818794c6e56888f3aa7443afae8e26",
     "packages": [
+        {
+            "name": "CarpeHora/ExtraPropertiesBehavior",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Carpe-Hora/ExtraPropertiesBehavior.git",
+                "reference": "04d5b4b0386f8ad29333ffeb9e5efb378d1b443a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Carpe-Hora/ExtraPropertiesBehavior/zipball/04d5b4b0386f8ad29333ffeb9e5efb378d1b443a",
+                "reference": "04d5b4b0386f8ad29333ffeb9e5efb378d1b443a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4",
+                "propel/propel1": ">=1.6.4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Julien Muetton",
+                    "email": "julien_muetton@carpe-hora.com",
+                    "homepage": "http://www.carpe-hora.com"
+                }
+            ],
+            "description": "ExtraPropertiesBehavior is a propel behavior to store key/value extra fields in a propel model.",
+            "homepage": "http://carpe-hora.github.com/ExtraPropertiesBehavior/",
+            "keywords": [
+                "Behavior",
+                "ExtraProperties",
+                "Key value",
+                "propel"
+            ],
+            "time": "2013-08-26 10:00:53"
+        },
         {
             "name": "composer/composer",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "43fde9177ededc627d3f6392f996b093410e1036"
+                "reference": "80499bb02418711b34bba59c1a6d8032429e5702"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/43fde9177ededc627d3f6392f996b093410e1036",
-                "reference": "43fde9177ededc627d3f6392f996b093410e1036",
+                "url": "https://api.github.com/repos/composer/composer/zipball/80499bb02418711b34bba59c1a6d8032429e5702",
+                "reference": "80499bb02418711b34bba59c1a6d8032429e5702",
                 "shasum": ""
             },
             "require": {
@@ -72,7 +117,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2013-12-05 15:29:59"
+            "time": "2013-12-06 12:32:19"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -131,27 +176,28 @@
         },
         {
             "name": "keeko/composer-installer",
-            "version": "0.18",
+            "version": "0.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keeko/composer-installer.git",
-                "reference": "d3518772f7678e8394665493f11499d64f84ea05"
+                "reference": "bcc984a0bb3ebe6192a00d53fbd9f3b6620d867e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keeko/composer-installer/zipball/d3518772f7678e8394665493f11499d64f84ea05",
-                "reference": "d3518772f7678e8394665493f11499d64f84ea05",
+                "url": "https://api.github.com/repos/keeko/composer-installer/zipball/bcc984a0bb3ebe6192a00d53fbd9f3b6620d867e",
+                "reference": "bcc984a0bb3ebe6192a00d53fbd9f3b6620d867e",
                 "shasum": ""
             },
             "require": {
+                "composer-plugin-api": "1.0.0",
                 "php": ">=5.4"
             },
             "require-dev": {
                 "composer/composer": "master-dev"
             },
-            "type": "composer-installer",
+            "type": "composer-plugin",
             "extra": {
-                "class": "\\keeko\\composer\\KeekoComposerInstaller"
+                "class": "\\keeko\\composer\\KeekoComposerPlugin"
             },
             "autoload": {
                 "psr-0": {
@@ -169,54 +215,102 @@
                 }
             ],
             "description": "Keeko component installer",
-            "time": "2013-08-24 16:35:37"
+            "time": "2013-12-08 23:04:34"
         },
         {
-            "name": "propel/propel",
-            "version": "dev-master",
+            "name": "phing/phing",
+            "version": "2.6.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/propelorm/Propel2.git",
-                "reference": "1f321f4df02710f79e9cae79ef1bf5800e705539"
+                "url": "https://github.com/phingofficial/phing.git",
+                "reference": "3f7d71bf561bafea39087250f777b349438cc32e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/propelorm/Propel2/zipball/1f321f4df02710f79e9cae79ef1bf5800e705539",
-                "reference": "1f321f4df02710f79e9cae79ef1bf5800e705539",
+                "url": "https://api.github.com/repos/phingofficial/phing/zipball/3f7d71bf561bafea39087250f777b349438cc32e",
+                "reference": "3f7d71bf561bafea39087250f777b349438cc32e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4",
-                "psr/log": "~1.0",
-                "symfony/console": "~2.2",
-                "symfony/filesystem": "~2.2",
-                "symfony/finder": "~2.2",
-                "symfony/validator": "~2.2",
-                "symfony/yaml": "~2.2"
-            },
-            "require-dev": {
-                "behat/behat": "~2.4",
-                "monolog/monolog": "~1.3",
-                "phpunit/phpunit": "3.7.*"
-            },
-            "suggest": {
-                "monolog/monolog": "The recommended logging library to use with Propel."
+                "php": ">=5.2.0"
             },
             "bin": [
-                "bin/propel"
+                "bin/phing"
+            ],
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "classes/phing/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "classes"
+            ],
+            "license": [
+                "LGPL3"
+            ],
+            "authors": [
+                {
+                    "name": "Michiel Rook",
+                    "email": "mrook@php.net"
+                },
+                {
+                    "name": "Phing Community",
+                    "homepage": "http://www.phing.info/trac/wiki/Development/Contributors"
+                }
+            ],
+            "description": "PHing Is Not GNU make; it's a PHP project build system or build tool based on Apache Ant.",
+            "homepage": "http://www.phing.info/",
+            "keywords": [
+                "build",
+                "task",
+                "tool"
+            ],
+            "time": "2013-08-26 21:13:03"
+        },
+        {
+            "name": "propel/propel1",
+            "version": "1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/propelorm/Propel.git",
+                "reference": "09058f1443bc287e550b9342a4379aac2e0a0b8f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/propelorm/Propel/zipball/09058f1443bc287e550b9342a4379aac2e0a0b8f",
+                "reference": "09058f1443bc287e550b9342a4379aac2e0a0b8f",
+                "shasum": ""
+            },
+            "require": {
+                "phing/phing": "~2.4",
+                "php": ">=5.2.4"
+            },
+            "require-dev": {
+                "pear-pear.php.net/pear_packagefilemanager2": "@stable"
+            },
+            "bin": [
+                "generator/bin/propel-gen",
+                "generator/bin/propel-gen.bat"
             ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Propel": "src/"
-                }
+                "classmap": [
+                    "runtime/lib",
+                    "generator/lib"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "runtime/lib",
+                "generator/lib"
+            ],
             "license": [
                 "MIT"
             ],
@@ -227,52 +321,16 @@
                     "homepage": "http://www.willdurand.fr"
                 }
             ],
-            "description": "Propel2 is an open-source Object-Relational Mapping (ORM) for PHP 5.4",
+            "description": "Propel is an open-source Object-Relational Mapping (ORM) for PHP5.",
             "homepage": "http://www.propelorm.org/",
             "keywords": [
                 "Active Record",
+                "database",
+                "mapping",
                 "orm",
                 "persistence"
             ],
-            "time": "2013-12-02 08:46:27"
-        },
-        {
-            "name": "psr/log",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/log.git",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Psr\\Log\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for logging libraries",
-            "keywords": [
-                "log",
-                "psr",
-                "psr-3"
-            ],
-            "time": "2012-12-21 11:40:51"
+            "time": "2013-10-21 12:52:56"
         },
         {
             "name": "seld/jsonlint",
@@ -666,64 +724,6 @@
             "time": "2013-11-26 16:40:27"
         },
         {
-            "name": "symfony/property-access",
-            "version": "v2.4.0",
-            "target-dir": "Symfony/Component/PropertyAccess",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/PropertyAccess.git",
-                "reference": "274951234150e303c83099a2429be6be35629fe9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/PropertyAccess/zipball/274951234150e303c83099a2429be6be35629fe9",
-                "reference": "274951234150e303c83099a2429be6be35629fe9",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\PropertyAccess\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony PropertyAccess Component",
-            "homepage": "http://symfony.com",
-            "keywords": [
-                "access",
-                "array",
-                "extraction",
-                "index",
-                "injection",
-                "object",
-                "property",
-                "property path",
-                "reflection"
-            ],
-            "time": "2013-11-13 21:30:16"
-        },
-        {
             "name": "symfony/routing",
             "version": "v2.4.0",
             "target-dir": "Symfony/Component/Routing",
@@ -790,126 +790,6 @@
             "time": "2013-11-22 17:42:00"
         },
         {
-            "name": "symfony/translation",
-            "version": "v2.4.0",
-            "target-dir": "Symfony/Component/Translation",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/Translation.git",
-                "reference": "0919e0fc709217f8c9e5049f2603419fdd4a34ff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Translation/zipball/0919e0fc709217f8c9e5049f2603419fdd4a34ff",
-                "reference": "0919e0fc709217f8c9e5049f2603419fdd4a34ff",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "symfony/config": "~2.0",
-                "symfony/yaml": "~2.2"
-            },
-            "suggest": {
-                "symfony/config": "",
-                "symfony/yaml": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Translation\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Translation Component",
-            "homepage": "http://symfony.com",
-            "time": "2013-11-28 10:27:26"
-        },
-        {
-            "name": "symfony/validator",
-            "version": "v2.4.0",
-            "target-dir": "Symfony/Component/Validator",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/Validator.git",
-                "reference": "12d1f1e64a43ce9cc35151ca89dae1ae8882d991"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Validator/zipball/12d1f1e64a43ce9cc35151ca89dae1ae8882d991",
-                "reference": "12d1f1e64a43ce9cc35151ca89dae1ae8882d991",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "symfony/property-access": "~2.2",
-                "symfony/translation": "~2.0"
-            },
-            "require-dev": {
-                "doctrine/annotations": "~1.0",
-                "doctrine/cache": "~1.0",
-                "symfony/config": "~2.2",
-                "symfony/http-foundation": "~2.1",
-                "symfony/intl": "~2.3",
-                "symfony/yaml": "~2.0"
-            },
-            "suggest": {
-                "doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
-                "doctrine/cache": "For using the default cached annotation reader",
-                "symfony/config": "",
-                "symfony/http-foundation": "",
-                "symfony/intl": "",
-                "symfony/yaml": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Validator\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Validator Component",
-            "homepage": "http://symfony.com",
-            "time": "2013-11-28 10:27:26"
-        },
-        {
             "name": "symfony/yaml",
             "version": "v2.4.0",
             "target-dir": "Symfony/Component/Yaml",
@@ -958,16 +838,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.14.2",
+            "version": "v1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "ca445842fcea4f844d68203ffa2d00f5e3cdea64"
+                "reference": "85e4ff98000157ff753d934b9f13659a953f5666"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/ca445842fcea4f844d68203ffa2d00f5e3cdea64",
-                "reference": "ca445842fcea4f844d68203ffa2d00f5e3cdea64",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/85e4ff98000157ff753d934b9f13659a953f5666",
+                "reference": "85e4ff98000157ff753d934b9f13659a953f5666",
                 "shasum": ""
             },
             "require": {
@@ -976,7 +856,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.14-dev"
+                    "dev-master": "1.15-dev"
                 }
             },
             "autoload": {
@@ -1003,7 +883,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-10-30 08:20:53"
+            "time": "2013-12-06 07:47:10"
         }
     ],
     "packages-dev": [
@@ -1014,8 +894,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "composer/composer": 20,
-        "propel/propel": 20
+        "composer/composer": 20
     },
     "platform": [
 

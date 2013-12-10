@@ -85,8 +85,14 @@ abstract class BaseGroupQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'keeko', $modelName = 'keeko\\core\\entities\\Group', $modelAlias = null)
+    public function __construct($dbName = null, $modelName = null, $modelAlias = null)
     {
+        if (null === $dbName) {
+            $dbName = 'keeko';
+        }
+        if (null === $modelName) {
+            $modelName = 'keeko\\core\\entities\\Group';
+        }
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
@@ -103,10 +109,8 @@ abstract class BaseGroupQuery extends ModelCriteria
         if ($criteria instanceof GroupQuery) {
             return $criteria;
         }
-        $query = new GroupQuery();
-        if (null !== $modelAlias) {
-            $query->setModelAlias($modelAlias);
-        }
+        $query = new GroupQuery(null, null, $modelAlias);
+
         if ($criteria instanceof Criteria) {
             $query->mergeWith($criteria);
         }
@@ -134,7 +138,7 @@ abstract class BaseGroupQuery extends ModelCriteria
             return null;
         }
         if ((null !== ($obj = GroupPeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
-            // the object is alredy in the instance pool
+            // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {

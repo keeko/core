@@ -6,12 +6,11 @@ use keeko\core\handler\ContentHandlerInterface;
 class ModuleActionHandler extends AbstractHandler {
 
 	/* (non-PHPdoc)
-	 * @see \keeko\core\handler\ContentHandlerInterface::getAdditionalContent()
+	 * @see \keeko\core\handler\ContentHandlerInterface::getContents()
 	 */
 	public function getContents($match) {
-		$mm = $this->keeko->getModuleManager();
-		$module = $mm->load($match['module']);
-		
+		$module = $this->getModule($match);
+
 		if (!array_key_exists('action', $match)) {
 			$entity = $module->getEntity();
 			$action = $entity->getDefaultAction();
@@ -19,7 +18,9 @@ class ModuleActionHandler extends AbstractHandler {
 			$action = $match['action'];
 		}
 		
+		/* @var $controller \keeko\core\action\ControllerInterface */
 		$controller = $module->loadController($action);
+		$controller->setParams($match['params']);
 		
 		return ['main' => $controller->run()];
 	}

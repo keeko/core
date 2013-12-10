@@ -46,7 +46,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     protected static $peer;
 
     /**
-     * The flag var to prevent infinit loop in deep copy
+     * The flag var to prevent infinite loop in deep copy
      * @var       boolean
      */
     protected $startCopy = false;
@@ -154,6 +154,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      */
     public function getId()
     {
+
         return $this->id;
     }
 
@@ -164,6 +165,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      */
     public function getIso()
     {
+
         return $this->iso;
     }
 
@@ -174,6 +176,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      */
     public function getName()
     {
+
         return $this->name;
     }
 
@@ -184,6 +187,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      */
     public function getLocalName()
     {
+
         return $this->local_name;
     }
 
@@ -194,6 +198,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      */
     public function getEnName()
     {
+
         return $this->en_name;
     }
 
@@ -204,6 +209,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      */
     public function getAltNames()
     {
+
         return $this->alt_names;
     }
 
@@ -214,6 +220,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      */
     public function getParentId()
     {
+
         return $this->parent_id;
     }
 
@@ -224,6 +231,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      */
     public function getCountryIsoNr()
     {
+
         return $this->country_iso_nr;
     }
 
@@ -234,13 +242,14 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      */
     public function getSubdivisionTypeId()
     {
+
         return $this->subdivision_type_id;
     }
 
     /**
      * Set the value of [id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Subdivision The current object (for fluent API support)
      */
     public function setId($v)
@@ -261,7 +270,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     /**
      * Set the value of [iso] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Subdivision The current object (for fluent API support)
      */
     public function setIso($v)
@@ -282,7 +291,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     /**
      * Set the value of [name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Subdivision The current object (for fluent API support)
      */
     public function setName($v)
@@ -303,7 +312,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     /**
      * Set the value of [local_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Subdivision The current object (for fluent API support)
      */
     public function setLocalName($v)
@@ -324,7 +333,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     /**
      * Set the value of [en_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Subdivision The current object (for fluent API support)
      */
     public function setEnName($v)
@@ -345,7 +354,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     /**
      * Set the value of [alt_names] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Subdivision The current object (for fluent API support)
      */
     public function setAltNames($v)
@@ -366,7 +375,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     /**
      * Set the value of [parent_id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Subdivision The current object (for fluent API support)
      */
     public function setParentId($v)
@@ -387,7 +396,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     /**
      * Set the value of [country_iso_nr] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Subdivision The current object (for fluent API support)
      */
     public function setCountryIsoNr($v)
@@ -412,7 +421,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     /**
      * Set the value of [subdivision_type_id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Subdivision The current object (for fluent API support)
      */
     public function setSubdivisionTypeId($v)
@@ -457,7 +466,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      * more tables.
      *
      * @param array $row The row returned by PDOStatement->fetch(PDO::FETCH_NUM)
-     * @param int $startcol 0-based offset column which indicates which restultset column to start with.
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
      * @return int             next starting column
      * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
@@ -483,6 +492,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
+
             return $startcol + 9; // 9 = SubdivisionPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -669,7 +679,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
             $this->alreadyInSave = true;
 
             // We call the save method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -887,10 +897,10 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      *
      * In addition to checking the current object, all related objects will
      * also be validated.  If all pass then <code>true</code> is returned; otherwise
-     * an aggreagated array of ValidationFailed objects will be returned.
+     * an aggregated array of ValidationFailed objects will be returned.
      *
      * @param array $columns Array of column names to validate.
-     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objets otherwise.
+     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objects otherwise.
      */
     protected function doValidate($columns = null)
     {
@@ -902,7 +912,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
 
 
             // We call the validate method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -1033,6 +1043,11 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
             $keys[7] => $this->getCountryIsoNr(),
             $keys[8] => $this->getSubdivisionTypeId(),
         );
+        $virtualColumns = $this->virtualColumns;
+        foreach ($virtualColumns as $key => $virtualColumn) {
+            $result[$key] = $virtualColumn;
+        }
+
         if ($includeForeignObjects) {
             if (null !== $this->aCountry) {
                 $result['Country'] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -1295,7 +1310,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a Country object.
      *
-     * @param             Country $v
+     * @param                  Country $v
      * @return Subdivision The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1347,7 +1362,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a SubdivisionType object.
      *
-     * @param             SubdivisionType $v
+     * @param                  SubdivisionType $v
      * @return Subdivision The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1489,7 +1504,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
                     if (false !== $this->collUsersPartial && count($collUsers)) {
                       $this->initUsers(false);
 
-                      foreach($collUsers as $obj) {
+                      foreach ($collUsers as $obj) {
                         if (false == $this->collUsers->contains($obj)) {
                           $this->collUsers->append($obj);
                         }
@@ -1499,12 +1514,13 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
                     }
 
                     $collUsers->getInternalIterator()->rewind();
+
                     return $collUsers;
                 }
 
-                if($partial && $this->collUsers) {
-                    foreach($this->collUsers as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collUsers) {
+                    foreach ($this->collUsers as $obj) {
+                        if ($obj->isNew()) {
                             $collUsers[] = $obj;
                         }
                     }
@@ -1532,7 +1548,8 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
     {
         $usersToDelete = $this->getUsers(new Criteria(), $con)->diff($users);
 
-        $this->usersScheduledForDeletion = unserialize(serialize($usersToDelete));
+
+        $this->usersScheduledForDeletion = $usersToDelete;
 
         foreach ($usersToDelete as $userRemoved) {
             $userRemoved->setSubdivision(null);
@@ -1566,7 +1583,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getUsers());
             }
             $query = UserQuery::create(null, $criteria);
@@ -1595,8 +1612,13 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
             $this->initUsers();
             $this->collUsersPartial = true;
         }
+
         if (!in_array($l, $this->collUsers->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddUser($l);
+
+            if ($this->usersScheduledForDeletion and $this->usersScheduledForDeletion->contains($l)) {
+                $this->usersScheduledForDeletion->remove($this->usersScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -1683,7 +1705,7 @@ abstract class BaseSubdivision extends BaseObject implements Persistent
      *
      * This method is a user-space workaround for PHP's inability to garbage collect
      * objects with circular references (even in PHP 5.3). This is currently necessary
-     * when using Propel in certain daemon or large-volumne/high-memory operations.
+     * when using Propel in certain daemon or large-volume/high-memory operations.
      *
      * @param boolean $deep Whether to also clear the references on all referrer objects.
      */

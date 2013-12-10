@@ -73,7 +73,6 @@ class Keeko {
 		$params['application'] = $this->application;
 		$params['basepath'] = $appRouter->getPrefix();
 
-		/* @var $router RouteMatcherInterface */
 		$routing = $this->application->getRouter()->getClassname();
 		$this->router = new $routing($params);
 		

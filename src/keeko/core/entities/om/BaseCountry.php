@@ -50,7 +50,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     protected static $peer;
 
     /**
-     * The flag var to prevent infinit loop in deep copy
+     * The flag var to prevent infinite loop in deep copy
      * @var       boolean
      */
     protected $startCopy = false;
@@ -230,6 +230,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getIsoNr()
     {
+
         return $this->iso_nr;
     }
 
@@ -240,6 +241,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getAlpha2()
     {
+
         return $this->alpha_2;
     }
 
@@ -250,6 +252,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getAlpha3()
     {
+
         return $this->alpha_3;
     }
 
@@ -260,6 +263,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getIoc()
     {
+
         return $this->ioc;
     }
 
@@ -270,6 +274,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getCapital()
     {
+
         return $this->capital;
     }
 
@@ -280,6 +285,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getTld()
     {
+
         return $this->tld;
     }
 
@@ -290,6 +296,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getPhone()
     {
+
         return $this->phone;
     }
 
@@ -300,6 +307,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getTerritoryIsoNr()
     {
+
         return $this->territory_iso_nr;
     }
 
@@ -310,6 +318,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getCurrencyIsoNr()
     {
+
         return $this->currency_iso_nr;
     }
 
@@ -320,6 +329,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getOfficialLocalName()
     {
+
         return $this->official_local_name;
     }
 
@@ -330,6 +340,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getOfficialEnName()
     {
+
         return $this->official_en_name;
     }
 
@@ -340,6 +351,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getShortLocalName()
     {
+
         return $this->short_local_name;
     }
 
@@ -350,6 +362,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getShortEnName()
     {
+
         return $this->short_en_name;
     }
 
@@ -360,6 +373,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getBboxSwLat()
     {
+
         return $this->bbox_sw_lat;
     }
 
@@ -370,6 +384,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getBboxSwLng()
     {
+
         return $this->bbox_sw_lng;
     }
 
@@ -380,6 +395,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getBboxNeLat()
     {
+
         return $this->bbox_ne_lat;
     }
 
@@ -390,13 +406,14 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function getBboxNeLng()
     {
+
         return $this->bbox_ne_lng;
     }
 
     /**
      * Set the value of [iso_nr] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setIsoNr($v)
@@ -417,7 +434,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [alpha_2] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setAlpha2($v)
@@ -438,7 +455,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [alpha_3] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setAlpha3($v)
@@ -459,7 +476,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [ioc] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setIoc($v)
@@ -480,7 +497,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [capital] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setCapital($v)
@@ -501,7 +518,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [tld] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setTld($v)
@@ -522,7 +539,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [phone] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setPhone($v)
@@ -543,7 +560,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [territory_iso_nr] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setTerritoryIsoNr($v)
@@ -568,7 +585,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [currency_iso_nr] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setCurrencyIsoNr($v)
@@ -593,7 +610,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [official_local_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setOfficialLocalName($v)
@@ -614,7 +631,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [official_en_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setOfficialEnName($v)
@@ -635,7 +652,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [short_local_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setShortLocalName($v)
@@ -656,7 +673,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [short_en_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setShortEnName($v)
@@ -677,7 +694,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [bbox_sw_lat] column.
      *
-     * @param double $v new value
+     * @param  double $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setBboxSwLat($v)
@@ -698,7 +715,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [bbox_sw_lng] column.
      *
-     * @param double $v new value
+     * @param  double $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setBboxSwLng($v)
@@ -719,7 +736,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [bbox_ne_lat] column.
      *
-     * @param double $v new value
+     * @param  double $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setBboxNeLat($v)
@@ -740,7 +757,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Set the value of [bbox_ne_lng] column.
      *
-     * @param double $v new value
+     * @param  double $v new value
      * @return Country The current object (for fluent API support)
      */
     public function setBboxNeLng($v)
@@ -781,7 +798,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * more tables.
      *
      * @param array $row The row returned by PDOStatement->fetch(PDO::FETCH_NUM)
-     * @param int $startcol 0-based offset column which indicates which restultset column to start with.
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
      * @return int             next starting column
      * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
@@ -815,6 +832,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
+
             return $startcol + 17; // 17 = CountryPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -1005,7 +1023,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $this->alreadyInSave = true;
 
             // We call the save method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -1294,10 +1312,10 @@ abstract class BaseCountry extends BaseObject implements Persistent
      *
      * In addition to checking the current object, all related objects will
      * also be validated.  If all pass then <code>true</code> is returned; otherwise
-     * an aggreagated array of ValidationFailed objects will be returned.
+     * an aggregated array of ValidationFailed objects will be returned.
      *
      * @param array $columns Array of column names to validate.
-     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objets otherwise.
+     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objects otherwise.
      */
     protected function doValidate($columns = null)
     {
@@ -1309,7 +1327,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
 
 
             // We call the validate method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -1488,6 +1506,11 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $keys[15] => $this->getBboxNeLat(),
             $keys[16] => $this->getBboxNeLng(),
         );
+        $virtualColumns = $this->virtualColumns;
+        foreach ($virtualColumns as $key => $virtualColumn) {
+            $result[$key] = $virtualColumn;
+        }
+
         if ($includeForeignObjects) {
             if (null !== $this->aTerritory) {
                 $result['Territory'] = $this->aTerritory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -1816,7 +1839,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a Territory object.
      *
-     * @param             Territory $v
+     * @param                  Territory $v
      * @return Country The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1868,7 +1891,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a Currency object.
      *
-     * @param             Currency $v
+     * @param                  Currency $v
      * @return Country The current object (for fluent API support)
      * @throws PropelException
      */
@@ -2016,7 +2039,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
                     if (false !== $this->collLocalizationsPartial && count($collLocalizations)) {
                       $this->initLocalizations(false);
 
-                      foreach($collLocalizations as $obj) {
+                      foreach ($collLocalizations as $obj) {
                         if (false == $this->collLocalizations->contains($obj)) {
                           $this->collLocalizations->append($obj);
                         }
@@ -2026,12 +2049,13 @@ abstract class BaseCountry extends BaseObject implements Persistent
                     }
 
                     $collLocalizations->getInternalIterator()->rewind();
+
                     return $collLocalizations;
                 }
 
-                if($partial && $this->collLocalizations) {
-                    foreach($this->collLocalizations as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collLocalizations) {
+                    foreach ($this->collLocalizations as $obj) {
+                        if ($obj->isNew()) {
                             $collLocalizations[] = $obj;
                         }
                     }
@@ -2059,7 +2083,8 @@ abstract class BaseCountry extends BaseObject implements Persistent
     {
         $localizationsToDelete = $this->getLocalizations(new Criteria(), $con)->diff($localizations);
 
-        $this->localizationsScheduledForDeletion = unserialize(serialize($localizationsToDelete));
+
+        $this->localizationsScheduledForDeletion = $localizationsToDelete;
 
         foreach ($localizationsToDelete as $localizationRemoved) {
             $localizationRemoved->setCountry(null);
@@ -2093,7 +2118,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getLocalizations());
             }
             $query = LocalizationQuery::create(null, $criteria);
@@ -2122,8 +2147,13 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $this->initLocalizations();
             $this->collLocalizationsPartial = true;
         }
+
         if (!in_array($l, $this->collLocalizations->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddLocalization($l);
+
+            if ($this->localizationsScheduledForDeletion and $this->localizationsScheduledForDeletion->contains($l)) {
+                $this->localizationsScheduledForDeletion->remove($this->localizationsScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -2284,7 +2314,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
                     if (false !== $this->collSubdivisionsPartial && count($collSubdivisions)) {
                       $this->initSubdivisions(false);
 
-                      foreach($collSubdivisions as $obj) {
+                      foreach ($collSubdivisions as $obj) {
                         if (false == $this->collSubdivisions->contains($obj)) {
                           $this->collSubdivisions->append($obj);
                         }
@@ -2294,12 +2324,13 @@ abstract class BaseCountry extends BaseObject implements Persistent
                     }
 
                     $collSubdivisions->getInternalIterator()->rewind();
+
                     return $collSubdivisions;
                 }
 
-                if($partial && $this->collSubdivisions) {
-                    foreach($this->collSubdivisions as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collSubdivisions) {
+                    foreach ($this->collSubdivisions as $obj) {
+                        if ($obj->isNew()) {
                             $collSubdivisions[] = $obj;
                         }
                     }
@@ -2327,7 +2358,8 @@ abstract class BaseCountry extends BaseObject implements Persistent
     {
         $subdivisionsToDelete = $this->getSubdivisions(new Criteria(), $con)->diff($subdivisions);
 
-        $this->subdivisionsScheduledForDeletion = unserialize(serialize($subdivisionsToDelete));
+
+        $this->subdivisionsScheduledForDeletion = $subdivisionsToDelete;
 
         foreach ($subdivisionsToDelete as $subdivisionRemoved) {
             $subdivisionRemoved->setCountry(null);
@@ -2361,7 +2393,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getSubdivisions());
             }
             $query = SubdivisionQuery::create(null, $criteria);
@@ -2390,8 +2422,13 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $this->initSubdivisions();
             $this->collSubdivisionsPartial = true;
         }
+
         if (!in_array($l, $this->collSubdivisions->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddSubdivision($l);
+
+            if ($this->subdivisionsScheduledForDeletion and $this->subdivisionsScheduledForDeletion->contains($l)) {
+                $this->subdivisionsScheduledForDeletion->remove($this->subdivisionsScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -2527,7 +2564,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
                     if (false !== $this->collUsersPartial && count($collUsers)) {
                       $this->initUsers(false);
 
-                      foreach($collUsers as $obj) {
+                      foreach ($collUsers as $obj) {
                         if (false == $this->collUsers->contains($obj)) {
                           $this->collUsers->append($obj);
                         }
@@ -2537,12 +2574,13 @@ abstract class BaseCountry extends BaseObject implements Persistent
                     }
 
                     $collUsers->getInternalIterator()->rewind();
+
                     return $collUsers;
                 }
 
-                if($partial && $this->collUsers) {
-                    foreach($this->collUsers as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collUsers) {
+                    foreach ($this->collUsers as $obj) {
+                        if ($obj->isNew()) {
                             $collUsers[] = $obj;
                         }
                     }
@@ -2570,7 +2608,8 @@ abstract class BaseCountry extends BaseObject implements Persistent
     {
         $usersToDelete = $this->getUsers(new Criteria(), $con)->diff($users);
 
-        $this->usersScheduledForDeletion = unserialize(serialize($usersToDelete));
+
+        $this->usersScheduledForDeletion = $usersToDelete;
 
         foreach ($usersToDelete as $userRemoved) {
             $userRemoved->setCountry(null);
@@ -2604,7 +2643,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getUsers());
             }
             $query = UserQuery::create(null, $criteria);
@@ -2633,8 +2672,13 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $this->initUsers();
             $this->collUsersPartial = true;
         }
+
         if (!in_array($l, $this->collUsers->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddUser($l);
+
+            if ($this->usersScheduledForDeletion and $this->usersScheduledForDeletion->contains($l)) {
+                $this->usersScheduledForDeletion->remove($this->usersScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -2729,7 +2773,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      *
      * This method is a user-space workaround for PHP's inability to garbage collect
      * objects with circular references (even in PHP 5.3). This is currently necessary
-     * when using Propel in certain daemon or large-volumne/high-memory operations.
+     * when using Propel in certain daemon or large-volume/high-memory operations.
      *
      * @param boolean $deep Whether to also clear the references on all referrer objects.
      */

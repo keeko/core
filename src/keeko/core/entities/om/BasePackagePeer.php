@@ -35,7 +35,7 @@ abstract class BasePackagePeer
     const OM_CLASS = 'keeko\\core\\entities\\Package';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'PackageTableMap';
+    const TM_CLASS = 'keeko\\core\\entities\\map\\PackageTableMap';
 
     /** The total number of columns. */
     const NUM_COLUMNS = 6;
@@ -68,7 +68,7 @@ abstract class BasePackagePeer
     const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
-     * An identiy map to hold any loaded instances of Package objects.
+     * An identity map to hold any loaded instances of Package objects.
      * This must be public so that other peer classes can access this when hydrating from JOIN
      * queries.
      * @var        array Package[]
@@ -242,7 +242,7 @@ abstract class BasePackagePeer
      *
      * @param      Criteria $criteria object used to create the SELECT statement.
      * @param      PropelPDO $con
-     * @return                 Package
+     * @return Package
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -309,7 +309,7 @@ abstract class BasePackagePeer
      * to the cache in order to ensure that the same objects are always returned by doSelect*()
      * and retrieveByPK*() calls.
      *
-     * @param      Package $obj A Package object.
+     * @param Package $obj A Package object.
      * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
@@ -359,7 +359,7 @@ abstract class BasePackagePeer
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
      * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-     * @return   Package Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+     * @return Package Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
      * @see        getPrimaryKeyHash()
      */
     public static function getInstanceFromPool($key)
@@ -380,10 +380,8 @@ abstract class BasePackagePeer
      */
     public static function clearInstancePool($and_clear_all_references = false)
     {
-      if ($and_clear_all_references)
-      {
-        foreach (PackagePeer::$instances as $instance)
-        {
+      if ($and_clear_all_references) {
+        foreach (PackagePeer::$instances as $instance) {
           $instance->clearAllReferences(true);
         }
       }
@@ -517,7 +515,7 @@ abstract class BasePackagePeer
     {
       $dbMap = Propel::getDatabaseMap(BasePackagePeer::DATABASE_NAME);
       if (!$dbMap->hasTable(BasePackagePeer::TABLE_NAME)) {
-        $dbMap->addTableObject(new PackageTableMap());
+        $dbMap->addTableObject(new \keeko\core\entities\map\PackageTableMap());
       }
     }
 
@@ -567,7 +565,7 @@ abstract class BasePackagePeer
             $con->beginTransaction();
             $pk = BasePeer::doInsert($criteria, $con);
             $con->commit();
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -640,7 +638,7 @@ abstract class BasePackagePeer
             $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -699,7 +697,7 @@ abstract class BasePackagePeer
             $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -712,7 +710,7 @@ abstract class BasePackagePeer
      *
      * NOTICE: This does not apply to primary or foreign keys for now.
      *
-     * @param      Package $obj The object to validate.
+     * @param Package $obj The object to validate.
      * @param      mixed $cols Column name or array of column names.
      *
      * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
@@ -745,7 +743,7 @@ abstract class BasePackagePeer
     /**
      * Retrieve a single object by pkey.
      *
-     * @param      int $pk the primary key.
+     * @param int $pk the primary key.
      * @param      PropelPDO $con the connection to use
      * @return Package
      */

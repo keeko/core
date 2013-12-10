@@ -42,7 +42,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
     protected static $peer;
 
     /**
-     * The flag var to prevent infinit loop in deep copy
+     * The flag var to prevent infinite loop in deep copy
      * @var       boolean
      */
     protected $startCopy = false;
@@ -140,6 +140,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      */
     public function getIsoNr()
     {
+
         return $this->iso_nr;
     }
 
@@ -150,6 +151,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      */
     public function getIso3()
     {
+
         return $this->iso3;
     }
 
@@ -160,6 +162,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      */
     public function getEnName()
     {
+
         return $this->en_name;
     }
 
@@ -170,6 +173,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      */
     public function getSymbolLeft()
     {
+
         return $this->symbol_left;
     }
 
@@ -180,6 +184,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      */
     public function getSymbolRight()
     {
+
         return $this->symbol_right;
     }
 
@@ -190,6 +195,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      */
     public function getDecimalDigits()
     {
+
         return $this->decimal_digits;
     }
 
@@ -200,6 +206,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      */
     public function getSubDivisor()
     {
+
         return $this->sub_divisor;
     }
 
@@ -210,6 +217,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      */
     public function getSubSymbolLeft()
     {
+
         return $this->sub_symbol_left;
     }
 
@@ -220,13 +228,14 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      */
     public function getSubSymbolRight()
     {
+
         return $this->sub_symbol_right;
     }
 
     /**
      * Set the value of [iso_nr] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Currency The current object (for fluent API support)
      */
     public function setIsoNr($v)
@@ -247,7 +256,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
     /**
      * Set the value of [iso3] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Currency The current object (for fluent API support)
      */
     public function setIso3($v)
@@ -268,7 +277,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
     /**
      * Set the value of [en_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Currency The current object (for fluent API support)
      */
     public function setEnName($v)
@@ -289,7 +298,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
     /**
      * Set the value of [symbol_left] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Currency The current object (for fluent API support)
      */
     public function setSymbolLeft($v)
@@ -310,7 +319,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
     /**
      * Set the value of [symbol_right] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Currency The current object (for fluent API support)
      */
     public function setSymbolRight($v)
@@ -331,7 +340,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
     /**
      * Set the value of [decimal_digits] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Currency The current object (for fluent API support)
      */
     public function setDecimalDigits($v)
@@ -352,7 +361,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
     /**
      * Set the value of [sub_divisor] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Currency The current object (for fluent API support)
      */
     public function setSubDivisor($v)
@@ -373,7 +382,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
     /**
      * Set the value of [sub_symbol_left] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Currency The current object (for fluent API support)
      */
     public function setSubSymbolLeft($v)
@@ -394,7 +403,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
     /**
      * Set the value of [sub_symbol_right] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Currency The current object (for fluent API support)
      */
     public function setSubSymbolRight($v)
@@ -435,7 +444,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      * more tables.
      *
      * @param array $row The row returned by PDOStatement->fetch(PDO::FETCH_NUM)
-     * @param int $startcol 0-based offset column which indicates which restultset column to start with.
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
      * @return int             next starting column
      * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
@@ -461,6 +470,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
+
             return $startcol + 9; // 9 = CurrencyPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -826,10 +836,10 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      *
      * In addition to checking the current object, all related objects will
      * also be validated.  If all pass then <code>true</code> is returned; otherwise
-     * an aggreagated array of ValidationFailed objects will be returned.
+     * an aggregated array of ValidationFailed objects will be returned.
      *
      * @param array $columns Array of column names to validate.
-     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objets otherwise.
+     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objects otherwise.
      */
     protected function doValidate($columns = null)
     {
@@ -954,6 +964,11 @@ abstract class BaseCurrency extends BaseObject implements Persistent
             $keys[7] => $this->getSubSymbolLeft(),
             $keys[8] => $this->getSubSymbolRight(),
         );
+        $virtualColumns = $this->virtualColumns;
+        foreach ($virtualColumns as $key => $virtualColumn) {
+            $result[$key] = $virtualColumn;
+        }
+
         if ($includeForeignObjects) {
             if (null !== $this->collCountrys) {
                 $result['Countrys'] = $this->collCountrys->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1300,7 +1315,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
                     if (false !== $this->collCountrysPartial && count($collCountrys)) {
                       $this->initCountrys(false);
 
-                      foreach($collCountrys as $obj) {
+                      foreach ($collCountrys as $obj) {
                         if (false == $this->collCountrys->contains($obj)) {
                           $this->collCountrys->append($obj);
                         }
@@ -1310,12 +1325,13 @@ abstract class BaseCurrency extends BaseObject implements Persistent
                     }
 
                     $collCountrys->getInternalIterator()->rewind();
+
                     return $collCountrys;
                 }
 
-                if($partial && $this->collCountrys) {
-                    foreach($this->collCountrys as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collCountrys) {
+                    foreach ($this->collCountrys as $obj) {
+                        if ($obj->isNew()) {
                             $collCountrys[] = $obj;
                         }
                     }
@@ -1343,7 +1359,8 @@ abstract class BaseCurrency extends BaseObject implements Persistent
     {
         $countrysToDelete = $this->getCountrys(new Criteria(), $con)->diff($countrys);
 
-        $this->countrysScheduledForDeletion = unserialize(serialize($countrysToDelete));
+
+        $this->countrysScheduledForDeletion = $countrysToDelete;
 
         foreach ($countrysToDelete as $countryRemoved) {
             $countryRemoved->setCurrency(null);
@@ -1377,7 +1394,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getCountrys());
             }
             $query = CountryQuery::create(null, $criteria);
@@ -1406,8 +1423,13 @@ abstract class BaseCurrency extends BaseObject implements Persistent
             $this->initCountrys();
             $this->collCountrysPartial = true;
         }
+
         if (!in_array($l, $this->collCountrys->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddCountry($l);
+
+            if ($this->countrysScheduledForDeletion and $this->countrysScheduledForDeletion->contains($l)) {
+                $this->countrysScheduledForDeletion->remove($this->countrysScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -1494,7 +1516,7 @@ abstract class BaseCurrency extends BaseObject implements Persistent
      *
      * This method is a user-space workaround for PHP's inability to garbage collect
      * objects with circular references (even in PHP 5.3). This is currently necessary
-     * when using Propel in certain daemon or large-volumne/high-memory operations.
+     * when using Propel in certain daemon or large-volume/high-memory operations.
      *
      * @param boolean $deep Whether to also clear the references on all referrer objects.
      */

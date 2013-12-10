@@ -46,7 +46,7 @@ abstract class BaseAction extends BaseObject implements Persistent
     protected static $peer;
 
     /**
-     * The flag var to prevent infinit loop in deep copy
+     * The flag var to prevent infinite loop in deep copy
      * @var       boolean
      */
     protected $startCopy = false;
@@ -165,6 +165,7 @@ abstract class BaseAction extends BaseObject implements Persistent
      */
     public function getId()
     {
+
         return $this->id;
     }
 
@@ -175,6 +176,7 @@ abstract class BaseAction extends BaseObject implements Persistent
      */
     public function getName()
     {
+
         return $this->name;
     }
 
@@ -185,6 +187,7 @@ abstract class BaseAction extends BaseObject implements Persistent
      */
     public function getTitle()
     {
+
         return $this->title;
     }
 
@@ -195,6 +198,7 @@ abstract class BaseAction extends BaseObject implements Persistent
      */
     public function getDescription()
     {
+
         return $this->description;
     }
 
@@ -205,6 +209,7 @@ abstract class BaseAction extends BaseObject implements Persistent
      */
     public function getApi()
     {
+
         return $this->api;
     }
 
@@ -215,13 +220,14 @@ abstract class BaseAction extends BaseObject implements Persistent
      */
     public function getModuleId()
     {
+
         return $this->module_id;
     }
 
     /**
      * Set the value of [id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Action The current object (for fluent API support)
      */
     public function setId($v)
@@ -242,7 +248,7 @@ abstract class BaseAction extends BaseObject implements Persistent
     /**
      * Set the value of [name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Action The current object (for fluent API support)
      */
     public function setName($v)
@@ -263,7 +269,7 @@ abstract class BaseAction extends BaseObject implements Persistent
     /**
      * Set the value of [title] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Action The current object (for fluent API support)
      */
     public function setTitle($v)
@@ -284,7 +290,7 @@ abstract class BaseAction extends BaseObject implements Persistent
     /**
      * Set the value of [description] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Action The current object (for fluent API support)
      */
     public function setDescription($v)
@@ -334,7 +340,7 @@ abstract class BaseAction extends BaseObject implements Persistent
     /**
      * Set the value of [module_id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Action The current object (for fluent API support)
      */
     public function setModuleId($v)
@@ -383,7 +389,7 @@ abstract class BaseAction extends BaseObject implements Persistent
      * more tables.
      *
      * @param array $row The row returned by PDOStatement->fetch(PDO::FETCH_NUM)
-     * @param int $startcol 0-based offset column which indicates which restultset column to start with.
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
      * @return int             next starting column
      * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
@@ -406,6 +412,7 @@ abstract class BaseAction extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
+
             return $startcol + 6; // 6 = ActionPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -590,7 +597,7 @@ abstract class BaseAction extends BaseObject implements Persistent
             $this->alreadyInSave = true;
 
             // We call the save method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -800,10 +807,10 @@ abstract class BaseAction extends BaseObject implements Persistent
      *
      * In addition to checking the current object, all related objects will
      * also be validated.  If all pass then <code>true</code> is returned; otherwise
-     * an aggreagated array of ValidationFailed objects will be returned.
+     * an aggregated array of ValidationFailed objects will be returned.
      *
      * @param array $columns Array of column names to validate.
-     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objets otherwise.
+     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objects otherwise.
      */
     protected function doValidate($columns = null)
     {
@@ -815,7 +822,7 @@ abstract class BaseAction extends BaseObject implements Persistent
 
 
             // We call the validate method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -936,6 +943,11 @@ abstract class BaseAction extends BaseObject implements Persistent
             $keys[4] => $this->getApi(),
             $keys[5] => $this->getModuleId(),
         );
+        $virtualColumns = $this->virtualColumns;
+        foreach ($virtualColumns as $key => $virtualColumn) {
+            $result[$key] = $virtualColumn;
+        }
+
         if ($includeForeignObjects) {
             if (null !== $this->aModule) {
                 $result['Module'] = $this->aModule->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -1186,7 +1198,7 @@ abstract class BaseAction extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a Module object.
      *
-     * @param             Module $v
+     * @param                  Module $v
      * @return Action The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1331,7 +1343,7 @@ abstract class BaseAction extends BaseObject implements Persistent
                     if (false !== $this->collBlockContentsPartial && count($collBlockContents)) {
                       $this->initBlockContents(false);
 
-                      foreach($collBlockContents as $obj) {
+                      foreach ($collBlockContents as $obj) {
                         if (false == $this->collBlockContents->contains($obj)) {
                           $this->collBlockContents->append($obj);
                         }
@@ -1341,12 +1353,13 @@ abstract class BaseAction extends BaseObject implements Persistent
                     }
 
                     $collBlockContents->getInternalIterator()->rewind();
+
                     return $collBlockContents;
                 }
 
-                if($partial && $this->collBlockContents) {
-                    foreach($this->collBlockContents as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collBlockContents) {
+                    foreach ($this->collBlockContents as $obj) {
+                        if ($obj->isNew()) {
                             $collBlockContents[] = $obj;
                         }
                     }
@@ -1374,7 +1387,8 @@ abstract class BaseAction extends BaseObject implements Persistent
     {
         $blockContentsToDelete = $this->getBlockContents(new Criteria(), $con)->diff($blockContents);
 
-        $this->blockContentsScheduledForDeletion = unserialize(serialize($blockContentsToDelete));
+
+        $this->blockContentsScheduledForDeletion = $blockContentsToDelete;
 
         foreach ($blockContentsToDelete as $blockContentRemoved) {
             $blockContentRemoved->setAction(null);
@@ -1408,7 +1422,7 @@ abstract class BaseAction extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getBlockContents());
             }
             $query = BlockContentQuery::create(null, $criteria);
@@ -1437,8 +1451,13 @@ abstract class BaseAction extends BaseObject implements Persistent
             $this->initBlockContents();
             $this->collBlockContentsPartial = true;
         }
+
         if (!in_array($l, $this->collBlockContents->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddBlockContent($l);
+
+            if ($this->blockContentsScheduledForDeletion and $this->blockContentsScheduledForDeletion->contains($l)) {
+                $this->blockContentsScheduledForDeletion->remove($this->blockContentsScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -1574,7 +1593,7 @@ abstract class BaseAction extends BaseObject implements Persistent
                     if (false !== $this->collGroupActionsPartial && count($collGroupActions)) {
                       $this->initGroupActions(false);
 
-                      foreach($collGroupActions as $obj) {
+                      foreach ($collGroupActions as $obj) {
                         if (false == $this->collGroupActions->contains($obj)) {
                           $this->collGroupActions->append($obj);
                         }
@@ -1584,12 +1603,13 @@ abstract class BaseAction extends BaseObject implements Persistent
                     }
 
                     $collGroupActions->getInternalIterator()->rewind();
+
                     return $collGroupActions;
                 }
 
-                if($partial && $this->collGroupActions) {
-                    foreach($this->collGroupActions as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collGroupActions) {
+                    foreach ($this->collGroupActions as $obj) {
+                        if ($obj->isNew()) {
                             $collGroupActions[] = $obj;
                         }
                     }
@@ -1617,7 +1637,11 @@ abstract class BaseAction extends BaseObject implements Persistent
     {
         $groupActionsToDelete = $this->getGroupActions(new Criteria(), $con)->diff($groupActions);
 
-        $this->groupActionsScheduledForDeletion = unserialize(serialize($groupActionsToDelete));
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->groupActionsScheduledForDeletion = clone $groupActionsToDelete;
 
         foreach ($groupActionsToDelete as $groupActionRemoved) {
             $groupActionRemoved->setAction(null);
@@ -1651,7 +1675,7 @@ abstract class BaseAction extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getGroupActions());
             }
             $query = GroupActionQuery::create(null, $criteria);
@@ -1680,8 +1704,13 @@ abstract class BaseAction extends BaseObject implements Persistent
             $this->initGroupActions();
             $this->collGroupActionsPartial = true;
         }
+
         if (!in_array($l, $this->collGroupActions->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddGroupAction($l);
+
+            if ($this->groupActionsScheduledForDeletion and $this->groupActionsScheduledForDeletion->contains($l)) {
+                $this->groupActionsScheduledForDeletion->remove($this->groupActionsScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -1766,7 +1795,7 @@ abstract class BaseAction extends BaseObject implements Persistent
      *
      * This method is a user-space workaround for PHP's inability to garbage collect
      * objects with circular references (even in PHP 5.3). This is currently necessary
-     * when using Propel in certain daemon or large-volumne/high-memory operations.
+     * when using Propel in certain daemon or large-volume/high-memory operations.
      *
      * @param boolean $deep Whether to also clear the references on all referrer objects.
      */

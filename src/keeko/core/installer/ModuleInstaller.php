@@ -48,7 +48,7 @@ class ModuleInstaller extends AbstractPackageInstaller {
 			
 			// call something like $module->update($initial->getPrettyVersion(), $target->getPrettyVersion());
 			$io->write(sprintf('[Keeko] Update Module: %s from %s to %s', 
-				$package->getName(), $initial->getPrettyVersion(), $target->getPrettyVersion()));
+				$target->getName(), $initial->getPrettyVersion(), $target->getPrettyVersion()));
 			
 			// TODO: Run ModuleManager->update($name)
 		}

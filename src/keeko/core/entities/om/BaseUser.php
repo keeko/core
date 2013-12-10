@@ -50,7 +50,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     protected static $peer;
 
     /**
-     * The flag var to prevent infinit loop in deep copy
+     * The flag var to prevent infinite loop in deep copy
      * @var       boolean
      */
     protected $startCopy = false;
@@ -260,6 +260,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getId()
     {
+
         return $this->id;
     }
 
@@ -270,6 +271,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getLoginName()
     {
+
         return $this->login_name;
     }
 
@@ -280,6 +282,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getPassword()
     {
+
         return $this->password;
     }
 
@@ -290,6 +293,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getGivenName()
     {
+
         return $this->given_name;
     }
 
@@ -300,6 +304,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getFamilyName()
     {
+
         return $this->family_name;
     }
 
@@ -310,6 +315,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getDisplayName()
     {
+
         return $this->display_name;
     }
 
@@ -320,6 +326,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getEmail()
     {
+
         return $this->email;
     }
 
@@ -330,6 +337,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getCountryIsoNr()
     {
+
         return $this->country_iso_nr;
     }
 
@@ -340,6 +348,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getSubdivisionId()
     {
+
         return $this->subdivision_id;
     }
 
@@ -350,6 +359,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getAddress()
     {
+
         return $this->address;
     }
 
@@ -360,6 +370,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getAddress2()
     {
+
         return $this->address2;
     }
 
@@ -410,6 +421,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getSex()
     {
+
         return $this->sex;
     }
 
@@ -420,6 +432,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getClub()
     {
+
         return $this->club;
     }
 
@@ -430,6 +443,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getCity()
     {
+
         return $this->city;
     }
 
@@ -440,6 +454,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getPostalCode()
     {
+
         return $this->postal_code;
     }
 
@@ -450,6 +465,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getTan()
     {
+
         return $this->tan;
     }
 
@@ -460,6 +476,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getPasswordRecoverCode()
     {
+
         return $this->password_recover_code;
     }
 
@@ -510,6 +527,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getLocationStatus()
     {
+
         return $this->location_status;
     }
 
@@ -520,6 +538,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getLatitude()
     {
+
         return $this->latitude;
     }
 
@@ -530,6 +549,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function getLongitude()
     {
+
         return $this->longitude;
     }
 
@@ -616,7 +636,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return User The current object (for fluent API support)
      */
     public function setId($v)
@@ -637,7 +657,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [login_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setLoginName($v)
@@ -658,7 +678,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [password] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setPassword($v)
@@ -679,7 +699,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [given_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setGivenName($v)
@@ -700,7 +720,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [family_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setFamilyName($v)
@@ -721,7 +741,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [display_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setDisplayName($v)
@@ -742,7 +762,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [email] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setEmail($v)
@@ -763,7 +783,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [country_iso_nr] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return User The current object (for fluent API support)
      */
     public function setCountryIsoNr($v)
@@ -788,7 +808,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [subdivision_id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return User The current object (for fluent API support)
      */
     public function setSubdivisionId($v)
@@ -813,7 +833,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [address] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setAddress($v)
@@ -834,7 +854,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [address2] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setAddress2($v)
@@ -878,7 +898,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [sex] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return User The current object (for fluent API support)
      */
     public function setSex($v)
@@ -899,7 +919,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [club] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setClub($v)
@@ -920,7 +940,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [city] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setCity($v)
@@ -941,7 +961,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [postal_code] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setPostalCode($v)
@@ -962,7 +982,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [tan] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setTan($v)
@@ -983,7 +1003,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [password_recover_code] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return User The current object (for fluent API support)
      */
     public function setPasswordRecoverCode($v)
@@ -1027,7 +1047,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [location_status] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return User The current object (for fluent API support)
      */
     public function setLocationStatus($v)
@@ -1048,7 +1068,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [latitude] column.
      *
-     * @param double $v new value
+     * @param  double $v new value
      * @return User The current object (for fluent API support)
      */
     public function setLatitude($v)
@@ -1069,7 +1089,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Set the value of [longitude] column.
      *
-     * @param double $v new value
+     * @param  double $v new value
      * @return User The current object (for fluent API support)
      */
     public function setLongitude($v)
@@ -1156,7 +1176,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      * more tables.
      *
      * @param array $row The row returned by PDOStatement->fetch(PDO::FETCH_NUM)
-     * @param int $startcol 0-based offset column which indicates which restultset column to start with.
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
      * @return int             next starting column
      * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
@@ -1197,6 +1217,7 @@ abstract class BaseUser extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
+
             return $startcol + 24; // 24 = UserPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -1396,7 +1417,7 @@ abstract class BaseUser extends BaseObject implements Persistent
             $this->alreadyInSave = true;
 
             // We call the save method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -1721,10 +1742,10 @@ abstract class BaseUser extends BaseObject implements Persistent
      *
      * In addition to checking the current object, all related objects will
      * also be validated.  If all pass then <code>true</code> is returned; otherwise
-     * an aggreagated array of ValidationFailed objects will be returned.
+     * an aggregated array of ValidationFailed objects will be returned.
      *
      * @param array $columns Array of column names to validate.
-     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objets otherwise.
+     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objects otherwise.
      */
     protected function doValidate($columns = null)
     {
@@ -1736,7 +1757,7 @@ abstract class BaseUser extends BaseObject implements Persistent
 
 
             // We call the validate method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -1935,6 +1956,11 @@ abstract class BaseUser extends BaseObject implements Persistent
             $keys[22] => $this->getCreated(),
             $keys[23] => $this->getUpdated(),
         );
+        $virtualColumns = $this->virtualColumns;
+        foreach ($virtualColumns as $key => $virtualColumn) {
+            $result[$key] = $virtualColumn;
+        }
+
         if ($includeForeignObjects) {
             if (null !== $this->aCountry) {
                 $result['Country'] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -2296,7 +2322,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a Country object.
      *
-     * @param             Country $v
+     * @param                  Country $v
      * @return User The current object (for fluent API support)
      * @throws PropelException
      */
@@ -2348,7 +2374,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a Subdivision object.
      *
-     * @param             Subdivision $v
+     * @param                  Subdivision $v
      * @return User The current object (for fluent API support)
      * @throws PropelException
      */
@@ -2493,7 +2519,7 @@ abstract class BaseUser extends BaseObject implements Persistent
                     if (false !== $this->collGroupsPartial && count($collGroups)) {
                       $this->initGroups(false);
 
-                      foreach($collGroups as $obj) {
+                      foreach ($collGroups as $obj) {
                         if (false == $this->collGroups->contains($obj)) {
                           $this->collGroups->append($obj);
                         }
@@ -2503,12 +2529,13 @@ abstract class BaseUser extends BaseObject implements Persistent
                     }
 
                     $collGroups->getInternalIterator()->rewind();
+
                     return $collGroups;
                 }
 
-                if($partial && $this->collGroups) {
-                    foreach($this->collGroups as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collGroups) {
+                    foreach ($this->collGroups as $obj) {
+                        if ($obj->isNew()) {
                             $collGroups[] = $obj;
                         }
                     }
@@ -2536,7 +2563,8 @@ abstract class BaseUser extends BaseObject implements Persistent
     {
         $groupsToDelete = $this->getGroups(new Criteria(), $con)->diff($groups);
 
-        $this->groupsScheduledForDeletion = unserialize(serialize($groupsToDelete));
+
+        $this->groupsScheduledForDeletion = $groupsToDelete;
 
         foreach ($groupsToDelete as $groupRemoved) {
             $groupRemoved->setUser(null);
@@ -2570,7 +2598,7 @@ abstract class BaseUser extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getGroups());
             }
             $query = GroupQuery::create(null, $criteria);
@@ -2599,8 +2627,13 @@ abstract class BaseUser extends BaseObject implements Persistent
             $this->initGroups();
             $this->collGroupsPartial = true;
         }
+
         if (!in_array($l, $this->collGroups->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddGroup($l);
+
+            if ($this->groupsScheduledForDeletion and $this->groupsScheduledForDeletion->contains($l)) {
+                $this->groupsScheduledForDeletion->remove($this->groupsScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -2711,7 +2744,7 @@ abstract class BaseUser extends BaseObject implements Persistent
                     if (false !== $this->collGroupUsersPartial && count($collGroupUsers)) {
                       $this->initGroupUsers(false);
 
-                      foreach($collGroupUsers as $obj) {
+                      foreach ($collGroupUsers as $obj) {
                         if (false == $this->collGroupUsers->contains($obj)) {
                           $this->collGroupUsers->append($obj);
                         }
@@ -2721,12 +2754,13 @@ abstract class BaseUser extends BaseObject implements Persistent
                     }
 
                     $collGroupUsers->getInternalIterator()->rewind();
+
                     return $collGroupUsers;
                 }
 
-                if($partial && $this->collGroupUsers) {
-                    foreach($this->collGroupUsers as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collGroupUsers) {
+                    foreach ($this->collGroupUsers as $obj) {
+                        if ($obj->isNew()) {
                             $collGroupUsers[] = $obj;
                         }
                     }
@@ -2754,7 +2788,11 @@ abstract class BaseUser extends BaseObject implements Persistent
     {
         $groupUsersToDelete = $this->getGroupUsers(new Criteria(), $con)->diff($groupUsers);
 
-        $this->groupUsersScheduledForDeletion = unserialize(serialize($groupUsersToDelete));
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->groupUsersScheduledForDeletion = clone $groupUsersToDelete;
 
         foreach ($groupUsersToDelete as $groupUserRemoved) {
             $groupUserRemoved->setUser(null);
@@ -2788,7 +2826,7 @@ abstract class BaseUser extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getGroupUsers());
             }
             $query = GroupUserQuery::create(null, $criteria);
@@ -2817,8 +2855,13 @@ abstract class BaseUser extends BaseObject implements Persistent
             $this->initGroupUsers();
             $this->collGroupUsersPartial = true;
         }
+
         if (!in_array($l, $this->collGroupUsers->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddGroupUser($l);
+
+            if ($this->groupUsersScheduledForDeletion and $this->groupUsersScheduledForDeletion->contains($l)) {
+                $this->groupUsersScheduledForDeletion->remove($this->groupUsersScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -2920,7 +2963,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      *
      * This method is a user-space workaround for PHP's inability to garbage collect
      * objects with circular references (even in PHP 5.3). This is currently necessary
-     * when using Propel in certain daemon or large-volumne/high-memory operations.
+     * when using Propel in certain daemon or large-volume/high-memory operations.
      *
      * @param boolean $deep Whether to also clear the references on all referrer objects.
      */

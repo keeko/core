@@ -55,7 +55,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     protected static $peer;
 
     /**
-     * The flag var to prevent infinit loop in deep copy
+     * The flag var to prevent infinite loop in deep copy
      * @var       boolean
      */
     protected $startCopy = false;
@@ -185,6 +185,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     public function getId()
     {
+
         return $this->id;
     }
 
@@ -195,6 +196,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     public function getTitle()
     {
+
         return $this->title;
     }
 
@@ -205,6 +207,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     public function getApplicationTypeId()
     {
+
         return $this->application_type_id;
     }
 
@@ -215,6 +218,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     public function getRouterId()
     {
+
         return $this->router_id;
     }
 
@@ -225,6 +229,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     public function getDesignId()
     {
+
         return $this->design_id;
     }
 
@@ -235,13 +240,14 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     public function getPackageId()
     {
+
         return $this->package_id;
     }
 
     /**
      * Set the value of [id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Application The current object (for fluent API support)
      */
     public function setId($v)
@@ -262,7 +268,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     /**
      * Set the value of [title] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Application The current object (for fluent API support)
      */
     public function setTitle($v)
@@ -283,7 +289,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     /**
      * Set the value of [application_type_id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Application The current object (for fluent API support)
      */
     public function setApplicationTypeId($v)
@@ -308,7 +314,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     /**
      * Set the value of [router_id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Application The current object (for fluent API support)
      */
     public function setRouterId($v)
@@ -333,7 +339,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     /**
      * Set the value of [design_id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Application The current object (for fluent API support)
      */
     public function setDesignId($v)
@@ -358,7 +364,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     /**
      * Set the value of [package_id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Application The current object (for fluent API support)
      */
     public function setPackageId($v)
@@ -403,7 +409,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
      * more tables.
      *
      * @param array $row The row returned by PDOStatement->fetch(PDO::FETCH_NUM)
-     * @param int $startcol 0-based offset column which indicates which restultset column to start with.
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
      * @return int             next starting column
      * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
@@ -426,6 +432,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
+
             return $startcol + 6; // 6 = ApplicationPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -624,7 +631,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
             $this->alreadyInSave = true;
 
             // We call the save method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -872,10 +879,10 @@ abstract class BaseApplication extends BaseObject implements Persistent
      *
      * In addition to checking the current object, all related objects will
      * also be validated.  If all pass then <code>true</code> is returned; otherwise
-     * an aggreagated array of ValidationFailed objects will be returned.
+     * an aggregated array of ValidationFailed objects will be returned.
      *
      * @param array $columns Array of column names to validate.
-     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objets otherwise.
+     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objects otherwise.
      */
     protected function doValidate($columns = null)
     {
@@ -887,7 +894,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
 
 
             // We call the validate method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -1034,6 +1041,11 @@ abstract class BaseApplication extends BaseObject implements Persistent
             $keys[4] => $this->getDesignId(),
             $keys[5] => $this->getPackageId(),
         );
+        $virtualColumns = $this->virtualColumns;
+        foreach ($virtualColumns as $key => $virtualColumn) {
+            $result[$key] = $virtualColumn;
+        }
+
         if ($includeForeignObjects) {
             if (null !== $this->aApplicationType) {
                 $result['ApplicationType'] = $this->aApplicationType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -1302,7 +1314,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a ApplicationType object.
      *
-     * @param             ApplicationType $v
+     * @param                  ApplicationType $v
      * @return Application The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1354,7 +1366,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a Package object.
      *
-     * @param             Package $v
+     * @param                  Package $v
      * @return Application The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1406,7 +1418,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a Router object.
      *
-     * @param             Router $v
+     * @param                  Router $v
      * @return Application The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1458,7 +1470,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a Design object.
      *
-     * @param             Design $v
+     * @param                  Design $v
      * @return Application The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1606,7 +1618,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
                     if (false !== $this->collApplicationUrisPartial && count($collApplicationUris)) {
                       $this->initApplicationUris(false);
 
-                      foreach($collApplicationUris as $obj) {
+                      foreach ($collApplicationUris as $obj) {
                         if (false == $this->collApplicationUris->contains($obj)) {
                           $this->collApplicationUris->append($obj);
                         }
@@ -1616,12 +1628,13 @@ abstract class BaseApplication extends BaseObject implements Persistent
                     }
 
                     $collApplicationUris->getInternalIterator()->rewind();
+
                     return $collApplicationUris;
                 }
 
-                if($partial && $this->collApplicationUris) {
-                    foreach($this->collApplicationUris as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collApplicationUris) {
+                    foreach ($this->collApplicationUris as $obj) {
+                        if ($obj->isNew()) {
                             $collApplicationUris[] = $obj;
                         }
                     }
@@ -1649,7 +1662,8 @@ abstract class BaseApplication extends BaseObject implements Persistent
     {
         $applicationUrisToDelete = $this->getApplicationUris(new Criteria(), $con)->diff($applicationUris);
 
-        $this->applicationUrisScheduledForDeletion = unserialize(serialize($applicationUrisToDelete));
+
+        $this->applicationUrisScheduledForDeletion = $applicationUrisToDelete;
 
         foreach ($applicationUrisToDelete as $applicationUriRemoved) {
             $applicationUriRemoved->setApplication(null);
@@ -1683,7 +1697,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getApplicationUris());
             }
             $query = ApplicationUriQuery::create(null, $criteria);
@@ -1712,8 +1726,13 @@ abstract class BaseApplication extends BaseObject implements Persistent
             $this->initApplicationUris();
             $this->collApplicationUrisPartial = true;
         }
+
         if (!in_array($l, $this->collApplicationUris->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddApplicationUri($l);
+
+            if ($this->applicationUrisScheduledForDeletion and $this->applicationUrisScheduledForDeletion->contains($l)) {
+                $this->applicationUrisScheduledForDeletion->remove($this->applicationUrisScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -1849,7 +1868,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
                     if (false !== $this->collPagesPartial && count($collPages)) {
                       $this->initPages(false);
 
-                      foreach($collPages as $obj) {
+                      foreach ($collPages as $obj) {
                         if (false == $this->collPages->contains($obj)) {
                           $this->collPages->append($obj);
                         }
@@ -1859,12 +1878,13 @@ abstract class BaseApplication extends BaseObject implements Persistent
                     }
 
                     $collPages->getInternalIterator()->rewind();
+
                     return $collPages;
                 }
 
-                if($partial && $this->collPages) {
-                    foreach($this->collPages as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collPages) {
+                    foreach ($this->collPages as $obj) {
+                        if ($obj->isNew()) {
                             $collPages[] = $obj;
                         }
                     }
@@ -1892,7 +1912,8 @@ abstract class BaseApplication extends BaseObject implements Persistent
     {
         $pagesToDelete = $this->getPages(new Criteria(), $con)->diff($pages);
 
-        $this->pagesScheduledForDeletion = unserialize(serialize($pagesToDelete));
+
+        $this->pagesScheduledForDeletion = $pagesToDelete;
 
         foreach ($pagesToDelete as $pageRemoved) {
             $pageRemoved->setApplication(null);
@@ -1926,7 +1947,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getPages());
             }
             $query = PageQuery::create(null, $criteria);
@@ -1955,8 +1976,13 @@ abstract class BaseApplication extends BaseObject implements Persistent
             $this->initPages();
             $this->collPagesPartial = true;
         }
+
         if (!in_array($l, $this->collPages->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddPage($l);
+
+            if ($this->pagesScheduledForDeletion and $this->pagesScheduledForDeletion->contains($l)) {
+                $this->pagesScheduledForDeletion->remove($this->pagesScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -2117,7 +2143,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
                     if (false !== $this->collApplicationExtraPropertysPartial && count($collApplicationExtraPropertys)) {
                       $this->initApplicationExtraPropertys(false);
 
-                      foreach($collApplicationExtraPropertys as $obj) {
+                      foreach ($collApplicationExtraPropertys as $obj) {
                         if (false == $this->collApplicationExtraPropertys->contains($obj)) {
                           $this->collApplicationExtraPropertys->append($obj);
                         }
@@ -2127,12 +2153,13 @@ abstract class BaseApplication extends BaseObject implements Persistent
                     }
 
                     $collApplicationExtraPropertys->getInternalIterator()->rewind();
+
                     return $collApplicationExtraPropertys;
                 }
 
-                if($partial && $this->collApplicationExtraPropertys) {
-                    foreach($this->collApplicationExtraPropertys as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collApplicationExtraPropertys) {
+                    foreach ($this->collApplicationExtraPropertys as $obj) {
+                        if ($obj->isNew()) {
                             $collApplicationExtraPropertys[] = $obj;
                         }
                     }
@@ -2160,7 +2187,8 @@ abstract class BaseApplication extends BaseObject implements Persistent
     {
         $applicationExtraPropertysToDelete = $this->getApplicationExtraPropertys(new Criteria(), $con)->diff($applicationExtraPropertys);
 
-        $this->applicationExtraPropertysScheduledForDeletion = unserialize(serialize($applicationExtraPropertysToDelete));
+
+        $this->applicationExtraPropertysScheduledForDeletion = $applicationExtraPropertysToDelete;
 
         foreach ($applicationExtraPropertysToDelete as $applicationExtraPropertyRemoved) {
             $applicationExtraPropertyRemoved->setApplication(null);
@@ -2194,7 +2222,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getApplicationExtraPropertys());
             }
             $query = ApplicationExtraPropertyQuery::create(null, $criteria);
@@ -2223,8 +2251,13 @@ abstract class BaseApplication extends BaseObject implements Persistent
             $this->initApplicationExtraPropertys();
             $this->collApplicationExtraPropertysPartial = true;
         }
+
         if (!in_array($l, $this->collApplicationExtraPropertys->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddApplicationExtraProperty($l);
+
+            if ($this->applicationExtraPropertysScheduledForDeletion and $this->applicationExtraPropertysScheduledForDeletion->contains($l)) {
+                $this->applicationExtraPropertysScheduledForDeletion->remove($this->applicationExtraPropertysScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -2283,7 +2316,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
      *
      * This method is a user-space workaround for PHP's inability to garbage collect
      * objects with circular references (even in PHP 5.3). This is currently necessary
-     * when using Propel in certain daemon or large-volumne/high-memory operations.
+     * when using Propel in certain daemon or large-volume/high-memory operations.
      *
      * @param boolean $deep Whether to also clear the references on all referrer objects.
      */
@@ -2362,7 +2395,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
 
     // extra_properties behavior
     /**
-     * convert propertyname in method to property name
+     * convert a value to a valid property name
      *
      * @param String $name the camelized property name
      *
@@ -2404,10 +2437,10 @@ abstract class BaseApplication extends BaseObject implements Persistent
     {
       $count = 0;
       $properties = $this->getApplicationExtraPropertys(null, $con);
-      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
-      foreach($properties as $prop)
+      $propertyName = ApplicationPeer::normalizePropertyName($propertyName);
+      foreach($properties as $property)
       {
-        if($prop->getPropertyName() == $propertyName)
+        if($property->getPropertyName() == $propertyName)
         {
           $count++;
         }
@@ -2425,10 +2458,10 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     protected function setPropertyById($id, $value, PropelPDO $con = null)
     {
-      $prop = $this->getPropertyObjectById($id, $con);
-      if($prop instanceof ApplicationExtraProperty)
+      $property = $this->getPropertyObjectById($id, $con);
+      if($property instanceof ApplicationExtraProperty)
       {
-        $prop->setPropertyValue(ApplicationPeer::normalizeExtraPropertyValue($value));
+        $property->setPropertyValue(ApplicationPeer::normalizePropertyValue($value));
         return $this;
       }
       else
@@ -2449,12 +2482,12 @@ abstract class BaseApplication extends BaseObject implements Persistent
     {
       $ret = array();
       $properties = $this->getApplicationExtraPropertys(null, $con);
-      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
-      foreach($properties as $prop)
+      $propertyName = ApplicationPeer::normalizePropertyName($propertyName);
+      foreach($properties as $property)
       {
-        if($prop->getPropertyName() == $propertyName)
+        if($property->getPropertyName() == $propertyName)
         {
-          $ret[$prop->getId() ? $prop->getId() : $propertyName.'_'.count($ret)] = $prop;
+          $ret[$property->getId() ? $property->getId() : $propertyName.'_'.count($ret)] = $property;
         }
       }
       return $ret;
@@ -2465,7 +2498,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
      * If property is not saved yet, id is the list index, created this way :
      * $propertyName.'_'.$index.
      *
-     * @param Integer|String  $id   the id of prorty to retrieve.
+     * @param Integer|String  $id   the id of the property to retrieve.
      * @param PropelPDO       $con  Optional connection object
      *
      * @return ApplicationExtraProperty
@@ -2475,11 +2508,11 @@ abstract class BaseApplication extends BaseObject implements Persistent
       if(is_numeric($id))
       {
         $properties = $this->getApplicationExtraPropertys(null, $con);
-        foreach($properties as $prop)
+        foreach($properties as $property)
         {
-          if($prop->getId() == $id)
+          if($property->getId() == $id)
           {
-            return $prop;
+            return $property;
           }
         }
       }
@@ -2498,8 +2531,8 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     protected function isPropertyWithIdA($id, $propertyName, PropelPDO $con = null)
     {
-      $prop = $this->getPropertyObjectById($id, $con);
-      return $prop && $prop->getPropertyName() == ApplicationPeer::normalizeExtraPropertyName($propertyName);
+      $property = $this->getPropertyObjectById($id, $con);
+      return $property && $property->getPropertyName() == ApplicationPeer::normalizePropertyName($propertyName);
     }
 
     /**
@@ -2514,7 +2547,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     protected function setPropertyByNameAndId($name, $value, $id, PropelPDO $con = null)
     {
-      if($this->isPropertyWithIdA($id, ApplicationPeer::normalizeExtraPropertyName($name), $con))
+      if($this->isPropertyWithIdA($id, ApplicationPeer::normalizePropertyName($name), $con))
       {
         return $this->setPropertyById($id, $value);
       }
@@ -2529,10 +2562,10 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     protected function getPropertyById($id, $defaultValue = null, PropelPDO $con = null)
     {
-      $prop = $this->getPropertyObjectById($id, $con);
-      if($prop instanceof ApplicationExtraProperty)
+      $property = $this->getPropertyObjectById($id, $con);
+      if($property instanceof ApplicationExtraProperty)
       {
-        return $prop->getPropertyValue();
+        return $property->getPropertyValue();
       }
       else
       {
@@ -2547,7 +2580,7 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     protected function deletePropertyByNameAndId($name, $id, PropelPDO $con = null)
     {
-      if($this->isPropertyWithIdA($id, ApplicationPeer::normalizeExtraPropertyName($name), $con))
+      if($this->isPropertyWithIdA($id, ApplicationPeer::normalizePropertyName($name), $con))
       {
         return $this->deletePropertyById($id, $con);
       }
@@ -2561,15 +2594,15 @@ abstract class BaseApplication extends BaseObject implements Persistent
      */
     protected function deletePropertyById($id, PropelPDO $con = null)
     {
-      $prop = $this->getPropertyObjectById($id, $con);
-      if($prop instanceof ApplicationExtraProperty)
+      $property = $this->getPropertyObjectById($id, $con);
+      if($property instanceof ApplicationExtraProperty)
       {
-        if(!$prop->isNew())
+        if(!$property->isNew())
         {
-          $prop->delete($con);
+          $property->delete($con);
         }
-        $this->collApplicationExtraPropertys->remove($this->collApplicationExtraPropertys->search($prop));
-        return $prop;
+        $this->collApplicationExtraPropertys->remove($this->collApplicationExtraPropertys->search($property));
+        return $property;
       }
       else
       {
@@ -2582,18 +2615,18 @@ abstract class BaseApplication extends BaseObject implements Persistent
      *
      * @param PropelPDO $con Optional connection object
      */
-    public function deletePropertiesByName($name, PropelPDO $con = null)
+    public function deletepropertiesByName($name, PropelPDO $con = null)
     {
-      $props = $this->getPropertiesObjectsByName($name, $con);
-      foreach($props as $prop)
+      $properties = $this->getPropertiesObjectsByName($name, $con);
+      foreach($properties as $property)
       {
-        if($prop instanceof ApplicationExtraProperty)
+        if($property instanceof ApplicationExtraProperty)
         {
-          $prop->delete($con);
-          $this->collApplicationExtraPropertys->remove($this->collApplicationExtraPropertys->search($prop));
+          $property->delete($con);
+          $this->collApplicationExtraPropertys->remove($this->collApplicationExtraPropertys->search($property));
         }
       }
-      return $props;
+      return $properties;
     }
 /**
  * Initializes internal state of Application object.
@@ -2612,7 +2645,7 @@ public function __construct()
     protected function initializeProperties()
     {
     }/**
-     * Returns the list of registered extra properties
+     * Returns the list of registered properties
      * that can be set only once.
      *
      * @return array
@@ -2633,7 +2666,7 @@ public function __construct()
      */
     public function registerProperty($propertyName, $defaultValue = null)
     {
-      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
+      $propertyName = ApplicationPeer::normalizePropertyName($propertyName);
       /* comment this line to remove default value update ability
       if(!array_key_exists($propertyName, $this->extraProperties))
       {
@@ -2647,7 +2680,7 @@ public function __construct()
 
     /**
      * Set a single occurence property.
-     * If the property already exists, then it is ovverriden, ortherwise
+     * If the property already exists, then it is overriden, ortherwise
      * new property is created.
      *
      * @param String    $name   the property name.
@@ -2658,15 +2691,15 @@ public function __construct()
      */
     public function setProperty($name, $value, PropelPDO $con = null)
     {
-      $name = ApplicationPeer::normalizeExtraPropertyName($name);
+      $name = ApplicationPeer::normalizePropertyName($name);
       if($this->hasProperty($name, $con))
       {
         $properties = $this->getApplicationExtraPropertys(null, $con);
-        foreach($properties as $prop)
+        foreach($properties as $property)
         {
-          if($prop->getPropertyName() == $name)
+          if($property->getPropertyName() == $name)
           {
-            $prop->setPropertyValue(ApplicationPeer::normalizeExtraPropertyValue($value));
+            $property->setPropertyValue(ApplicationPeer::normalizePropertyValue($value));
             return $this;
           }
         }
@@ -2675,7 +2708,7 @@ public function __construct()
       {
         $property = new ApplicationExtraProperty();
         $property->setPropertyName($name);
-        $property->setPropertyValue(ApplicationPeer::normalizeExtraPropertyValue($value));
+        $property->setPropertyValue(ApplicationPeer::normalizePropertyValue($value));
         $this->addApplicationExtraProperty($property);
       }
       return $this;
@@ -2684,7 +2717,7 @@ public function __construct()
     /**
      * Get the value of an extra property that can appear only once.
      *
-     * @param   String    $propertyName   the name of propertyto retrieve.
+     * @param   String    $propertyName   the name of property retrieve.
      * @param   Mixed     $defaultValue   default value if property isn't set.
      * @param   PropelPDO $con            Optional connection object
      *
@@ -2693,12 +2726,12 @@ public function __construct()
     public function getProperty($propertyName, $defaultValue = null, PropelPDO $con = null)
     {
       $properties = $this->getApplicationExtraPropertys(null, $con);
-      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
-      foreach($properties as $prop)
+      $propertyName = ApplicationPeer::normalizePropertyName($propertyName);
+      foreach($properties as $property)
       {
-        if($prop->getPropertyName() == $propertyName)
+        if($property->getPropertyName() == $propertyName)
         {
-          return $prop->getPropertyValue();
+          return $property->getPropertyValue();
         }
       }
       return is_null($defaultValue)
@@ -2726,7 +2759,7 @@ public function __construct()
      */
     public function registerMultipleProperty($propertyName, $defaultValue = null)
     {
-      $propertyName = ApplicationPeer::normalizeExtraPropertyName($propertyName);
+      $propertyName = ApplicationPeer::normalizePropertyName($propertyName);
       /* comment this line to remove default value update ability
       if(!array_key_exists($propertyName, $this->multipleExtraProperties))
       {
@@ -2747,8 +2780,8 @@ public function __construct()
     public function addProperty($propertyName, $value)
     {
       $property = new ApplicationExtraProperty();
-      $property->setPropertyName(ApplicationPeer::normalizeExtraPropertyName($propertyName));
-      $property->setPropertyValue(ApplicationPeer::normalizeExtraPropertyValue($value));
+      $property->setPropertyName(ApplicationPeer::normalizePropertyName($propertyName));
+      $property->setPropertyValue(ApplicationPeer::normalizePropertyValue($value));
       $this->addApplicationExtraProperty($property);
       return $this;
     }
@@ -2770,9 +2803,9 @@ public function __construct()
     {
       $ret = array();
       $properties = $this->getPropertiesObjectsByName($propertyName, $con);
-      foreach($properties as $key => $prop)
+      foreach($properties as $key => $property)
       {
-        $ret[$key] = $prop->getPropertyValue();
+        $ret[$key] = $property->getPropertyValue();
       }
       // is there a property id ?
       if (!is_null($id) && isset($ret[$id]))
@@ -2789,9 +2822,21 @@ public function __construct()
     /**
      * returns an associative array with the properties and associated values.
      *
+     * @deprecated Prefer the getProperties() method
+     *
      * @return array
      */
     public function getExtraProperties($con = null)
+    {
+      return $this->getProperties($con);
+    }
+
+    /**
+     * returns an associative array with the properties and associated values.
+     *
+     * @return array
+     */
+    public function getProperties($con = null)
     {
       $ret = array();
 
@@ -2849,15 +2894,15 @@ public function __construct()
         // calls the registered properties dedicated functions
         if(in_array($methodName = substr($name, 0,3), array('add', 'set', 'has', 'get')))
         {
-          $propertyName = ApplicationPeer::normalizeExtraPropertyName($this->extraPropertyNameFromMethod(substr($name, 3)));
+          $propertyName = ApplicationPeer::normalizePropertyName($this->extraPropertyNameFromMethod(substr($name, 3)));
         }
         else if(in_array($methodName = substr($name, 0,5), array('count', 'clear')))
         {
-          $propertyName = ApplicationPeer::normalizeExtraPropertyName($this->extraPropertyNameFromMethod(substr($name, 5)));
+          $propertyName = ApplicationPeer::normalizePropertyName($this->extraPropertyNameFromMethod(substr($name, 5)));
         }
         else if(in_array($methodName = substr($name, 0,6), array('delete', 'update')))
         {
-          $propertyName = ApplicationPeer::normalizeExtraPropertyName($this->extraPropertyNameFromMethod(substr($name, 6)));
+          $propertyName = ApplicationPeer::normalizePropertyName($this->extraPropertyNameFromMethod(substr($name, 6)));
         }
         if(isset($propertyName))
         {

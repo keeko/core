@@ -42,7 +42,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
     protected static $peer;
 
     /**
-     * The flag var to prevent infinit loop in deep copy
+     * The flag var to prevent infinite loop in deep copy
      * @var       boolean
      */
     protected $startCopy = false;
@@ -110,6 +110,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function getId()
     {
+
         return $this->id;
     }
 
@@ -120,6 +121,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function getName()
     {
+
         return $this->name;
     }
 
@@ -130,6 +132,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function getTitle()
     {
+
         return $this->title;
     }
 
@@ -140,13 +143,14 @@ abstract class BaseRouter extends BaseObject implements Persistent
      */
     public function getClassName()
     {
+
         return $this->class_name;
     }
 
     /**
      * Set the value of [id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Router The current object (for fluent API support)
      */
     public function setId($v)
@@ -167,7 +171,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
     /**
      * Set the value of [name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Router The current object (for fluent API support)
      */
     public function setName($v)
@@ -188,7 +192,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
     /**
      * Set the value of [title] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Router The current object (for fluent API support)
      */
     public function setTitle($v)
@@ -209,7 +213,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
     /**
      * Set the value of [class_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Router The current object (for fluent API support)
      */
     public function setClassName($v)
@@ -250,7 +254,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      * more tables.
      *
      * @param array $row The row returned by PDOStatement->fetch(PDO::FETCH_NUM)
-     * @param int $startcol 0-based offset column which indicates which restultset column to start with.
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
      * @return int             next starting column
      * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
@@ -271,6 +275,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
+
             return $startcol + 4; // 4 = RouterPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -617,10 +622,10 @@ abstract class BaseRouter extends BaseObject implements Persistent
      *
      * In addition to checking the current object, all related objects will
      * also be validated.  If all pass then <code>true</code> is returned; otherwise
-     * an aggreagated array of ValidationFailed objects will be returned.
+     * an aggregated array of ValidationFailed objects will be returned.
      *
      * @param array $columns Array of column names to validate.
-     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objets otherwise.
+     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objects otherwise.
      */
     protected function doValidate($columns = null)
     {
@@ -725,6 +730,11 @@ abstract class BaseRouter extends BaseObject implements Persistent
             $keys[2] => $this->getTitle(),
             $keys[3] => $this->getClassName(),
         );
+        $virtualColumns = $this->virtualColumns;
+        foreach ($virtualColumns as $key => $virtualColumn) {
+            $result[$key] = $virtualColumn;
+        }
+
         if ($includeForeignObjects) {
             if (null !== $this->collApplications) {
                 $result['Applications'] = $this->collApplications->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1041,7 +1051,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
                     if (false !== $this->collApplicationsPartial && count($collApplications)) {
                       $this->initApplications(false);
 
-                      foreach($collApplications as $obj) {
+                      foreach ($collApplications as $obj) {
                         if (false == $this->collApplications->contains($obj)) {
                           $this->collApplications->append($obj);
                         }
@@ -1051,12 +1061,13 @@ abstract class BaseRouter extends BaseObject implements Persistent
                     }
 
                     $collApplications->getInternalIterator()->rewind();
+
                     return $collApplications;
                 }
 
-                if($partial && $this->collApplications) {
-                    foreach($this->collApplications as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collApplications) {
+                    foreach ($this->collApplications as $obj) {
+                        if ($obj->isNew()) {
                             $collApplications[] = $obj;
                         }
                     }
@@ -1084,7 +1095,8 @@ abstract class BaseRouter extends BaseObject implements Persistent
     {
         $applicationsToDelete = $this->getApplications(new Criteria(), $con)->diff($applications);
 
-        $this->applicationsScheduledForDeletion = unserialize(serialize($applicationsToDelete));
+
+        $this->applicationsScheduledForDeletion = $applicationsToDelete;
 
         foreach ($applicationsToDelete as $applicationRemoved) {
             $applicationRemoved->setRouter(null);
@@ -1118,7 +1130,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getApplications());
             }
             $query = ApplicationQuery::create(null, $criteria);
@@ -1147,8 +1159,13 @@ abstract class BaseRouter extends BaseObject implements Persistent
             $this->initApplications();
             $this->collApplicationsPartial = true;
         }
+
         if (!in_array($l, $this->collApplications->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddApplication($l);
+
+            if ($this->applicationsScheduledForDeletion and $this->applicationsScheduledForDeletion->contains($l)) {
+                $this->applicationsScheduledForDeletion->remove($this->applicationsScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -1280,7 +1297,7 @@ abstract class BaseRouter extends BaseObject implements Persistent
      *
      * This method is a user-space workaround for PHP's inability to garbage collect
      * objects with circular references (even in PHP 5.3). This is currently necessary
-     * when using Propel in certain daemon or large-volumne/high-memory operations.
+     * when using Propel in certain daemon or large-volume/high-memory operations.
      *
      * @param boolean $deep Whether to also clear the references on all referrer objects.
      */

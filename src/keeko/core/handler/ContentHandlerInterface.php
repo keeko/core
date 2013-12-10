@@ -17,7 +17,7 @@ interface ContentHandlerInterface {
 	 * Returns an associative array with keys for layout blocks
 	 * and ApplicationContent as value.
 	 * 
-	 * @param $match the result from a router match
+	 * @param array $match the result from a router match
 	 * @return ApplicationContentInterface[]
 	 */
 	public function getContents($match);
@@ -34,7 +34,7 @@ interface ContentHandlerInterface {
 	 * Returns an identifier to a specific layout that should be used
 	 * or <code>null</code> if nothing special should be used.
 	 * 
-	 * @param $match the result from a router match
+	 * @param array $match the result from a router match
 	 * @return String layout identifier
 	 */
 	public function getLayout($match);

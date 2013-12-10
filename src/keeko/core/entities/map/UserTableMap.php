@@ -76,8 +76,8 @@ class UserTableMap extends TableMap
     {
         $this->addRelation('Country', 'keeko\\core\\entities\\Country', RelationMap::MANY_TO_ONE, array('country_iso_nr' => 'iso_nr', ), null, null);
         $this->addRelation('Subdivision', 'keeko\\core\\entities\\Subdivision', RelationMap::MANY_TO_ONE, array('subdivision_id' => 'id', ), null, null);
-        $this->addRelation('Group', 'keeko\\core\\entities\\Group', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'RESTRICT', null, 'Groups');
-        $this->addRelation('GroupUser', 'keeko\\core\\entities\\GroupUser', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'RESTRICT', null, 'GroupUsers');
+        $this->addRelation('Group', 'keeko\\core\\entities\\Group', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null, 'Groups');
+        $this->addRelation('GroupUser', 'keeko\\core\\entities\\GroupUser', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null, 'GroupUsers');
     } // buildRelations()
 
     /**

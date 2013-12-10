@@ -45,7 +45,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
     protected static $peer;
 
     /**
-     * The flag var to prevent infinit loop in deep copy
+     * The flag var to prevent infinite loop in deep copy
      * @var       boolean
      */
     protected $startCopy = false;
@@ -118,6 +118,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      */
     public function getId()
     {
+
         return $this->id;
     }
 
@@ -128,6 +129,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      */
     public function getBlockItemId()
     {
+
         return $this->block_item_id;
     }
 
@@ -138,13 +140,14 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      */
     public function getSpan()
     {
+
         return $this->span;
     }
 
     /**
      * Set the value of [id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return BlockGrid The current object (for fluent API support)
      */
     public function setId($v)
@@ -165,7 +168,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
     /**
      * Set the value of [block_item_id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return BlockGrid The current object (for fluent API support)
      */
     public function setBlockItemId($v)
@@ -190,7 +193,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
     /**
      * Set the value of [span] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return BlockGrid The current object (for fluent API support)
      */
     public function setSpan($v)
@@ -231,7 +234,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      * more tables.
      *
      * @param array $row The row returned by PDOStatement->fetch(PDO::FETCH_NUM)
-     * @param int $startcol 0-based offset column which indicates which restultset column to start with.
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
      * @return int             next starting column
      * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
@@ -251,6 +254,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
+
             return $startcol + 3; // 3 = BlockGridPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -433,7 +437,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
             $this->alreadyInSave = true;
 
             // We call the save method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -607,10 +611,10 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      *
      * In addition to checking the current object, all related objects will
      * also be validated.  If all pass then <code>true</code> is returned; otherwise
-     * an aggreagated array of ValidationFailed objects will be returned.
+     * an aggregated array of ValidationFailed objects will be returned.
      *
      * @param array $columns Array of column names to validate.
-     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objets otherwise.
+     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objects otherwise.
      */
     protected function doValidate($columns = null)
     {
@@ -622,7 +626,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
 
 
             // We call the validate method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -723,6 +727,11 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
             $keys[1] => $this->getBlockItemId(),
             $keys[2] => $this->getSpan(),
         );
+        $virtualColumns = $this->virtualColumns;
+        foreach ($virtualColumns as $key => $virtualColumn) {
+            $result[$key] = $virtualColumn;
+        }
+
         if ($includeForeignObjects) {
             if (null !== $this->aBlockItem) {
                 $result['BlockItem'] = $this->aBlockItem->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -946,7 +955,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a BlockItem object.
      *
-     * @param             BlockItem $v
+     * @param                  BlockItem $v
      * @return BlockGrid The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1088,7 +1097,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
                     if (false !== $this->collBlockGridExtraPropertysPartial && count($collBlockGridExtraPropertys)) {
                       $this->initBlockGridExtraPropertys(false);
 
-                      foreach($collBlockGridExtraPropertys as $obj) {
+                      foreach ($collBlockGridExtraPropertys as $obj) {
                         if (false == $this->collBlockGridExtraPropertys->contains($obj)) {
                           $this->collBlockGridExtraPropertys->append($obj);
                         }
@@ -1098,12 +1107,13 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
                     }
 
                     $collBlockGridExtraPropertys->getInternalIterator()->rewind();
+
                     return $collBlockGridExtraPropertys;
                 }
 
-                if($partial && $this->collBlockGridExtraPropertys) {
-                    foreach($this->collBlockGridExtraPropertys as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collBlockGridExtraPropertys) {
+                    foreach ($this->collBlockGridExtraPropertys as $obj) {
+                        if ($obj->isNew()) {
                             $collBlockGridExtraPropertys[] = $obj;
                         }
                     }
@@ -1131,7 +1141,8 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
     {
         $blockGridExtraPropertysToDelete = $this->getBlockGridExtraPropertys(new Criteria(), $con)->diff($blockGridExtraPropertys);
 
-        $this->blockGridExtraPropertysScheduledForDeletion = unserialize(serialize($blockGridExtraPropertysToDelete));
+
+        $this->blockGridExtraPropertysScheduledForDeletion = $blockGridExtraPropertysToDelete;
 
         foreach ($blockGridExtraPropertysToDelete as $blockGridExtraPropertyRemoved) {
             $blockGridExtraPropertyRemoved->setBlockGrid(null);
@@ -1165,7 +1176,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getBlockGridExtraPropertys());
             }
             $query = BlockGridExtraPropertyQuery::create(null, $criteria);
@@ -1194,8 +1205,13 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
             $this->initBlockGridExtraPropertys();
             $this->collBlockGridExtraPropertysPartial = true;
         }
+
         if (!in_array($l, $this->collBlockGridExtraPropertys->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddBlockGridExtraProperty($l);
+
+            if ($this->blockGridExtraPropertysScheduledForDeletion and $this->blockGridExtraPropertysScheduledForDeletion->contains($l)) {
+                $this->blockGridExtraPropertysScheduledForDeletion->remove($this->blockGridExtraPropertysScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -1251,7 +1267,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      *
      * This method is a user-space workaround for PHP's inability to garbage collect
      * objects with circular references (even in PHP 5.3). This is currently necessary
-     * when using Propel in certain daemon or large-volumne/high-memory operations.
+     * when using Propel in certain daemon or large-volume/high-memory operations.
      *
      * @param boolean $deep Whether to also clear the references on all referrer objects.
      */
@@ -1300,7 +1316,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
 
     // extra_properties behavior
     /**
-     * convert propertyname in method to property name
+     * convert a value to a valid property name
      *
      * @param String $name the camelized property name
      *
@@ -1342,10 +1358,10 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
     {
       $count = 0;
       $properties = $this->getBlockGridExtraPropertys(null, $con);
-      $propertyName = BlockGridPeer::normalizeExtraPropertyName($propertyName);
-      foreach($properties as $prop)
+      $propertyName = BlockGridPeer::normalizePropertyName($propertyName);
+      foreach($properties as $property)
       {
-        if($prop->getPropertyName() == $propertyName)
+        if($property->getPropertyName() == $propertyName)
         {
           $count++;
         }
@@ -1363,10 +1379,10 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      */
     protected function setPropertyById($id, $value, PropelPDO $con = null)
     {
-      $prop = $this->getPropertyObjectById($id, $con);
-      if($prop instanceof BlockGridExtraProperty)
+      $property = $this->getPropertyObjectById($id, $con);
+      if($property instanceof BlockGridExtraProperty)
       {
-        $prop->setPropertyValue(BlockGridPeer::normalizeExtraPropertyValue($value));
+        $property->setPropertyValue(BlockGridPeer::normalizePropertyValue($value));
         return $this;
       }
       else
@@ -1387,12 +1403,12 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
     {
       $ret = array();
       $properties = $this->getBlockGridExtraPropertys(null, $con);
-      $propertyName = BlockGridPeer::normalizeExtraPropertyName($propertyName);
-      foreach($properties as $prop)
+      $propertyName = BlockGridPeer::normalizePropertyName($propertyName);
+      foreach($properties as $property)
       {
-        if($prop->getPropertyName() == $propertyName)
+        if($property->getPropertyName() == $propertyName)
         {
-          $ret[$prop->getId() ? $prop->getId() : $propertyName.'_'.count($ret)] = $prop;
+          $ret[$property->getId() ? $property->getId() : $propertyName.'_'.count($ret)] = $property;
         }
       }
       return $ret;
@@ -1403,7 +1419,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      * If property is not saved yet, id is the list index, created this way :
      * $propertyName.'_'.$index.
      *
-     * @param Integer|String  $id   the id of prorty to retrieve.
+     * @param Integer|String  $id   the id of the property to retrieve.
      * @param PropelPDO       $con  Optional connection object
      *
      * @return BlockGridExtraProperty
@@ -1413,11 +1429,11 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
       if(is_numeric($id))
       {
         $properties = $this->getBlockGridExtraPropertys(null, $con);
-        foreach($properties as $prop)
+        foreach($properties as $property)
         {
-          if($prop->getId() == $id)
+          if($property->getId() == $id)
           {
-            return $prop;
+            return $property;
           }
         }
       }
@@ -1436,8 +1452,8 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      */
     protected function isPropertyWithIdA($id, $propertyName, PropelPDO $con = null)
     {
-      $prop = $this->getPropertyObjectById($id, $con);
-      return $prop && $prop->getPropertyName() == BlockGridPeer::normalizeExtraPropertyName($propertyName);
+      $property = $this->getPropertyObjectById($id, $con);
+      return $property && $property->getPropertyName() == BlockGridPeer::normalizePropertyName($propertyName);
     }
 
     /**
@@ -1452,7 +1468,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      */
     protected function setPropertyByNameAndId($name, $value, $id, PropelPDO $con = null)
     {
-      if($this->isPropertyWithIdA($id, BlockGridPeer::normalizeExtraPropertyName($name), $con))
+      if($this->isPropertyWithIdA($id, BlockGridPeer::normalizePropertyName($name), $con))
       {
         return $this->setPropertyById($id, $value);
       }
@@ -1467,10 +1483,10 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      */
     protected function getPropertyById($id, $defaultValue = null, PropelPDO $con = null)
     {
-      $prop = $this->getPropertyObjectById($id, $con);
-      if($prop instanceof BlockGridExtraProperty)
+      $property = $this->getPropertyObjectById($id, $con);
+      if($property instanceof BlockGridExtraProperty)
       {
-        return $prop->getPropertyValue();
+        return $property->getPropertyValue();
       }
       else
       {
@@ -1485,7 +1501,7 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      */
     protected function deletePropertyByNameAndId($name, $id, PropelPDO $con = null)
     {
-      if($this->isPropertyWithIdA($id, BlockGridPeer::normalizeExtraPropertyName($name), $con))
+      if($this->isPropertyWithIdA($id, BlockGridPeer::normalizePropertyName($name), $con))
       {
         return $this->deletePropertyById($id, $con);
       }
@@ -1499,15 +1515,15 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      */
     protected function deletePropertyById($id, PropelPDO $con = null)
     {
-      $prop = $this->getPropertyObjectById($id, $con);
-      if($prop instanceof BlockGridExtraProperty)
+      $property = $this->getPropertyObjectById($id, $con);
+      if($property instanceof BlockGridExtraProperty)
       {
-        if(!$prop->isNew())
+        if(!$property->isNew())
         {
-          $prop->delete($con);
+          $property->delete($con);
         }
-        $this->collBlockGridExtraPropertys->remove($this->collBlockGridExtraPropertys->search($prop));
-        return $prop;
+        $this->collBlockGridExtraPropertys->remove($this->collBlockGridExtraPropertys->search($property));
+        return $property;
       }
       else
       {
@@ -1520,18 +1536,18 @@ abstract class BaseBlockGrid extends BaseObject implements Persistent
      *
      * @param PropelPDO $con Optional connection object
      */
-    public function deletePropertiesByName($name, PropelPDO $con = null)
+    public function deletepropertiesByName($name, PropelPDO $con = null)
     {
-      $props = $this->getPropertiesObjectsByName($name, $con);
-      foreach($props as $prop)
+      $properties = $this->getPropertiesObjectsByName($name, $con);
+      foreach($properties as $property)
       {
-        if($prop instanceof BlockGridExtraProperty)
+        if($property instanceof BlockGridExtraProperty)
         {
-          $prop->delete($con);
-          $this->collBlockGridExtraPropertys->remove($this->collBlockGridExtraPropertys->search($prop));
+          $property->delete($con);
+          $this->collBlockGridExtraPropertys->remove($this->collBlockGridExtraPropertys->search($property));
         }
       }
-      return $props;
+      return $properties;
     }
 /**
  * Initializes internal state of BlockGrid object.
@@ -1550,7 +1566,7 @@ public function __construct()
     protected function initializeProperties()
     {
     }/**
-     * Returns the list of registered extra properties
+     * Returns the list of registered properties
      * that can be set only once.
      *
      * @return array
@@ -1571,7 +1587,7 @@ public function __construct()
      */
     public function registerProperty($propertyName, $defaultValue = null)
     {
-      $propertyName = BlockGridPeer::normalizeExtraPropertyName($propertyName);
+      $propertyName = BlockGridPeer::normalizePropertyName($propertyName);
       /* comment this line to remove default value update ability
       if(!array_key_exists($propertyName, $this->extraProperties))
       {
@@ -1585,7 +1601,7 @@ public function __construct()
 
     /**
      * Set a single occurence property.
-     * If the property already exists, then it is ovverriden, ortherwise
+     * If the property already exists, then it is overriden, ortherwise
      * new property is created.
      *
      * @param String    $name   the property name.
@@ -1596,15 +1612,15 @@ public function __construct()
      */
     public function setProperty($name, $value, PropelPDO $con = null)
     {
-      $name = BlockGridPeer::normalizeExtraPropertyName($name);
+      $name = BlockGridPeer::normalizePropertyName($name);
       if($this->hasProperty($name, $con))
       {
         $properties = $this->getBlockGridExtraPropertys(null, $con);
-        foreach($properties as $prop)
+        foreach($properties as $property)
         {
-          if($prop->getPropertyName() == $name)
+          if($property->getPropertyName() == $name)
           {
-            $prop->setPropertyValue(BlockGridPeer::normalizeExtraPropertyValue($value));
+            $property->setPropertyValue(BlockGridPeer::normalizePropertyValue($value));
             return $this;
           }
         }
@@ -1613,7 +1629,7 @@ public function __construct()
       {
         $property = new BlockGridExtraProperty();
         $property->setPropertyName($name);
-        $property->setPropertyValue(BlockGridPeer::normalizeExtraPropertyValue($value));
+        $property->setPropertyValue(BlockGridPeer::normalizePropertyValue($value));
         $this->addBlockGridExtraProperty($property);
       }
       return $this;
@@ -1622,7 +1638,7 @@ public function __construct()
     /**
      * Get the value of an extra property that can appear only once.
      *
-     * @param   String    $propertyName   the name of propertyto retrieve.
+     * @param   String    $propertyName   the name of property retrieve.
      * @param   Mixed     $defaultValue   default value if property isn't set.
      * @param   PropelPDO $con            Optional connection object
      *
@@ -1631,12 +1647,12 @@ public function __construct()
     public function getProperty($propertyName, $defaultValue = null, PropelPDO $con = null)
     {
       $properties = $this->getBlockGridExtraPropertys(null, $con);
-      $propertyName = BlockGridPeer::normalizeExtraPropertyName($propertyName);
-      foreach($properties as $prop)
+      $propertyName = BlockGridPeer::normalizePropertyName($propertyName);
+      foreach($properties as $property)
       {
-        if($prop->getPropertyName() == $propertyName)
+        if($property->getPropertyName() == $propertyName)
         {
-          return $prop->getPropertyValue();
+          return $property->getPropertyValue();
         }
       }
       return is_null($defaultValue)
@@ -1664,7 +1680,7 @@ public function __construct()
      */
     public function registerMultipleProperty($propertyName, $defaultValue = null)
     {
-      $propertyName = BlockGridPeer::normalizeExtraPropertyName($propertyName);
+      $propertyName = BlockGridPeer::normalizePropertyName($propertyName);
       /* comment this line to remove default value update ability
       if(!array_key_exists($propertyName, $this->multipleExtraProperties))
       {
@@ -1685,8 +1701,8 @@ public function __construct()
     public function addProperty($propertyName, $value)
     {
       $property = new BlockGridExtraProperty();
-      $property->setPropertyName(BlockGridPeer::normalizeExtraPropertyName($propertyName));
-      $property->setPropertyValue(BlockGridPeer::normalizeExtraPropertyValue($value));
+      $property->setPropertyName(BlockGridPeer::normalizePropertyName($propertyName));
+      $property->setPropertyValue(BlockGridPeer::normalizePropertyValue($value));
       $this->addBlockGridExtraProperty($property);
       return $this;
     }
@@ -1708,9 +1724,9 @@ public function __construct()
     {
       $ret = array();
       $properties = $this->getPropertiesObjectsByName($propertyName, $con);
-      foreach($properties as $key => $prop)
+      foreach($properties as $key => $property)
       {
-        $ret[$key] = $prop->getPropertyValue();
+        $ret[$key] = $property->getPropertyValue();
       }
       // is there a property id ?
       if (!is_null($id) && isset($ret[$id]))
@@ -1727,9 +1743,21 @@ public function __construct()
     /**
      * returns an associative array with the properties and associated values.
      *
+     * @deprecated Prefer the getProperties() method
+     *
      * @return array
      */
     public function getExtraProperties($con = null)
+    {
+      return $this->getProperties($con);
+    }
+
+    /**
+     * returns an associative array with the properties and associated values.
+     *
+     * @return array
+     */
+    public function getProperties($con = null)
     {
       $ret = array();
 
@@ -1787,15 +1815,15 @@ public function __construct()
         // calls the registered properties dedicated functions
         if(in_array($methodName = substr($name, 0,3), array('add', 'set', 'has', 'get')))
         {
-          $propertyName = BlockGridPeer::normalizeExtraPropertyName($this->extraPropertyNameFromMethod(substr($name, 3)));
+          $propertyName = BlockGridPeer::normalizePropertyName($this->extraPropertyNameFromMethod(substr($name, 3)));
         }
         else if(in_array($methodName = substr($name, 0,5), array('count', 'clear')))
         {
-          $propertyName = BlockGridPeer::normalizeExtraPropertyName($this->extraPropertyNameFromMethod(substr($name, 5)));
+          $propertyName = BlockGridPeer::normalizePropertyName($this->extraPropertyNameFromMethod(substr($name, 5)));
         }
         else if(in_array($methodName = substr($name, 0,6), array('delete', 'update')))
         {
-          $propertyName = BlockGridPeer::normalizeExtraPropertyName($this->extraPropertyNameFromMethod(substr($name, 6)));
+          $propertyName = BlockGridPeer::normalizePropertyName($this->extraPropertyNameFromMethod(substr($name, 6)));
         }
         if(isset($propertyName))
         {

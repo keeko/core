@@ -61,8 +61,14 @@ abstract class BaseGroupActionQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'keeko', $modelName = 'keeko\\core\\entities\\GroupAction', $modelAlias = null)
+    public function __construct($dbName = null, $modelName = null, $modelAlias = null)
     {
+        if (null === $dbName) {
+            $dbName = 'keeko';
+        }
+        if (null === $modelName) {
+            $modelName = 'keeko\\core\\entities\\GroupAction';
+        }
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
@@ -79,10 +85,8 @@ abstract class BaseGroupActionQuery extends ModelCriteria
         if ($criteria instanceof GroupActionQuery) {
             return $criteria;
         }
-        $query = new GroupActionQuery();
-        if (null !== $modelAlias) {
-            $query->setModelAlias($modelAlias);
-        }
+        $query = new GroupActionQuery(null, null, $modelAlias);
+
         if ($criteria instanceof Criteria) {
             $query->mergeWith($criteria);
         }
@@ -111,7 +115,7 @@ abstract class BaseGroupActionQuery extends ModelCriteria
             return null;
         }
         if ((null !== ($obj = GroupActionPeer::getInstanceFromPool(serialize(array((string) $key[0], (string) $key[1]))))) && !$this->formatter) {
-            // the object is alredy in the instance pool
+            // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {

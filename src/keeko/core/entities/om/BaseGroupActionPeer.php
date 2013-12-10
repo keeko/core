@@ -35,7 +35,7 @@ abstract class BaseGroupActionPeer
     const OM_CLASS = 'keeko\\core\\entities\\GroupAction';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'GroupActionTableMap';
+    const TM_CLASS = 'keeko\\core\\entities\\map\\GroupActionTableMap';
 
     /** The total number of columns. */
     const NUM_COLUMNS = 2;
@@ -56,7 +56,7 @@ abstract class BaseGroupActionPeer
     const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
-     * An identiy map to hold any loaded instances of GroupAction objects.
+     * An identity map to hold any loaded instances of GroupAction objects.
      * This must be public so that other peer classes can access this when hydrating from JOIN
      * queries.
      * @var        array GroupAction[]
@@ -222,7 +222,7 @@ abstract class BaseGroupActionPeer
      *
      * @param      Criteria $criteria object used to create the SELECT statement.
      * @param      PropelPDO $con
-     * @return                 GroupAction
+     * @return GroupAction
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -289,7 +289,7 @@ abstract class BaseGroupActionPeer
      * to the cache in order to ensure that the same objects are always returned by doSelect*()
      * and retrieveByPK*() calls.
      *
-     * @param      GroupAction $obj A GroupAction object.
+     * @param GroupAction $obj A GroupAction object.
      * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
@@ -339,7 +339,7 @@ abstract class BaseGroupActionPeer
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
      * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-     * @return   GroupAction Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+     * @return GroupAction Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
      * @see        getPrimaryKeyHash()
      */
     public static function getInstanceFromPool($key)
@@ -360,10 +360,8 @@ abstract class BaseGroupActionPeer
      */
     public static function clearInstancePool($and_clear_all_references = false)
     {
-      if ($and_clear_all_references)
-      {
-        foreach (GroupActionPeer::$instances as $instance)
-        {
+      if ($and_clear_all_references) {
+        foreach (GroupActionPeer::$instances as $instance) {
           $instance->clearAllReferences(true);
         }
       }
@@ -1122,7 +1120,7 @@ abstract class BaseGroupActionPeer
     {
       $dbMap = Propel::getDatabaseMap(BaseGroupActionPeer::DATABASE_NAME);
       if (!$dbMap->hasTable(BaseGroupActionPeer::TABLE_NAME)) {
-        $dbMap->addTableObject(new GroupActionTableMap());
+        $dbMap->addTableObject(new \keeko\core\entities\map\GroupActionTableMap());
       }
     }
 
@@ -1168,7 +1166,7 @@ abstract class BaseGroupActionPeer
             $con->beginTransaction();
             $pk = BasePeer::doInsert($criteria, $con);
             $con->commit();
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -1249,7 +1247,7 @@ abstract class BaseGroupActionPeer
             $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -1316,7 +1314,7 @@ abstract class BaseGroupActionPeer
             $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -1329,7 +1327,7 @@ abstract class BaseGroupActionPeer
      *
      * NOTICE: This does not apply to primary or foreign keys for now.
      *
-     * @param      GroupAction $obj The object to validate.
+     * @param GroupAction $obj The object to validate.
      * @param      mixed $cols Column name or array of column names.
      *
      * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
@@ -1364,7 +1362,7 @@ abstract class BaseGroupActionPeer
      * @param   int $group_id
      * @param   int $action_id
      * @param      PropelPDO $con
-     * @return   GroupAction
+     * @return GroupAction
      */
     public static function retrieveByPK($group_id, $action_id, PropelPDO $con = null) {
         $_instancePoolKey = serialize(array((string) $group_id, (string) $action_id));

@@ -46,7 +46,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
     protected static $peer;
 
     /**
-     * The flag var to prevent infinit loop in deep copy
+     * The flag var to prevent infinite loop in deep copy
      * @var       boolean
      */
     protected $startCopy = false;
@@ -131,6 +131,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
      */
     public function getId()
     {
+
         return $this->id;
     }
 
@@ -141,6 +142,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
      */
     public function getName()
     {
+
         return $this->name;
     }
 
@@ -151,6 +153,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
      */
     public function getTitle()
     {
+
         return $this->title;
     }
 
@@ -161,13 +164,14 @@ abstract class BaseLayout extends BaseObject implements Persistent
      */
     public function getDesignId()
     {
+
         return $this->design_id;
     }
 
     /**
      * Set the value of [id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Layout The current object (for fluent API support)
      */
     public function setId($v)
@@ -188,7 +192,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
     /**
      * Set the value of [name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Layout The current object (for fluent API support)
      */
     public function setName($v)
@@ -209,7 +213,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
     /**
      * Set the value of [title] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Layout The current object (for fluent API support)
      */
     public function setTitle($v)
@@ -230,7 +234,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
     /**
      * Set the value of [design_id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Layout The current object (for fluent API support)
      */
     public function setDesignId($v)
@@ -275,7 +279,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
      * more tables.
      *
      * @param array $row The row returned by PDOStatement->fetch(PDO::FETCH_NUM)
-     * @param int $startcol 0-based offset column which indicates which restultset column to start with.
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
      * @return int             next starting column
      * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
@@ -296,6 +300,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
+
             return $startcol + 4; // 4 = LayoutPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -480,7 +485,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
             $this->alreadyInSave = true;
 
             // We call the save method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -679,10 +684,10 @@ abstract class BaseLayout extends BaseObject implements Persistent
      *
      * In addition to checking the current object, all related objects will
      * also be validated.  If all pass then <code>true</code> is returned; otherwise
-     * an aggreagated array of ValidationFailed objects will be returned.
+     * an aggregated array of ValidationFailed objects will be returned.
      *
      * @param array $columns Array of column names to validate.
-     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objets otherwise.
+     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objects otherwise.
      */
     protected function doValidate($columns = null)
     {
@@ -694,7 +699,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
 
 
             // We call the validate method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -807,6 +812,11 @@ abstract class BaseLayout extends BaseObject implements Persistent
             $keys[2] => $this->getTitle(),
             $keys[3] => $this->getDesignId(),
         );
+        $virtualColumns = $this->virtualColumns;
+        foreach ($virtualColumns as $key => $virtualColumn) {
+            $result[$key] = $virtualColumn;
+        }
+
         if ($includeForeignObjects) {
             if (null !== $this->aDesign) {
                 $result['Design'] = $this->aDesign->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -1045,7 +1055,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
     /**
      * Declares an association between this object and a Design object.
      *
-     * @param             Design $v
+     * @param                  Design $v
      * @return Layout The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1190,7 +1200,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
                     if (false !== $this->collPagesPartial && count($collPages)) {
                       $this->initPages(false);
 
-                      foreach($collPages as $obj) {
+                      foreach ($collPages as $obj) {
                         if (false == $this->collPages->contains($obj)) {
                           $this->collPages->append($obj);
                         }
@@ -1200,12 +1210,13 @@ abstract class BaseLayout extends BaseObject implements Persistent
                     }
 
                     $collPages->getInternalIterator()->rewind();
+
                     return $collPages;
                 }
 
-                if($partial && $this->collPages) {
-                    foreach($this->collPages as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collPages) {
+                    foreach ($this->collPages as $obj) {
+                        if ($obj->isNew()) {
                             $collPages[] = $obj;
                         }
                     }
@@ -1233,7 +1244,8 @@ abstract class BaseLayout extends BaseObject implements Persistent
     {
         $pagesToDelete = $this->getPages(new Criteria(), $con)->diff($pages);
 
-        $this->pagesScheduledForDeletion = unserialize(serialize($pagesToDelete));
+
+        $this->pagesScheduledForDeletion = $pagesToDelete;
 
         foreach ($pagesToDelete as $pageRemoved) {
             $pageRemoved->setLayout(null);
@@ -1267,7 +1279,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getPages());
             }
             $query = PageQuery::create(null, $criteria);
@@ -1296,8 +1308,13 @@ abstract class BaseLayout extends BaseObject implements Persistent
             $this->initPages();
             $this->collPagesPartial = true;
         }
+
         if (!in_array($l, $this->collPages->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddPage($l);
+
+            if ($this->pagesScheduledForDeletion and $this->pagesScheduledForDeletion->contains($l)) {
+                $this->pagesScheduledForDeletion->remove($this->pagesScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -1458,7 +1475,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
                     if (false !== $this->collBlocksPartial && count($collBlocks)) {
                       $this->initBlocks(false);
 
-                      foreach($collBlocks as $obj) {
+                      foreach ($collBlocks as $obj) {
                         if (false == $this->collBlocks->contains($obj)) {
                           $this->collBlocks->append($obj);
                         }
@@ -1468,12 +1485,13 @@ abstract class BaseLayout extends BaseObject implements Persistent
                     }
 
                     $collBlocks->getInternalIterator()->rewind();
+
                     return $collBlocks;
                 }
 
-                if($partial && $this->collBlocks) {
-                    foreach($this->collBlocks as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collBlocks) {
+                    foreach ($this->collBlocks as $obj) {
+                        if ($obj->isNew()) {
                             $collBlocks[] = $obj;
                         }
                     }
@@ -1501,7 +1519,8 @@ abstract class BaseLayout extends BaseObject implements Persistent
     {
         $blocksToDelete = $this->getBlocks(new Criteria(), $con)->diff($blocks);
 
-        $this->blocksScheduledForDeletion = unserialize(serialize($blocksToDelete));
+
+        $this->blocksScheduledForDeletion = $blocksToDelete;
 
         foreach ($blocksToDelete as $blockRemoved) {
             $blockRemoved->setLayout(null);
@@ -1535,7 +1554,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getBlocks());
             }
             $query = BlockQuery::create(null, $criteria);
@@ -1564,8 +1583,13 @@ abstract class BaseLayout extends BaseObject implements Persistent
             $this->initBlocks();
             $this->collBlocksPartial = true;
         }
+
         if (!in_array($l, $this->collBlocks->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddBlock($l);
+
+            if ($this->blocksScheduledForDeletion and $this->blocksScheduledForDeletion->contains($l)) {
+                $this->blocksScheduledForDeletion->remove($this->blocksScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -1622,7 +1646,7 @@ abstract class BaseLayout extends BaseObject implements Persistent
      *
      * This method is a user-space workaround for PHP's inability to garbage collect
      * objects with circular references (even in PHP 5.3). This is currently necessary
-     * when using Propel in certain daemon or large-volumne/high-memory operations.
+     * when using Propel in certain daemon or large-volume/high-memory operations.
      *
      * @param boolean $deep Whether to also clear the references on all referrer objects.
      */

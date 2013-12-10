@@ -6,6 +6,7 @@ use keeko\core\entities\Action;
 use keeko\core\module\ModuleInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use keeko\core\entities\Module;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 trait ActionTrait {
 

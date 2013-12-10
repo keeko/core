@@ -64,8 +64,14 @@ abstract class BaseBlockGridQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'keeko', $modelName = 'keeko\\core\\entities\\BlockGrid', $modelAlias = null)
+    public function __construct($dbName = null, $modelName = null, $modelAlias = null)
     {
+        if (null === $dbName) {
+            $dbName = 'keeko';
+        }
+        if (null === $modelName) {
+            $modelName = 'keeko\\core\\entities\\BlockGrid';
+        }
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
@@ -82,10 +88,8 @@ abstract class BaseBlockGridQuery extends ModelCriteria
         if ($criteria instanceof BlockGridQuery) {
             return $criteria;
         }
-        $query = new BlockGridQuery();
-        if (null !== $modelAlias) {
-            $query->setModelAlias($modelAlias);
-        }
+        $query = new BlockGridQuery(null, null, $modelAlias);
+
         if ($criteria instanceof Criteria) {
             $query->mergeWith($criteria);
         }
@@ -113,7 +117,7 @@ abstract class BaseBlockGridQuery extends ModelCriteria
             return null;
         }
         if ((null !== ($obj = BlockGridPeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
-            // the object is alredy in the instance pool
+            // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {
@@ -540,8 +544,7 @@ abstract class BaseBlockGridQuery extends ModelCriteria
 
     // extra_properties behavior
     /**
-     * Filter based on an extra property
-     *
+     * Filter based on a property *
      * If the property is not set for a particular object it will be present in the results
      *
      * @var string $propertyName The name of the property to filter on
@@ -549,10 +552,10 @@ abstract class BaseBlockGridQuery extends ModelCriteria
      *
      * @return BlockGridQuery
      */
-    public function filterByExtraProperty($propertyName, $propertyValue)
+    public function filterByProperty($propertyName, $propertyValue)
     {
-      $propertyName = BlockGridPeer::normalizeExtraPropertyName($propertyName);
-      $propertyValue = BlockGridPeer::normalizeExtraPropertyValue($propertyValue);
+      $propertyName = BlockGridPeer::normalizePropertyName($propertyName);
+      $propertyValue = BlockGridPeer::normalizePropertyValue($propertyValue);
 
       return $this
         ->leftJoinBlockGridExtraProperty($joinName = $propertyName . '_' . uniqid())
@@ -561,8 +564,22 @@ abstract class BaseBlockGridQuery extends ModelCriteria
     }
 
     /**
-     * Filter based on an extra property
+     * Filter based on a property *
+     * If the property is not set for a particular object it will be present in the results
      *
+     * @deprecated see filterByProperty()
+     *
+     * @var string $propertyName The name of the property to filter on
+     * @var mixed $propertyValue The value of the property to filter on
+     *
+     * @return BlockGridQuery
+     */
+    public function filterByExtraProperty($propertyName, $propertyValue)
+    {
+      return $this->filterByProperty($propertyName, $propertyValue);
+    }
+    /**
+     * Filter based on a property *
      * If the property is not set for a particular object it it will be assumed
      * to have a value of $default
      *
@@ -573,11 +590,11 @@ abstract class BaseBlockGridQuery extends ModelCriteria
      *
      * @return BlockGridQuery
      */
-    public function filterByExtraPropertyWithDefault($propertyName, $propertyValue, $default)
+    public function filterByPropertyWithDefault($propertyName, $propertyValue, $default)
     {
-      $propertyName = BlockGridPeer::normalizeExtraPropertyName($propertyName);
-      $propertyValue = BlockGridPeer::normalizeExtraPropertyValue($propertyValue);
-      $default = BlockGridPeer::normalizeExtraPropertyValue($default);
+      $propertyName = BlockGridPeer::normalizePropertyName($propertyName);
+      $propertyValue = BlockGridPeer::normalizePropertyValue($propertyValue);
+      $default = BlockGridPeer::normalizePropertyValue($default);
 
       return $this
         ->leftJoinBlockGridExtraProperty($joinName = $propertyName . '_' . uniqid())
@@ -585,5 +602,23 @@ abstract class BaseBlockGridQuery extends ModelCriteria
         ->where("COALESCE({$joinName}.PropertyValue, '{$default}') = ?", $propertyValue);
     }
 
+    /**
+     * Filter based on a property *
+     * If the property is not set for a particular object it it will be assumed
+     * to have a value of $default
+     *
+     * @deprecated see filterByExtraPropertyWithDefault()
+     *
+     * @var string $propertyName The name of the property to filter on
+     * @var mixed $propertyValue The value of the property to filter on
+     * @var mixed $default The value that will be assumed as default if an object
+     *                     does not have the property set
+     *
+     * @return BlockGridQuery
+     */
+    public function filterByExtraPropertyWithDefault($propertyName, $propertyValue, $default)
+    {
+      return $this->filterByPropertyWithDefault($propertyName, $propertyValue, $default);
+    }
 
 }

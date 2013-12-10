@@ -43,7 +43,7 @@ abstract class BaseModule extends Package implements Persistent
     protected static $peer;
 
     /**
-     * The flag var to prevent infinit loop in deep copy
+     * The flag var to prevent infinite loop in deep copy
      * @var       boolean
      */
     protected $startCopy = false;
@@ -140,6 +140,7 @@ abstract class BaseModule extends Package implements Persistent
      */
     public function getClassName()
     {
+
         return $this->class_name;
     }
 
@@ -150,6 +151,7 @@ abstract class BaseModule extends Package implements Persistent
      */
     public function getActivatedVersion()
     {
+
         return $this->activated_version;
     }
 
@@ -160,6 +162,7 @@ abstract class BaseModule extends Package implements Persistent
      */
     public function getDefaultAction()
     {
+
         return $this->default_action;
     }
 
@@ -170,6 +173,7 @@ abstract class BaseModule extends Package implements Persistent
      */
     public function getId()
     {
+
         return $this->id;
     }
 
@@ -180,6 +184,7 @@ abstract class BaseModule extends Package implements Persistent
      */
     public function getName()
     {
+
         return $this->name;
     }
 
@@ -190,6 +195,7 @@ abstract class BaseModule extends Package implements Persistent
      */
     public function getTitle()
     {
+
         return $this->title;
     }
 
@@ -200,6 +206,7 @@ abstract class BaseModule extends Package implements Persistent
      */
     public function getDescription()
     {
+
         return $this->description;
     }
 
@@ -210,13 +217,14 @@ abstract class BaseModule extends Package implements Persistent
      */
     public function getInstalledVersion()
     {
+
         return $this->installed_version;
     }
 
     /**
      * Set the value of [class_name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Module The current object (for fluent API support)
      */
     public function setClassName($v)
@@ -237,7 +245,7 @@ abstract class BaseModule extends Package implements Persistent
     /**
      * Set the value of [activated_version] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Module The current object (for fluent API support)
      */
     public function setActivatedVersion($v)
@@ -258,7 +266,7 @@ abstract class BaseModule extends Package implements Persistent
     /**
      * Set the value of [default_action] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Module The current object (for fluent API support)
      */
     public function setDefaultAction($v)
@@ -279,7 +287,7 @@ abstract class BaseModule extends Package implements Persistent
     /**
      * Set the value of [id] column.
      *
-     * @param int $v new value
+     * @param  int $v new value
      * @return Module The current object (for fluent API support)
      */
     public function setId($v)
@@ -304,7 +312,7 @@ abstract class BaseModule extends Package implements Persistent
     /**
      * Set the value of [name] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Module The current object (for fluent API support)
      */
     public function setName($v)
@@ -325,7 +333,7 @@ abstract class BaseModule extends Package implements Persistent
     /**
      * Set the value of [title] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Module The current object (for fluent API support)
      */
     public function setTitle($v)
@@ -346,7 +354,7 @@ abstract class BaseModule extends Package implements Persistent
     /**
      * Set the value of [description] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Module The current object (for fluent API support)
      */
     public function setDescription($v)
@@ -367,7 +375,7 @@ abstract class BaseModule extends Package implements Persistent
     /**
      * Set the value of [installed_version] column.
      *
-     * @param string $v new value
+     * @param  string $v new value
      * @return Module The current object (for fluent API support)
      */
     public function setInstalledVersion($v)
@@ -408,7 +416,7 @@ abstract class BaseModule extends Package implements Persistent
      * more tables.
      *
      * @param array $row The row returned by PDOStatement->fetch(PDO::FETCH_NUM)
-     * @param int $startcol 0-based offset column which indicates which restultset column to start with.
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
      * @return int             next starting column
      * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
@@ -433,6 +441,7 @@ abstract class BaseModule extends Package implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
+
             return $startcol + 8; // 8 = ModulePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -623,7 +632,7 @@ abstract class BaseModule extends Package implements Persistent
             $this->alreadyInSave = true;
 
             // We call the save method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -816,10 +825,10 @@ abstract class BaseModule extends Package implements Persistent
      *
      * In addition to checking the current object, all related objects will
      * also be validated.  If all pass then <code>true</code> is returned; otherwise
-     * an aggreagated array of ValidationFailed objects will be returned.
+     * an aggregated array of ValidationFailed objects will be returned.
      *
      * @param array $columns Array of column names to validate.
-     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objets otherwise.
+     * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objects otherwise.
      */
     protected function doValidate($columns = null)
     {
@@ -831,7 +840,7 @@ abstract class BaseModule extends Package implements Persistent
 
 
             // We call the validate method on the following object(s) if they
-            // were passed to this object by their coresponding set
+            // were passed to this object by their corresponding set
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
@@ -952,6 +961,11 @@ abstract class BaseModule extends Package implements Persistent
             $keys[6] => $this->getDescription(),
             $keys[7] => $this->getInstalledVersion(),
         );
+        $virtualColumns = $this->virtualColumns;
+        foreach ($virtualColumns as $key => $virtualColumn) {
+            $result[$key] = $virtualColumn;
+        }
+
         if ($includeForeignObjects) {
             if (null !== $this->aPackage) {
                 $result['Package'] = $this->aPackage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -1210,7 +1224,7 @@ abstract class BaseModule extends Package implements Persistent
     /**
      * Declares an association between this object and a Package object.
      *
-     * @param             Package $v
+     * @param                  Package $v
      * @return Module The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1346,7 +1360,7 @@ abstract class BaseModule extends Package implements Persistent
                     if (false !== $this->collActionsPartial && count($collActions)) {
                       $this->initActions(false);
 
-                      foreach($collActions as $obj) {
+                      foreach ($collActions as $obj) {
                         if (false == $this->collActions->contains($obj)) {
                           $this->collActions->append($obj);
                         }
@@ -1356,12 +1370,13 @@ abstract class BaseModule extends Package implements Persistent
                     }
 
                     $collActions->getInternalIterator()->rewind();
+
                     return $collActions;
                 }
 
-                if($partial && $this->collActions) {
-                    foreach($this->collActions as $obj) {
-                        if($obj->isNew()) {
+                if ($partial && $this->collActions) {
+                    foreach ($this->collActions as $obj) {
+                        if ($obj->isNew()) {
                             $collActions[] = $obj;
                         }
                     }
@@ -1389,7 +1404,8 @@ abstract class BaseModule extends Package implements Persistent
     {
         $actionsToDelete = $this->getActions(new Criteria(), $con)->diff($actions);
 
-        $this->actionsScheduledForDeletion = unserialize(serialize($actionsToDelete));
+
+        $this->actionsScheduledForDeletion = $actionsToDelete;
 
         foreach ($actionsToDelete as $actionRemoved) {
             $actionRemoved->setModule(null);
@@ -1423,7 +1439,7 @@ abstract class BaseModule extends Package implements Persistent
                 return 0;
             }
 
-            if($partial && !$criteria) {
+            if ($partial && !$criteria) {
                 return count($this->getActions());
             }
             $query = ActionQuery::create(null, $criteria);
@@ -1452,8 +1468,13 @@ abstract class BaseModule extends Package implements Persistent
             $this->initActions();
             $this->collActionsPartial = true;
         }
+
         if (!in_array($l, $this->collActions->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
             $this->doAddAction($l);
+
+            if ($this->actionsScheduledForDeletion and $this->actionsScheduledForDeletion->contains($l)) {
+                $this->actionsScheduledForDeletion->remove($this->actionsScheduledForDeletion->search($l));
+            }
         }
 
         return $this;
@@ -1514,7 +1535,7 @@ abstract class BaseModule extends Package implements Persistent
      *
      * This method is a user-space workaround for PHP's inability to garbage collect
      * objects with circular references (even in PHP 5.3). This is currently necessary
-     * when using Propel in certain daemon or large-volumne/high-memory operations.
+     * when using Propel in certain daemon or large-volume/high-memory operations.
      *
      * @param boolean $deep Whether to also clear the references on all referrer objects.
      */

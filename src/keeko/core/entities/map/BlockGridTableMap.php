@@ -71,6 +71,7 @@ class BlockGridTableMap extends TableMap
 ),
             'extra_properties' =>  array (
   'properties_table' => 'block_grid_properties',
+  'property_name' => 'property',
   'property_name_column' => 'property_name',
   'property_value_column' => 'property_value',
   'default_properties' => '',

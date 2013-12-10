@@ -35,7 +35,7 @@ abstract class BaseLanguagePeer
     const OM_CLASS = 'keeko\\core\\entities\\Language';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'LanguageTableMap';
+    const TM_CLASS = 'keeko\\core\\entities\\map\\LanguageTableMap';
 
     /** The total number of columns. */
     const NUM_COLUMNS = 10;
@@ -80,7 +80,7 @@ abstract class BaseLanguagePeer
     const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
-     * An identiy map to hold any loaded instances of Language objects.
+     * An identity map to hold any loaded instances of Language objects.
      * This must be public so that other peer classes can access this when hydrating from JOIN
      * queries.
      * @var        array Language[]
@@ -262,7 +262,7 @@ abstract class BaseLanguagePeer
      *
      * @param      Criteria $criteria object used to create the SELECT statement.
      * @param      PropelPDO $con
-     * @return                 Language
+     * @return Language
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -329,7 +329,7 @@ abstract class BaseLanguagePeer
      * to the cache in order to ensure that the same objects are always returned by doSelect*()
      * and retrieveByPK*() calls.
      *
-     * @param      Language $obj A Language object.
+     * @param Language $obj A Language object.
      * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
@@ -379,7 +379,7 @@ abstract class BaseLanguagePeer
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
      * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-     * @return   Language Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+     * @return Language Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
      * @see        getPrimaryKeyHash()
      */
     public static function getInstanceFromPool($key)
@@ -400,10 +400,8 @@ abstract class BaseLanguagePeer
      */
     public static function clearInstancePool($and_clear_all_references = false)
     {
-      if ($and_clear_all_references)
-      {
-        foreach (LanguagePeer::$instances as $instance)
-        {
+      if ($and_clear_all_references) {
+        foreach (LanguagePeer::$instances as $instance) {
           $instance->clearAllReferences(true);
         }
       }
@@ -1162,7 +1160,7 @@ abstract class BaseLanguagePeer
     {
       $dbMap = Propel::getDatabaseMap(BaseLanguagePeer::DATABASE_NAME);
       if (!$dbMap->hasTable(BaseLanguagePeer::TABLE_NAME)) {
-        $dbMap->addTableObject(new LanguageTableMap());
+        $dbMap->addTableObject(new \keeko\core\entities\map\LanguageTableMap());
       }
     }
 
@@ -1212,7 +1210,7 @@ abstract class BaseLanguagePeer
             $con->beginTransaction();
             $pk = BasePeer::doInsert($criteria, $con);
             $con->commit();
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -1285,7 +1283,7 @@ abstract class BaseLanguagePeer
             $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -1344,7 +1342,7 @@ abstract class BaseLanguagePeer
             $con->commit();
 
             return $affectedRows;
-        } catch (PropelException $e) {
+        } catch (Exception $e) {
             $con->rollBack();
             throw $e;
         }
@@ -1357,7 +1355,7 @@ abstract class BaseLanguagePeer
      *
      * NOTICE: This does not apply to primary or foreign keys for now.
      *
-     * @param      Language $obj The object to validate.
+     * @param Language $obj The object to validate.
      * @param      mixed $cols Column name or array of column names.
      *
      * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
@@ -1390,7 +1388,7 @@ abstract class BaseLanguagePeer
     /**
      * Retrieve a single object by pkey.
      *
-     * @param      int $pk the primary key.
+     * @param int $pk the primary key.
      * @param      PropelPDO $con the connection to use
      * @return Language
      */
