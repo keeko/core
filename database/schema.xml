@@ -188,6 +188,7 @@
 		</behavior>
 
 		<behavior name="extra_properties">
+			<parameter name="property_name" value="param" />
 			<parameter name="properties_table" value="application_params" />
 			<parameter name="normalize" value="false" />
 		</behavior>
@@ -200,8 +201,8 @@
 		<column name="basepath" type="VARCHAR" size="255" required="true" />
 		<column name="secure" type="BOOLEAN" />
 		<column name="application_id" type="INTEGER" size="10" required="true" />
-		<column name="localization_id" type="INTEGER" size="10"
-			required="true" />
+		<column name="localization_id" type="INTEGER" size="10" required="true" />
+			
 		<foreign-key foreignTable="application" onDelete="restrict">
 			<reference local="application_id" foreign="id" />
 		</foreign-key>

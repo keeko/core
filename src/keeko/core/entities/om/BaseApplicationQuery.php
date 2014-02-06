@@ -1076,74 +1076,74 @@ abstract class BaseApplicationQuery extends ModelCriteria
 
     // extra_properties behavior
     /**
-     * Filter based on a property *
-     * If the property is not set for a particular object it will be present in the results
+     * Filter based on a param *
+     * If the param is not set for a particular object it will be present in the results
      *
-     * @var string $propertyName The name of the property to filter on
-     * @var mixed $propertyValue The value of the property to filter on
+     * @var string $paramName The name of the param to filter on
+     * @var mixed $paramValue The value of the param to filter on
      *
      * @return ApplicationQuery
      */
-    public function filterByProperty($propertyName, $propertyValue)
+    public function filterByParam($paramName, $paramValue)
     {
       return $this
-        ->leftJoinApplicationExtraProperty($joinName = $propertyName . '_' . uniqid())
-        ->addJoinCondition($joinName, "{$joinName}.PropertyName = ?", $propertyName)
-        ->where("{$joinName}.PropertyValue = ?", $propertyValue);
+        ->leftJoinApplicationExtraProperty($joinName = $paramName . '_' . uniqid())
+        ->addJoinCondition($joinName, "{$joinName}.PropertyName = ?", $paramName)
+        ->where("{$joinName}.PropertyValue = ?", $paramValue);
     }
 
     /**
-     * Filter based on a property *
-     * If the property is not set for a particular object it will be present in the results
+     * Filter based on a param *
+     * If the param is not set for a particular object it will be present in the results
      *
-     * @deprecated see filterByProperty()
+     * @deprecated see filterByParam()
      *
-     * @var string $propertyName The name of the property to filter on
-     * @var mixed $propertyValue The value of the property to filter on
+     * @var string $paramName The name of the param to filter on
+     * @var mixed $paramValue The value of the param to filter on
      *
      * @return ApplicationQuery
      */
-    public function filterByExtraProperty($propertyName, $propertyValue)
+    public function filterByExtraProperty($paramName, $paramValue)
     {
-      return $this->filterByProperty($propertyName, $propertyValue);
+      return $this->filterByParam($paramName, $paramValue);
     }
     /**
-     * Filter based on a property *
-     * If the property is not set for a particular object it it will be assumed
+     * Filter based on a param *
+     * If the param is not set for a particular object it it will be assumed
      * to have a value of $default
      *
-     * @var string $propertyName The name of the property to filter on
-     * @var mixed $propertyValue The value of the property to filter on
+     * @var string $paramName The name of the param to filter on
+     * @var mixed $paramValue The value of the param to filter on
      * @var mixed $default The value that will be assumed as default if an object
-     *                     does not have the property set
+     *                     does not have the param set
      *
      * @return ApplicationQuery
      */
-    public function filterByPropertyWithDefault($propertyName, $propertyValue, $default)
+    public function filterByParamWithDefault($paramName, $paramValue, $default)
     {
       return $this
-        ->leftJoinApplicationExtraProperty($joinName = $propertyName . '_' . uniqid())
-        ->addJoinCondition($joinName, "{$joinName}.PropertyName = ?", $propertyName)
-        ->where("COALESCE({$joinName}.PropertyValue, '{$default}') = ?", $propertyValue);
+        ->leftJoinApplicationExtraProperty($joinName = $paramName . '_' . uniqid())
+        ->addJoinCondition($joinName, "{$joinName}.PropertyName = ?", $paramName)
+        ->where("COALESCE({$joinName}.PropertyValue, '{$default}') = ?", $paramValue);
     }
 
     /**
-     * Filter based on a property *
-     * If the property is not set for a particular object it it will be assumed
+     * Filter based on a param *
+     * If the param is not set for a particular object it it will be assumed
      * to have a value of $default
      *
      * @deprecated see filterByExtraPropertyWithDefault()
      *
-     * @var string $propertyName The name of the property to filter on
-     * @var mixed $propertyValue The value of the property to filter on
+     * @var string $paramName The name of the param to filter on
+     * @var mixed $paramValue The value of the param to filter on
      * @var mixed $default The value that will be assumed as default if an object
-     *                     does not have the property set
+     *                     does not have the param set
      *
      * @return ApplicationQuery
      */
-    public function filterByExtraPropertyWithDefault($propertyName, $propertyValue, $default)
+    public function filterByExtraPropertyWithDefault($paramName, $paramValue, $default)
     {
-      return $this->filterByPropertyWithDefault($propertyName, $propertyValue, $default);
+      return $this->filterByParamWithDefault($paramName, $paramValue, $default);
     }
 
 }

@@ -13,10 +13,10 @@ class Keeko {
 
 	/** @var Application */
 	protected $application;
-	
+
 	/** @var Localization */
 	protected $localization;
-	
+
 	/** @var RouterInterface */
 	protected $router;
 
@@ -25,38 +25,38 @@ class Keeko {
 
 	/**
 	 * Creates a new Keeko Application
-	 * 
+	 *
 	 */
 	public function __construct() {
 		$this->moduleManager = new ModuleManager($this);
-	}	
-	
+	}
+
 	public function setEntity(Application $application) {
 		$this->application = $application;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return Application
 	 */
 	public function getEntity() {
 		return $this->application;
 	}
-	
-	public function setLocalization(Localization $localization) { 
+
+	public function setLocalization(Localization $localization) {
 		$this->localization = $localization;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return Localization
 	 */
 	public function getLocalization() {
 		return $this->localization;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return ModuleManager
 	 */
 	public function getModuleManager() {
@@ -65,19 +65,15 @@ class Keeko {
 
 	public function run(Request $request, ApplicationRouter $appRouter) {
 		// get params
-		$params = $this->application->getExtraProperties(); // see: https://github.com/Carpe-Hora/ExtraPropertiesBehavior/issues/12
-// 		$params = [];
-// 		foreach ($this->application->getExtraProperties() as $key => $value) {
-// 			$params[strtolower($key)] = $value;
-// 		}
+		$params = $this->application->getParams();
 		$params['application'] = $this->application;
 		$params['basepath'] = $appRouter->getPrefix();
 
 		$routing = $this->application->getRouter()->getClassname();
 		$this->router = new $routing($params);
-		
+
 		$response = new Response('', 200, ['content-type' => 'text/html']);
-		
+
 		try {
 			$handler = $this->router->getHandler();
 			$handler->setKeeko($this);
@@ -116,7 +112,7 @@ class Keeko {
 		} catch (MethodNotAllowedException $e) {
 			$response->setStatusCode(405);
 		}
-		
+
 		return $response;
 	}
 

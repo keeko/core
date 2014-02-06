@@ -96,8 +96,8 @@ class KeekoInstaller {
 		$api->setDesign($design);
 		$api->setTitle('API');
 		$api->setRouter($mar);
-		$api->setProperty('module', 'keeko/user');
-		$api->setProperty('action', 'users');
+		$api->setParam('module', 'keeko/user');
+		$api->setParam('action', 'users');
 		$api->save();
 
 		$uri = new ApplicationUri();

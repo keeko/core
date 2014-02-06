@@ -156,10 +156,10 @@ abstract class BaseApplication extends BaseObject implements Persistent
 
     // extra_properties behavior
 
-    /** the list of all single properties */
-    protected $extraProperties = array();
-    /** the list of all multiple properties */
-    protected $multipleExtraProperties = array();
+    /** the list of all single params */
+    protected $extraParams = array();
+    /** the list of all multiple params */
+    protected $multipleExtraParams = array();
     /**
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
@@ -2395,13 +2395,13 @@ abstract class BaseApplication extends BaseObject implements Persistent
 
     // extra_properties behavior
     /**
-     * convert a value to a valid property name
+     * convert a value to a valid param name
      *
-     * @param String $name the camelized property name
+     * @param String $name the camelized param name
      *
      * @return String
      */
-    protected function extraPropertyNameFromMethod($name)
+    protected function extraParamNameFromMethod($name)
     {
       $tmp = $name;
       $tmp = str_replace('::', '/', $tmp);
@@ -2411,36 +2411,36 @@ abstract class BaseApplication extends BaseObject implements Persistent
     }
 
     /**
-     * checks that the event defines a property with $propertyName
+     * checks that the event defines a param with $paramName
      *
      * @todo optimize to make it stop on first occurence
      *
-     * @param String    $propertyName  name of the property to check.
+     * @param String    $paramName  name of the param to check.
      * @param PropelPDO $con           Optional connection object
      *
      * @return Boolean
      */
-    public function hasProperty($propertyName, PropelPDO $con = null)
+    public function hasParam($paramName, PropelPDO $con = null)
     {
-      return $this->countPropertiesByName($propertyName, $con) > 0;
+      return $this->countParamsByName($paramName, $con) > 0;
     }
 
     /**
-     * Count the number of occurences of $propertyName.
+     * Count the number of occurences of $paramName.
      *
-     * @param   String    $propertyName   the property to count.
+     * @param   String    $paramName   the param to count.
      * @param   PropelPDO $con            Optional connection object
      *
      * @return  Integer
      */
-    public function countPropertiesByName($propertyName, PropelPDO $con = null)
+    public function countParamsByName($paramName, PropelPDO $con = null)
     {
       $count = 0;
-      $properties = $this->getApplicationExtraPropertys(null, $con);
-      $propertyName = ApplicationPeer::normalizePropertyName($propertyName);
-      foreach($properties as $property)
+      $params = $this->getApplicationExtraPropertys(null, $con);
+      $paramName = ApplicationPeer::normalizeParamName($paramName);
+      foreach($params as $param)
       {
-        if($property->getPropertyName() == $propertyName)
+        if($param->getPropertyName() == $paramName)
         {
           $count++;
         }
@@ -2449,19 +2449,19 @@ abstract class BaseApplication extends BaseObject implements Persistent
     }
 
     /**
-     * Set the property with id $id.
-     * can only be used with an already set property
+     * Set the param with id $id.
+     * can only be used with an already set param
      *
      * @param   PropelPDO $con Optional connection object
      *
      * @return Application|false
      */
-    protected function setPropertyById($id, $value, PropelPDO $con = null)
+    protected function setParamById($id, $value, PropelPDO $con = null)
     {
-      $property = $this->getPropertyObjectById($id, $con);
-      if($property instanceof ApplicationExtraProperty)
+      $param = $this->getParamObjectById($id, $con);
+      if($param instanceof ApplicationExtraProperty)
       {
-        $property->setPropertyValue(ApplicationPeer::normalizePropertyValue($value));
+        $param->setPropertyValue(ApplicationPeer::normalizeParamValue($value));
         return $this;
       }
       else
@@ -2471,101 +2471,101 @@ abstract class BaseApplication extends BaseObject implements Persistent
     }
 
     /**
-     * Retrive property objects with $propertyName.
+     * Retrive param objects with $paramName.
      *
-     * @param   String    $propertyName the properties to look for.
+     * @param   String    $paramName the params to look for.
      * @param   PropelPDO $con          Optional connection object
      *
      * @return  Array
      */
-    protected function getPropertiesObjectsByName($propertyName, PropelPDO $con = null)
+    protected function getParamsObjectsByName($paramName, PropelPDO $con = null)
     {
       $ret = array();
-      $properties = $this->getApplicationExtraPropertys(null, $con);
-      $propertyName = ApplicationPeer::normalizePropertyName($propertyName);
-      foreach($properties as $property)
+      $params = $this->getApplicationExtraPropertys(null, $con);
+      $paramName = ApplicationPeer::normalizeParamName($paramName);
+      foreach($params as $param)
       {
-        if($property->getPropertyName() == $propertyName)
+        if($param->getPropertyName() == $paramName)
         {
-          $ret[$property->getId() ? $property->getId() : $propertyName.'_'.count($ret)] = $property;
+          $ret[$param->getId() ? $param->getId() : $paramName.'_'.count($ret)] = $param;
         }
       }
       return $ret;
     }
 
     /**
-     * Retrieve related property with $id.
-     * If property is not saved yet, id is the list index, created this way :
-     * $propertyName.'_'.$index.
+     * Retrieve related param with $id.
+     * If param is not saved yet, id is the list index, created this way :
+     * $paramName.'_'.$index.
      *
-     * @param Integer|String  $id   the id of the property to retrieve.
+     * @param Integer|String  $id   the id of the param to retrieve.
      * @param PropelPDO       $con  Optional connection object
      *
      * @return ApplicationExtraProperty
      */
-    protected function getPropertyObjectById($id, PropelPDO $con = null)
+    protected function getParamObjectById($id, PropelPDO $con = null)
     {
       if(is_numeric($id))
       {
-        $properties = $this->getApplicationExtraPropertys(null, $con);
-        foreach($properties as $property)
+        $params = $this->getApplicationExtraPropertys(null, $con);
+        foreach($params as $param)
         {
-          if($property->getId() == $id)
+          if($param->getId() == $id)
           {
-            return $property;
+            return $param;
           }
         }
       }
       else
       {
-        $propertyName = substr($id, 0, strrpos($id, '_'));
-        $properties = $this->getPropertiesObjectsByName($propertyName, $con);
-        return $properties[$id];
+        $paramName = substr($id, 0, strrpos($id, '_'));
+        $params = $this->getParamsObjectsByName($paramName, $con);
+        return $params[$id];
       }
     }
 
     /**
-     * Check wether property with $id is
+     * Check wether param with $id is
      *
      * @param PropelPDO $con  Optional connection object
      */
-    protected function isPropertyWithIdA($id, $propertyName, PropelPDO $con = null)
+    protected function isParamWithIdA($id, $paramName, PropelPDO $con = null)
     {
-      $property = $this->getPropertyObjectById($id, $con);
-      return $property && $property->getPropertyName() == ApplicationPeer::normalizePropertyName($propertyName);
+      $param = $this->getParamObjectById($id, $con);
+      return $param && $param->getPropertyName() == ApplicationPeer::normalizeParamName($paramName);
     }
 
     /**
-     * wrapped function on update{Property} callback
+     * wrapped function on update{Param} callback
      *
-     * @param string          $name  the property to update's type
+     * @param string          $name  the param to update's type
      * @param mixed           $value the new value
-     * @param integer|string  $id    the id of the property to update
+     * @param integer|string  $id    the id of the param to update
      * @param PropelPDO       $con   Optional connection object
      *
      * @return Boolean|ApplicationExtraProperty
      */
-    protected function setPropertyByNameAndId($name, $value, $id, PropelPDO $con = null)
+    protected function setParamByNameAndId($name, $value, $id, PropelPDO $con = null)
     {
-      if($this->isPropertyWithIdA($id, ApplicationPeer::normalizePropertyName($name), $con))
+      if($this->isParamWithIdA($id, ApplicationPeer::normalizeParamName($name), $con))
       {
-        return $this->setPropertyById($id, $value);
+        return $this->setParamById($id, $value);
       }
       return false;
     }
 
     /**
-     * get the property with id $id.
-     * can only be used with an already set property
+     * get the param with id $id.
+     * can only be used with an already set param
      *
      * @param PropelPDO $con Optional connection object
      */
-    protected function getPropertyById($id, $defaultValue = null, PropelPDO $con = null)
+    protected function getParamById($id, $defaultValue = null, PropelPDO $con = null)
     {
-      $property = $this->getPropertyObjectById($id, $con);
-      if($property instanceof ApplicationExtraProperty)
+      $param = $this->getParamObjectById($id, $con);
+      if($param instanceof ApplicationExtraProperty)
       {
-        return $property->getPropertyValue();
+        return $param->getPropertyValue();
       }
       else
       {
@@ -2574,35 +2574,35 @@ abstract class BaseApplication extends BaseObject implements Persistent
     }
 
     /**
-     * wrapped function on deleteProperty callback
+     * wrapped function on deleteParam callback
      *
      * @param PropelPDO $con Optional connection object
      */
-    protected function deletePropertyByNameAndId($name, $id, PropelPDO $con = null)
+    protected function deleteParamByNameAndId($name, $id, PropelPDO $con = null)
     {
-      if($this->isPropertyWithIdA($id, ApplicationPeer::normalizePropertyName($name), $con))
+      if($this->isParamWithIdA($id, ApplicationPeer::normalizeParamName($name), $con))
       {
-        return $this->deletePropertyById($id, $con);
+        return $this->deleteParamById($id, $con);
       }
       return false;
     }
 
     /**
-     * delete a multiple occurence property
+     * delete a multiple occurence param
      *
      * @param PropelPDO $con  Optional connection object
      */
-    protected function deletePropertyById($id, PropelPDO $con = null)
+    protected function deleteParamById($id, PropelPDO $con = null)
     {
-      $property = $this->getPropertyObjectById($id, $con);
-      if($property instanceof ApplicationExtraProperty)
+      $param = $this->getParamObjectById($id, $con);
+      if($param instanceof ApplicationExtraProperty)
       {
-        if(!$property->isNew())
+        if(!$param->isNew())
         {
-          $property->delete($con);
+          $param->delete($con);
         }
-        $this->collApplicationExtraPropertys->remove($this->collApplicationExtraPropertys->search($property));
-        return $property;
+        $this->collApplicationExtraPropertys->remove($this->collApplicationExtraPropertys->search($param));
+        return $param;
       }
       else
       {
@@ -2611,22 +2611,22 @@ abstract class BaseApplication extends BaseObject implements Persistent
     }
 
     /**
-     * delete all properties with $name
+     * delete all params with $name
      *
      * @param PropelPDO $con Optional connection object
      */
-    public function deletepropertiesByName($name, PropelPDO $con = null)
+    public function deleteparamsByName($name, PropelPDO $con = null)
     {
-      $properties = $this->getPropertiesObjectsByName($name, $con);
-      foreach($properties as $property)
+      $params = $this->getParamsObjectsByName($name, $con);
+      foreach($params as $param)
       {
-        if($property instanceof ApplicationExtraProperty)
+        if($param instanceof ApplicationExtraProperty)
         {
-          $property->delete($con);
-          $this->collApplicationExtraPropertys->remove($this->collApplicationExtraPropertys->search($property));
+          $param->delete($con);
+          $this->collApplicationExtraPropertys->remove($this->collApplicationExtraPropertys->search($param));
         }
       }
-      return $properties;
+      return $params;
     }
 /**
  * Initializes internal state of Application object.
@@ -2635,179 +2635,179 @@ public function __construct()
 {
   parent::__construct();
 
-  $this->initializeProperties();
+  $this->initializeParams();
 }
 
 /**
-     * initialize properties.
-     * called in the constructor to add default properties.
+     * initialize params.
+     * called in the constructor to add default params.
      */
-    protected function initializeProperties()
+    protected function initializeParams()
     {
     }/**
-     * Returns the list of registered properties
+     * Returns the list of registered params
      * that can be set only once.
      *
      * @return array
      */
-    public function getRegisteredSingleProperties()
+    public function getRegisteredSingleParams()
     {
-      return array_keys($this->extraProperties);
+      return array_keys($this->extraParams);
     }
 
     /**
-     * Register a new single occurence property $propertyName for the object.
+     * Register a new single occurence param $paramName for the object.
      * The property will be accessible through getPropertyName method.
      *
-     * @param String  $propertyName   the property name.
-     * @param Mixed   $defaultValue   default property value.
+     * @param String  $paramName   the param name.
+     * @param Mixed   $defaultValue   default param value.
      *
      * @return Application
      */
-    public function registerProperty($propertyName, $defaultValue = null)
+    public function registerParam($paramName, $defaultValue = null)
     {
-      $propertyName = ApplicationPeer::normalizePropertyName($propertyName);
+      $paramName = ApplicationPeer::normalizeParamName($paramName);
       /* comment this line to remove default value update ability
-      if(!array_key_exists($propertyName, $this->extraProperties))
+      if(!array_key_exists($paramName, $this->extraParams))
       {
-        $this->extraProperties[$propertyName] = $defaultValue;
+        $this->extraProperties[$paramName] = $defaultValue;
       }
       /*/
-      $this->extraProperties[$propertyName] = $defaultValue;
+      $this->extraProperties[$paramName] = $defaultValue;
       //*/
       return $this;
     }
 
     /**
-     * Set a single occurence property.
-     * If the property already exists, then it is overriden, ortherwise
-     * new property is created.
+     * Set a single occurence param.
+     * If the param already exists, then it is overriden, ortherwise
+     * new param is created.
      *
-     * @param String    $name   the property name.
-     * @param Mixed     $value  default property value.
+     * @param String    $name   the param name.
+     * @param Mixed     $value  default param value.
      * @param PropelPDO $con    Optional connection object
      *
      * @return Application
      */
-    public function setProperty($name, $value, PropelPDO $con = null)
+    public function setParam($name, $value, PropelPDO $con = null)
     {
-      $name = ApplicationPeer::normalizePropertyName($name);
-      if($this->hasProperty($name, $con))
+      $name = ApplicationPeer::normalizeParamName($name);
+      if($this->hasParam($name, $con))
       {
-        $properties = $this->getApplicationExtraPropertys(null, $con);
-        foreach($properties as $property)
+        $params = $this->getApplicationExtraPropertys(null, $con);
+        foreach($params as $param)
         {
-          if($property->getPropertyName() == $name)
+          if($param->getPropertyName() == $name)
           {
-            $property->setPropertyValue(ApplicationPeer::normalizePropertyValue($value));
+            $param->setPropertyValue(ApplicationPeer::normalizeParamValue($value));
             return $this;
           }
         }
       }
       else
       {
-        $property = new ApplicationExtraProperty();
-        $property->setPropertyName($name);
-        $property->setPropertyValue(ApplicationPeer::normalizePropertyValue($value));
-        $this->addApplicationExtraProperty($property);
+        $param = new ApplicationExtraProperty();
+        $param->setPropertyName($name);
+        $param->setPropertyValue(ApplicationPeer::normalizeParamValue($value));
+        $this->addApplicationExtraProperty($param);
       }
       return $this;
     }
 
     /**
-     * Get the value of an extra property that can appear only once.
+     * Get the value of an extra param that can appear only once.
      *
-     * @param   String    $propertyName   the name of property retrieve.
-     * @param   Mixed     $defaultValue   default value if property isn't set.
+     * @param   String    $paramName   the name of param retrieve.
+     * @param   Mixed     $defaultValue   default value if param isn't set.
      * @param   PropelPDO $con            Optional connection object
      *
      * @return  Mixed
      */
-    public function getProperty($propertyName, $defaultValue = null, PropelPDO $con = null)
+    public function getParam($paramName, $defaultValue = null, PropelPDO $con = null)
     {
-      $properties = $this->getApplicationExtraPropertys(null, $con);
-      $propertyName = ApplicationPeer::normalizePropertyName($propertyName);
-      foreach($properties as $property)
+      $params = $this->getApplicationExtraPropertys(null, $con);
+      $paramName = ApplicationPeer::normalizeParamName($paramName);
+      foreach($params as $param)
       {
-        if($property->getPropertyName() == $propertyName)
+        if($param->getPropertyName() == $paramName)
         {
-          return $property->getPropertyValue();
+          return $param->getPropertyValue();
         }
       }
       return is_null($defaultValue)
-                ? isset($this->extraProperties[$propertyName])
-                          ? $this->extraProperties[$propertyName]
+                ? isset($this->extraProperties[$paramName])
+                          ? $this->extraProperties[$paramName]
                           : null
                 : $defaultValue;
     }/**
-     * returns the list of registered multiple properties
+     * returns the list of registered multiple params
      *
      * @return array
      */
-    public function getRegisteredMultipleProperties()
+    public function getRegisteredMultipleParams()
     {
-      return array_keys($this->multipleExtraProperties);
+      return array_keys($this->multipleExtraParams);
     }
 
     /**
-     * Register a new multiple occurence property $propertyName for the object.
-     * The properties will be accessible through getPropertyNames method.
+     * Register a new multiple occurence param $paramName for the object.
+     * The params will be accessible through getPropertyNames method.
      *
-     * @param String  $propertyName   the property name.
-     * @param Mixed   $defaultValue   default property value.
+     * @param String  $paramName   the param name.
+     * @param Mixed   $defaultValue   default param value.
      * @return Application
      */
-    public function registerMultipleProperty($propertyName, $defaultValue = null)
+    public function registerMultipleParam($paramName, $defaultValue = null)
     {
-      $propertyName = ApplicationPeer::normalizePropertyName($propertyName);
+      $paramName = ApplicationPeer::normalizeParamName($paramName);
       /* comment this line to remove default value update ability
-      if(!array_key_exists($propertyName, $this->multipleExtraProperties))
+      if(!array_key_exists($paramName, $this->multipleExtraParams))
       {
-        $this->multipleExtraProperties[$propertyName] = $defaultValue;
+        $this->multipleExtraParams[$paramName] = $defaultValue;
       }
       /*/
-      $this->multipleExtraProperties[$propertyName] = $defaultValue;
+      $this->multipleExtraParams[$paramName] = $defaultValue;
       //*/
       return $this;
     }
 
     /**
-     * adds a multiple instance property to event
+     * adds a multiple instance param to event
      *
-     * @param String  $propertyName   the name of the property to add.
-     * @param Mixed   $value          the value for new property.
+     * @param String  $paramName   the name of the param to add.
+     * @param Mixed   $value          the value for new param.
      */
-    public function addProperty($propertyName, $value)
+    public function addParam($paramName, $value)
     {
-      $property = new ApplicationExtraProperty();
-      $property->setPropertyName(ApplicationPeer::normalizePropertyName($propertyName));
-      $property->setPropertyValue(ApplicationPeer::normalizePropertyValue($value));
-      $this->addApplicationExtraProperty($property);
+      $param = new ApplicationExtraProperty();
+      $param->setPropertyName(ApplicationPeer::normalizeParamName($paramName));
+      $param->setPropertyValue(ApplicationPeer::normalizeParamValue($value));
+      $this->addApplicationExtraProperty($param);
       return $this;
     }
 
     /**
-     * returns an array of all matching values for given property
+     * returns an array of all matching values for given param
      * the array keys are the values ID
      * @todo enhance the case an id is given
      * @todo check the case there is an id but does not exists
      *
-     * @param string    $propertyName    the name of properties to retrieve
+     * @param string    $paramName    the name of params to retrieve
      * @param mixed     $default         The default value to use
-     * @param Integer   $id              The unique id of the property to retrieve
+     * @param Integer   $id              The unique id of the param to retrieve
      * @param PropelPDO $con             Optional connection object
      *
-     * @return array  the list of matching properties (prop_id => value).
+     * @return array  the list of matching params (prop_id => value).
      */
-    public function getPropertiesByName($propertyName, $default = array(), $id = null, PropelPDO $con = null)
+    public function getParamsByName($paramName, $default = array(), $id = null, PropelPDO $con = null)
     {
       $ret = array();
-      $properties = $this->getPropertiesObjectsByName($propertyName, $con);
-      foreach($properties as $key => $property)
+      $params = $this->getParamsObjectsByName($paramName, $con);
+      foreach($params as $key => $param)
       {
-        $ret[$key] = $property->getPropertyValue();
+        $ret[$key] = $param->getPropertyValue();
       }
-      // is there a property id ?
+      // is there a param id ?
       if (!is_null($id) && isset($ret[$id]))
       {
         return $ret[$id];
@@ -2820,38 +2820,38 @@ public function __construct()
       return $ret;
     }
     /**
-     * returns an associative array with the properties and associated values.
+     * returns an associative array with the params and associated values.
      *
-     * @deprecated Prefer the getProperties() method
+     * @deprecated Prefer the getParams() method
      *
      * @return array
      */
-    public function getExtraProperties($con = null)
+    public function getExtraParams($con = null)
     {
-      return $this->getProperties($con);
+      return $this->getParams($con);
     }
 
     /**
-     * returns an associative array with the properties and associated values.
+     * returns an associative array with the params and associated values.
      *
      * @return array
      */
-    public function getProperties($con = null)
+    public function getParams($con = null)
     {
       $ret = array();
 
-      // init with default single and multiple properties
-      $ret = array_merge($ret, $this->extraProperties);
-      foreach ($this->multipleExtraProperties as $propertyName => $default) {
-        $ret[$propertyName] = array();
+      // init with default single and multiple params
+      $ret = array_merge($ret, $this->extraParams);
+      foreach ($this->multipleExtraParams as $paramName => $default) {
+        $ret[$paramName] = array();
       }
 
-      foreach ($this->getApplicationExtraPropertys(null, $con) as $property) {
-        $pname = $property->getPropertyName();
-        $pvalue = $property->getPropertyValue();
+      foreach ($this->getApplicationExtraPropertys(null, $con) as $param) {
+        $pname = $param->getPropertyName();
+        $pvalue = $param->getPropertyValue();
 
-        if (array_key_exists($pname, $this->extraProperties)) {
-          // single property
+        if (array_key_exists($pname, $this->extraParams)) {
+          // single param
           $ret[$pname] = $pvalue;
         }
         elseif (array_key_exists($pname, $ret) && is_array($ret[$pname])){
@@ -2865,10 +2865,10 @@ public function __construct()
         }
       }
 
-      // set multiple properties default
-      foreach ($this->multipleExtraProperties as $propertyName => $default) {
-        if (!is_null($default) && !count($ret[$propertyName])) {
-          $ret[$propertyName][] = $default;
+      // set multiple params default
+      foreach ($this->multipleExtraParams as $paramName => $default) {
+        if (!is_null($default) && !count($ret[$paramName])) {
+          $ret[$paramName][] = $default;
         }
       }
 
@@ -2891,85 +2891,85 @@ public function __construct()
             return call_user_func_array(array($delegate, $name), $params);
         }
         // extra_properties behavior
-        // calls the registered properties dedicated functions
+        // calls the registered params dedicated functions
         if(in_array($methodName = substr($name, 0,3), array('add', 'set', 'has', 'get')))
         {
-          $propertyName = ApplicationPeer::normalizePropertyName($this->extraPropertyNameFromMethod(substr($name, 3)));
+          $paramName = ApplicationPeer::normalizeParamName($this->extraParamNameFromMethod(substr($name, 3)));
         }
         else if(in_array($methodName = substr($name, 0,5), array('count', 'clear')))
         {
-          $propertyName = ApplicationPeer::normalizePropertyName($this->extraPropertyNameFromMethod(substr($name, 5)));
+          $paramName = ApplicationPeer::normalizeParamName($this->extraParamNameFromMethod(substr($name, 5)));
         }
         else if(in_array($methodName = substr($name, 0,6), array('delete', 'update')))
         {
-          $propertyName = ApplicationPeer::normalizePropertyName($this->extraPropertyNameFromMethod(substr($name, 6)));
+          $paramName = ApplicationPeer::normalizeParamName($this->extraParamNameFromMethod(substr($name, 6)));
         }
-        if(isset($propertyName))
+        if(isset($paramName))
         {
-          if(array_key_exists($propertyName, $this->extraProperties))
+          if(array_key_exists($paramName, $this->extraParams))
           {
             switch($methodName)
             {
               case 'add':
               case 'set':
-                $callable = array($this, 'setProperty');
+                $callable = array($this, 'setParam');
                 break;
               case 'get':
-                $callable = array($this, 'getProperty');
+                $callable = array($this, 'getParam');
                 break;
               case 'has':
-                $callable = array($this, 'hasProperty');
+                $callable = array($this, 'hasParam');
                 break;
               case 'count':
-                $callable = array($this, 'countPropertiesByName');
+                $callable = array($this, 'countParamsByName');
                 break;
               case 'clear':
               case 'delete':
-                $callable = array($this, 'deletePropertiesByName');
+                $callable = array($this, 'deleteParamsByName');
                 break;
               case 'update':
-                $callable = array($this, 'setPropertyByName');
+                $callable = array($this, 'setParamByName');
                 break;
             }
           }
-          else if(array_key_exists($propertyName, $this->multipleExtraProperties) ||
-                  ('S' == substr($propertyName, -1) && array_key_exists($propertyName = substr($propertyName, 0, -1), $this->multipleExtraProperties)))
+          else if(array_key_exists($paramName, $this->multipleExtraParams) ||
+                  ('S' == substr($paramName, -1) && array_key_exists($paramName = substr($paramName, 0, -1), $this->multipleExtraParams)))
           {
             switch($methodName)
             {
               case 'add':
               case 'set':
-                $callable = array($this, 'addProperty');
+                $callable = array($this, 'addParam');
                 break;
               case 'get':
-                $callable = array($this, 'getPropertiesByName');
+                $callable = array($this, 'getParamsByName');
                 break;
               case 'has':
-                $callable = array($this, 'hasProperty');
+                $callable = array($this, 'hasParam');
                 break;
               case 'count':
-                $callable = array($this, 'countPropertiesByName');
+                $callable = array($this, 'countParamsByName');
                 break;
               case 'clear':
-                $callable = array($this, 'deletePropertiesByName');
+                $callable = array($this, 'deleteParamsByName');
                 break;
               case 'delete':
-                $callable = array($this, 'deletePropertyByNameAndId');
+                $callable = array($this, 'deleteParamByNameAndId');
                 break;
               case 'update':
-                $callable = array($this, 'setPropertyByNameAndId');
+                $callable = array($this, 'setParamByNameAndId');
                 break;
             }
           }
             //* no error throw to make sure other behaviors can be called.
             else
             {
-              throw new RuntimeException(sprintf('Unknown property %s.<br />possible single properties: %s<br />possible multiple properties', $propertyName, join(',', array_keys($this->extraProperties)), join(',', array_keys($this->multipleExtraProperties))));
+              throw new RuntimeException(sprintf('Unknown param %s.<br />possible single params: %s<br />possible multiple params', $paramName, join(',', array_keys($this->extraParams)), join(',', array_keys($this->multipleExtraParams))));
             }
             //*/
           if(isset($callable))
           {
-            array_unshift($params, $propertyName);
+            array_unshift($params, $paramName);
             return call_user_func_array($callable, $params);
           }
 

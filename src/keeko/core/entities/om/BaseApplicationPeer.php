@@ -2170,51 +2170,51 @@ abstract class BaseApplicationPeer
 
     // extra_properties behavior
     /**
-     * Normalizes property name.
+     * Normalizes param name.
      *
-     * @param String $propertyName the property name to normalize.
-     * @param String the normalized property name
+     * @param String $paramName the param name to normalize.
+     * @param String the normalized param name
      */
-    static function normalizePropertyName($propertyName)
+    static function normalizeParamName($paramName)
     {
-      return $propertyName;
+      return $paramName;
     }
 
     /**
-     * Normalizes property name.
+     * Normalizes param name.
      *
-     * @deprecated see normalizePropertyName()
+     * @deprecated see normalizeParamName()
      *
-     * @param String $propertyName the property name to normalize.
-     * @param String the normalized property name
+     * @param String $paramName the param name to normalize.
+     * @param String the normalized param name
      */
-    static function normalizeExtraPropertyName($propertyName)
+    static function normalizeExtraPropertyName($paramName)
     {
-      return self::normalizePropertyName($propertyName);
+      return self::normalizeParamName($paramName);
     }
 
     /**
-     * Normalizes property value.
+     * Normalizes param value.
      *
-     * @param String $propertyValue the property value to normalize.
-     * @param String the normalized property value
+     * @param String $paramValue the param value to normalize.
+     * @param String the normalized param value
      */
-    static function normalizePropertyValue($propertyValue)
+    static function normalizeParamValue($paramValue)
     {
-      return $propertyValue;
+      return $paramValue;
     }
 
     /**
-     * Normalizes property value.
+     * Normalizes param value.
      *
-     * @deprecated see normalizePropertyValue()
+     * @deprecated see normalizeParamValue()
      *
-     * @param String $propertyValue the property value to normalize.
-     * @param String the normalized property value
+     * @param String $paramValue the param value to normalize.
+     * @param String the normalized param value
      */
-    static function normalizeExtraPropertyValue($propertyValue)
+    static function normalizeExtraPropertyValue($paramValue)
     {
-      return self::normalizePropertyValue($propertyValue);
+      return self::normalizeParamValue($paramValue);
     }
 } // BaseApplicationPeer
 

@@ -79,7 +79,7 @@ class ApplicationTableMap extends TableMap
 ),
             'extra_properties' =>  array (
   'properties_table' => 'application_params',
-  'property_name' => 'property',
+  'property_name' => 'param',
   'property_name_column' => 'property_name',
   'property_value_column' => 'property_value',
   'default_properties' => '',
