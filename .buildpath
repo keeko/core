@@ -14,8 +14,8 @@
 	<buildpathentry kind="src" path="vendor/phing/phing/classes/phing"/>
 	<buildpathentry kind="src" path="vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs"/>
 	<buildpathentry kind="src" path="src"/>
-	<buildpathentry kind="src" path="vendor/symfony/console"/>
 	<buildpathentry kind="src" path="vendor/CarpeHora/ExtraPropertiesBehavior/src"/>
+	<buildpathentry kind="src" path="vendor/symfony/console"/>
 	<buildpathentry kind="src" path="vendor/twig/twig/lib"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
 	<buildpathentry excluding="composer/" kind="src" path="vendor/composer"/>
