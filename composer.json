@@ -14,13 +14,12 @@
 		"symfony/config" : "~2",
 		"symfony/http-foundation" : "~2",
 		"symfony/routing" : "~2",
-		"twig/twig" : "~1",
 		"symfony/options-resolver" : "~2",
 		"symfony/finder" : "~2",
 		"symfony/yaml" : "~2",
 		"symfony/filesystem" : "~2",
-		"propel/propel1" : "~1",
-		"CarpeHora/ExtraPropertiesBehavior" : "~1"
+		"twig/twig" : "~1",
+		"propel/propel" : "dev-master"
 	},
 	"autoload" : {
 		"psr-0" : {
