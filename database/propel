@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# variables
+curr_dir=`pwd`
+
+dir=`dirname $0`
+script_path=`cd  $dir;pwd`
+
+database_path=${script_path}
+propel_bin=${script_path}/../vendor/bin/propel
+src_path=${script_path}/../src
+output_path=${database_path}/generated
+sql_path=${database_path}/sql
+config_path=${script_path}/../config
+config_file=propel.php
+
+# running propel
+cd $database_path
+$propel_bin build --output-dir=$output_path
+$propel_bin sql:build --output-dir=$sql_path
+#$propel_bin convert-conf --output-dir=$config_path --output-file=$config_file
+
+# copy files
+cp -Rf $output_path/keeko/core/model $src_path/
+
+# cleanup
+rm -rf $output_path

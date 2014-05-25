@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `iuf_id` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `iuf_id`;
 -- MySQL dump 10.13  Distrib 5.5.24, for osx10.5 (i386)
 --
 -- Host: localhost    Database: iuf_id
