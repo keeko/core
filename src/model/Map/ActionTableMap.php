@@ -168,6 +168,7 @@ class ActionTableMap extends TableMap
         $this->addRelation('Module', '\\keeko\\core\\model\\Module', RelationMap::MANY_TO_ONE, array('module_id' => 'id', ), 'CASCADE', null);
         $this->addRelation('Api', '\\keeko\\core\\model\\Api', RelationMap::ONE_TO_MANY, array('id' => 'action_id', ), 'CASCADE', null, 'Apis');
         $this->addRelation('GroupAction', '\\keeko\\core\\model\\GroupAction', RelationMap::ONE_TO_MANY, array('id' => 'action_id', ), 'RESTRICT', null, 'GroupActions');
+        $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Groups');
     } // buildRelations()
     /**
      * Method to invalidate the instance pool of all tables related to keeko_action     * by a foreign key with ON DELETE CASCADE

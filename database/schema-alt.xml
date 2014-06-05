@@ -7,7 +7,7 @@
 	<!-- <behavior name="listener"> <parameter name="table" value="iuf_listener"/> 
 		<parameter name="phpName" value="Listener"/> </behavior> -->
 
-	
+
 	<table name="language">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
@@ -146,25 +146,26 @@
 	<table name="router">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
-		<column name="name" type="VARCHAR" required="true"/>
+		<column name="name" type="VARCHAR" required="true" />
 		<column name="title" type="VARCHAR" size="255" />
 		<column name="class_name" type="VARCHAR" size="255" required="true" />
 	</table>
-	
+
 	<table name="application_type">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
-		<column name="name" type="VARCHAR" required="true"/>
+		<column name="name" type="VARCHAR" required="true" />
 		<column name="title" type="VARCHAR" size="255" />
 	</table>
 
 	<table name="application">
-		<column name="id" type="INTEGER" primaryKey="true"
-			required="true" autoIncrement="true" />
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
 		<column name="title" type="VARCHAR" size="255" />
-		<column name="application_type_id" type="INTEGER" size="10" required="true" />
+		<column name="application_type_id" type="INTEGER" size="10"
+			required="true" />
 		<column name="router_id" type="INTEGER" size="10" required="true" />
-		<column name="design_id" type="INTEGER" required="true"/>
+		<column name="design_id" type="INTEGER" required="true" />
 		<column name="package_id" type="INTEGER" />
 
 		<foreign-key foreignTable="application_type">
@@ -178,7 +179,7 @@
 		<foreign-key foreignTable="router" onDelete="restrict">
 			<reference local="router_id" foreign="id" />
 		</foreign-key>
-		
+
 		<foreign-key foreignTable="design" onDelete="restrict">
 			<reference local="design_id" foreign="id" />
 		</foreign-key>
@@ -200,9 +201,11 @@
 		<column name="httphost" type="VARCHAR" size="255" required="true" />
 		<column name="basepath" type="VARCHAR" size="255" required="true" />
 		<column name="secure" type="BOOLEAN" />
-		<column name="application_id" type="INTEGER" size="10" required="true" />
-		<column name="localization_id" type="INTEGER" size="10" required="true" />
-			
+		<column name="application_id" type="INTEGER" size="10"
+			required="true" />
+		<column name="localization_id" type="INTEGER" size="10"
+			required="true" />
+
 		<foreign-key foreignTable="application" onDelete="restrict">
 			<reference local="application_id" foreign="id" />
 		</foreign-key>
@@ -212,65 +215,58 @@
 	</table>
 
 	<table name="page">
-		<column name="id" type="INTEGER" primaryKey="true"
-			required="true" autoIncrement="true" />
-		<column name="parent_id" type="INTEGER" required="false"/>
-		<column name="title" type="VARCHAR"/>
-		<column name="slug" type="VARCHAR"/>
-		<column name="description" type="LONGVARCHAR"/>
-		<column name="keywords" type="VARCHAR"/>
-		<column name="layout_id" type="INTEGER"/>
-		<column name="application_id" type="INTEGER"/>
-		
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
+		<column name="parent_id" type="INTEGER" required="false" />
+		<column name="title" type="VARCHAR" />
+		<column name="slug" type="VARCHAR" />
+		<column name="description" type="LONGVARCHAR" />
+		<column name="keywords" type="VARCHAR" />
+		<column name="layout_id" type="INTEGER" />
+		<column name="application_id" type="INTEGER" />
+
 		<foreign-key foreignTable="page">
 			<reference local="parent_id" foreign="id" />
 		</foreign-key>
-		
+
 		<foreign-key foreignTable="layout">
 			<reference local="layout_id" foreign="id" />
 		</foreign-key>
-		
+
 		<foreign-key foreignTable="application">
 			<reference local="application_id" foreign="id" />
 		</foreign-key>
 	</table>
-	
+
 	<table name="route">
-		<column name="id" type="INTEGER" primaryKey="true"
-			required="true" autoIncrement="true" />
-		<column name="slug" type="VARCHAR"/>
-		<column name="redirect_id" type="INTEGER" required="false"/>
-		<column name="page_id" type="INTEGER" required="false"/>
-		
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
+		<column name="slug" type="VARCHAR" />
+		<column name="redirect_id" type="INTEGER" required="false" />
+		<column name="page_id" type="INTEGER" required="false" />
+
 		<foreign-key foreignTable="route">
 			<reference local="redirect_id" foreign="id" />
 		</foreign-key>
-		
+
 		<foreign-key foreignTable="page">
 			<reference local="page_id" foreign="id" />
 		</foreign-key>
 	</table>
-	
+
 	<table name="design">
 		<behavior name="concrete_inheritance">
 			<parameter name="extends" value="package" />
 		</behavior>
-		<!-- <column name="id" type="INTEGER" primaryKey="true"
-			required="true" autoIncrement="true" />
-		<column name="package_id" type="INTEGER" />
-
-		<foreign-key foreignTable="package">
-			<reference local="package_id" foreign="id" />
-		</foreign-key>
-
-		<behavior name="delegate">
-			<parameter name="to" value="package" />
-		</behavior>-->
+		<!-- <column name="id" type="INTEGER" primaryKey="true" required="true" 
+			autoIncrement="true" /> <column name="package_id" type="INTEGER" /> <foreign-key 
+			foreignTable="package"> <reference local="package_id" foreign="id" /> </foreign-key> 
+			<behavior name="delegate"> <parameter name="to" value="package" /> </behavior> -->
 	</table>
-	
+
 	<table name="layout">
-		<column name="id" type="INTEGER" primaryKey="true"
-			required="true" autoIncrement="true" />
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
 		<column name="title" type="VARCHAR" />
 		<column name="design_id" type="INTEGER" />
@@ -279,10 +275,10 @@
 			<reference local="design_id" foreign="id" />
 		</foreign-key>
 	</table>
-	
+
 	<table name="block">
-		<column name="id" type="INTEGER" primaryKey="true"
-			required="true" autoIncrement="true" />
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
 		<column name="title" type="VARCHAR" />
 		<column name="layout_id" type="INTEGER" />
@@ -291,19 +287,19 @@
 			<reference local="layout_id" foreign="id" />
 		</foreign-key>
 	</table>
-	
+
 	<table name="block_item">
-		<column name="id" type="INTEGER" primaryKey="true"
-			required="true" autoIncrement="true" />
-		<column name="block_id" type="INTEGER"/>
-		<column name="parent_id" type="INTEGER"/>
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
+		<column name="block_id" type="INTEGER" />
+		<column name="parent_id" type="INTEGER" />
 	</table>
-	
+
 	<table name="block_grid">
-		<column name="id" type="INTEGER" primaryKey="true"
-			required="true" autoIncrement="true" />
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
 		<column name="block_item_id" type="INTEGER" />
-		<column name="span" type="INTEGER"/>
+		<column name="span" type="INTEGER" />
 
 		<foreign-key foreignTable="block_item">
 			<reference local="block_item_id" foreign="id" />
@@ -312,22 +308,22 @@
 		<behavior name="delegate">
 			<parameter name="to" value="block_item" />
 		</behavior>
-		
+
 		<behavior name="extra_properties">
 			<parameter name="properties_table" value="block_grid_properties" />
 		</behavior>
 	</table>
-	
+
 	<table name="block_content">
-		<column name="id" type="INTEGER" primaryKey="true"
-			required="true" autoIncrement="true" />
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" />
 		<column name="block_item_id" type="INTEGER" />
 		<column name="action_id" type="INTEGER" />
 
 		<foreign-key foreignTable="block_item">
 			<reference local="block_item_id" foreign="id" />
 		</foreign-key>
-		
+
 		<foreign-key foreignTable="action">
 			<reference local="action_id" foreign="id" />
 		</foreign-key>
@@ -344,34 +340,29 @@
 		<column name="class_name" type="VARCHAR" size="255" required="true" />
 		<column name="activated_version" type="VARCHAR" size="50" />
 		<column name="default_action" type="VARCHAR" />
-		
-		
-		<!-- <column name="id" type="INTEGER" size="10" primaryKey="true"
-			required="true" autoIncrement="true" />
-		<column name="package_id" type="INTEGER" />
-		<foreign-key foreignTable="package">
-			<reference local="package_id" foreign="id" />
-		</foreign-key>
-		<behavior name="delegate">
-			<parameter name="to" value="package" />
-		</behavior>-->
+
+
+		<!-- <column name="id" type="INTEGER" size="10" primaryKey="true" required="true" 
+			autoIncrement="true" /> <column name="package_id" type="INTEGER" /> <foreign-key 
+			foreignTable="package"> <reference local="package_id" foreign="id" /> </foreign-key> 
+			<behavior name="delegate"> <parameter name="to" value="package" /> </behavior> -->
 	</table>
 
 	<table name="action">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
-		<column name="name" type="VARCHAR" required="true"/>
-		<column name="title" type="VARCHAR" required="true"/>
+		<column name="name" type="VARCHAR" required="true" />
+		<column name="title" type="VARCHAR" required="true" />
 		<column name="description" type="VARCHAR" size="255" />
 		<column name="api" type="BOOLEAN" required="true" default="false" />
 		<column name="module_id" type="INTEGER" size="10" required="true" />
-		
-		
+
+
 		<foreign-key foreignTable="module" onDelete="cascade">
 			<reference local="module_id" foreign="id" />
 		</foreign-key>
 	</table>
-	
+
 	<table name="user">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
@@ -413,8 +404,8 @@
 			<unique-column name="login_name" size="45" />
 		</unique>
 	</table>
-	
-	
+
+
 	<table name="group">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
@@ -454,5 +445,5 @@
 			<reference local="action_id" foreign="id" />
 		</foreign-key>
 	</table>
-	
+
 </database>

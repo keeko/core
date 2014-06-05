@@ -7,21 +7,24 @@ use keeko\core\model\ApplicationUriQuery;
 use keeko\core\model\ApplicationUri;
 
 class ApplicationRouter implements RouteMatcherInterface {
+
 	private $destination;
+
 	private $prefix;
+
 	private $uri;
-	
+
 	public function __construct() {
 	}
-	
+
 	public function getDestination() {
 		return $this->destination;
 	}
-	
+
 	public function getPrefix() {
 		return $this->prefix;
 	}
-	
+
 	/**
 	 *
 	 * @return ApplicationUri
@@ -29,7 +32,7 @@ class ApplicationRouter implements RouteMatcherInterface {
 	public function getUri() {
 		return $this->uri;
 	}
-	
+
 	/**
 	 *
 	 * @param Request $request        	
@@ -41,10 +44,7 @@ class ApplicationRouter implements RouteMatcherInterface {
 		// better loop. Maybe some priority on longer strings?
 		// Or strings with more slashes?
 		// better query on that?
-		$uris = ApplicationUriQuery::create()
-			->joinApplication()
-			->filterByHttphost($request->getHttpHost())
-			->find();
+		$uris = ApplicationUriQuery::create()->joinApplication()->filterByHttphost($request->getHttpHost())->find();
 		
 		foreach ($uris as $uri) {
 			if (strpos($request->getRequestUri(), $uri->getBasepath()) !== false) {

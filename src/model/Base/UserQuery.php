@@ -33,7 +33,6 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery orderByAddress2($order = Criteria::ASC) Order by the address2 column
  * @method     ChildUserQuery orderByBirthday($order = Criteria::ASC) Order by the birthday column
  * @method     ChildUserQuery orderBySex($order = Criteria::ASC) Order by the sex column
- * @method     ChildUserQuery orderByClub($order = Criteria::ASC) Order by the club column
  * @method     ChildUserQuery orderByCity($order = Criteria::ASC) Order by the city column
  * @method     ChildUserQuery orderByPostalCode($order = Criteria::ASC) Order by the postal_code column
  * @method     ChildUserQuery orderByPasswordRecoverCode($order = Criteria::ASC) Order by the password_recover_code column
@@ -41,8 +40,8 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery orderByLocationStatus($order = Criteria::ASC) Order by the location_status column
  * @method     ChildUserQuery orderByLatitude($order = Criteria::ASC) Order by the latitude column
  * @method     ChildUserQuery orderByLongitude($order = Criteria::ASC) Order by the longitude column
- * @method     ChildUserQuery orderByCreated($order = Criteria::ASC) Order by the created column
- * @method     ChildUserQuery orderByUpdated($order = Criteria::ASC) Order by the updated column
+ * @method     ChildUserQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
+ * @method     ChildUserQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method     ChildUserQuery groupById() Group by the id column
  * @method     ChildUserQuery groupByLoginName() Group by the login_name column
@@ -57,7 +56,6 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery groupByAddress2() Group by the address2 column
  * @method     ChildUserQuery groupByBirthday() Group by the birthday column
  * @method     ChildUserQuery groupBySex() Group by the sex column
- * @method     ChildUserQuery groupByClub() Group by the club column
  * @method     ChildUserQuery groupByCity() Group by the city column
  * @method     ChildUserQuery groupByPostalCode() Group by the postal_code column
  * @method     ChildUserQuery groupByPasswordRecoverCode() Group by the password_recover_code column
@@ -65,8 +63,8 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery groupByLocationStatus() Group by the location_status column
  * @method     ChildUserQuery groupByLatitude() Group by the latitude column
  * @method     ChildUserQuery groupByLongitude() Group by the longitude column
- * @method     ChildUserQuery groupByCreated() Group by the created column
- * @method     ChildUserQuery groupByUpdated() Group by the updated column
+ * @method     ChildUserQuery groupByCreatedAt() Group by the created_at column
+ * @method     ChildUserQuery groupByUpdatedAt() Group by the updated_at column
  *
  * @method     ChildUserQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildUserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -106,7 +104,6 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser findOneByAddress2(string $address2) Return the first ChildUser filtered by the address2 column
  * @method     ChildUser findOneByBirthday(string $birthday) Return the first ChildUser filtered by the birthday column
  * @method     ChildUser findOneBySex(int $sex) Return the first ChildUser filtered by the sex column
- * @method     ChildUser findOneByClub(string $club) Return the first ChildUser filtered by the club column
  * @method     ChildUser findOneByCity(string $city) Return the first ChildUser filtered by the city column
  * @method     ChildUser findOneByPostalCode(string $postal_code) Return the first ChildUser filtered by the postal_code column
  * @method     ChildUser findOneByPasswordRecoverCode(string $password_recover_code) Return the first ChildUser filtered by the password_recover_code column
@@ -114,8 +111,8 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser findOneByLocationStatus(int $location_status) Return the first ChildUser filtered by the location_status column
  * @method     ChildUser findOneByLatitude(double $latitude) Return the first ChildUser filtered by the latitude column
  * @method     ChildUser findOneByLongitude(double $longitude) Return the first ChildUser filtered by the longitude column
- * @method     ChildUser findOneByCreated(string $created) Return the first ChildUser filtered by the created column
- * @method     ChildUser findOneByUpdated(string $updated) Return the first ChildUser filtered by the updated column
+ * @method     ChildUser findOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column
+ * @method     ChildUser findOneByUpdatedAt(string $updated_at) Return the first ChildUser filtered by the updated_at column
  *
  * @method     ChildUser[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUser objects based on current ModelCriteria
  * @method     ChildUser[]|ObjectCollection findById(int $id) Return ChildUser objects filtered by the id column
@@ -131,7 +128,6 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser[]|ObjectCollection findByAddress2(string $address2) Return ChildUser objects filtered by the address2 column
  * @method     ChildUser[]|ObjectCollection findByBirthday(string $birthday) Return ChildUser objects filtered by the birthday column
  * @method     ChildUser[]|ObjectCollection findBySex(int $sex) Return ChildUser objects filtered by the sex column
- * @method     ChildUser[]|ObjectCollection findByClub(string $club) Return ChildUser objects filtered by the club column
  * @method     ChildUser[]|ObjectCollection findByCity(string $city) Return ChildUser objects filtered by the city column
  * @method     ChildUser[]|ObjectCollection findByPostalCode(string $postal_code) Return ChildUser objects filtered by the postal_code column
  * @method     ChildUser[]|ObjectCollection findByPasswordRecoverCode(string $password_recover_code) Return ChildUser objects filtered by the password_recover_code column
@@ -139,8 +135,8 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser[]|ObjectCollection findByLocationStatus(int $location_status) Return ChildUser objects filtered by the location_status column
  * @method     ChildUser[]|ObjectCollection findByLatitude(double $latitude) Return ChildUser objects filtered by the latitude column
  * @method     ChildUser[]|ObjectCollection findByLongitude(double $longitude) Return ChildUser objects filtered by the longitude column
- * @method     ChildUser[]|ObjectCollection findByCreated(string $created) Return ChildUser objects filtered by the created column
- * @method     ChildUser[]|ObjectCollection findByUpdated(string $updated) Return ChildUser objects filtered by the updated column
+ * @method     ChildUser[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildUser objects filtered by the created_at column
+ * @method     ChildUser[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildUser objects filtered by the updated_at column
  * @method     ChildUser[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -230,7 +226,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, LOGIN_NAME, PASSWORD, GIVEN_NAME, FAMILY_NAME, DISPLAY_NAME, EMAIL, COUNTRY_ISO_NR, SUBDIVISION_ID, ADDRESS, ADDRESS2, BIRTHDAY, SEX, CLUB, CITY, POSTAL_CODE, PASSWORD_RECOVER_CODE, PASSWORD_RECOVER_TIME, LOCATION_STATUS, LATITUDE, LONGITUDE, CREATED, UPDATED FROM keeko_user WHERE ID = :p0';
+        $sql = 'SELECT ID, LOGIN_NAME, PASSWORD, GIVEN_NAME, FAMILY_NAME, DISPLAY_NAME, EMAIL, COUNTRY_ISO_NR, SUBDIVISION_ID, ADDRESS, ADDRESS2, BIRTHDAY, SEX, CITY, POSTAL_CODE, PASSWORD_RECOVER_CODE, PASSWORD_RECOVER_TIME, LOCATION_STATUS, LATITUDE, LONGITUDE, CREATED_AT, UPDATED_AT FROM keeko_user WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -764,35 +760,6 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the club column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByClub('fooValue');   // WHERE club = 'fooValue'
-     * $query->filterByClub('%fooValue%'); // WHERE club LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $club The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByClub($club = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($club)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $club)) {
-                $club = str_replace('*', '%', $club);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_CLUB, $club, $comparison);
-    }
-
-    /**
      * Filter the query on the city column
      *
      * Example usage:
@@ -1046,16 +1013,16 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the created column
+     * Filter the query on the created_at column
      *
      * Example usage:
      * <code>
-     * $query->filterByCreated('2011-03-14'); // WHERE created = '2011-03-14'
-     * $query->filterByCreated('now'); // WHERE created = '2011-03-14'
-     * $query->filterByCreated(array('max' => 'yesterday')); // WHERE created > '2011-03-13'
+     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
+     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
+     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $created The value to use as filter.
+     * @param     mixed $createdAt The value to use as filter.
      *              Values can be integers (unix timestamps), DateTime objects, or strings.
      *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
@@ -1065,16 +1032,16 @@ abstract class UserQuery extends ModelCriteria
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
-    public function filterByCreated($created = null, $comparison = null)
+    public function filterByCreatedAt($createdAt = null, $comparison = null)
     {
-        if (is_array($created)) {
+        if (is_array($createdAt)) {
             $useMinMax = false;
-            if (isset($created['min'])) {
-                $this->addUsingAlias(UserTableMap::COL_CREATED, $created['min'], Criteria::GREATER_EQUAL);
+            if (isset($createdAt['min'])) {
+                $this->addUsingAlias(UserTableMap::COL_CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($created['max'])) {
-                $this->addUsingAlias(UserTableMap::COL_CREATED, $created['max'], Criteria::LESS_EQUAL);
+            if (isset($createdAt['max'])) {
+                $this->addUsingAlias(UserTableMap::COL_CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -1085,20 +1052,20 @@ abstract class UserQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(UserTableMap::COL_CREATED, $created, $comparison);
+        return $this->addUsingAlias(UserTableMap::COL_CREATED_AT, $createdAt, $comparison);
     }
 
     /**
-     * Filter the query on the updated column
+     * Filter the query on the updated_at column
      *
      * Example usage:
      * <code>
-     * $query->filterByUpdated('2011-03-14'); // WHERE updated = '2011-03-14'
-     * $query->filterByUpdated('now'); // WHERE updated = '2011-03-14'
-     * $query->filterByUpdated(array('max' => 'yesterday')); // WHERE updated > '2011-03-13'
+     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $updated The value to use as filter.
+     * @param     mixed $updatedAt The value to use as filter.
      *              Values can be integers (unix timestamps), DateTime objects, or strings.
      *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
@@ -1108,16 +1075,16 @@ abstract class UserQuery extends ModelCriteria
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
-    public function filterByUpdated($updated = null, $comparison = null)
+    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
     {
-        if (is_array($updated)) {
+        if (is_array($updatedAt)) {
             $useMinMax = false;
-            if (isset($updated['min'])) {
-                $this->addUsingAlias(UserTableMap::COL_UPDATED, $updated['min'], Criteria::GREATER_EQUAL);
+            if (isset($updatedAt['min'])) {
+                $this->addUsingAlias(UserTableMap::COL_UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($updated['max'])) {
-                $this->addUsingAlias(UserTableMap::COL_UPDATED, $updated['max'], Criteria::LESS_EQUAL);
+            if (isset($updatedAt['max'])) {
+                $this->addUsingAlias(UserTableMap::COL_UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -1128,7 +1095,7 @@ abstract class UserQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(UserTableMap::COL_UPDATED, $updated, $comparison);
+        return $this->addUsingAlias(UserTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
     }
 
     /**
@@ -1428,6 +1395,23 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related Group object
+     * using the keeko_group_user table as cross reference
+     *
+     * @param Group $group the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByGroup($group, $comparison = Criteria::EQUAL)
+    {
+        return $this
+            ->useGroupUserQuery()
+            ->filterByGroup($group, $comparison)
+            ->endUse();
+    }
+
+    /**
      * Exclude object from result
      *
      * @param   ChildUser $user Object to remove from the list of results
@@ -1515,7 +1499,7 @@ abstract class UserQuery extends ModelCriteria
      */
     public function recentlyUpdated($nbDays = 7)
     {
-        return $this->addUsingAlias(UserTableMap::COL_UPDATED, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+        return $this->addUsingAlias(UserTableMap::COL_UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
 
     /**
@@ -1525,7 +1509,7 @@ abstract class UserQuery extends ModelCriteria
      */
     public function lastUpdatedFirst()
     {
-        return $this->addDescendingOrderByColumn(UserTableMap::COL_UPDATED);
+        return $this->addDescendingOrderByColumn(UserTableMap::COL_UPDATED_AT);
     }
 
     /**
@@ -1535,7 +1519,7 @@ abstract class UserQuery extends ModelCriteria
      */
     public function firstUpdatedFirst()
     {
-        return $this->addAscendingOrderByColumn(UserTableMap::COL_UPDATED);
+        return $this->addAscendingOrderByColumn(UserTableMap::COL_UPDATED_AT);
     }
 
     /**
@@ -1545,7 +1529,7 @@ abstract class UserQuery extends ModelCriteria
      */
     public function lastCreatedFirst()
     {
-        return $this->addDescendingOrderByColumn(UserTableMap::COL_CREATED);
+        return $this->addDescendingOrderByColumn(UserTableMap::COL_CREATED_AT);
     }
 
     /**
@@ -1557,7 +1541,7 @@ abstract class UserQuery extends ModelCriteria
      */
     public function recentlyCreated($nbDays = 7)
     {
-        return $this->addUsingAlias(UserTableMap::COL_CREATED, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+        return $this->addUsingAlias(UserTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
 
     /**
@@ -1567,7 +1551,7 @@ abstract class UserQuery extends ModelCriteria
      */
     public function firstCreatedFirst()
     {
-        return $this->addAscendingOrderByColumn(UserTableMap::COL_CREATED);
+        return $this->addAscendingOrderByColumn(UserTableMap::COL_CREATED_AT);
     }
 
 } // UserQuery

@@ -131,6 +131,7 @@ class GroupActionTableMap extends TableMap
         $this->setClassName('\\keeko\\core\\model\\GroupAction');
         $this->setPackage('keeko.core.model');
         $this->setUseIdGenerator(false);
+        $this->setIsCrossRef(true);
         // columns
         $this->addForeignPrimaryKey('GROUP_ID', 'GroupId', 'INTEGER' , 'keeko_group', 'ID', true, 10, null);
         $this->addForeignPrimaryKey('ACTION_ID', 'ActionId', 'INTEGER' , 'keeko_action', 'ID', true, 10, null);

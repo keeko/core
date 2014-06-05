@@ -20,8 +20,10 @@ use keeko\core\model\Action as ChildAction;
 use keeko\core\model\ActionQuery as ChildActionQuery;
 use keeko\core\model\Api as ChildApi;
 use keeko\core\model\ApiQuery as ChildApiQuery;
+use keeko\core\model\Group as ChildGroup;
 use keeko\core\model\GroupAction as ChildGroupAction;
 use keeko\core\model\GroupActionQuery as ChildGroupActionQuery;
+use keeko\core\model\GroupQuery as ChildGroupQuery;
 use keeko\core\model\Module as ChildModule;
 use keeko\core\model\ModuleQuery as ChildModuleQuery;
 use keeko\core\model\Map\ActionTableMap;
@@ -114,12 +116,28 @@ abstract class Action implements ActiveRecordInterface
     protected $collGroupActionsPartial;
 
     /**
+     * @var        ObjectCollection|ChildGroup[] Cross Collection to store aggregation of ChildGroup objects.
+     */
+    protected $collGroups;
+
+    /**
+     * @var bool
+     */
+    protected $collGroupsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildGroup[]
+     */
+    protected $groupsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -664,6 +682,7 @@ abstract class Action implements ActiveRecordInterface
 
             $this->collGroupActions = null;
 
+            $this->collGroups = null;
         } // if (deep)
     }
 
@@ -785,6 +804,35 @@ abstract class Action implements ActiveRecordInterface
                 $affectedRows += 1;
                 $this->resetModified();
             }
+
+            if ($this->groupsScheduledForDeletion !== null) {
+                if (!$this->groupsScheduledForDeletion->isEmpty()) {
+                    $pks = array();
+                    foreach ($this->groupsScheduledForDeletion as $entry) {
+                        $entryPk = [];
+
+                        $entryPk[1] = $this->getId();
+                        $entryPk[0] = $entry->getId();
+                        $pks[] = $entryPk;
+                    }
+
+                    \keeko\core\model\GroupActionQuery::create()
+                        ->filterByPrimaryKeys($pks)
+                        ->delete($con);
+
+                    $this->groupsScheduledForDeletion = null;
+                }
+
+            }
+
+            if ($this->collGroups) {
+                foreach ($this->collGroups as $group) {
+                    if (!$group->isDeleted() && ($group->isNew() || $group->isModified())) {
+                        $group->save($con);
+                    }
+                }
+            }
+
 
             if ($this->apisScheduledForDeletion !== null) {
                 if (!$this->apisScheduledForDeletion->isEmpty()) {
@@ -1847,6 +1895,248 @@ abstract class Action implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collGroups collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addGroups()
+     */
+    public function clearGroups()
+    {
+        $this->collGroups = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Initializes the collGroups collection.
+     *
+     * By default this just sets the collGroups collection to an empty collection (like clearGroups());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @return void
+     */
+    public function initGroups()
+    {
+        $this->collGroups = new ObjectCollection();
+        $this->collGroupsPartial = true;
+
+        $this->collGroups->setModel('\keeko\core\model\Group');
+    }
+
+    /**
+     * Checks if the collGroups collection is loaded.
+     *
+     * @return bool
+     */
+    public function isGroupsLoaded()
+    {
+        return null !== $this->collGroups;
+    }
+
+    /**
+     * Gets a collection of ChildGroup objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_action cross-reference table.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildAction is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return ObjectCollection|ChildGroup[] List of ChildGroup objects
+     */
+    public function getGroups(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collGroupsPartial && !$this->isNew();
+        if (null === $this->collGroups || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collGroups) {
+                    $this->initGroups();
+                }
+            } else {
+
+                $query = ChildGroupQuery::create(null, $criteria)
+                    ->filterByAction($this);
+                $collGroups = $query->find($con);
+                if (null !== $criteria) {
+                    return $collGroups;
+                }
+
+                if ($partial && $this->collGroups) {
+                    //make sure that already added objects gets added to the list of the database.
+                    foreach ($this->collGroups as $obj) {
+                        if (!$collGroups->contains($obj)) {
+                            $collGroups[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collGroups = $collGroups;
+                $this->collGroupsPartial = false;
+            }
+        }
+
+        return $this->collGroups;
+    }
+
+    /**
+     * Sets a collection of Group objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_action cross-reference table.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param  Collection $groups A Propel collection.
+     * @param  ConnectionInterface $con Optional connection object
+     * @return $this|ChildAction The current object (for fluent API support)
+     */
+    public function setGroups(Collection $groups, ConnectionInterface $con = null)
+    {
+        $this->clearGroups();
+        $currentGroups = $this->getGroups();
+
+        $groupsScheduledForDeletion = $currentGroups->diff($groups);
+
+        foreach ($groupsScheduledForDeletion as $toDelete) {
+            $this->removeGroup($toDelete);
+        }
+
+        foreach ($groups as $group) {
+            if (!$currentGroups->contains($group)) {
+                $this->doAddGroup($group);
+            }
+        }
+
+        $this->collGroupsPartial = false;
+        $this->collGroups = $groups;
+
+        return $this;
+    }
+
+    /**
+     * Gets the number of Group objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_action cross-reference table.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      boolean $distinct Set to true to force count distinct
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return int the number of related Group objects
+     */
+    public function countGroups(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collGroupsPartial && !$this->isNew();
+        if (null === $this->collGroups || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collGroups) {
+                return 0;
+            } else {
+
+                if ($partial && !$criteria) {
+                    return count($this->getGroups());
+                }
+
+                $query = ChildGroupQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByAction($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collGroups);
+        }
+    }
+
+    /**
+     * Associate a ChildGroup to this object
+     * through the keeko_group_action cross reference table.
+     *
+     * @param ChildGroup $group
+     * @return ChildAction The current object (for fluent API support)
+     */
+    public function addGroup(ChildGroup $group)
+    {
+        if ($this->collGroups === null) {
+            $this->initGroups();
+        }
+
+        if (!$this->getGroups()->contains($group)) {
+            // only add it if the **same** object is not already associated
+            $this->collGroups->push($group);
+            $this->doAddGroup($group);
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param ChildGroup $group
+     */
+    protected function doAddGroup(ChildGroup $group)
+    {
+        $groupAction = new ChildGroupAction();
+
+        $groupAction->setGroup($group);
+
+        $groupAction->setAction($this);
+
+        $this->addGroupAction($groupAction);
+
+        // set the back reference to this object directly as using provided method either results
+        // in endless loop or in multiple relations
+        if (!$group->isActionsLoaded()) {
+            $group->initActions();
+            $group->getActions()->push($this);
+        } elseif (!$group->getActions()->contains($this)) {
+            $group->getActions()->push($this);
+        }
+
+    }
+
+    /**
+     * Remove group of this object
+     * through the keeko_group_action cross reference table.
+     *
+     * @param ChildGroup $group
+     * @return ChildAction The current object (for fluent API support)
+     */
+    public function removeGroup(ChildGroup $group)
+    {
+        if ($this->getGroups()->contains($group)) { $groupAction = new ChildGroupAction();
+
+            $groupAction->setGroup($group);
+            if ($group->isActionsLoaded()) {
+                //remove the back reference if available
+                $group->getActions()->removeObject($this);
+            }
+
+            $groupAction->setAction($this);
+            $this->removeGroupAction(clone $groupAction);
+            $groupAction->clear();
+
+            $this->collGroups->remove($this->collGroups->search($group));
+
+            if (null === $this->groupsScheduledForDeletion) {
+                $this->groupsScheduledForDeletion = clone $this->collGroups;
+                $this->groupsScheduledForDeletion->clear();
+            }
+
+            $this->groupsScheduledForDeletion->push($group);
+        }
+
+
+        return $this;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1890,10 +2180,16 @@ abstract class Action implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collGroups) {
+                foreach ($this->collGroups as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collApis = null;
         $this->collGroupActions = null;
+        $this->collGroups = null;
         $this->aModule = null;
     }
 

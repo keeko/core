@@ -2,15 +2,14 @@
 namespace keeko\security;
 
 use Symfony\Component\Config\FileLocator;
-
 use Hautelook\Phpass\PasswordHash;
-
 use Symfony\Component\Yaml\Yaml;
 
-class Phpass implements PasswordHasherInterface
-{
+class Phpass implements PasswordHasherInterface {
+
 	/**
 	 * The adapter for hashing passwords
+	 * 
 	 * @var \Hautelook\Phpass\PasswordHash
 	 */
 	private $adapter;
@@ -21,11 +20,11 @@ class Phpass implements PasswordHasherInterface
 	public function __construct() {
 		$strength = 8;
 		$portable = false;
-
+		
 		try {
 			$locator = new FileLocator(KEEKO_PATH_CONFIG);
 			$configFile = $locator->locate('security.yml', null, true);
-
+			
 			$config = Yaml::parse($configFile);
 			if (array_key_exists('phpass', $config)) {
 				if (array_key_exists('strength', $config['phpass'])) {
@@ -35,15 +34,16 @@ class Phpass implements PasswordHasherInterface
 					$portable = $config['phpass']['portable'];
 				}
 			}
-		} catch(\InvalidArgumentException $e) {}
-
+		} catch (\InvalidArgumentException $e) {
+		}
+		
 		$this->adapter = new PasswordHash($strength, $portable);
 	}
 
 	/**
 	 * Hashes the provided plaintext password and returns the hashed one
 	 *
-	 * @param string $password
+	 * @param string $password        	
 	 * @return string
 	 */
 	public function hash($password) {
@@ -53,8 +53,8 @@ class Phpass implements PasswordHasherInterface
 	/**
 	 * Validates a given plaintext password against the given hashed password
 	 *
-	 * @param string $password
-	 * @param string $hash
+	 * @param string $password        	
+	 * @param string $hash        	
 	 * @return bool
 	 */
 	public function validate($password, $hash) {

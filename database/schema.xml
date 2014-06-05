@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database defaultIdMethod="native" name="keeko" namespace="keeko\core\model"
-	defaultPhpNamingMethod="phpname"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	defaultPhpNamingMethod="phpname" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd">
 
 	<!-- <behavior name="listener"> <parameter name="table" value="iuf_listener"/> 
 		<parameter name="phpName" value="Listener"/> </behavior> -->
 
-	
+
 	<table name="language">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
@@ -156,7 +155,8 @@
 		<column name="httphost" type="VARCHAR" size="255" required="true" />
 		<column name="basepath" type="VARCHAR" size="255" required="true" />
 		<column name="secure" type="BOOLEAN" />
-		<column name="application_id" type="INTEGER" size="10" required="true" />
+		<column name="application_id" type="INTEGER" size="10"
+			required="true" />
 		<column name="localization_id" type="INTEGER" size="10"
 			required="true" />
 
@@ -175,18 +175,19 @@
 		<column name="class_name" type="VARCHAR" size="255" required="true" />
 		<column name="activated_version" type="VARCHAR" size="50" />
 		<column name="default_action" type="VARCHAR" />
-		<column name="has_api" type="BOOLEAN" default="false" phpName="Api"/>
+		<column name="slug" type="VARCHAR" />
+		<column name="has_api" type="BOOLEAN" default="false" phpName="Api" />
 	</table>
 
 	<table name="action">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
-		<column name="name" type="VARCHAR" required="true"/>
-		<column name="title" type="VARCHAR" required="true"/>
-		<column name="description" type="VARCHAR" size="255"/>
-		<column name="class_name" type="VARCHAR" size="255" required="true"/>
-		<column name="module_id" type="INTEGER" size="10" required="true"/>
-		
+		<column name="name" type="VARCHAR" required="true" />
+		<column name="title" type="VARCHAR" required="true" />
+		<column name="description" type="VARCHAR" size="255" />
+		<column name="class_name" type="VARCHAR" size="255" required="true" />
+		<column name="module_id" type="INTEGER" size="10" required="true" />
+
 		<foreign-key foreignTable="module" onDelete="cascade">
 			<reference local="module_id" foreign="id" />
 		</foreign-key>
@@ -195,10 +196,10 @@
 	<table name="api">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
-		<column name="route" type="VARCHAR" require="true"/>
-		<column name="method" type="VARCHAR" require="true"/>
-		<column name="action_id" type="INTEGER" size="10" required="true"/>
-		<column name="required_params" type="VARCHAR" size="255"/>
+		<column name="route" type="VARCHAR" required="true" />
+		<column name="method" type="VARCHAR" required="true" />
+		<column name="action_id" type="INTEGER" size="10" required="true" />
+		<column name="required_params" type="VARCHAR" size="255" />
 
 		<foreign-key foreignTable="action" onDelete="cascade">
 			<reference local="action_id" foreign="id" />
@@ -212,7 +213,7 @@
 		<column name="password" type="VARCHAR" size="100" required="true" />
 		<column name="given_name" type="VARCHAR" size="100" />
 		<column name="family_name" type="VARCHAR" size="100" />
-		<column name="display_name" type="VARCHAR" size="100" required="true" />
+		<column name="display_name" type="VARCHAR" size="100" />
 		<column name="email" type="VARCHAR" size="255" required="true" />
 		<column name="country_iso_nr" type="INTEGER" />
 		<column name="subdivision_id" type="INTEGER" />
@@ -220,7 +221,6 @@
 		<column name="address2" type="LONGVARCHAR" />
 		<column name="birthday" type="DATE" />
 		<column name="sex" type="TINYINT" />
-		<column name="club" type="VARCHAR" size="100" />
 		<column name="city" type="VARCHAR" size="128" />
 		<column name="postal_code" type="VARCHAR" size="45" />
 		<column name="password_recover_code" type="VARCHAR" size="32" />
@@ -229,9 +229,13 @@
 		<column name="latitude" type="FLOAT" size="10" />
 		<column name="longitude" type="FLOAT" size="10" />
 
-		<behavior name="timestampable">
-			<parameter name="create_column" value="created" />
-			<parameter name="update_column" value="updated" />
+		<behavior name="timestampable"></behavior>
+
+		<behavior name="validate">
+			<parameter name="rule1" value="{column: login_name, validator: NotNull}" />
+			<parameter name="rule2" value="{column: email, validator: NotNull}" />
+			<parameter name="rule3" value="{column: email, validator: Email}" />
+			<parameter name="rule4" value="{column: password, validator: NotNull}" />
 		</behavior>
 
 		<foreign-key foreignTable="country">
@@ -245,7 +249,7 @@
 			<unique-column name="login_name" />
 		</unique>
 	</table>
-	
+
 	<table name="group">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
@@ -255,12 +259,19 @@
 		<column name="is_default" type="BOOLEAN" />
 		<column name="is_active" type="BOOLEAN" default="1" />
 		<column name="is_system" type="BOOLEAN" default="0" />
+		
+		<behavior name="timestampable"></behavior>
+		
+		<behavior name="validate">
+			<parameter name="rule1" value="{column: name, validator: NotNull}" />
+		</behavior>
+		
 		<foreign-key foreignTable="user" onDelete="restrict">
 			<reference local="user_id" foreign="id" />
 		</foreign-key>
 	</table>
 
-	<table name="group_user">
+	<table name="group_user" isCrossRef="true">
 		<column name="user_id" type="INTEGER" size="10" primaryKey="true"
 			required="true" />
 		<column name="group_id" type="INTEGER" size="10" primaryKey="true"
@@ -273,7 +284,7 @@
 		</foreign-key>
 	</table>
 
-	<table name="group_action">
+	<table name="group_action" isCrossRef="true">
 		<column name="group_id" type="INTEGER" size="10" primaryKey="true"
 			required="true" />
 		<column name="action_id" type="INTEGER" size="10" primaryKey="true"
@@ -285,5 +296,5 @@
 			<reference local="action_id" foreign="id" />
 		</foreign-key>
 	</table>
-	
+
 </database>

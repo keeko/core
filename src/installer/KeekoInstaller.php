@@ -22,12 +22,12 @@ class KeekoInstaller {
 
 	public function installKeeko(IOInterface $io, Composer $composer) {
 		$this->installStaticData();
-
+		
 		$packageManager = new PackageManager();
 		$appInstaller = new AppInstaller();
 		$moduleInstaller = new ModuleInstaller();
 		$moduleManager = new ModuleManager($packageManager);
-
+		
 		// localization
 		// de
 		$de = new Localization();
@@ -35,7 +35,7 @@ class KeekoInstaller {
 		$de->setCountryIsoNr(276);
 		$de->setIsDefault(true);
 		$de->save();
-
+		
 		// apps
 		// -- api app
 		$apiAppPackage = $packageManager->getApplicationPackage('keeko/api-app');
@@ -61,7 +61,7 @@ class KeekoInstaller {
 		// -- website app
 		$websiteAppPackage = $packageManager->getApplicationPackage('keeko/website-app');
 		$websiteApp = $appInstaller->install($io, $websiteAppPackage);
-
+		
 		$uri = new ApplicationUri();
 		$uri->setApplication($websiteApp);
 		$uri->setLocalization($de);
@@ -75,18 +75,27 @@ class KeekoInstaller {
 			$moduleInstaller->install($io, $userModulePackage);
 			$moduleManager->activate('keeko/user');
 		}
+		
+		$groupModulePackage = $packageManager->getModulePackage('keeko/group');
+		if ($groupModulePackage) {
+			$moduleInstaller->install($io, $groupModulePackage);
+			$moduleManager->activate('keeko/group');
+		}
 	}
 
 	private function installStaticData() {
-		$files = ['sql/keeko.sql', 'data/static-data.sql'];
+		$files = [
+			'sql/keeko.sql',
+			'data/static-data.sql'
+		];
 		$con = Propel::getConnection();
-
+		
 		foreach ($files as $file) {
 			$path = KEEKO_PATH . '/core/database/' . $file;
-
+			
 			if (file_exists($path)) {
 				$sql = file_get_contents($path);
-
+				
 				try {
 					$stmt = $con->prepare($sql);
 					$stmt->execute();
@@ -96,5 +105,4 @@ class KeekoInstaller {
 			}
 		}
 	}
-
 }

@@ -9,16 +9,18 @@ use Composer\Package\Loader\ValidatingArrayLoader;
 use Composer\Json\JsonFile;
 
 class PackageManager {
-	
-	/** @var JsonLoader */
+
+	/**
+	 * @var JsonLoader
+	 */
 	private $loader;
-	
+
 	private $cache = [];
-	
+
 	public function __construct() {
 		$this->loader = new ArrayLoader();
 	}
-	
+
 	private function load($file) {
 		$config = JsonFile::parseJson(file_get_contents($file), $file);
 		
@@ -29,15 +31,16 @@ class PackageManager {
 		
 		return $this->loader->load($config);
 	}
-	
+
 	/**
+	 *
 	 * @return CompletePackageInterface
 	 */
 	private function getPackage($directory, $packageName) {
 		if (isset($this->cache[$packageName])) {
 			return $this->cache[$packageName];
 		}
-
+		
 		$path = $directory . '/' . $packageName . '/composer.json';
 		
 		if (file_exists($path)) {
@@ -49,6 +52,7 @@ class PackageManager {
 	}
 
 	/**
+	 *
 	 * @return CompletePackageInterface
 	 */
 	public function getModulePackage($packageName) {
@@ -56,6 +60,7 @@ class PackageManager {
 	}
 
 	/**
+	 *
 	 * @return CompletePackageInterface
 	 */
 	public function getApplicationPackage($packageName) {

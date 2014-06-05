@@ -77,6 +77,12 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
     protected $default_action;
 
     /**
+     * The value for the slug field.
+     * @var        string
+     */
+    protected $slug;
+
+    /**
      * The value for the has_api field.
      * Note: this column has a database default value of: false
      * @var        boolean
@@ -399,6 +405,16 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
     }
 
     /**
+     * Get the [slug] column value.
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
      * Get the [has_api] column value.
      *
      * @return boolean
@@ -517,22 +533,25 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ModuleTableMap::translateFieldName('DefaultAction', TableMap::TYPE_PHPNAME, $indexType)];
             $this->default_action = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ModuleTableMap::translateFieldName('Api', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ModuleTableMap::translateFieldName('Slug', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->slug = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ModuleTableMap::translateFieldName('Api', TableMap::TYPE_PHPNAME, $indexType)];
             $this->has_api = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ModuleTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ModuleTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ModuleTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ModuleTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ModuleTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ModuleTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
             $this->title = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ModuleTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ModuleTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
             $this->description = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ModuleTableMap::translateFieldName('InstalledVersion', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ModuleTableMap::translateFieldName('InstalledVersion', TableMap::TYPE_PHPNAME, $indexType)];
             $this->installed_version = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -542,7 +561,7 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 9; // 9 = ModuleTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = ModuleTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Module'), 0, $e);
@@ -628,6 +647,26 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
 
         return $this;
     } // setDefaultAction()
+
+    /**
+     * Set the value of [slug] column.
+     *
+     * @param  string $v new value
+     * @return $this|\keeko\core\model\Module The current object (for fluent API support)
+     */
+    public function setSlug($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->slug !== $v) {
+            $this->slug = $v;
+            $this->modifiedColumns[ModuleTableMap::COL_SLUG] = true;
+        }
+
+        return $this;
+    } // setSlug()
 
     /**
      * Sets the value of the [has_api] column.
@@ -979,6 +1018,9 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
         if ($this->isColumnModified(ModuleTableMap::COL_DEFAULT_ACTION)) {
             $modifiedColumns[':p' . $index++]  = 'DEFAULT_ACTION';
         }
+        if ($this->isColumnModified(ModuleTableMap::COL_SLUG)) {
+            $modifiedColumns[':p' . $index++]  = 'SLUG';
+        }
         if ($this->isColumnModified(ModuleTableMap::COL_HAS_API)) {
             $modifiedColumns[':p' . $index++]  = 'HAS_API';
         }
@@ -1016,6 +1058,9 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
                         break;
                     case 'DEFAULT_ACTION':
                         $stmt->bindValue($identifier, $this->default_action, PDO::PARAM_STR);
+                        break;
+                    case 'SLUG':
+                        $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
                     case 'HAS_API':
                         $stmt->bindValue($identifier, (int) $this->has_api, PDO::PARAM_INT);
@@ -1100,21 +1145,24 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
                 return $this->getDefaultAction();
                 break;
             case 3:
-                return $this->getApi();
+                return $this->getSlug();
                 break;
             case 4:
-                return $this->getId();
+                return $this->getApi();
                 break;
             case 5:
-                return $this->getName();
+                return $this->getId();
                 break;
             case 6:
-                return $this->getTitle();
+                return $this->getName();
                 break;
             case 7:
-                return $this->getDescription();
+                return $this->getTitle();
                 break;
             case 8:
+                return $this->getDescription();
+                break;
+            case 9:
                 return $this->getInstalledVersion();
                 break;
             default:
@@ -1149,12 +1197,13 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
             $keys[0] => $this->getClassName(),
             $keys[1] => $this->getActivatedVersion(),
             $keys[2] => $this->getDefaultAction(),
-            $keys[3] => $this->getApi(),
-            $keys[4] => $this->getId(),
-            $keys[5] => $this->getName(),
-            $keys[6] => $this->getTitle(),
-            $keys[7] => $this->getDescription(),
-            $keys[8] => $this->getInstalledVersion(),
+            $keys[3] => $this->getSlug(),
+            $keys[4] => $this->getApi(),
+            $keys[5] => $this->getId(),
+            $keys[6] => $this->getName(),
+            $keys[7] => $this->getTitle(),
+            $keys[8] => $this->getDescription(),
+            $keys[9] => $this->getInstalledVersion(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1212,21 +1261,24 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
                 $this->setDefaultAction($value);
                 break;
             case 3:
-                $this->setApi($value);
+                $this->setSlug($value);
                 break;
             case 4:
-                $this->setId($value);
+                $this->setApi($value);
                 break;
             case 5:
-                $this->setName($value);
+                $this->setId($value);
                 break;
             case 6:
-                $this->setTitle($value);
+                $this->setName($value);
                 break;
             case 7:
-                $this->setDescription($value);
+                $this->setTitle($value);
                 break;
             case 8:
+                $this->setDescription($value);
+                break;
+            case 9:
                 $this->setInstalledVersion($value);
                 break;
         } // switch()
@@ -1265,22 +1317,25 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
             $this->setDefaultAction($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setApi($arr[$keys[3]]);
+            $this->setSlug($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setId($arr[$keys[4]]);
+            $this->setApi($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setName($arr[$keys[5]]);
+            $this->setId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setTitle($arr[$keys[6]]);
+            $this->setName($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setDescription($arr[$keys[7]]);
+            $this->setTitle($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setInstalledVersion($arr[$keys[8]]);
+            $this->setDescription($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setInstalledVersion($arr[$keys[9]]);
         }
     }
 
@@ -1325,6 +1380,9 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ModuleTableMap::COL_DEFAULT_ACTION)) {
             $criteria->add(ModuleTableMap::COL_DEFAULT_ACTION, $this->default_action);
+        }
+        if ($this->isColumnModified(ModuleTableMap::COL_SLUG)) {
+            $criteria->add(ModuleTableMap::COL_SLUG, $this->slug);
         }
         if ($this->isColumnModified(ModuleTableMap::COL_HAS_API)) {
             $criteria->add(ModuleTableMap::COL_HAS_API, $this->has_api);
@@ -1440,6 +1498,7 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
         $copyObj->setClassName($this->getClassName());
         $copyObj->setActivatedVersion($this->getActivatedVersion());
         $copyObj->setDefaultAction($this->getDefaultAction());
+        $copyObj->setSlug($this->getSlug());
         $copyObj->setApi($this->getApi());
         $copyObj->setId($this->getId());
         $copyObj->setName($this->getName());
@@ -1779,6 +1838,7 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
         $this->class_name = null;
         $this->activated_version = null;
         $this->default_action = null;
+        $this->slug = null;
         $this->has_api = null;
         $this->id = null;
         $this->name = null;

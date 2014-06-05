@@ -59,7 +59,7 @@ class GroupTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 9;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class GroupTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 9;
 
     /**
      * the column name for the ID field
@@ -107,6 +107,16 @@ class GroupTableMap extends TableMap
     const COL_IS_SYSTEM = 'keeko_group.IS_SYSTEM';
 
     /**
+     * the column name for the CREATED_AT field
+     */
+    const COL_CREATED_AT = 'keeko_group.CREATED_AT';
+
+    /**
+     * the column name for the UPDATED_AT field
+     */
+    const COL_UPDATED_AT = 'keeko_group.UPDATED_AT';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -118,12 +128,12 @@ class GroupTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'UserId', 'Name', 'IsGuest', 'IsDefault', 'IsActive', 'IsSystem', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'userId', 'name', 'isGuest', 'isDefault', 'isActive', 'isSystem', ),
-        self::TYPE_COLNAME       => array(GroupTableMap::COL_ID, GroupTableMap::COL_USER_ID, GroupTableMap::COL_NAME, GroupTableMap::COL_IS_GUEST, GroupTableMap::COL_IS_DEFAULT, GroupTableMap::COL_IS_ACTIVE, GroupTableMap::COL_IS_SYSTEM, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_USER_ID', 'COL_NAME', 'COL_IS_GUEST', 'COL_IS_DEFAULT', 'COL_IS_ACTIVE', 'COL_IS_SYSTEM', ),
-        self::TYPE_FIELDNAME     => array('id', 'user_id', 'name', 'is_guest', 'is_default', 'is_active', 'is_system', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id', 'UserId', 'Name', 'IsGuest', 'IsDefault', 'IsActive', 'IsSystem', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'userId', 'name', 'isGuest', 'isDefault', 'isActive', 'isSystem', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(GroupTableMap::COL_ID, GroupTableMap::COL_USER_ID, GroupTableMap::COL_NAME, GroupTableMap::COL_IS_GUEST, GroupTableMap::COL_IS_DEFAULT, GroupTableMap::COL_IS_ACTIVE, GroupTableMap::COL_IS_SYSTEM, GroupTableMap::COL_CREATED_AT, GroupTableMap::COL_UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_USER_ID', 'COL_NAME', 'COL_IS_GUEST', 'COL_IS_DEFAULT', 'COL_IS_ACTIVE', 'COL_IS_SYSTEM', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('id', 'user_id', 'name', 'is_guest', 'is_default', 'is_active', 'is_system', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -133,12 +143,12 @@ class GroupTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'UserId' => 1, 'Name' => 2, 'IsGuest' => 3, 'IsDefault' => 4, 'IsActive' => 5, 'IsSystem' => 6, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'userId' => 1, 'name' => 2, 'isGuest' => 3, 'isDefault' => 4, 'isActive' => 5, 'isSystem' => 6, ),
-        self::TYPE_COLNAME       => array(GroupTableMap::COL_ID => 0, GroupTableMap::COL_USER_ID => 1, GroupTableMap::COL_NAME => 2, GroupTableMap::COL_IS_GUEST => 3, GroupTableMap::COL_IS_DEFAULT => 4, GroupTableMap::COL_IS_ACTIVE => 5, GroupTableMap::COL_IS_SYSTEM => 6, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_USER_ID' => 1, 'COL_NAME' => 2, 'COL_IS_GUEST' => 3, 'COL_IS_DEFAULT' => 4, 'COL_IS_ACTIVE' => 5, 'COL_IS_SYSTEM' => 6, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'user_id' => 1, 'name' => 2, 'is_guest' => 3, 'is_default' => 4, 'is_active' => 5, 'is_system' => 6, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'UserId' => 1, 'Name' => 2, 'IsGuest' => 3, 'IsDefault' => 4, 'IsActive' => 5, 'IsSystem' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'userId' => 1, 'name' => 2, 'isGuest' => 3, 'isDefault' => 4, 'isActive' => 5, 'isSystem' => 6, 'createdAt' => 7, 'updatedAt' => 8, ),
+        self::TYPE_COLNAME       => array(GroupTableMap::COL_ID => 0, GroupTableMap::COL_USER_ID => 1, GroupTableMap::COL_NAME => 2, GroupTableMap::COL_IS_GUEST => 3, GroupTableMap::COL_IS_DEFAULT => 4, GroupTableMap::COL_IS_ACTIVE => 5, GroupTableMap::COL_IS_SYSTEM => 6, GroupTableMap::COL_CREATED_AT => 7, GroupTableMap::COL_UPDATED_AT => 8, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_USER_ID' => 1, 'COL_NAME' => 2, 'COL_IS_GUEST' => 3, 'COL_IS_DEFAULT' => 4, 'COL_IS_ACTIVE' => 5, 'COL_IS_SYSTEM' => 6, 'COL_CREATED_AT' => 7, 'COL_UPDATED_AT' => 8, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'user_id' => 1, 'name' => 2, 'is_guest' => 3, 'is_default' => 4, 'is_active' => 5, 'is_system' => 6, 'created_at' => 7, 'updated_at' => 8, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -164,6 +174,8 @@ class GroupTableMap extends TableMap
         $this->addColumn('IS_DEFAULT', 'IsDefault', 'BOOLEAN', false, 1, null);
         $this->addColumn('IS_ACTIVE', 'IsActive', 'BOOLEAN', false, 1, true);
         $this->addColumn('IS_SYSTEM', 'IsSystem', 'BOOLEAN', false, 1, false);
+        $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
 
     /**
@@ -174,7 +186,23 @@ class GroupTableMap extends TableMap
         $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), 'RESTRICT', null);
         $this->addRelation('GroupUser', '\\keeko\\core\\model\\GroupUser', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), 'RESTRICT', null, 'GroupUsers');
         $this->addRelation('GroupAction', '\\keeko\\core\\model\\GroupAction', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), 'RESTRICT', null, 'GroupActions');
+        $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Users');
+        $this->addRelation('Action', '\\keeko\\core\\model\\Action', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Actions');
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
+            'validate' => array('rule1' => array ('column' => 'name','validator' => 'NotNull',), ),
+        );
+    } // getBehaviors()
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -324,6 +352,8 @@ class GroupTableMap extends TableMap
             $criteria->addSelectColumn(GroupTableMap::COL_IS_DEFAULT);
             $criteria->addSelectColumn(GroupTableMap::COL_IS_ACTIVE);
             $criteria->addSelectColumn(GroupTableMap::COL_IS_SYSTEM);
+            $criteria->addSelectColumn(GroupTableMap::COL_CREATED_AT);
+            $criteria->addSelectColumn(GroupTableMap::COL_UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.USER_ID');
@@ -332,6 +362,8 @@ class GroupTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.IS_DEFAULT');
             $criteria->addSelectColumn($alias . '.IS_ACTIVE');
             $criteria->addSelectColumn($alias . '.IS_SYSTEM');
+            $criteria->addSelectColumn($alias . '.CREATED_AT');
+            $criteria->addSelectColumn($alias . '.UPDATED_AT');
         }
     }
 

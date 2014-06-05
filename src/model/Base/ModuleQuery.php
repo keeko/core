@@ -24,6 +24,7 @@ use keeko\core\model\Map\ModuleTableMap;
  * @method     ChildModuleQuery orderByClassName($order = Criteria::ASC) Order by the class_name column
  * @method     ChildModuleQuery orderByActivatedVersion($order = Criteria::ASC) Order by the activated_version column
  * @method     ChildModuleQuery orderByDefaultAction($order = Criteria::ASC) Order by the default_action column
+ * @method     ChildModuleQuery orderBySlug($order = Criteria::ASC) Order by the slug column
  * @method     ChildModuleQuery orderByApi($order = Criteria::ASC) Order by the has_api column
  * @method     ChildModuleQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildModuleQuery orderByName($order = Criteria::ASC) Order by the name column
@@ -34,6 +35,7 @@ use keeko\core\model\Map\ModuleTableMap;
  * @method     ChildModuleQuery groupByClassName() Group by the class_name column
  * @method     ChildModuleQuery groupByActivatedVersion() Group by the activated_version column
  * @method     ChildModuleQuery groupByDefaultAction() Group by the default_action column
+ * @method     ChildModuleQuery groupBySlug() Group by the slug column
  * @method     ChildModuleQuery groupByApi() Group by the has_api column
  * @method     ChildModuleQuery groupById() Group by the id column
  * @method     ChildModuleQuery groupByName() Group by the name column
@@ -61,6 +63,7 @@ use keeko\core\model\Map\ModuleTableMap;
  * @method     ChildModule findOneByClassName(string $class_name) Return the first ChildModule filtered by the class_name column
  * @method     ChildModule findOneByActivatedVersion(string $activated_version) Return the first ChildModule filtered by the activated_version column
  * @method     ChildModule findOneByDefaultAction(string $default_action) Return the first ChildModule filtered by the default_action column
+ * @method     ChildModule findOneBySlug(string $slug) Return the first ChildModule filtered by the slug column
  * @method     ChildModule findOneByApi(boolean $has_api) Return the first ChildModule filtered by the has_api column
  * @method     ChildModule findOneById(int $id) Return the first ChildModule filtered by the id column
  * @method     ChildModule findOneByName(string $name) Return the first ChildModule filtered by the name column
@@ -72,6 +75,7 @@ use keeko\core\model\Map\ModuleTableMap;
  * @method     ChildModule[]|ObjectCollection findByClassName(string $class_name) Return ChildModule objects filtered by the class_name column
  * @method     ChildModule[]|ObjectCollection findByActivatedVersion(string $activated_version) Return ChildModule objects filtered by the activated_version column
  * @method     ChildModule[]|ObjectCollection findByDefaultAction(string $default_action) Return ChildModule objects filtered by the default_action column
+ * @method     ChildModule[]|ObjectCollection findBySlug(string $slug) Return ChildModule objects filtered by the slug column
  * @method     ChildModule[]|ObjectCollection findByApi(boolean $has_api) Return ChildModule objects filtered by the has_api column
  * @method     ChildModule[]|ObjectCollection findById(int $id) Return ChildModule objects filtered by the id column
  * @method     ChildModule[]|ObjectCollection findByName(string $name) Return ChildModule objects filtered by the name column
@@ -167,7 +171,7 @@ abstract class ModuleQuery extends ChildPackageQuery
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT CLASS_NAME, ACTIVATED_VERSION, DEFAULT_ACTION, HAS_API, ID, NAME, TITLE, DESCRIPTION, INSTALLED_VERSION FROM keeko_module WHERE ID = :p0';
+        $sql = 'SELECT CLASS_NAME, ACTIVATED_VERSION, DEFAULT_ACTION, SLUG, HAS_API, ID, NAME, TITLE, DESCRIPTION, INSTALLED_VERSION FROM keeko_module WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -342,6 +346,35 @@ abstract class ModuleQuery extends ChildPackageQuery
         }
 
         return $this->addUsingAlias(ModuleTableMap::COL_DEFAULT_ACTION, $defaultAction, $comparison);
+    }
+
+    /**
+     * Filter the query on the slug column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySlug('fooValue');   // WHERE slug = 'fooValue'
+     * $query->filterBySlug('%fooValue%'); // WHERE slug LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $slug The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildModuleQuery The current query, for fluid interface
+     */
+    public function filterBySlug($slug = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($slug)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $slug)) {
+                $slug = str_replace('*', '%', $slug);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ModuleTableMap::COL_SLUG, $slug, $comparison);
     }
 
     /**

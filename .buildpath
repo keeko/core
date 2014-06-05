@@ -20,7 +20,6 @@
 	<buildpathentry kind="src" path="vendor/symfony/validator"/>
 	<buildpathentry excluding="composer/" kind="src" path="vendor/composer"/>
 	<buildpathentry kind="src" path="vendor/symfony/translation"/>
-	<buildpathentry kind="src" path="vendor/symfony/property-access"/>
 	<buildpathentry kind="src" path="vendor/symfony/yaml"/>
 	<buildpathentry kind="src" path="vendor/keeko/composer-installer/src"/>
 </buildpath>

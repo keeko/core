@@ -27,6 +27,8 @@ use keeko\core\model\Map\GroupTableMap;
  * @method     ChildGroupQuery orderByIsDefault($order = Criteria::ASC) Order by the is_default column
  * @method     ChildGroupQuery orderByIsActive($order = Criteria::ASC) Order by the is_active column
  * @method     ChildGroupQuery orderByIsSystem($order = Criteria::ASC) Order by the is_system column
+ * @method     ChildGroupQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
+ * @method     ChildGroupQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method     ChildGroupQuery groupById() Group by the id column
  * @method     ChildGroupQuery groupByUserId() Group by the user_id column
@@ -35,6 +37,8 @@ use keeko\core\model\Map\GroupTableMap;
  * @method     ChildGroupQuery groupByIsDefault() Group by the is_default column
  * @method     ChildGroupQuery groupByIsActive() Group by the is_active column
  * @method     ChildGroupQuery groupByIsSystem() Group by the is_system column
+ * @method     ChildGroupQuery groupByCreatedAt() Group by the created_at column
+ * @method     ChildGroupQuery groupByUpdatedAt() Group by the updated_at column
  *
  * @method     ChildGroupQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildGroupQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -64,6 +68,8 @@ use keeko\core\model\Map\GroupTableMap;
  * @method     ChildGroup findOneByIsDefault(boolean $is_default) Return the first ChildGroup filtered by the is_default column
  * @method     ChildGroup findOneByIsActive(boolean $is_active) Return the first ChildGroup filtered by the is_active column
  * @method     ChildGroup findOneByIsSystem(boolean $is_system) Return the first ChildGroup filtered by the is_system column
+ * @method     ChildGroup findOneByCreatedAt(string $created_at) Return the first ChildGroup filtered by the created_at column
+ * @method     ChildGroup findOneByUpdatedAt(string $updated_at) Return the first ChildGroup filtered by the updated_at column
  *
  * @method     ChildGroup[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGroup objects based on current ModelCriteria
  * @method     ChildGroup[]|ObjectCollection findById(int $id) Return ChildGroup objects filtered by the id column
@@ -73,6 +79,8 @@ use keeko\core\model\Map\GroupTableMap;
  * @method     ChildGroup[]|ObjectCollection findByIsDefault(boolean $is_default) Return ChildGroup objects filtered by the is_default column
  * @method     ChildGroup[]|ObjectCollection findByIsActive(boolean $is_active) Return ChildGroup objects filtered by the is_active column
  * @method     ChildGroup[]|ObjectCollection findByIsSystem(boolean $is_system) Return ChildGroup objects filtered by the is_system column
+ * @method     ChildGroup[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildGroup objects filtered by the created_at column
+ * @method     ChildGroup[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildGroup objects filtered by the updated_at column
  * @method     ChildGroup[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -162,7 +170,7 @@ abstract class GroupQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, USER_ID, NAME, IS_GUEST, IS_DEFAULT, IS_ACTIVE, IS_SYSTEM FROM keeko_group WHERE ID = :p0';
+        $sql = 'SELECT ID, USER_ID, NAME, IS_GUEST, IS_DEFAULT, IS_ACTIVE, IS_SYSTEM, CREATED_AT, UPDATED_AT FROM keeko_group WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -474,6 +482,92 @@ abstract class GroupQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the created_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
+     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
+     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $createdAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildGroupQuery The current query, for fluid interface
+     */
+    public function filterByCreatedAt($createdAt = null, $comparison = null)
+    {
+        if (is_array($createdAt)) {
+            $useMinMax = false;
+            if (isset($createdAt['min'])) {
+                $this->addUsingAlias(GroupTableMap::COL_CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($createdAt['max'])) {
+                $this->addUsingAlias(GroupTableMap::COL_CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(GroupTableMap::COL_CREATED_AT, $createdAt, $comparison);
+    }
+
+    /**
+     * Filter the query on the updated_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $updatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildGroupQuery The current query, for fluid interface
+     */
+    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
+    {
+        if (is_array($updatedAt)) {
+            $useMinMax = false;
+            if (isset($updatedAt['min'])) {
+                $this->addUsingAlias(GroupTableMap::COL_UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($updatedAt['max'])) {
+                $this->addUsingAlias(GroupTableMap::COL_UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(GroupTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
+    }
+
+    /**
      * Filter the query by a related \keeko\core\model\User object
      *
      * @param \keeko\core\model\User|ObjectCollection $user The related object(s) to use as filter
@@ -695,6 +789,40 @@ abstract class GroupQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related User object
+     * using the keeko_group_user table as cross reference
+     *
+     * @param User $user the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildGroupQuery The current query, for fluid interface
+     */
+    public function filterByUser($user, $comparison = Criteria::EQUAL)
+    {
+        return $this
+            ->useGroupUserQuery()
+            ->filterByUser($user, $comparison)
+            ->endUse();
+    }
+
+    /**
+     * Filter the query by a related Action object
+     * using the keeko_group_action table as cross reference
+     *
+     * @param Action $action the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildGroupQuery The current query, for fluid interface
+     */
+    public function filterByAction($action, $comparison = Criteria::EQUAL)
+    {
+        return $this
+            ->useGroupActionQuery()
+            ->filterByAction($action, $comparison)
+            ->endUse();
+    }
+
+    /**
      * Exclude object from result
      *
      * @param   ChildGroup $group Object to remove from the list of results
@@ -769,6 +897,72 @@ abstract class GroupQuery extends ModelCriteria
 
             return $affectedRows;
         });
+    }
+
+    // timestampable behavior
+
+    /**
+     * Filter by the latest updated
+     *
+     * @param      int $nbDays Maximum age of the latest update in days
+     *
+     * @return     $this|ChildGroupQuery The current query, for fluid interface
+     */
+    public function recentlyUpdated($nbDays = 7)
+    {
+        return $this->addUsingAlias(GroupTableMap::COL_UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
+     * Order by update date desc
+     *
+     * @return     $this|ChildGroupQuery The current query, for fluid interface
+     */
+    public function lastUpdatedFirst()
+    {
+        return $this->addDescendingOrderByColumn(GroupTableMap::COL_UPDATED_AT);
+    }
+
+    /**
+     * Order by update date asc
+     *
+     * @return     $this|ChildGroupQuery The current query, for fluid interface
+     */
+    public function firstUpdatedFirst()
+    {
+        return $this->addAscendingOrderByColumn(GroupTableMap::COL_UPDATED_AT);
+    }
+
+    /**
+     * Order by create date desc
+     *
+     * @return     $this|ChildGroupQuery The current query, for fluid interface
+     */
+    public function lastCreatedFirst()
+    {
+        return $this->addDescendingOrderByColumn(GroupTableMap::COL_CREATED_AT);
+    }
+
+    /**
+     * Filter by the latest created
+     *
+     * @param      int $nbDays Maximum age of in days
+     *
+     * @return     $this|ChildGroupQuery The current query, for fluid interface
+     */
+    public function recentlyCreated($nbDays = 7)
+    {
+        return $this->addUsingAlias(GroupTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
+     * Order by create date asc
+     *
+     * @return     $this|ChildGroupQuery The current query, for fluid interface
+     */
+    public function firstCreatedFirst()
+    {
+        return $this->addAscendingOrderByColumn(GroupTableMap::COL_CREATED_AT);
     }
 
 } // GroupQuery

@@ -131,6 +131,7 @@ class GroupUserTableMap extends TableMap
         $this->setClassName('\\keeko\\core\\model\\GroupUser');
         $this->setPackage('keeko.core.model');
         $this->setUseIdGenerator(false);
+        $this->setIsCrossRef(true);
         // columns
         $this->addForeignPrimaryKey('USER_ID', 'UserId', 'INTEGER' , 'keeko_user', 'ID', true, 10, null);
         $this->addForeignPrimaryKey('GROUP_ID', 'GroupId', 'INTEGER' , 'keeko_group', 'ID', true, 10, null);

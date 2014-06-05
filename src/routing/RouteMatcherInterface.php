@@ -8,10 +8,10 @@ interface RouteMatcherInterface {
 
 	/**
 	 * Matches a route for the given request
-	 * 
+	 *
 	 * @throws MethodNotAllowedException
-	 * @throws ResourceNotFoundException 
-	 * @param mixed $request
+	 * @throws ResourceNotFoundException
+	 * @param mixed $request        	
 	 * @return mixed data for the route
 	 */
 	public function match($request);

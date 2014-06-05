@@ -17,7 +17,10 @@ abstract class AbstractRouter {
 		'param-false' => 'off'
 	];
 
-	private $requiredOptions = ['module', 'basepath'];
+	private $requiredOptions = [
+// 		'module',
+		'basepath'
+	];
 
 	private $optionalOptions = [];
 
@@ -46,7 +49,7 @@ abstract class AbstractRouter {
 
 	protected function init(RouteCollection $routes) {
 		$context = new RequestContext($this->options['basepath']);
-
+		
 		$this->matcher = new UrlMatcher($routes, $context);
 		$this->generator = new UrlGenerator($routes, $context);
 	}
@@ -97,13 +100,11 @@ abstract class AbstractRouter {
 			$kv = explode('=', $part);
 			if ($kv[0] != '') {
 				$params[$kv[0]] = count($kv) > 1
-					? $kv[1] == $this->options['param-true']
-						? true
-						: ($kv[1] == $this->options['param-false'] ? false : $kv[1])
-					: true;
+					? $kv[1] == $this->options['param-true'] ? true
+					: ($kv[1] == $this->options['param-false'] ? false : $kv[1]) : true;
 			}
 		}
-
+		
 		return $params;
 	}
 

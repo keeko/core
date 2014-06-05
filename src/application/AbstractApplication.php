@@ -9,54 +9,61 @@ use keeko\core\package\PackageManager;
 
 abstract class AbstractApplication {
 
-	/** @var Application */
+	/**
+	 * @var Application
+	 */
 	protected $model;
-	
-	/** @var Localization */
+
+	/**
+	 * @var Localization
+	 */
 	protected $localization;
-	
-	/** @var ModuleManager */
+
+	/**
+	 * @var ModuleManager
+	 */
 	protected $moduleManager;
-	
-	/** @var PackageManager */
+
+	/**
+	 * @var PackageManager
+	 */
 	protected $packageManager;
-	
+
 	protected $prefix;
-	
+
 	protected $base;
-	
+
 	protected $root;
-	
+
 	/**
 	 * Creates a new Keeko Application
-	 *
 	 */
 	public function __construct(Application $model) {
 		$this->model = $model;
 		$this->packageManager = new PackageManager();
 		$this->moduleManager = new ModuleManager($this->packageManager, $this);
 	}
-	
+
 	public function getPackageManager() {
 		return $this->packageManager;
 	}
-	
+
 	public function setModel(Application $model) {
 		$this->model = $model;
 	}
-	
+
 	public function setPrefix($prefix) {
 		$this->prefix = $prefix;
 	}
-	
+
 	public function setBase($base) {
 		$this->base = $base;
 	}
-	
+
 	public function setRoot($root) {
 		$this->root = $root;
 	}
-	
+
 	/**
 	 *
 	 * @return Application
@@ -64,11 +71,11 @@ abstract class AbstractApplication {
 	public function getModel() {
 		return $this->model;
 	}
-	
+
 	public function setLocalization(Localization $localization) {
 		$this->localization = $localization;
 	}
-	
+
 	/**
 	 *
 	 * @return Localization

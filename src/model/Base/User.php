@@ -18,6 +18,15 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
+use Symfony\Component\Validator\ConstraintValidatorFactory;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\DefaultTranslator;
+use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
+use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
 use keeko\core\model\Country as ChildCountry;
 use keeko\core\model\CountryQuery as ChildCountryQuery;
 use keeko\core\model\Group as ChildGroup;
@@ -143,12 +152,6 @@ abstract class User implements ActiveRecordInterface
     protected $sex;
 
     /**
-     * The value for the club field.
-     * @var        string
-     */
-    protected $club;
-
-    /**
      * The value for the city field.
      * @var        string
      */
@@ -191,16 +194,16 @@ abstract class User implements ActiveRecordInterface
     protected $longitude;
 
     /**
-     * The value for the created field.
+     * The value for the created_at field.
      * @var        \DateTime
      */
-    protected $created;
+    protected $created_at;
 
     /**
-     * The value for the updated field.
+     * The value for the updated_at field.
      * @var        \DateTime
      */
-    protected $updated;
+    protected $updated_at;
 
     /**
      * @var        ChildCountry
@@ -225,12 +228,45 @@ abstract class User implements ActiveRecordInterface
     protected $collGroupUsersPartial;
 
     /**
+     * @var        ObjectCollection|ChildGroup[] Cross Collection to store aggregation of ChildGroup objects.
+     */
+    protected $collGroups;
+
+    /**
+     * @var bool
+     */
+    protected $collGroupsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    // validate behavior
+
+    /**
+     * Flag to prevent endless validation loop, if this object is referenced
+     * by another object which falls in this transaction.
+     * @var        boolean
+     */
+    protected $alreadyInValidation = false;
+
+    /**
+     * ConstraintViolationList object
+     *
+     * @see     http://api.symfony.com/2.0/Symfony/Component/Validator/ConstraintViolationList.html
+     * @var     ConstraintViolationList
+     */
+    protected $validationFailures;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildGroup[]
+     */
+    protected $groupsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -602,16 +638,6 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Get the [club] column value.
-     *
-     * @return string
-     */
-    public function getClub()
-    {
-        return $this->club;
-    }
-
-    /**
      * Get the [city] column value.
      *
      * @return string
@@ -692,7 +718,7 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [created] column value.
+     * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -702,17 +728,17 @@ abstract class User implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getCreated($format = NULL)
+    public function getCreatedAt($format = NULL)
     {
         if ($format === null) {
-            return $this->created;
+            return $this->created_at;
         } else {
-            return $this->created instanceof \DateTime ? $this->created->format($format) : null;
+            return $this->created_at instanceof \DateTime ? $this->created_at->format($format) : null;
         }
     }
 
     /**
-     * Get the [optionally formatted] temporal [updated] column value.
+     * Get the [optionally formatted] temporal [updated_at] column value.
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -722,12 +748,12 @@ abstract class User implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getUpdated($format = NULL)
+    public function getUpdatedAt($format = NULL)
     {
         if ($format === null) {
-            return $this->updated;
+            return $this->updated_at;
         } else {
-            return $this->updated instanceof \DateTime ? $this->updated->format($format) : null;
+            return $this->updated_at instanceof \DateTime ? $this->updated_at->format($format) : null;
         }
     }
 
@@ -809,44 +835,41 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('Sex', TableMap::TYPE_PHPNAME, $indexType)];
             $this->sex = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('Club', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->club = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
             $this->city = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('PostalCode', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('PostalCode', TableMap::TYPE_PHPNAME, $indexType)];
             $this->postal_code = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : UserTableMap::translateFieldName('PasswordRecoverCode', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('PasswordRecoverCode', TableMap::TYPE_PHPNAME, $indexType)];
             $this->password_recover_code = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 17 + $startcol : UserTableMap::translateFieldName('PasswordRecoverTime', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : UserTableMap::translateFieldName('PasswordRecoverTime', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->password_recover_time = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 18 + $startcol : UserTableMap::translateFieldName('LocationStatus', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 17 + $startcol : UserTableMap::translateFieldName('LocationStatus', TableMap::TYPE_PHPNAME, $indexType)];
             $this->location_status = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 19 + $startcol : UserTableMap::translateFieldName('Latitude', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 18 + $startcol : UserTableMap::translateFieldName('Latitude', TableMap::TYPE_PHPNAME, $indexType)];
             $this->latitude = (null !== $col) ? (double) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 20 + $startcol : UserTableMap::translateFieldName('Longitude', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 19 + $startcol : UserTableMap::translateFieldName('Longitude', TableMap::TYPE_PHPNAME, $indexType)];
             $this->longitude = (null !== $col) ? (double) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 21 + $startcol : UserTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 20 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->created = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 22 + $startcol : UserTableMap::translateFieldName('Updated', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 21 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->updated = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -855,7 +878,7 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 23; // 23 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 22; // 22 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\User'), 0, $e);
@@ -1154,26 +1177,6 @@ abstract class User implements ActiveRecordInterface
     } // setSex()
 
     /**
-     * Set the value of [club] column.
-     *
-     * @param  string $v new value
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     */
-    public function setClub($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->club !== $v) {
-            $this->club = $v;
-            $this->modifiedColumns[UserTableMap::COL_CLUB] = true;
-        }
-
-        return $this;
-    } // setClub()
-
-    /**
      * Set the value of [city] column.
      *
      * @param  string $v new value
@@ -1314,44 +1317,44 @@ abstract class User implements ActiveRecordInterface
     } // setLongitude()
 
     /**
-     * Sets the value of [created] column to a normalized version of the date/time value specified.
+     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
-    public function setCreated($v)
+    public function setCreatedAt($v)
     {
         $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->created !== null || $dt !== null) {
-            if ($dt !== $this->created) {
-                $this->created = $dt;
-                $this->modifiedColumns[UserTableMap::COL_CREATED] = true;
+        if ($this->created_at !== null || $dt !== null) {
+            if ($dt !== $this->created_at) {
+                $this->created_at = $dt;
+                $this->modifiedColumns[UserTableMap::COL_CREATED_AT] = true;
             }
         } // if either are not null
 
         return $this;
-    } // setCreated()
+    } // setCreatedAt()
 
     /**
-     * Sets the value of [updated] column to a normalized version of the date/time value specified.
+     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
-    public function setUpdated($v)
+    public function setUpdatedAt($v)
     {
         $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->updated !== null || $dt !== null) {
-            if ($dt !== $this->updated) {
-                $this->updated = $dt;
-                $this->modifiedColumns[UserTableMap::COL_UPDATED] = true;
+        if ($this->updated_at !== null || $dt !== null) {
+            if ($dt !== $this->updated_at) {
+                $this->updated_at = $dt;
+                $this->modifiedColumns[UserTableMap::COL_UPDATED_AT] = true;
             }
         } // if either are not null
 
         return $this;
-    } // setUpdated()
+    } // setUpdatedAt()
 
     /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
@@ -1396,6 +1399,7 @@ abstract class User implements ActiveRecordInterface
 
             $this->collGroupUsers = null;
 
+            $this->collGroups = null;
         } // if (deep)
     }
 
@@ -1460,17 +1464,17 @@ abstract class User implements ActiveRecordInterface
                 $ret = $ret && $this->preInsert($con);
                 // timestampable behavior
 
-                if (!$this->isColumnModified(UserTableMap::COL_CREATED)) {
-                    $this->setCreated(time());
+                if (!$this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
+                    $this->setCreatedAt(time());
                 }
-                if (!$this->isColumnModified(UserTableMap::COL_UPDATED)) {
-                    $this->setUpdated(time());
+                if (!$this->isColumnModified(UserTableMap::COL_UPDATED_AT)) {
+                    $this->setUpdatedAt(time());
                 }
             } else {
                 $ret = $ret && $this->preUpdate($con);
                 // timestampable behavior
-                if ($this->isModified() && !$this->isColumnModified(UserTableMap::COL_UPDATED)) {
-                    $this->setUpdated(time());
+                if ($this->isModified() && !$this->isColumnModified(UserTableMap::COL_UPDATED_AT)) {
+                    $this->setUpdatedAt(time());
                 }
             }
             if ($ret) {
@@ -1536,6 +1540,35 @@ abstract class User implements ActiveRecordInterface
                 $affectedRows += 1;
                 $this->resetModified();
             }
+
+            if ($this->groupsScheduledForDeletion !== null) {
+                if (!$this->groupsScheduledForDeletion->isEmpty()) {
+                    $pks = array();
+                    foreach ($this->groupsScheduledForDeletion as $entry) {
+                        $entryPk = [];
+
+                        $entryPk[0] = $this->getId();
+                        $entryPk[1] = $entry->getId();
+                        $pks[] = $entryPk;
+                    }
+
+                    \keeko\core\model\GroupUserQuery::create()
+                        ->filterByPrimaryKeys($pks)
+                        ->delete($con);
+
+                    $this->groupsScheduledForDeletion = null;
+                }
+
+            }
+
+            if ($this->collGroups) {
+                foreach ($this->collGroups as $group) {
+                    if (!$group->isDeleted() && ($group->isNew() || $group->isModified())) {
+                        $group->save($con);
+                    }
+                }
+            }
+
 
             if ($this->groupsScheduledForDeletion !== null) {
                 if (!$this->groupsScheduledForDeletion->isEmpty()) {
@@ -1637,9 +1670,6 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_SEX)) {
             $modifiedColumns[':p' . $index++]  = 'SEX';
         }
-        if ($this->isColumnModified(UserTableMap::COL_CLUB)) {
-            $modifiedColumns[':p' . $index++]  = 'CLUB';
-        }
         if ($this->isColumnModified(UserTableMap::COL_CITY)) {
             $modifiedColumns[':p' . $index++]  = 'CITY';
         }
@@ -1661,11 +1691,11 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_LONGITUDE)) {
             $modifiedColumns[':p' . $index++]  = 'LONGITUDE';
         }
-        if ($this->isColumnModified(UserTableMap::COL_CREATED)) {
-            $modifiedColumns[':p' . $index++]  = 'CREATED';
+        if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
         }
-        if ($this->isColumnModified(UserTableMap::COL_UPDATED)) {
-            $modifiedColumns[':p' . $index++]  = 'UPDATED';
+        if ($this->isColumnModified(UserTableMap::COL_UPDATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
         }
 
         $sql = sprintf(
@@ -1717,9 +1747,6 @@ abstract class User implements ActiveRecordInterface
                     case 'SEX':
                         $stmt->bindValue($identifier, $this->sex, PDO::PARAM_INT);
                         break;
-                    case 'CLUB':
-                        $stmt->bindValue($identifier, $this->club, PDO::PARAM_STR);
-                        break;
                     case 'CITY':
                         $stmt->bindValue($identifier, $this->city, PDO::PARAM_STR);
                         break;
@@ -1741,11 +1768,11 @@ abstract class User implements ActiveRecordInterface
                     case 'LONGITUDE':
                         $stmt->bindValue($identifier, $this->longitude, PDO::PARAM_STR);
                         break;
-                    case 'CREATED':
-                        $stmt->bindValue($identifier, $this->created ? $this->created->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'CREATED_AT':
+                        $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'UPDATED':
-                        $stmt->bindValue($identifier, $this->updated ? $this->updated->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'UPDATED_AT':
+                        $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1849,34 +1876,31 @@ abstract class User implements ActiveRecordInterface
                 return $this->getSex();
                 break;
             case 13:
-                return $this->getClub();
-                break;
-            case 14:
                 return $this->getCity();
                 break;
-            case 15:
+            case 14:
                 return $this->getPostalCode();
                 break;
-            case 16:
+            case 15:
                 return $this->getPasswordRecoverCode();
                 break;
-            case 17:
+            case 16:
                 return $this->getPasswordRecoverTime();
                 break;
-            case 18:
+            case 17:
                 return $this->getLocationStatus();
                 break;
-            case 19:
+            case 18:
                 return $this->getLatitude();
                 break;
-            case 20:
+            case 19:
                 return $this->getLongitude();
                 break;
-            case 21:
-                return $this->getCreated();
+            case 20:
+                return $this->getCreatedAt();
                 break;
-            case 22:
-                return $this->getUpdated();
+            case 21:
+                return $this->getUpdatedAt();
                 break;
             default:
                 return null;
@@ -1920,16 +1944,15 @@ abstract class User implements ActiveRecordInterface
             $keys[10] => $this->getAddress2(),
             $keys[11] => $this->getBirthday(),
             $keys[12] => $this->getSex(),
-            $keys[13] => $this->getClub(),
-            $keys[14] => $this->getCity(),
-            $keys[15] => $this->getPostalCode(),
-            $keys[16] => $this->getPasswordRecoverCode(),
-            $keys[17] => $this->getPasswordRecoverTime(),
-            $keys[18] => $this->getLocationStatus(),
-            $keys[19] => $this->getLatitude(),
-            $keys[20] => $this->getLongitude(),
-            $keys[21] => $this->getCreated(),
-            $keys[22] => $this->getUpdated(),
+            $keys[13] => $this->getCity(),
+            $keys[14] => $this->getPostalCode(),
+            $keys[15] => $this->getPasswordRecoverCode(),
+            $keys[16] => $this->getPasswordRecoverTime(),
+            $keys[17] => $this->getLocationStatus(),
+            $keys[18] => $this->getLatitude(),
+            $keys[19] => $this->getLongitude(),
+            $keys[20] => $this->getCreatedAt(),
+            $keys[21] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -2023,34 +2046,31 @@ abstract class User implements ActiveRecordInterface
                 $this->setSex($value);
                 break;
             case 13:
-                $this->setClub($value);
-                break;
-            case 14:
                 $this->setCity($value);
                 break;
-            case 15:
+            case 14:
                 $this->setPostalCode($value);
                 break;
-            case 16:
+            case 15:
                 $this->setPasswordRecoverCode($value);
                 break;
-            case 17:
+            case 16:
                 $this->setPasswordRecoverTime($value);
                 break;
-            case 18:
+            case 17:
                 $this->setLocationStatus($value);
                 break;
-            case 19:
+            case 18:
                 $this->setLatitude($value);
                 break;
-            case 20:
+            case 19:
                 $this->setLongitude($value);
                 break;
-            case 21:
-                $this->setCreated($value);
+            case 20:
+                $this->setCreatedAt($value);
                 break;
-            case 22:
-                $this->setUpdated($value);
+            case 21:
+                $this->setUpdatedAt($value);
                 break;
         } // switch()
 
@@ -2118,34 +2138,31 @@ abstract class User implements ActiveRecordInterface
             $this->setSex($arr[$keys[12]]);
         }
         if (array_key_exists($keys[13], $arr)) {
-            $this->setClub($arr[$keys[13]]);
+            $this->setCity($arr[$keys[13]]);
         }
         if (array_key_exists($keys[14], $arr)) {
-            $this->setCity($arr[$keys[14]]);
+            $this->setPostalCode($arr[$keys[14]]);
         }
         if (array_key_exists($keys[15], $arr)) {
-            $this->setPostalCode($arr[$keys[15]]);
+            $this->setPasswordRecoverCode($arr[$keys[15]]);
         }
         if (array_key_exists($keys[16], $arr)) {
-            $this->setPasswordRecoverCode($arr[$keys[16]]);
+            $this->setPasswordRecoverTime($arr[$keys[16]]);
         }
         if (array_key_exists($keys[17], $arr)) {
-            $this->setPasswordRecoverTime($arr[$keys[17]]);
+            $this->setLocationStatus($arr[$keys[17]]);
         }
         if (array_key_exists($keys[18], $arr)) {
-            $this->setLocationStatus($arr[$keys[18]]);
+            $this->setLatitude($arr[$keys[18]]);
         }
         if (array_key_exists($keys[19], $arr)) {
-            $this->setLatitude($arr[$keys[19]]);
+            $this->setLongitude($arr[$keys[19]]);
         }
         if (array_key_exists($keys[20], $arr)) {
-            $this->setLongitude($arr[$keys[20]]);
+            $this->setCreatedAt($arr[$keys[20]]);
         }
         if (array_key_exists($keys[21], $arr)) {
-            $this->setCreated($arr[$keys[21]]);
-        }
-        if (array_key_exists($keys[22], $arr)) {
-            $this->setUpdated($arr[$keys[22]]);
+            $this->setUpdatedAt($arr[$keys[21]]);
         }
     }
 
@@ -2221,9 +2238,6 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_SEX)) {
             $criteria->add(UserTableMap::COL_SEX, $this->sex);
         }
-        if ($this->isColumnModified(UserTableMap::COL_CLUB)) {
-            $criteria->add(UserTableMap::COL_CLUB, $this->club);
-        }
         if ($this->isColumnModified(UserTableMap::COL_CITY)) {
             $criteria->add(UserTableMap::COL_CITY, $this->city);
         }
@@ -2245,11 +2259,11 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_LONGITUDE)) {
             $criteria->add(UserTableMap::COL_LONGITUDE, $this->longitude);
         }
-        if ($this->isColumnModified(UserTableMap::COL_CREATED)) {
-            $criteria->add(UserTableMap::COL_CREATED, $this->created);
+        if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
+            $criteria->add(UserTableMap::COL_CREATED_AT, $this->created_at);
         }
-        if ($this->isColumnModified(UserTableMap::COL_UPDATED)) {
-            $criteria->add(UserTableMap::COL_UPDATED, $this->updated);
+        if ($this->isColumnModified(UserTableMap::COL_UPDATED_AT)) {
+            $criteria->add(UserTableMap::COL_UPDATED_AT, $this->updated_at);
         }
 
         return $criteria;
@@ -2349,7 +2363,6 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setAddress2($this->getAddress2());
         $copyObj->setBirthday($this->getBirthday());
         $copyObj->setSex($this->getSex());
-        $copyObj->setClub($this->getClub());
         $copyObj->setCity($this->getCity());
         $copyObj->setPostalCode($this->getPostalCode());
         $copyObj->setPasswordRecoverCode($this->getPasswordRecoverCode());
@@ -2357,8 +2370,8 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setLocationStatus($this->getLocationStatus());
         $copyObj->setLatitude($this->getLatitude());
         $copyObj->setLongitude($this->getLongitude());
-        $copyObj->setCreated($this->getCreated());
-        $copyObj->setUpdated($this->getUpdated());
+        $copyObj->setCreatedAt($this->getCreatedAt());
+        $copyObj->setUpdatedAt($this->getUpdatedAt());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -2993,6 +3006,248 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collGroups collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addGroups()
+     */
+    public function clearGroups()
+    {
+        $this->collGroups = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Initializes the collGroups collection.
+     *
+     * By default this just sets the collGroups collection to an empty collection (like clearGroups());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @return void
+     */
+    public function initGroups()
+    {
+        $this->collGroups = new ObjectCollection();
+        $this->collGroupsPartial = true;
+
+        $this->collGroups->setModel('\keeko\core\model\Group');
+    }
+
+    /**
+     * Checks if the collGroups collection is loaded.
+     *
+     * @return bool
+     */
+    public function isGroupsLoaded()
+    {
+        return null !== $this->collGroups;
+    }
+
+    /**
+     * Gets a collection of ChildGroup objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_user cross-reference table.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return ObjectCollection|ChildGroup[] List of ChildGroup objects
+     */
+    public function getGroups(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collGroupsPartial && !$this->isNew();
+        if (null === $this->collGroups || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collGroups) {
+                    $this->initGroups();
+                }
+            } else {
+
+                $query = ChildGroupQuery::create(null, $criteria)
+                    ->filterByUser($this);
+                $collGroups = $query->find($con);
+                if (null !== $criteria) {
+                    return $collGroups;
+                }
+
+                if ($partial && $this->collGroups) {
+                    //make sure that already added objects gets added to the list of the database.
+                    foreach ($this->collGroups as $obj) {
+                        if (!$collGroups->contains($obj)) {
+                            $collGroups[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collGroups = $collGroups;
+                $this->collGroupsPartial = false;
+            }
+        }
+
+        return $this->collGroups;
+    }
+
+    /**
+     * Sets a collection of Group objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_user cross-reference table.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param  Collection $groups A Propel collection.
+     * @param  ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setGroups(Collection $groups, ConnectionInterface $con = null)
+    {
+        $this->clearGroups();
+        $currentGroups = $this->getGroups();
+
+        $groupsScheduledForDeletion = $currentGroups->diff($groups);
+
+        foreach ($groupsScheduledForDeletion as $toDelete) {
+            $this->removeGroup($toDelete);
+        }
+
+        foreach ($groups as $group) {
+            if (!$currentGroups->contains($group)) {
+                $this->doAddGroup($group);
+            }
+        }
+
+        $this->collGroupsPartial = false;
+        $this->collGroups = $groups;
+
+        return $this;
+    }
+
+    /**
+     * Gets the number of Group objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_user cross-reference table.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      boolean $distinct Set to true to force count distinct
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return int the number of related Group objects
+     */
+    public function countGroups(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collGroupsPartial && !$this->isNew();
+        if (null === $this->collGroups || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collGroups) {
+                return 0;
+            } else {
+
+                if ($partial && !$criteria) {
+                    return count($this->getGroups());
+                }
+
+                $query = ChildGroupQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByUser($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collGroups);
+        }
+    }
+
+    /**
+     * Associate a ChildGroup to this object
+     * through the keeko_group_user cross reference table.
+     *
+     * @param ChildGroup $group
+     * @return ChildUser The current object (for fluent API support)
+     */
+    public function addGroup(ChildGroup $group)
+    {
+        if ($this->collGroups === null) {
+            $this->initGroups();
+        }
+
+        if (!$this->getGroups()->contains($group)) {
+            // only add it if the **same** object is not already associated
+            $this->collGroups->push($group);
+            $this->doAddGroup($group);
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param ChildGroup $group
+     */
+    protected function doAddGroup(ChildGroup $group)
+    {
+        $groupUser = new ChildGroupUser();
+
+        $groupUser->setGroup($group);
+
+        $groupUser->setUser($this);
+
+        $this->addGroupUser($groupUser);
+
+        // set the back reference to this object directly as using provided method either results
+        // in endless loop or in multiple relations
+        if (!$group->isUsersLoaded()) {
+            $group->initUsers();
+            $group->getUsers()->push($this);
+        } elseif (!$group->getUsers()->contains($this)) {
+            $group->getUsers()->push($this);
+        }
+
+    }
+
+    /**
+     * Remove group of this object
+     * through the keeko_group_user cross reference table.
+     *
+     * @param ChildGroup $group
+     * @return ChildUser The current object (for fluent API support)
+     */
+    public function removeGroup(ChildGroup $group)
+    {
+        if ($this->getGroups()->contains($group)) { $groupUser = new ChildGroupUser();
+
+            $groupUser->setGroup($group);
+            if ($group->isUsersLoaded()) {
+                //remove the back reference if available
+                $group->getUsers()->removeObject($this);
+            }
+
+            $groupUser->setUser($this);
+            $this->removeGroupUser(clone $groupUser);
+            $groupUser->clear();
+
+            $this->collGroups->remove($this->collGroups->search($group));
+
+            if (null === $this->groupsScheduledForDeletion) {
+                $this->groupsScheduledForDeletion = clone $this->collGroups;
+                $this->groupsScheduledForDeletion->clear();
+            }
+
+            $this->groupsScheduledForDeletion->push($group);
+        }
+
+
+        return $this;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -3018,7 +3273,6 @@ abstract class User implements ActiveRecordInterface
         $this->address2 = null;
         $this->birthday = null;
         $this->sex = null;
-        $this->club = null;
         $this->city = null;
         $this->postal_code = null;
         $this->password_recover_code = null;
@@ -3026,8 +3280,8 @@ abstract class User implements ActiveRecordInterface
         $this->location_status = null;
         $this->latitude = null;
         $this->longitude = null;
-        $this->created = null;
-        $this->updated = null;
+        $this->created_at = null;
+        $this->updated_at = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -3056,10 +3310,16 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collGroups) {
+                foreach ($this->collGroups as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collGroups = null;
         $this->collGroupUsers = null;
+        $this->collGroups = null;
         $this->aCountry = null;
         $this->aSubdivision = null;
     }
@@ -3083,9 +3343,107 @@ abstract class User implements ActiveRecordInterface
      */
     public function keepUpdateDateUnchanged()
     {
-        $this->modifiedColumns[UserTableMap::COL_UPDATED] = true;
+        $this->modifiedColumns[UserTableMap::COL_UPDATED_AT] = true;
 
         return $this;
+    }
+
+    // validate behavior
+
+    /**
+     * Configure validators constraints. The Validator object uses this method
+     * to perform object validation.
+     *
+     * @param ClassMetadata $metadata
+     */
+    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('login_name', new NotNull());
+        $metadata->addPropertyConstraint('email', new NotNull());
+        $metadata->addPropertyConstraint('email', new Email());
+        $metadata->addPropertyConstraint('password', new NotNull());
+    }
+
+    /**
+     * Validates the object and all objects related to this table.
+     *
+     * @see        getValidationFailures()
+     * @param      object $validator A Validator class instance
+     * @return     boolean Whether all objects pass validation.
+     */
+    public function validate(Validator $validator = null)
+    {
+        if (null === $validator) {
+            $validator = new Validator(new ClassMetadataFactory(new StaticMethodLoader()), new ConstraintValidatorFactory(), new DefaultTranslator());
+        }
+
+        $failureMap = new ConstraintViolationList();
+
+        if (!$this->alreadyInValidation) {
+            $this->alreadyInValidation = true;
+            $retval = null;
+
+            // We call the validate method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aCountry, 'validate')) {
+                if (!$this->aCountry->validate($validator)) {
+                    $failureMap->addAll($this->aCountry->getValidationFailures());
+                }
+            }
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aSubdivision, 'validate')) {
+                if (!$this->aSubdivision->validate($validator)) {
+                    $failureMap->addAll($this->aSubdivision->getValidationFailures());
+                }
+            }
+
+            $retval = $validator->validate($this);
+            if (count($retval) > 0) {
+                $failureMap->addAll($retval);
+            }
+
+            if (null !== $this->collGroups) {
+                foreach ($this->collGroups as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collGroupUsers) {
+                foreach ($this->collGroupUsers as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+
+            $this->alreadyInValidation = false;
+        }
+
+        $this->validationFailures = $failureMap;
+
+        return (Boolean) (!(count($this->validationFailures) > 0));
+
+    }
+
+    /**
+     * Gets any ConstraintViolation objects that resulted from last call to validate().
+     *
+     *
+     * @return     object ConstraintViolationList
+     * @see        validate()
+     */
+    public function getValidationFailures()
+    {
+        return $this->validationFailures;
     }
 
     /**

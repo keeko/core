@@ -2,6 +2,7 @@
 
 namespace keeko\core\model\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use Propel\Runtime\Propel;
@@ -16,6 +17,17 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
+use Symfony\Component\Validator\ConstraintValidatorFactory;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\DefaultTranslator;
+use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
+use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
+use keeko\core\model\Action as ChildAction;
+use keeko\core\model\ActionQuery as ChildActionQuery;
 use keeko\core\model\Group as ChildGroup;
 use keeko\core\model\GroupAction as ChildGroupAction;
 use keeko\core\model\GroupActionQuery as ChildGroupActionQuery;
@@ -105,6 +117,18 @@ abstract class Group implements ActiveRecordInterface
     protected $is_system;
 
     /**
+     * The value for the created_at field.
+     * @var        \DateTime
+     */
+    protected $created_at;
+
+    /**
+     * The value for the updated_at field.
+     * @var        \DateTime
+     */
+    protected $updated_at;
+
+    /**
      * @var        ChildUser
      */
     protected $aUser;
@@ -122,12 +146,61 @@ abstract class Group implements ActiveRecordInterface
     protected $collGroupActionsPartial;
 
     /**
+     * @var        ObjectCollection|ChildUser[] Cross Collection to store aggregation of ChildUser objects.
+     */
+    protected $collUsers;
+
+    /**
+     * @var bool
+     */
+    protected $collUsersPartial;
+
+    /**
+     * @var        ObjectCollection|ChildAction[] Cross Collection to store aggregation of ChildAction objects.
+     */
+    protected $collActions;
+
+    /**
+     * @var bool
+     */
+    protected $collActionsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    // validate behavior
+
+    /**
+     * Flag to prevent endless validation loop, if this object is referenced
+     * by another object which falls in this transaction.
+     * @var        boolean
+     */
+    protected $alreadyInValidation = false;
+
+    /**
+     * ConstraintViolationList object
+     *
+     * @see     http://api.symfony.com/2.0/Symfony/Component/Validator/ConstraintViolationList.html
+     * @var     ConstraintViolationList
+     */
+    protected $validationFailures;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildUser[]
+     */
+    protected $usersScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildAction[]
+     */
+    protected $actionsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -483,6 +556,46 @@ abstract class Group implements ActiveRecordInterface
     }
 
     /**
+     * Get the [optionally formatted] temporal [created_at] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *
+     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getCreatedAt($format = NULL)
+    {
+        if ($format === null) {
+            return $this->created_at;
+        } else {
+            return $this->created_at instanceof \DateTime ? $this->created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [updated_at] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *
+     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getUpdatedAt($format = NULL)
+    {
+        if ($format === null) {
+            return $this->updated_at;
+        } else {
+            return $this->updated_at instanceof \DateTime ? $this->updated_at->format($format) : null;
+        }
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -546,6 +659,18 @@ abstract class Group implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GroupTableMap::translateFieldName('IsSystem', TableMap::TYPE_PHPNAME, $indexType)];
             $this->is_system = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : GroupTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : GroupTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -554,7 +679,7 @@ abstract class Group implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = GroupTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = GroupTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Group'), 0, $e);
@@ -758,6 +883,46 @@ abstract class Group implements ActiveRecordInterface
     } // setIsSystem()
 
     /**
+     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\keeko\core\model\Group The current object (for fluent API support)
+     */
+    public function setCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->created_at !== null || $dt !== null) {
+            if ($dt !== $this->created_at) {
+                $this->created_at = $dt;
+                $this->modifiedColumns[GroupTableMap::COL_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setCreatedAt()
+
+    /**
+     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\keeko\core\model\Group The current object (for fluent API support)
+     */
+    public function setUpdatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->updated_at !== null || $dt !== null) {
+            if ($dt !== $this->updated_at) {
+                $this->updated_at = $dt;
+                $this->modifiedColumns[GroupTableMap::COL_UPDATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setUpdatedAt()
+
+    /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
      *
      * This will only work if the object has been saved and has a valid primary key set.
@@ -799,6 +964,8 @@ abstract class Group implements ActiveRecordInterface
 
             $this->collGroupActions = null;
 
+            $this->collUsers = null;
+            $this->collActions = null;
         } // if (deep)
     }
 
@@ -861,8 +1028,20 @@ abstract class Group implements ActiveRecordInterface
             $ret = $this->preSave($con);
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
+                // timestampable behavior
+
+                if (!$this->isColumnModified(GroupTableMap::COL_CREATED_AT)) {
+                    $this->setCreatedAt(time());
+                }
+                if (!$this->isColumnModified(GroupTableMap::COL_UPDATED_AT)) {
+                    $this->setUpdatedAt(time());
+                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
+                // timestampable behavior
+                if ($this->isModified() && !$this->isColumnModified(GroupTableMap::COL_UPDATED_AT)) {
+                    $this->setUpdatedAt(time());
+                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
@@ -920,6 +1099,64 @@ abstract class Group implements ActiveRecordInterface
                 $affectedRows += 1;
                 $this->resetModified();
             }
+
+            if ($this->usersScheduledForDeletion !== null) {
+                if (!$this->usersScheduledForDeletion->isEmpty()) {
+                    $pks = array();
+                    foreach ($this->usersScheduledForDeletion as $entry) {
+                        $entryPk = [];
+
+                        $entryPk[1] = $this->getId();
+                        $entryPk[0] = $entry->getId();
+                        $pks[] = $entryPk;
+                    }
+
+                    \keeko\core\model\GroupUserQuery::create()
+                        ->filterByPrimaryKeys($pks)
+                        ->delete($con);
+
+                    $this->usersScheduledForDeletion = null;
+                }
+
+            }
+
+            if ($this->collUsers) {
+                foreach ($this->collUsers as $user) {
+                    if (!$user->isDeleted() && ($user->isNew() || $user->isModified())) {
+                        $user->save($con);
+                    }
+                }
+            }
+
+
+            if ($this->actionsScheduledForDeletion !== null) {
+                if (!$this->actionsScheduledForDeletion->isEmpty()) {
+                    $pks = array();
+                    foreach ($this->actionsScheduledForDeletion as $entry) {
+                        $entryPk = [];
+
+                        $entryPk[0] = $this->getId();
+                        $entryPk[1] = $entry->getId();
+                        $pks[] = $entryPk;
+                    }
+
+                    \keeko\core\model\GroupActionQuery::create()
+                        ->filterByPrimaryKeys($pks)
+                        ->delete($con);
+
+                    $this->actionsScheduledForDeletion = null;
+                }
+
+            }
+
+            if ($this->collActions) {
+                foreach ($this->collActions as $action) {
+                    if (!$action->isDeleted() && ($action->isNew() || $action->isModified())) {
+                        $action->save($con);
+                    }
+                }
+            }
+
 
             if ($this->groupUsersScheduledForDeletion !== null) {
                 if (!$this->groupUsersScheduledForDeletion->isEmpty()) {
@@ -1002,6 +1239,12 @@ abstract class Group implements ActiveRecordInterface
         if ($this->isColumnModified(GroupTableMap::COL_IS_SYSTEM)) {
             $modifiedColumns[':p' . $index++]  = 'IS_SYSTEM';
         }
+        if ($this->isColumnModified(GroupTableMap::COL_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
+        }
+        if ($this->isColumnModified(GroupTableMap::COL_UPDATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
+        }
 
         $sql = sprintf(
             'INSERT INTO keeko_group (%s) VALUES (%s)',
@@ -1033,6 +1276,12 @@ abstract class Group implements ActiveRecordInterface
                         break;
                     case 'IS_SYSTEM':
                         $stmt->bindValue($identifier, (int) $this->is_system, PDO::PARAM_INT);
+                        break;
+                    case 'CREATED_AT':
+                        $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'UPDATED_AT':
+                        $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1117,6 +1366,12 @@ abstract class Group implements ActiveRecordInterface
             case 6:
                 return $this->getIsSystem();
                 break;
+            case 7:
+                return $this->getCreatedAt();
+                break;
+            case 8:
+                return $this->getUpdatedAt();
+                break;
             default:
                 return null;
                 break;
@@ -1153,6 +1408,8 @@ abstract class Group implements ActiveRecordInterface
             $keys[4] => $this->getIsDefault(),
             $keys[5] => $this->getIsActive(),
             $keys[6] => $this->getIsSystem(),
+            $keys[7] => $this->getCreatedAt(),
+            $keys[8] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1224,6 +1481,12 @@ abstract class Group implements ActiveRecordInterface
             case 6:
                 $this->setIsSystem($value);
                 break;
+            case 7:
+                $this->setCreatedAt($value);
+                break;
+            case 8:
+                $this->setUpdatedAt($value);
+                break;
         } // switch()
 
         return $this;
@@ -1270,6 +1533,12 @@ abstract class Group implements ActiveRecordInterface
         }
         if (array_key_exists($keys[6], $arr)) {
             $this->setIsSystem($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setCreatedAt($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setUpdatedAt($arr[$keys[8]]);
         }
     }
 
@@ -1326,6 +1595,12 @@ abstract class Group implements ActiveRecordInterface
         }
         if ($this->isColumnModified(GroupTableMap::COL_IS_SYSTEM)) {
             $criteria->add(GroupTableMap::COL_IS_SYSTEM, $this->is_system);
+        }
+        if ($this->isColumnModified(GroupTableMap::COL_CREATED_AT)) {
+            $criteria->add(GroupTableMap::COL_CREATED_AT, $this->created_at);
+        }
+        if ($this->isColumnModified(GroupTableMap::COL_UPDATED_AT)) {
+            $criteria->add(GroupTableMap::COL_UPDATED_AT, $this->updated_at);
         }
 
         return $criteria;
@@ -1419,6 +1694,8 @@ abstract class Group implements ActiveRecordInterface
         $copyObj->setIsDefault($this->getIsDefault());
         $copyObj->setIsActive($this->getIsActive());
         $copyObj->setIsSystem($this->getIsSystem());
+        $copyObj->setCreatedAt($this->getCreatedAt());
+        $copyObj->setUpdatedAt($this->getUpdatedAt());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -2030,6 +2307,490 @@ abstract class Group implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collUsers collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addUsers()
+     */
+    public function clearUsers()
+    {
+        $this->collUsers = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Initializes the collUsers collection.
+     *
+     * By default this just sets the collUsers collection to an empty collection (like clearUsers());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @return void
+     */
+    public function initUsers()
+    {
+        $this->collUsers = new ObjectCollection();
+        $this->collUsersPartial = true;
+
+        $this->collUsers->setModel('\keeko\core\model\User');
+    }
+
+    /**
+     * Checks if the collUsers collection is loaded.
+     *
+     * @return bool
+     */
+    public function isUsersLoaded()
+    {
+        return null !== $this->collUsers;
+    }
+
+    /**
+     * Gets a collection of ChildUser objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_user cross-reference table.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGroup is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return ObjectCollection|ChildUser[] List of ChildUser objects
+     */
+    public function getUsers(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collUsersPartial && !$this->isNew();
+        if (null === $this->collUsers || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collUsers) {
+                    $this->initUsers();
+                }
+            } else {
+
+                $query = ChildUserQuery::create(null, $criteria)
+                    ->filterByGroup($this);
+                $collUsers = $query->find($con);
+                if (null !== $criteria) {
+                    return $collUsers;
+                }
+
+                if ($partial && $this->collUsers) {
+                    //make sure that already added objects gets added to the list of the database.
+                    foreach ($this->collUsers as $obj) {
+                        if (!$collUsers->contains($obj)) {
+                            $collUsers[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collUsers = $collUsers;
+                $this->collUsersPartial = false;
+            }
+        }
+
+        return $this->collUsers;
+    }
+
+    /**
+     * Sets a collection of User objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_user cross-reference table.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param  Collection $users A Propel collection.
+     * @param  ConnectionInterface $con Optional connection object
+     * @return $this|ChildGroup The current object (for fluent API support)
+     */
+    public function setUsers(Collection $users, ConnectionInterface $con = null)
+    {
+        $this->clearUsers();
+        $currentUsers = $this->getUsers();
+
+        $usersScheduledForDeletion = $currentUsers->diff($users);
+
+        foreach ($usersScheduledForDeletion as $toDelete) {
+            $this->removeUser($toDelete);
+        }
+
+        foreach ($users as $user) {
+            if (!$currentUsers->contains($user)) {
+                $this->doAddUser($user);
+            }
+        }
+
+        $this->collUsersPartial = false;
+        $this->collUsers = $users;
+
+        return $this;
+    }
+
+    /**
+     * Gets the number of User objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_user cross-reference table.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      boolean $distinct Set to true to force count distinct
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return int the number of related User objects
+     */
+    public function countUsers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collUsersPartial && !$this->isNew();
+        if (null === $this->collUsers || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collUsers) {
+                return 0;
+            } else {
+
+                if ($partial && !$criteria) {
+                    return count($this->getUsers());
+                }
+
+                $query = ChildUserQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByGroup($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collUsers);
+        }
+    }
+
+    /**
+     * Associate a ChildUser to this object
+     * through the keeko_group_user cross reference table.
+     *
+     * @param ChildUser $user
+     * @return ChildGroup The current object (for fluent API support)
+     */
+    public function addUser(ChildUser $user)
+    {
+        if ($this->collUsers === null) {
+            $this->initUsers();
+        }
+
+        if (!$this->getUsers()->contains($user)) {
+            // only add it if the **same** object is not already associated
+            $this->collUsers->push($user);
+            $this->doAddUser($user);
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param ChildUser $user
+     */
+    protected function doAddUser(ChildUser $user)
+    {
+        $groupUser = new ChildGroupUser();
+
+        $groupUser->setUser($user);
+
+        $groupUser->setGroup($this);
+
+        $this->addGroupUser($groupUser);
+
+        // set the back reference to this object directly as using provided method either results
+        // in endless loop or in multiple relations
+        if (!$user->isGroupsLoaded()) {
+            $user->initGroups();
+            $user->getGroups()->push($this);
+        } elseif (!$user->getGroups()->contains($this)) {
+            $user->getGroups()->push($this);
+        }
+
+    }
+
+    /**
+     * Remove user of this object
+     * through the keeko_group_user cross reference table.
+     *
+     * @param ChildUser $user
+     * @return ChildGroup The current object (for fluent API support)
+     */
+    public function removeUser(ChildUser $user)
+    {
+        if ($this->getUsers()->contains($user)) { $groupUser = new ChildGroupUser();
+
+            $groupUser->setUser($user);
+            if ($user->isGroupsLoaded()) {
+                //remove the back reference if available
+                $user->getGroups()->removeObject($this);
+            }
+
+            $groupUser->setGroup($this);
+            $this->removeGroupUser(clone $groupUser);
+            $groupUser->clear();
+
+            $this->collUsers->remove($this->collUsers->search($user));
+
+            if (null === $this->usersScheduledForDeletion) {
+                $this->usersScheduledForDeletion = clone $this->collUsers;
+                $this->usersScheduledForDeletion->clear();
+            }
+
+            $this->usersScheduledForDeletion->push($user);
+        }
+
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collActions collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addActions()
+     */
+    public function clearActions()
+    {
+        $this->collActions = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Initializes the collActions collection.
+     *
+     * By default this just sets the collActions collection to an empty collection (like clearActions());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @return void
+     */
+    public function initActions()
+    {
+        $this->collActions = new ObjectCollection();
+        $this->collActionsPartial = true;
+
+        $this->collActions->setModel('\keeko\core\model\Action');
+    }
+
+    /**
+     * Checks if the collActions collection is loaded.
+     *
+     * @return bool
+     */
+    public function isActionsLoaded()
+    {
+        return null !== $this->collActions;
+    }
+
+    /**
+     * Gets a collection of ChildAction objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_action cross-reference table.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGroup is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return ObjectCollection|ChildAction[] List of ChildAction objects
+     */
+    public function getActions(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collActionsPartial && !$this->isNew();
+        if (null === $this->collActions || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collActions) {
+                    $this->initActions();
+                }
+            } else {
+
+                $query = ChildActionQuery::create(null, $criteria)
+                    ->filterByGroup($this);
+                $collActions = $query->find($con);
+                if (null !== $criteria) {
+                    return $collActions;
+                }
+
+                if ($partial && $this->collActions) {
+                    //make sure that already added objects gets added to the list of the database.
+                    foreach ($this->collActions as $obj) {
+                        if (!$collActions->contains($obj)) {
+                            $collActions[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collActions = $collActions;
+                $this->collActionsPartial = false;
+            }
+        }
+
+        return $this->collActions;
+    }
+
+    /**
+     * Sets a collection of Action objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_action cross-reference table.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param  Collection $actions A Propel collection.
+     * @param  ConnectionInterface $con Optional connection object
+     * @return $this|ChildGroup The current object (for fluent API support)
+     */
+    public function setActions(Collection $actions, ConnectionInterface $con = null)
+    {
+        $this->clearActions();
+        $currentActions = $this->getActions();
+
+        $actionsScheduledForDeletion = $currentActions->diff($actions);
+
+        foreach ($actionsScheduledForDeletion as $toDelete) {
+            $this->removeAction($toDelete);
+        }
+
+        foreach ($actions as $action) {
+            if (!$currentActions->contains($action)) {
+                $this->doAddAction($action);
+            }
+        }
+
+        $this->collActionsPartial = false;
+        $this->collActions = $actions;
+
+        return $this;
+    }
+
+    /**
+     * Gets the number of Action objects related by a many-to-many relationship
+     * to the current object by way of the keeko_group_action cross-reference table.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      boolean $distinct Set to true to force count distinct
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return int the number of related Action objects
+     */
+    public function countActions(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collActionsPartial && !$this->isNew();
+        if (null === $this->collActions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collActions) {
+                return 0;
+            } else {
+
+                if ($partial && !$criteria) {
+                    return count($this->getActions());
+                }
+
+                $query = ChildActionQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByGroup($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collActions);
+        }
+    }
+
+    /**
+     * Associate a ChildAction to this object
+     * through the keeko_group_action cross reference table.
+     *
+     * @param ChildAction $action
+     * @return ChildGroup The current object (for fluent API support)
+     */
+    public function addAction(ChildAction $action)
+    {
+        if ($this->collActions === null) {
+            $this->initActions();
+        }
+
+        if (!$this->getActions()->contains($action)) {
+            // only add it if the **same** object is not already associated
+            $this->collActions->push($action);
+            $this->doAddAction($action);
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param ChildAction $action
+     */
+    protected function doAddAction(ChildAction $action)
+    {
+        $groupAction = new ChildGroupAction();
+
+        $groupAction->setAction($action);
+
+        $groupAction->setGroup($this);
+
+        $this->addGroupAction($groupAction);
+
+        // set the back reference to this object directly as using provided method either results
+        // in endless loop or in multiple relations
+        if (!$action->isGroupsLoaded()) {
+            $action->initGroups();
+            $action->getGroups()->push($this);
+        } elseif (!$action->getGroups()->contains($this)) {
+            $action->getGroups()->push($this);
+        }
+
+    }
+
+    /**
+     * Remove action of this object
+     * through the keeko_group_action cross reference table.
+     *
+     * @param ChildAction $action
+     * @return ChildGroup The current object (for fluent API support)
+     */
+    public function removeAction(ChildAction $action)
+    {
+        if ($this->getActions()->contains($action)) { $groupAction = new ChildGroupAction();
+
+            $groupAction->setAction($action);
+            if ($action->isGroupsLoaded()) {
+                //remove the back reference if available
+                $action->getGroups()->removeObject($this);
+            }
+
+            $groupAction->setGroup($this);
+            $this->removeGroupAction(clone $groupAction);
+            $groupAction->clear();
+
+            $this->collActions->remove($this->collActions->search($action));
+
+            if (null === $this->actionsScheduledForDeletion) {
+                $this->actionsScheduledForDeletion = clone $this->collActions;
+                $this->actionsScheduledForDeletion->clear();
+            }
+
+            $this->actionsScheduledForDeletion->push($action);
+        }
+
+
+        return $this;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -2046,6 +2807,8 @@ abstract class Group implements ActiveRecordInterface
         $this->is_default = null;
         $this->is_active = null;
         $this->is_system = null;
+        $this->created_at = null;
+        $this->updated_at = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -2075,10 +2838,22 @@ abstract class Group implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collUsers) {
+                foreach ($this->collUsers as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collActions) {
+                foreach ($this->collActions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collGroupUsers = null;
         $this->collGroupActions = null;
+        $this->collUsers = null;
+        $this->collActions = null;
         $this->aUser = null;
     }
 
@@ -2090,6 +2865,109 @@ abstract class Group implements ActiveRecordInterface
     public function __toString()
     {
         return (string) $this->exportTo(GroupTableMap::DEFAULT_STRING_FORMAT);
+    }
+
+    // timestampable behavior
+
+    /**
+     * Mark the current object so that the update date doesn't get updated during next save
+     *
+     * @return     $this|ChildGroup The current object (for fluent API support)
+     */
+    public function keepUpdateDateUnchanged()
+    {
+        $this->modifiedColumns[GroupTableMap::COL_UPDATED_AT] = true;
+
+        return $this;
+    }
+
+    // validate behavior
+
+    /**
+     * Configure validators constraints. The Validator object uses this method
+     * to perform object validation.
+     *
+     * @param ClassMetadata $metadata
+     */
+    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('name', new NotNull());
+    }
+
+    /**
+     * Validates the object and all objects related to this table.
+     *
+     * @see        getValidationFailures()
+     * @param      object $validator A Validator class instance
+     * @return     boolean Whether all objects pass validation.
+     */
+    public function validate(Validator $validator = null)
+    {
+        if (null === $validator) {
+            $validator = new Validator(new ClassMetadataFactory(new StaticMethodLoader()), new ConstraintValidatorFactory(), new DefaultTranslator());
+        }
+
+        $failureMap = new ConstraintViolationList();
+
+        if (!$this->alreadyInValidation) {
+            $this->alreadyInValidation = true;
+            $retval = null;
+
+            // We call the validate method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aUser, 'validate')) {
+                if (!$this->aUser->validate($validator)) {
+                    $failureMap->addAll($this->aUser->getValidationFailures());
+                }
+            }
+
+            $retval = $validator->validate($this);
+            if (count($retval) > 0) {
+                $failureMap->addAll($retval);
+            }
+
+            if (null !== $this->collGroupUsers) {
+                foreach ($this->collGroupUsers as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collGroupActions) {
+                foreach ($this->collGroupActions as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+
+            $this->alreadyInValidation = false;
+        }
+
+        $this->validationFailures = $failureMap;
+
+        return (Boolean) (!(count($this->validationFailures) > 0));
+
+    }
+
+    /**
+     * Gets any ConstraintViolation objects that resulted from last call to validate().
+     *
+     *
+     * @return     object ConstraintViolationList
+     * @see        validate()
+     */
+    public function getValidationFailures()
+    {
+        return $this->validationFailures;
     }
 
     /**

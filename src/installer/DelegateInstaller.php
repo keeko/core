@@ -15,12 +15,12 @@ use Composer\Repository\WritableRepositoryInterface;
 class DelegateInstaller {
 
 	private static $isKeekoCorePresent = false;
-	
+
 	public static function preInstall(CommandEvent $event) {
 		$packages = $event->getComposer()->getRepositoryManager()->getLocalRepository()->findPackages('keeko/core');
 		self::$isKeekoCorePresent = count($packages) > 0;
 	}
-	
+
 	public static function installPackage(PackageEvent $event) {
 		if (!self::bootstrap()) {
 			return;
@@ -34,7 +34,7 @@ class DelegateInstaller {
 			$installer->install($event->getIO(), $package);
 		}
 	}
-	
+
 	public static function updatePackage(PackageEvent $event) {
 		if (!self::bootstrap()) {
 			return;
@@ -49,7 +49,7 @@ class DelegateInstaller {
 			$installer->update($event->getIO(), $initial, $target);
 		}
 	}
-	
+
 	public static function uninstallPackage(PackageEvent $event) {
 		if (!self::bootstrap()) {
 			return;
@@ -62,21 +62,28 @@ class DelegateInstaller {
 			$installer->uninstall($event->getIO(), $package);
 		}
 	}
-	
+
 	/**
 	 * Returns the installer for a given type
 	 *
-	 * @param PackageInterface
+	 * @param
+	 *        	PackageInterface
 	 * @return AbstractPackageInstaller
 	 */
 	private static function getInstaller(PackageInterface $package) {
 		switch ($package->getType()) {
-			case 'keeko-app': return new AppInstaller(); break;
-			case 'keeko-module': return new ModuleInstaller(); break;
-			default: return new DummyInstaller(); break;
+			case 'keeko-app':
+				return new AppInstaller();
+				break;
+			case 'keeko-module':
+				return new ModuleInstaller();
+				break;
+			default:
+				return new DummyInstaller();
+				break;
 		}
 	}
-	
+
 	private static function bootstrap() {
 		$autoload = rtrim(getcwd(), '/\\') . '/vendor/autoload.php';
 		

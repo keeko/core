@@ -59,7 +59,7 @@ class ModuleTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 9;
+    const NUM_COLUMNS = 10;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class ModuleTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 9;
+    const NUM_HYDRATE_COLUMNS = 10;
 
     /**
      * the column name for the CLASS_NAME field
@@ -85,6 +85,11 @@ class ModuleTableMap extends TableMap
      * the column name for the DEFAULT_ACTION field
      */
     const COL_DEFAULT_ACTION = 'keeko_module.DEFAULT_ACTION';
+
+    /**
+     * the column name for the SLUG field
+     */
+    const COL_SLUG = 'keeko_module.SLUG';
 
     /**
      * the column name for the HAS_API field
@@ -128,12 +133,12 @@ class ModuleTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('ClassName', 'ActivatedVersion', 'DefaultAction', 'Api', 'Id', 'Name', 'Title', 'Description', 'InstalledVersion', ),
-        self::TYPE_STUDLYPHPNAME => array('className', 'activatedVersion', 'defaultAction', 'api', 'id', 'name', 'title', 'description', 'installedVersion', ),
-        self::TYPE_COLNAME       => array(ModuleTableMap::COL_CLASS_NAME, ModuleTableMap::COL_ACTIVATED_VERSION, ModuleTableMap::COL_DEFAULT_ACTION, ModuleTableMap::COL_HAS_API, ModuleTableMap::COL_ID, ModuleTableMap::COL_NAME, ModuleTableMap::COL_TITLE, ModuleTableMap::COL_DESCRIPTION, ModuleTableMap::COL_INSTALLED_VERSION, ),
-        self::TYPE_RAW_COLNAME   => array('COL_CLASS_NAME', 'COL_ACTIVATED_VERSION', 'COL_DEFAULT_ACTION', 'COL_HAS_API', 'COL_ID', 'COL_NAME', 'COL_TITLE', 'COL_DESCRIPTION', 'COL_INSTALLED_VERSION', ),
-        self::TYPE_FIELDNAME     => array('class_name', 'activated_version', 'default_action', 'has_api', 'id', 'name', 'title', 'description', 'installed_version', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('ClassName', 'ActivatedVersion', 'DefaultAction', 'Slug', 'Api', 'Id', 'Name', 'Title', 'Description', 'InstalledVersion', ),
+        self::TYPE_STUDLYPHPNAME => array('className', 'activatedVersion', 'defaultAction', 'slug', 'api', 'id', 'name', 'title', 'description', 'installedVersion', ),
+        self::TYPE_COLNAME       => array(ModuleTableMap::COL_CLASS_NAME, ModuleTableMap::COL_ACTIVATED_VERSION, ModuleTableMap::COL_DEFAULT_ACTION, ModuleTableMap::COL_SLUG, ModuleTableMap::COL_HAS_API, ModuleTableMap::COL_ID, ModuleTableMap::COL_NAME, ModuleTableMap::COL_TITLE, ModuleTableMap::COL_DESCRIPTION, ModuleTableMap::COL_INSTALLED_VERSION, ),
+        self::TYPE_RAW_COLNAME   => array('COL_CLASS_NAME', 'COL_ACTIVATED_VERSION', 'COL_DEFAULT_ACTION', 'COL_SLUG', 'COL_HAS_API', 'COL_ID', 'COL_NAME', 'COL_TITLE', 'COL_DESCRIPTION', 'COL_INSTALLED_VERSION', ),
+        self::TYPE_FIELDNAME     => array('class_name', 'activated_version', 'default_action', 'slug', 'has_api', 'id', 'name', 'title', 'description', 'installed_version', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -143,12 +148,12 @@ class ModuleTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('ClassName' => 0, 'ActivatedVersion' => 1, 'DefaultAction' => 2, 'Api' => 3, 'Id' => 4, 'Name' => 5, 'Title' => 6, 'Description' => 7, 'InstalledVersion' => 8, ),
-        self::TYPE_STUDLYPHPNAME => array('className' => 0, 'activatedVersion' => 1, 'defaultAction' => 2, 'api' => 3, 'id' => 4, 'name' => 5, 'title' => 6, 'description' => 7, 'installedVersion' => 8, ),
-        self::TYPE_COLNAME       => array(ModuleTableMap::COL_CLASS_NAME => 0, ModuleTableMap::COL_ACTIVATED_VERSION => 1, ModuleTableMap::COL_DEFAULT_ACTION => 2, ModuleTableMap::COL_HAS_API => 3, ModuleTableMap::COL_ID => 4, ModuleTableMap::COL_NAME => 5, ModuleTableMap::COL_TITLE => 6, ModuleTableMap::COL_DESCRIPTION => 7, ModuleTableMap::COL_INSTALLED_VERSION => 8, ),
-        self::TYPE_RAW_COLNAME   => array('COL_CLASS_NAME' => 0, 'COL_ACTIVATED_VERSION' => 1, 'COL_DEFAULT_ACTION' => 2, 'COL_HAS_API' => 3, 'COL_ID' => 4, 'COL_NAME' => 5, 'COL_TITLE' => 6, 'COL_DESCRIPTION' => 7, 'COL_INSTALLED_VERSION' => 8, ),
-        self::TYPE_FIELDNAME     => array('class_name' => 0, 'activated_version' => 1, 'default_action' => 2, 'has_api' => 3, 'id' => 4, 'name' => 5, 'title' => 6, 'description' => 7, 'installed_version' => 8, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('ClassName' => 0, 'ActivatedVersion' => 1, 'DefaultAction' => 2, 'Slug' => 3, 'Api' => 4, 'Id' => 5, 'Name' => 6, 'Title' => 7, 'Description' => 8, 'InstalledVersion' => 9, ),
+        self::TYPE_STUDLYPHPNAME => array('className' => 0, 'activatedVersion' => 1, 'defaultAction' => 2, 'slug' => 3, 'api' => 4, 'id' => 5, 'name' => 6, 'title' => 7, 'description' => 8, 'installedVersion' => 9, ),
+        self::TYPE_COLNAME       => array(ModuleTableMap::COL_CLASS_NAME => 0, ModuleTableMap::COL_ACTIVATED_VERSION => 1, ModuleTableMap::COL_DEFAULT_ACTION => 2, ModuleTableMap::COL_SLUG => 3, ModuleTableMap::COL_HAS_API => 4, ModuleTableMap::COL_ID => 5, ModuleTableMap::COL_NAME => 6, ModuleTableMap::COL_TITLE => 7, ModuleTableMap::COL_DESCRIPTION => 8, ModuleTableMap::COL_INSTALLED_VERSION => 9, ),
+        self::TYPE_RAW_COLNAME   => array('COL_CLASS_NAME' => 0, 'COL_ACTIVATED_VERSION' => 1, 'COL_DEFAULT_ACTION' => 2, 'COL_SLUG' => 3, 'COL_HAS_API' => 4, 'COL_ID' => 5, 'COL_NAME' => 6, 'COL_TITLE' => 7, 'COL_DESCRIPTION' => 8, 'COL_INSTALLED_VERSION' => 9, ),
+        self::TYPE_FIELDNAME     => array('class_name' => 0, 'activated_version' => 1, 'default_action' => 2, 'slug' => 3, 'has_api' => 4, 'id' => 5, 'name' => 6, 'title' => 7, 'description' => 8, 'installed_version' => 9, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -170,6 +175,7 @@ class ModuleTableMap extends TableMap
         $this->addColumn('CLASS_NAME', 'ClassName', 'VARCHAR', true, 255, null);
         $this->addColumn('ACTIVATED_VERSION', 'ActivatedVersion', 'VARCHAR', false, 50, null);
         $this->addColumn('DEFAULT_ACTION', 'DefaultAction', 'VARCHAR', false, 255, null);
+        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 255, null);
         $this->addColumn('HAS_API', 'Api', 'BOOLEAN', false, 1, false);
         $this->addForeignPrimaryKey('ID', 'Id', 'INTEGER' , 'keeko_package', 'ID', true, null, null);
         $this->addColumn('NAME', 'Name', 'VARCHAR', false, 255, null);
@@ -225,11 +231,11 @@ class ModuleTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -248,7 +254,7 @@ class ModuleTableMap extends TableMap
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 4 + $offset
+                ? 5 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
@@ -353,6 +359,7 @@ class ModuleTableMap extends TableMap
             $criteria->addSelectColumn(ModuleTableMap::COL_CLASS_NAME);
             $criteria->addSelectColumn(ModuleTableMap::COL_ACTIVATED_VERSION);
             $criteria->addSelectColumn(ModuleTableMap::COL_DEFAULT_ACTION);
+            $criteria->addSelectColumn(ModuleTableMap::COL_SLUG);
             $criteria->addSelectColumn(ModuleTableMap::COL_HAS_API);
             $criteria->addSelectColumn(ModuleTableMap::COL_ID);
             $criteria->addSelectColumn(ModuleTableMap::COL_NAME);
@@ -363,6 +370,7 @@ class ModuleTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.CLASS_NAME');
             $criteria->addSelectColumn($alias . '.ACTIVATED_VERSION');
             $criteria->addSelectColumn($alias . '.DEFAULT_ACTION');
+            $criteria->addSelectColumn($alias . '.SLUG');
             $criteria->addSelectColumn($alias . '.HAS_API');
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.NAME');

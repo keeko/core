@@ -14,15 +14,20 @@ use keeko\core\model\Api;
 class ModuleManager {
 
 	private $loadedModules = [];
+
 	private $activatedModules = [];
+
 	private $installedModules = [];
-	
+
 	/**
+	 *
 	 * @var PackageManager
 	 */
 	private $packageManager;
-	
-	/** @var AbstractApplication */
+
+	/**
+	 * @var AbstractApplication
+	 */
 	private $application;
 
 	public function __construct(PackageManager $packageManager = null, AbstractApplication $application = null) {
@@ -43,19 +48,19 @@ class ModuleManager {
 			}
 		}
 	}
-	
+
 	public function getPackageManager() {
 		return $this->packageManager;
 	}
-
-// 	public function getInstalledModules() {
-// 		return $this->installedModules;
-// 	}
 	
-// 	public function getActivatedModules() {
-// 		return $this->activatedModules;
-// 	}
-
+	// public function getInstalledModules() {
+	// return $this->installedModules;
+	// }
+	
+	// public function getActivatedModules() {
+	// return $this->activatedModules;
+	// }
+	
 	/**
 	 * Loads a module and returns the associated class or returns if already loaded
 	 *
@@ -74,18 +79,18 @@ class ModuleManager {
 		}
 		
 		$model = $this->activatedModules[$packageName];
-
+		
 		if ($model->getInstalledVersion() > $model->getActivatedVersion()) {
 			throw new ModuleException(sprintf('Module Version Mismatch (%s). Module needs updated by the Administrator', $packageName), 500);
 		}
-
+		
 		// load
 		$className = $model->getClassName();
 		
 		/* @var $mod AbstractModule */
 		$mod = new $className($model, $this->application);
 		$this->loadedModules[$packageName] = $mod;
-
+		
 		return $mod;
 	}
 
@@ -94,7 +99,7 @@ class ModuleManager {
 		if (isset($this->activatedModules[$packageName])) {
 			return;
 		}
-
+		
 		$module = ModuleQuery::create()->findOneByName($packageName);
 		if ($module === null) {
 			throw new ModuleException(sprintf('Module (%s) not installed for activation', $packageName));
@@ -102,7 +107,7 @@ class ModuleManager {
 		$module->setActivatedVersion($module->getInstalledVersion());
 		$module->save();
 		$package = $this->packageManager->getModulePackage($packageName);
-
+		
 		// install actions
 		$extra = $package->getExtra();
 		if (isset($extra['keeko']) && isset($extra['keeko']['module'])) {
@@ -110,7 +115,7 @@ class ModuleManager {
 			$this->installApi($module, $extra['keeko']['module'], $actions);
 		}
 	}
-	
+
 	private function installActions(Module $module, $data) {
 		if (!isset($data['actions'])) {
 			return;
@@ -122,26 +127,26 @@ class ModuleManager {
 			$a = new Action();
 			$a->setName($name);
 			$a->setModule($module);
-
+			
 			if (isset($options['title'])) {
 				$a->setTitle($options['title']);
 			}
-
+			
 			if (isset($options['description'])) {
 				$a->setDescription($options['description']);
 			}
-
+			
 			if (isset($options['class'])) {
 				$a->setClassName($options['class']);
 			}
-
+			
 			$a->save();
 			$actions[$name] = $a->getId();
 		}
 		
 		return $actions;
 	}
-	
+
 	private function installApi(Module $module, $data, $actionMap) {
 		if (!isset($data['api'])) {
 			return;
@@ -155,7 +160,7 @@ class ModuleManager {
 		if (isset($data['api']['resourcePath'])) {
 			$base = $data['api']['resourcePath'];
 		}
-
+		
 		foreach ($data['api']['apis'] as $apis) {
 			$path = $apis['path'];
 			foreach ($apis['operations'] as $op) {
@@ -179,15 +184,14 @@ class ModuleManager {
 				$api->save();
 			}
 		}
-
+		
 		$module->setApi(true);
 		$module->save();
 	}
 
 	public function deactivate($packageName) {
-		if (array_key_exists($packageName, $this->activatedModules)
-				&& !array_key_exists($packageName, $this->installedModules)) {
-
+		if (array_key_exists($packageName, $this->activatedModules) && !array_key_exists($packageName, $this->installedModules)) {
+			
 			$mod = ModuleQuery::create()->filterByName($packageName)->findOne();
 			$mod->setActivatedVersion(null);
 			$mod->save();
@@ -195,14 +199,14 @@ class ModuleManager {
 			unset($this->activatedModules[$packageName]);
 		}
 	}
-
-// 	/**
-// 	 * Returns wether a module was loaded
-// 	 *
-// 	 * @param String $packageName
-// 	 * @return boolean true if loaded, false if not
-// 	 */
-// 	public function isLoaded($packageName) {
-// 		return array_key_exists($packageName, $this->loadedModules);
-// 	}
+	
+	// /**
+	// * Returns wether a module was loaded
+	// *
+	// * @param String $packageName
+	// * @return boolean true if loaded, false if not
+	// */
+	// public function isLoaded($packageName) {
+	// return array_key_exists($packageName, $this->loadedModules);
+	// }
 }

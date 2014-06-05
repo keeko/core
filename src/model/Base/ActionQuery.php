@@ -670,6 +670,23 @@ abstract class ActionQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related Group object
+     * using the keeko_group_action table as cross reference
+     *
+     * @param Group $group the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildActionQuery The current query, for fluid interface
+     */
+    public function filterByGroup($group, $comparison = Criteria::EQUAL)
+    {
+        return $this
+            ->useGroupActionQuery()
+            ->filterByGroup($group, $comparison)
+            ->endUse();
+    }
+
+    /**
      * Exclude object from result
      *
      * @param   ChildAction $action Object to remove from the list of results

@@ -148,8 +148,8 @@ class ApiTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-        $this->addColumn('ROUTE', 'Route', 'VARCHAR', false, 255, null);
-        $this->addColumn('METHOD', 'Method', 'VARCHAR', false, 255, null);
+        $this->addColumn('ROUTE', 'Route', 'VARCHAR', true, 255, null);
+        $this->addColumn('METHOD', 'Method', 'VARCHAR', true, 255, null);
         $this->addForeignKey('ACTION_ID', 'ActionId', 'INTEGER', 'keeko_action', 'ID', true, 10, null);
         $this->addColumn('REQUIRED_PARAMS', 'RequiredParams', 'VARCHAR', false, 255, null);
     } // initialize()
