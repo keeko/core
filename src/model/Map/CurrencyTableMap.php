@@ -16,7 +16,7 @@ use keeko\core\model\CurrencyQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_currency' table.
+ * This class defines the structure of the 'kk_currency' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class CurrencyTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_currency';
+    const TABLE_NAME = 'kk_currency';
 
     /**
      * The related Propel class for this table
@@ -74,47 +74,47 @@ class CurrencyTableMap extends TableMap
     /**
      * the column name for the ISO_NR field
      */
-    const COL_ISO_NR = 'keeko_currency.ISO_NR';
+    const COL_ISO_NR = 'kk_currency.ISO_NR';
 
     /**
      * the column name for the ISO3 field
      */
-    const COL_ISO3 = 'keeko_currency.ISO3';
+    const COL_ISO3 = 'kk_currency.ISO3';
 
     /**
      * the column name for the EN_NAME field
      */
-    const COL_EN_NAME = 'keeko_currency.EN_NAME';
+    const COL_EN_NAME = 'kk_currency.EN_NAME';
 
     /**
      * the column name for the SYMBOL_LEFT field
      */
-    const COL_SYMBOL_LEFT = 'keeko_currency.SYMBOL_LEFT';
+    const COL_SYMBOL_LEFT = 'kk_currency.SYMBOL_LEFT';
 
     /**
      * the column name for the SYMBOL_RIGHT field
      */
-    const COL_SYMBOL_RIGHT = 'keeko_currency.SYMBOL_RIGHT';
+    const COL_SYMBOL_RIGHT = 'kk_currency.SYMBOL_RIGHT';
 
     /**
      * the column name for the DECIMAL_DIGITS field
      */
-    const COL_DECIMAL_DIGITS = 'keeko_currency.DECIMAL_DIGITS';
+    const COL_DECIMAL_DIGITS = 'kk_currency.DECIMAL_DIGITS';
 
     /**
      * the column name for the SUB_DIVISOR field
      */
-    const COL_SUB_DIVISOR = 'keeko_currency.SUB_DIVISOR';
+    const COL_SUB_DIVISOR = 'kk_currency.SUB_DIVISOR';
 
     /**
      * the column name for the SUB_SYMBOL_LEFT field
      */
-    const COL_SUB_SYMBOL_LEFT = 'keeko_currency.SUB_SYMBOL_LEFT';
+    const COL_SUB_SYMBOL_LEFT = 'kk_currency.SUB_SYMBOL_LEFT';
 
     /**
      * the column name for the SUB_SYMBOL_RIGHT field
      */
-    const COL_SUB_SYMBOL_RIGHT = 'keeko_currency.SUB_SYMBOL_RIGHT';
+    const COL_SUB_SYMBOL_RIGHT = 'kk_currency.SUB_SYMBOL_RIGHT';
 
     /**
      * The default string format for model objects of the related table
@@ -161,7 +161,7 @@ class CurrencyTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_currency');
+        $this->setName('kk_currency');
         $this->setPhpName('Currency');
         $this->setClassName('\\keeko\\core\\model\\Currency');
         $this->setPackage('keeko.core.model');
@@ -414,7 +414,7 @@ class CurrencyTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_currency table.
+     * Deletes all rows from the kk_currency table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

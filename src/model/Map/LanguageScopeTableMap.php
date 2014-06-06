@@ -16,7 +16,7 @@ use keeko\core\model\LanguageScopeQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_language_scope' table.
+ * This class defines the structure of the 'kk_language_scope' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class LanguageScopeTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_language_scope';
+    const TABLE_NAME = 'kk_language_scope';
 
     /**
      * The related Propel class for this table
@@ -74,12 +74,12 @@ class LanguageScopeTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_language_scope.ID';
+    const COL_ID = 'kk_language_scope.ID';
 
     /**
      * the column name for the NAME field
      */
-    const COL_NAME = 'keeko_language_scope.NAME';
+    const COL_NAME = 'kk_language_scope.NAME';
 
     /**
      * The default string format for model objects of the related table
@@ -126,7 +126,7 @@ class LanguageScopeTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_language_scope');
+        $this->setName('kk_language_scope');
         $this->setPhpName('LanguageScope');
         $this->setClassName('\\keeko\\core\\model\\LanguageScope');
         $this->setPackage('keeko.core.model');
@@ -358,7 +358,7 @@ class LanguageScopeTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_language_scope table.
+     * Deletes all rows from the kk_language_scope table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

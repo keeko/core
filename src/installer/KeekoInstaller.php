@@ -10,24 +10,36 @@ use keeko\core\model\Application;
 use Composer\IO\IOInterface;
 use Composer\Composer;
 use keeko\core\package\PackageManager;
+use Composer\IO\NullIO;
+use Symfony\Component\HttpFoundation\Request;
 
 class KeekoInstaller {
 
-	public function __construct() {
-		// bootstrap
-		if (!defined('KEEKO_PATH')) {
-			require_once rtrim(getcwd(), '/\\') . '/src/bootstrap.php';
-		}
+	private $io;
+	private $packageManager;
+	private $appInstaller;
+	private $moduleInstaller;
+	private $moduleManager;
+	
+	public function __construct(IOInterface $io = null) {
+// 		// bootstrap
+// 		if (!defined('KEEKO_PATH')) {
+// 			require_once rtrim(getcwd(), '/\\') . '/src/bootstrap.php';
+// 		}
+		
+		$this->io = $io ?: new NullIO();
+		$this->packageManager = new PackageManager();
+		$this->appInstaller = new AppInstaller();
+		$this->moduleInstaller = new ModuleInstaller();
+		
+		$this->installStaticData();
+		$this->moduleManager = new ModuleManager($this->packageManager);
 	}
 
-	public function installKeeko(IOInterface $io, Composer $composer) {
-		$this->installStaticData();
-		
-		$packageManager = new PackageManager();
-		$appInstaller = new AppInstaller();
-		$moduleInstaller = new ModuleInstaller();
-		$moduleManager = new ModuleManager($packageManager);
-		
+	public function installKeeko() {
+		$request = Request::createFromGlobals();
+		$base = $request->getBasePath();
+
 		// localization
 		// de
 		$de = new Localization();
@@ -38,49 +50,57 @@ class KeekoInstaller {
 		
 		// apps
 		// -- api app
-		$apiAppPackage = $packageManager->getApplicationPackage('keeko/api-app');
-		$apiApp = $appInstaller->install($io, $apiAppPackage);
+		$apiAppPackage = $this->packageManager->getApplicationPackage('keeko/api-app');
+		$apiApp = $this->appInstaller->install($this->io, $apiAppPackage);
 		
 		$uri = new ApplicationUri();
 		$uri->setApplication($apiApp);
 		$uri->setLocalization($de);
-		$uri->setHttphost('localhost');
-		$uri->setBasepath('/keeko/public/api/');
+		$uri->setHttphost($request->getHost());
+		$uri->setBasepath($base . '/api/');
+		$uri->setSecure($request->isSecure());
 		$uri->save();
 		
-		$developerAppPackage = $packageManager->getApplicationPackage('keeko/developer-app');
-		$developerApp = $appInstaller->install($io, $developerAppPackage);
+		$developerAppPackage = $this->packageManager->getApplicationPackage('keeko/developer-app');
+		$developerApp = $this->appInstaller->install($this->io, $developerAppPackage);
 		
 		$uri = new ApplicationUri();
 		$uri->setApplication($developerApp);
 		$uri->setLocalization($de);
 		$uri->setHttphost('localhost');
-		$uri->setBasepath('/keeko/public/developer/');
+		$uri->setBasepath($base . '/developer/');
+		$uri->setSecure($request->isSecure());
 		$uri->save();
 		
 		// -- website app
-		$websiteAppPackage = $packageManager->getApplicationPackage('keeko/website-app');
-		$websiteApp = $appInstaller->install($io, $websiteAppPackage);
+		$websiteAppPackage = $this->packageManager->getApplicationPackage('keeko/website-app');
+		$websiteApp = $this->appInstaller->install($this->io, $websiteAppPackage);
 		
 		$uri = new ApplicationUri();
 		$uri->setApplication($websiteApp);
 		$uri->setLocalization($de);
 		$uri->setHttphost('localhost');
-		$uri->setBasepath('/keeko/public/');
+		$uri->setBasepath($base . '/');
+		$uri->setSecure($request->isSecure());
 		$uri->save();
-		
+
 		// modules
-		$userModulePackage = $packageManager->getModulePackage('keeko/user');
-		if ($userModulePackage) {
-			$moduleInstaller->install($io, $userModulePackage);
-			$moduleManager->activate('keeko/user');
-		}
+		$this->installModule('keeko/user');
+		$this->activateModule('keeko/user');
 		
-		$groupModulePackage = $packageManager->getModulePackage('keeko/group');
-		if ($groupModulePackage) {
-			$moduleInstaller->install($io, $groupModulePackage);
-			$moduleManager->activate('keeko/group');
+		$this->installModule('keeko/group');
+		$this->activateModule('keeko/group');
+	}
+	
+	public function installModule($packageName) {
+		$modulePackage = $this->packageManager->getModulePackage($packageName);
+		if ($modulePackage) {
+			$this->moduleInstaller->install($this->io, $modulePackage);
 		}
+	}
+	
+	public function activateModule($packageName) {
+		$this->moduleManager->activate($packageName);
 	}
 
 	private function installStaticData() {

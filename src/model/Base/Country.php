@@ -1381,7 +1381,7 @@ abstract class Country implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_country (%s) VALUES (%s)',
+            'INSERT INTO kk_country (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

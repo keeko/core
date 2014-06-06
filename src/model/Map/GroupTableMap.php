@@ -16,7 +16,7 @@ use keeko\core\model\GroupQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_group' table.
+ * This class defines the structure of the 'kk_group' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class GroupTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_group';
+    const TABLE_NAME = 'kk_group';
 
     /**
      * The related Propel class for this table
@@ -74,47 +74,47 @@ class GroupTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_group.ID';
+    const COL_ID = 'kk_group.ID';
 
     /**
      * the column name for the USER_ID field
      */
-    const COL_USER_ID = 'keeko_group.USER_ID';
+    const COL_USER_ID = 'kk_group.USER_ID';
 
     /**
      * the column name for the NAME field
      */
-    const COL_NAME = 'keeko_group.NAME';
+    const COL_NAME = 'kk_group.NAME';
 
     /**
      * the column name for the IS_GUEST field
      */
-    const COL_IS_GUEST = 'keeko_group.IS_GUEST';
+    const COL_IS_GUEST = 'kk_group.IS_GUEST';
 
     /**
      * the column name for the IS_DEFAULT field
      */
-    const COL_IS_DEFAULT = 'keeko_group.IS_DEFAULT';
+    const COL_IS_DEFAULT = 'kk_group.IS_DEFAULT';
 
     /**
      * the column name for the IS_ACTIVE field
      */
-    const COL_IS_ACTIVE = 'keeko_group.IS_ACTIVE';
+    const COL_IS_ACTIVE = 'kk_group.IS_ACTIVE';
 
     /**
      * the column name for the IS_SYSTEM field
      */
-    const COL_IS_SYSTEM = 'keeko_group.IS_SYSTEM';
+    const COL_IS_SYSTEM = 'kk_group.IS_SYSTEM';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = 'keeko_group.CREATED_AT';
+    const COL_CREATED_AT = 'kk_group.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = 'keeko_group.UPDATED_AT';
+    const COL_UPDATED_AT = 'kk_group.UPDATED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -161,14 +161,14 @@ class GroupTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_group');
+        $this->setName('kk_group');
         $this->setPhpName('Group');
         $this->setClassName('\\keeko\\core\\model\\Group');
         $this->setPackage('keeko.core.model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-        $this->addForeignKey('USER_ID', 'UserId', 'INTEGER', 'keeko_user', 'ID', false, 10, null);
+        $this->addForeignKey('USER_ID', 'UserId', 'INTEGER', 'kk_user', 'ID', false, 10, null);
         $this->addColumn('NAME', 'Name', 'VARCHAR', false, 64, null);
         $this->addColumn('IS_GUEST', 'IsGuest', 'BOOLEAN', false, 1, null);
         $this->addColumn('IS_DEFAULT', 'IsDefault', 'BOOLEAN', false, 1, null);
@@ -432,7 +432,7 @@ class GroupTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_group table.
+     * Deletes all rows from the kk_group table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

@@ -16,7 +16,7 @@ use keeko\core\model\CurrencyQuery as ChildCurrencyQuery;
 use keeko\core\model\Map\CurrencyTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_currency' table.
+ * Base class that represents a query for the 'kk_currency' table.
  *
  *
  *
@@ -162,7 +162,7 @@ abstract class CurrencyQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ISO_NR, ISO3, EN_NAME, SYMBOL_LEFT, SYMBOL_RIGHT, DECIMAL_DIGITS, SUB_DIVISOR, SUB_SYMBOL_LEFT, SUB_SYMBOL_RIGHT FROM keeko_currency WHERE ISO_NR = :p0';
+        $sql = 'SELECT ISO_NR, ISO3, EN_NAME, SYMBOL_LEFT, SYMBOL_RIGHT, DECIMAL_DIGITS, SUB_DIVISOR, SUB_SYMBOL_LEFT, SUB_SYMBOL_RIGHT FROM kk_currency WHERE ISO_NR = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -639,7 +639,7 @@ abstract class CurrencyQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_currency table.
+     * Deletes all rows from the kk_currency table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

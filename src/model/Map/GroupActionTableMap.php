@@ -16,7 +16,7 @@ use keeko\core\model\GroupActionQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_group_action' table.
+ * This class defines the structure of the 'kk_group_action' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class GroupActionTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_group_action';
+    const TABLE_NAME = 'kk_group_action';
 
     /**
      * The related Propel class for this table
@@ -74,12 +74,12 @@ class GroupActionTableMap extends TableMap
     /**
      * the column name for the GROUP_ID field
      */
-    const COL_GROUP_ID = 'keeko_group_action.GROUP_ID';
+    const COL_GROUP_ID = 'kk_group_action.GROUP_ID';
 
     /**
      * the column name for the ACTION_ID field
      */
-    const COL_ACTION_ID = 'keeko_group_action.ACTION_ID';
+    const COL_ACTION_ID = 'kk_group_action.ACTION_ID';
 
     /**
      * The default string format for model objects of the related table
@@ -126,15 +126,15 @@ class GroupActionTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_group_action');
+        $this->setName('kk_group_action');
         $this->setPhpName('GroupAction');
         $this->setClassName('\\keeko\\core\\model\\GroupAction');
         $this->setPackage('keeko.core.model');
         $this->setUseIdGenerator(false);
         $this->setIsCrossRef(true);
         // columns
-        $this->addForeignPrimaryKey('GROUP_ID', 'GroupId', 'INTEGER' , 'keeko_group', 'ID', true, 10, null);
-        $this->addForeignPrimaryKey('ACTION_ID', 'ActionId', 'INTEGER' , 'keeko_action', 'ID', true, 10, null);
+        $this->addForeignPrimaryKey('GROUP_ID', 'GroupId', 'INTEGER' , 'kk_group', 'ID', true, 10, null);
+        $this->addForeignPrimaryKey('ACTION_ID', 'ActionId', 'INTEGER' , 'kk_action', 'ID', true, 10, null);
     } // initialize()
 
     /**
@@ -432,7 +432,7 @@ class GroupActionTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_group_action table.
+     * Deletes all rows from the kk_group_action table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

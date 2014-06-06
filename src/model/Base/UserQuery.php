@@ -16,7 +16,7 @@ use keeko\core\model\UserQuery as ChildUserQuery;
 use keeko\core\model\Map\UserTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_user' table.
+ * Base class that represents a query for the 'kk_user' table.
  *
  *
  *
@@ -226,7 +226,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, LOGIN_NAME, PASSWORD, GIVEN_NAME, FAMILY_NAME, DISPLAY_NAME, EMAIL, COUNTRY_ISO_NR, SUBDIVISION_ID, ADDRESS, ADDRESS2, BIRTHDAY, SEX, CITY, POSTAL_CODE, PASSWORD_RECOVER_CODE, PASSWORD_RECOVER_TIME, LOCATION_STATUS, LATITUDE, LONGITUDE, CREATED_AT, UPDATED_AT FROM keeko_user WHERE ID = :p0';
+        $sql = 'SELECT ID, LOGIN_NAME, PASSWORD, GIVEN_NAME, FAMILY_NAME, DISPLAY_NAME, EMAIL, COUNTRY_ISO_NR, SUBDIVISION_ID, ADDRESS, ADDRESS2, BIRTHDAY, SEX, CITY, POSTAL_CODE, PASSWORD_RECOVER_CODE, PASSWORD_RECOVER_TIME, LOCATION_STATUS, LATITUDE, LONGITUDE, CREATED_AT, UPDATED_AT FROM kk_user WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -1396,7 +1396,7 @@ abstract class UserQuery extends ModelCriteria
 
     /**
      * Filter the query by a related Group object
-     * using the keeko_group_user table as cross reference
+     * using the kk_group_user table as cross reference
      *
      * @param Group $group the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -1428,7 +1428,7 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_user table.
+     * Deletes all rows from the kk_user table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

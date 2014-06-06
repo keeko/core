@@ -16,7 +16,7 @@ use keeko\core\model\CountryQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_country' table.
+ * This class defines the structure of the 'kk_country' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class CountryTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_country';
+    const TABLE_NAME = 'kk_country';
 
     /**
      * The related Propel class for this table
@@ -74,87 +74,87 @@ class CountryTableMap extends TableMap
     /**
      * the column name for the ISO_NR field
      */
-    const COL_ISO_NR = 'keeko_country.ISO_NR';
+    const COL_ISO_NR = 'kk_country.ISO_NR';
 
     /**
      * the column name for the ALPHA_2 field
      */
-    const COL_ALPHA_2 = 'keeko_country.ALPHA_2';
+    const COL_ALPHA_2 = 'kk_country.ALPHA_2';
 
     /**
      * the column name for the ALPHA_3 field
      */
-    const COL_ALPHA_3 = 'keeko_country.ALPHA_3';
+    const COL_ALPHA_3 = 'kk_country.ALPHA_3';
 
     /**
      * the column name for the IOC field
      */
-    const COL_IOC = 'keeko_country.IOC';
+    const COL_IOC = 'kk_country.IOC';
 
     /**
      * the column name for the CAPITAL field
      */
-    const COL_CAPITAL = 'keeko_country.CAPITAL';
+    const COL_CAPITAL = 'kk_country.CAPITAL';
 
     /**
      * the column name for the TLD field
      */
-    const COL_TLD = 'keeko_country.TLD';
+    const COL_TLD = 'kk_country.TLD';
 
     /**
      * the column name for the PHONE field
      */
-    const COL_PHONE = 'keeko_country.PHONE';
+    const COL_PHONE = 'kk_country.PHONE';
 
     /**
      * the column name for the TERRITORY_ISO_NR field
      */
-    const COL_TERRITORY_ISO_NR = 'keeko_country.TERRITORY_ISO_NR';
+    const COL_TERRITORY_ISO_NR = 'kk_country.TERRITORY_ISO_NR';
 
     /**
      * the column name for the CURRENCY_ISO_NR field
      */
-    const COL_CURRENCY_ISO_NR = 'keeko_country.CURRENCY_ISO_NR';
+    const COL_CURRENCY_ISO_NR = 'kk_country.CURRENCY_ISO_NR';
 
     /**
      * the column name for the OFFICIAL_LOCAL_NAME field
      */
-    const COL_OFFICIAL_LOCAL_NAME = 'keeko_country.OFFICIAL_LOCAL_NAME';
+    const COL_OFFICIAL_LOCAL_NAME = 'kk_country.OFFICIAL_LOCAL_NAME';
 
     /**
      * the column name for the OFFICIAL_EN_NAME field
      */
-    const COL_OFFICIAL_EN_NAME = 'keeko_country.OFFICIAL_EN_NAME';
+    const COL_OFFICIAL_EN_NAME = 'kk_country.OFFICIAL_EN_NAME';
 
     /**
      * the column name for the SHORT_LOCAL_NAME field
      */
-    const COL_SHORT_LOCAL_NAME = 'keeko_country.SHORT_LOCAL_NAME';
+    const COL_SHORT_LOCAL_NAME = 'kk_country.SHORT_LOCAL_NAME';
 
     /**
      * the column name for the SHORT_EN_NAME field
      */
-    const COL_SHORT_EN_NAME = 'keeko_country.SHORT_EN_NAME';
+    const COL_SHORT_EN_NAME = 'kk_country.SHORT_EN_NAME';
 
     /**
      * the column name for the BBOX_SW_LAT field
      */
-    const COL_BBOX_SW_LAT = 'keeko_country.BBOX_SW_LAT';
+    const COL_BBOX_SW_LAT = 'kk_country.BBOX_SW_LAT';
 
     /**
      * the column name for the BBOX_SW_LNG field
      */
-    const COL_BBOX_SW_LNG = 'keeko_country.BBOX_SW_LNG';
+    const COL_BBOX_SW_LNG = 'kk_country.BBOX_SW_LNG';
 
     /**
      * the column name for the BBOX_NE_LAT field
      */
-    const COL_BBOX_NE_LAT = 'keeko_country.BBOX_NE_LAT';
+    const COL_BBOX_NE_LAT = 'kk_country.BBOX_NE_LAT';
 
     /**
      * the column name for the BBOX_NE_LNG field
      */
-    const COL_BBOX_NE_LNG = 'keeko_country.BBOX_NE_LNG';
+    const COL_BBOX_NE_LNG = 'kk_country.BBOX_NE_LNG';
 
     /**
      * The default string format for model objects of the related table
@@ -201,7 +201,7 @@ class CountryTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_country');
+        $this->setName('kk_country');
         $this->setPhpName('Country');
         $this->setClassName('\\keeko\\core\\model\\Country');
         $this->setPackage('keeko.core.model');
@@ -214,8 +214,8 @@ class CountryTableMap extends TableMap
         $this->addColumn('CAPITAL', 'Capital', 'VARCHAR', false, 128, null);
         $this->addColumn('TLD', 'Tld', 'VARCHAR', false, 3, null);
         $this->addColumn('PHONE', 'Phone', 'VARCHAR', false, 16, null);
-        $this->addForeignKey('TERRITORY_ISO_NR', 'TerritoryIsoNr', 'INTEGER', 'keeko_territory', 'ISO_NR', true, null, null);
-        $this->addForeignKey('CURRENCY_ISO_NR', 'CurrencyIsoNr', 'INTEGER', 'keeko_currency', 'ISO_NR', true, null, null);
+        $this->addForeignKey('TERRITORY_ISO_NR', 'TerritoryIsoNr', 'INTEGER', 'kk_territory', 'ISO_NR', true, null, null);
+        $this->addForeignKey('CURRENCY_ISO_NR', 'CurrencyIsoNr', 'INTEGER', 'kk_currency', 'ISO_NR', true, null, null);
         $this->addColumn('OFFICIAL_LOCAL_NAME', 'OfficialLocalName', 'VARCHAR', false, 128, null);
         $this->addColumn('OFFICIAL_EN_NAME', 'OfficialEnName', 'VARCHAR', false, 128, null);
         $this->addColumn('SHORT_LOCAL_NAME', 'ShortLocalName', 'VARCHAR', false, 128, null);
@@ -482,7 +482,7 @@ class CountryTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_country table.
+     * Deletes all rows from the kk_country table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

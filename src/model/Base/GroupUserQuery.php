@@ -16,7 +16,7 @@ use keeko\core\model\GroupUserQuery as ChildGroupUserQuery;
 use keeko\core\model\Map\GroupUserTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_group_user' table.
+ * Base class that represents a query for the 'kk_group_user' table.
  *
  *
  *
@@ -138,7 +138,7 @@ abstract class GroupUserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT USER_ID, GROUP_ID FROM keeko_group_user WHERE USER_ID = :p0 AND GROUP_ID = :p1';
+        $sql = 'SELECT USER_ID, GROUP_ID FROM kk_group_user WHERE USER_ID = :p0 AND GROUP_ID = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -495,7 +495,7 @@ abstract class GroupUserQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_group_user table.
+     * Deletes all rows from the kk_group_user table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

@@ -16,7 +16,7 @@ use keeko\core\model\GroupQuery as ChildGroupQuery;
 use keeko\core\model\Map\GroupTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_group' table.
+ * Base class that represents a query for the 'kk_group' table.
  *
  *
  *
@@ -170,7 +170,7 @@ abstract class GroupQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, USER_ID, NAME, IS_GUEST, IS_DEFAULT, IS_ACTIVE, IS_SYSTEM, CREATED_AT, UPDATED_AT FROM keeko_group WHERE ID = :p0';
+        $sql = 'SELECT ID, USER_ID, NAME, IS_GUEST, IS_DEFAULT, IS_ACTIVE, IS_SYSTEM, CREATED_AT, UPDATED_AT FROM kk_group WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -790,7 +790,7 @@ abstract class GroupQuery extends ModelCriteria
 
     /**
      * Filter the query by a related User object
-     * using the keeko_group_user table as cross reference
+     * using the kk_group_user table as cross reference
      *
      * @param User $user the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -807,7 +807,7 @@ abstract class GroupQuery extends ModelCriteria
 
     /**
      * Filter the query by a related Action object
-     * using the keeko_group_action table as cross reference
+     * using the kk_group_action table as cross reference
      *
      * @param Action $action the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -839,7 +839,7 @@ abstract class GroupQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_group table.
+     * Deletes all rows from the kk_group table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

@@ -6,7 +6,7 @@ use keeko\core\model\Base\LanguageTypeQuery as BaseLanguageTypeQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_language_type' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_language_type' table.
  *
  *
  *

@@ -6,7 +6,7 @@ use keeko\core\model\Base\CurrencyQuery as BaseCurrencyQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_currency' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_currency' table.
  *
  *
  *

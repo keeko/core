@@ -16,7 +16,7 @@ use keeko\core\model\ApiQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_api' table.
+ * This class defines the structure of the 'kk_api' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class ApiTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_api';
+    const TABLE_NAME = 'kk_api';
 
     /**
      * The related Propel class for this table
@@ -74,27 +74,27 @@ class ApiTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_api.ID';
+    const COL_ID = 'kk_api.ID';
 
     /**
      * the column name for the ROUTE field
      */
-    const COL_ROUTE = 'keeko_api.ROUTE';
+    const COL_ROUTE = 'kk_api.ROUTE';
 
     /**
      * the column name for the METHOD field
      */
-    const COL_METHOD = 'keeko_api.METHOD';
+    const COL_METHOD = 'kk_api.METHOD';
 
     /**
      * the column name for the ACTION_ID field
      */
-    const COL_ACTION_ID = 'keeko_api.ACTION_ID';
+    const COL_ACTION_ID = 'kk_api.ACTION_ID';
 
     /**
      * the column name for the REQUIRED_PARAMS field
      */
-    const COL_REQUIRED_PARAMS = 'keeko_api.REQUIRED_PARAMS';
+    const COL_REQUIRED_PARAMS = 'kk_api.REQUIRED_PARAMS';
 
     /**
      * The default string format for model objects of the related table
@@ -141,7 +141,7 @@ class ApiTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_api');
+        $this->setName('kk_api');
         $this->setPhpName('Api');
         $this->setClassName('\\keeko\\core\\model\\Api');
         $this->setPackage('keeko.core.model');
@@ -150,7 +150,7 @@ class ApiTableMap extends TableMap
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
         $this->addColumn('ROUTE', 'Route', 'VARCHAR', true, 255, null);
         $this->addColumn('METHOD', 'Method', 'VARCHAR', true, 255, null);
-        $this->addForeignKey('ACTION_ID', 'ActionId', 'INTEGER', 'keeko_action', 'ID', true, 10, null);
+        $this->addForeignKey('ACTION_ID', 'ActionId', 'INTEGER', 'kk_action', 'ID', true, 10, null);
         $this->addColumn('REQUIRED_PARAMS', 'RequiredParams', 'VARCHAR', false, 255, null);
     } // initialize()
 
@@ -382,7 +382,7 @@ class ApiTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_api table.
+     * Deletes all rows from the kk_api table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

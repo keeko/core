@@ -16,7 +16,7 @@ use keeko\core\model\LocalizationQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_localization' table.
+ * This class defines the structure of the 'kk_localization' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class LocalizationTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_localization';
+    const TABLE_NAME = 'kk_localization';
 
     /**
      * The related Propel class for this table
@@ -74,27 +74,27 @@ class LocalizationTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_localization.ID';
+    const COL_ID = 'kk_localization.ID';
 
     /**
      * the column name for the PARENT_ID field
      */
-    const COL_PARENT_ID = 'keeko_localization.PARENT_ID';
+    const COL_PARENT_ID = 'kk_localization.PARENT_ID';
 
     /**
      * the column name for the LANGUAGE_ID field
      */
-    const COL_LANGUAGE_ID = 'keeko_localization.LANGUAGE_ID';
+    const COL_LANGUAGE_ID = 'kk_localization.LANGUAGE_ID';
 
     /**
      * the column name for the COUNTRY_ISO_NR field
      */
-    const COL_COUNTRY_ISO_NR = 'keeko_localization.COUNTRY_ISO_NR';
+    const COL_COUNTRY_ISO_NR = 'kk_localization.COUNTRY_ISO_NR';
 
     /**
      * the column name for the IS_DEFAULT field
      */
-    const COL_IS_DEFAULT = 'keeko_localization.IS_DEFAULT';
+    const COL_IS_DEFAULT = 'kk_localization.IS_DEFAULT';
 
     /**
      * The default string format for model objects of the related table
@@ -141,16 +141,16 @@ class LocalizationTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_localization');
+        $this->setName('kk_localization');
         $this->setPhpName('Localization');
         $this->setClassName('\\keeko\\core\\model\\Localization');
         $this->setPackage('keeko.core.model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addForeignKey('PARENT_ID', 'ParentId', 'INTEGER', 'keeko_localization', 'ID', false, 10, null);
-        $this->addForeignKey('LANGUAGE_ID', 'LanguageId', 'INTEGER', 'keeko_language', 'ID', false, 10, null);
-        $this->addForeignKey('COUNTRY_ISO_NR', 'CountryIsoNr', 'INTEGER', 'keeko_country', 'ISO_NR', false, 10, null);
+        $this->addForeignKey('PARENT_ID', 'ParentId', 'INTEGER', 'kk_localization', 'ID', false, 10, null);
+        $this->addForeignKey('LANGUAGE_ID', 'LanguageId', 'INTEGER', 'kk_language', 'ID', false, 10, null);
+        $this->addForeignKey('COUNTRY_ISO_NR', 'CountryIsoNr', 'INTEGER', 'kk_country', 'ISO_NR', false, 10, null);
         $this->addColumn('IS_DEFAULT', 'IsDefault', 'BOOLEAN', false, 1, null);
     } // initialize()
 
@@ -386,7 +386,7 @@ class LocalizationTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_localization table.
+     * Deletes all rows from the kk_localization table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

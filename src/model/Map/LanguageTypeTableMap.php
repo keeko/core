@@ -16,7 +16,7 @@ use keeko\core\model\LanguageTypeQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_language_type' table.
+ * This class defines the structure of the 'kk_language_type' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class LanguageTypeTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_language_type';
+    const TABLE_NAME = 'kk_language_type';
 
     /**
      * The related Propel class for this table
@@ -74,12 +74,12 @@ class LanguageTypeTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_language_type.ID';
+    const COL_ID = 'kk_language_type.ID';
 
     /**
      * the column name for the NAME field
      */
-    const COL_NAME = 'keeko_language_type.NAME';
+    const COL_NAME = 'kk_language_type.NAME';
 
     /**
      * The default string format for model objects of the related table
@@ -126,7 +126,7 @@ class LanguageTypeTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_language_type');
+        $this->setName('kk_language_type');
         $this->setPhpName('LanguageType');
         $this->setClassName('\\keeko\\core\\model\\LanguageType');
         $this->setPackage('keeko.core.model');
@@ -358,7 +358,7 @@ class LanguageTypeTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_language_type table.
+     * Deletes all rows from the kk_language_type table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

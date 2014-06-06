@@ -6,7 +6,7 @@ use keeko\core\model\Base\ApplicationUriQuery as BaseApplicationUriQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_application_uri' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_application_uri' table.
  *
  *
  *

@@ -6,7 +6,7 @@ use keeko\core\model\Base\PackageQuery as BasePackageQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_package' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_package' table.
  *
  *
  *

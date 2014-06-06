@@ -7,7 +7,7 @@
 		<parameter name="phpName" value="Listener"/> </behavior> -->
 
 
-	<table name="language">
+	<table name="language" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
 		<column name="alpha_2" type="VARCHAR" size="2" />
@@ -28,19 +28,19 @@
 		</foreign-key>
 	</table>
 
-	<table name="language_scope">
+	<table name="language_scope" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
 	</table>
 
-	<table name="language_type">
+	<table name="language_type" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
 	</table>
 
-	<table name="localization">
+	<table name="localization" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
 		<column name="parent_id" type="INTEGER" size="10" />
@@ -59,7 +59,7 @@
 		</foreign-key>
 	</table>
 
-	<table name="country">
+	<table name="country" namespace="\keeko\core\model">
 		<column name="iso_nr" type="INTEGER" primaryKey="true"
 			required="true" />
 		<column name="alpha_2" type="CHAR" size="2" />
@@ -87,14 +87,14 @@
 		</foreign-key>
 	</table>
 
-	<table name="territory">
+	<table name="territory" namespace="\keeko\core\model">
 		<column name="iso_nr" type="INTEGER" primaryKey="true"
 			required="true" />
 		<column name="parent_iso_nr" type="INTEGER" />
 		<column name="name_en" type="VARCHAR" size="45" required="true" />
 	</table>
 
-	<table name="currency">
+	<table name="currency" namespace="\keeko\core\model">
 		<column name="iso_nr" type="INTEGER" primaryKey="true"
 			required="true" />
 		<column name="iso3" type="CHAR" size="3" required="true" />
@@ -107,7 +107,7 @@
 		<column name="sub_symbol_right" type="VARCHAR" size="45" />
 	</table>
 
-	<table name="subdivision">
+	<table name="subdivision" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
 		<column name="iso" type="VARCHAR" size="45" />
@@ -127,13 +127,13 @@
 		</foreign-key>
 	</table>
 
-	<table name="subdivision_type">
+	<table name="subdivision_type" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
 		<column name="name" type="VARCHAR" size="128" />
 	</table>
 
-	<table name="package">
+	<table name="package" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
@@ -142,14 +142,14 @@
 		<column name="installed_version" type="VARCHAR" size="50" />
 	</table>
 
-	<table name="application">
+	<table name="application" namespace="\keeko\core\model">
 		<behavior name="concrete_inheritance">
 			<parameter name="extends" value="package" />
 		</behavior>
 		<column name="class_name" type="VARCHAR" size="255" required="true" />
 	</table>
 
-	<table name="application_uri">
+	<table name="application_uri" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="httphost" type="VARCHAR" size="255" required="true" />
@@ -168,7 +168,7 @@
 		</foreign-key>
 	</table>
 
-	<table name="module">
+	<table name="module" namespace="\keeko\core\model">
 		<behavior name="concrete_inheritance">
 			<parameter name="extends" value="package" />
 		</behavior>
@@ -179,7 +179,7 @@
 		<column name="has_api" type="BOOLEAN" default="false" phpName="Api" />
 	</table>
 
-	<table name="action">
+	<table name="action" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" required="true" />
@@ -193,7 +193,7 @@
 		</foreign-key>
 	</table>
 
-	<table name="api">
+	<table name="api" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="route" type="VARCHAR" required="true" />
@@ -206,7 +206,7 @@
 		</foreign-key>
 	</table>
 
-	<table name="user">
+	<table name="user" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
 			autoIncrement="true" />
 		<column name="login_name" type="VARCHAR" size="100" required="true" />
@@ -250,7 +250,7 @@
 		</unique>
 	</table>
 
-	<table name="group">
+	<table name="group" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
 		<column name="user_id" type="INTEGER" size="10" />
@@ -271,7 +271,7 @@
 		</foreign-key>
 	</table>
 
-	<table name="group_user" isCrossRef="true">
+	<table name="group_user" isCrossRef="true" namespace="\keeko\core\model">
 		<column name="user_id" type="INTEGER" size="10" primaryKey="true"
 			required="true" />
 		<column name="group_id" type="INTEGER" size="10" primaryKey="true"
@@ -284,7 +284,7 @@
 		</foreign-key>
 	</table>
 
-	<table name="group_action" isCrossRef="true">
+	<table name="group_action" isCrossRef="true" namespace="\keeko\core\model">
 		<column name="group_id" type="INTEGER" size="10" primaryKey="true"
 			required="true" />
 		<column name="action_id" type="INTEGER" size="10" primaryKey="true"

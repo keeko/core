@@ -16,7 +16,7 @@ use keeko\core\model\TerritoryQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_territory' table.
+ * This class defines the structure of the 'kk_territory' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class TerritoryTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_territory';
+    const TABLE_NAME = 'kk_territory';
 
     /**
      * The related Propel class for this table
@@ -74,17 +74,17 @@ class TerritoryTableMap extends TableMap
     /**
      * the column name for the ISO_NR field
      */
-    const COL_ISO_NR = 'keeko_territory.ISO_NR';
+    const COL_ISO_NR = 'kk_territory.ISO_NR';
 
     /**
      * the column name for the PARENT_ISO_NR field
      */
-    const COL_PARENT_ISO_NR = 'keeko_territory.PARENT_ISO_NR';
+    const COL_PARENT_ISO_NR = 'kk_territory.PARENT_ISO_NR';
 
     /**
      * the column name for the NAME_EN field
      */
-    const COL_NAME_EN = 'keeko_territory.NAME_EN';
+    const COL_NAME_EN = 'kk_territory.NAME_EN';
 
     /**
      * The default string format for model objects of the related table
@@ -131,7 +131,7 @@ class TerritoryTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_territory');
+        $this->setName('kk_territory');
         $this->setPhpName('Territory');
         $this->setClassName('\\keeko\\core\\model\\Territory');
         $this->setPackage('keeko.core.model');
@@ -366,7 +366,7 @@ class TerritoryTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_territory table.
+     * Deletes all rows from the kk_territory table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

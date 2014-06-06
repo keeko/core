@@ -6,7 +6,7 @@ use keeko\core\model\Base\GroupActionQuery as BaseGroupActionQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_group_action' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_group_action' table.
  *
  *
  *

@@ -16,7 +16,7 @@ use keeko\core\model\ApplicationUriQuery as ChildApplicationUriQuery;
 use keeko\core\model\Map\ApplicationUriTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_application_uri' table.
+ * Base class that represents a query for the 'kk_application_uri' table.
  *
  *
  *
@@ -154,7 +154,7 @@ abstract class ApplicationUriQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, HTTPHOST, BASEPATH, SECURE, APPLICATION_ID, LOCALIZATION_ID FROM keeko_application_uri WHERE ID = :p0';
+        $sql = 'SELECT ID, HTTPHOST, BASEPATH, SECURE, APPLICATION_ID, LOCALIZATION_ID FROM kk_application_uri WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -623,7 +623,7 @@ abstract class ApplicationUriQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_application_uri table.
+     * Deletes all rows from the kk_application_uri table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

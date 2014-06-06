@@ -838,7 +838,7 @@ abstract class ApplicationUri implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_application_uri (%s) VALUES (%s)',
+            'INSERT INTO kk_application_uri (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

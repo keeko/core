@@ -639,7 +639,7 @@ abstract class LanguageScope implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_language_scope (%s) VALUES (%s)',
+            'INSERT INTO kk_language_scope (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

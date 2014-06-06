@@ -16,7 +16,7 @@ use keeko\core\model\CountryQuery as ChildCountryQuery;
 use keeko\core\model\Map\CountryTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_country' table.
+ * Base class that represents a query for the 'kk_country' table.
  *
  *
  *
@@ -210,7 +210,7 @@ abstract class CountryQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ISO_NR, ALPHA_2, ALPHA_3, IOC, CAPITAL, TLD, PHONE, TERRITORY_ISO_NR, CURRENCY_ISO_NR, OFFICIAL_LOCAL_NAME, OFFICIAL_EN_NAME, SHORT_LOCAL_NAME, SHORT_EN_NAME, BBOX_SW_LAT, BBOX_SW_LNG, BBOX_NE_LAT, BBOX_NE_LNG FROM keeko_country WHERE ISO_NR = :p0';
+        $sql = 'SELECT ISO_NR, ALPHA_2, ALPHA_3, IOC, CAPITAL, TLD, PHONE, TERRITORY_ISO_NR, CURRENCY_ISO_NR, OFFICIAL_LOCAL_NAME, OFFICIAL_EN_NAME, SHORT_LOCAL_NAME, SHORT_EN_NAME, BBOX_SW_LAT, BBOX_SW_LNG, BBOX_NE_LAT, BBOX_NE_LNG FROM kk_country WHERE ISO_NR = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -1267,7 +1267,7 @@ abstract class CountryQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_country table.
+     * Deletes all rows from the kk_country table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

@@ -756,7 +756,7 @@ abstract class Api implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_api (%s) VALUES (%s)',
+            'INSERT INTO kk_api (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

@@ -6,7 +6,7 @@ use keeko\core\model\Base\ModuleQuery as BaseModuleQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_module' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_module' table.
  *
  *
  *

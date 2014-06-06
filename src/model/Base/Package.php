@@ -802,7 +802,7 @@ abstract class Package implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_package (%s) VALUES (%s)',
+            'INSERT INTO kk_package (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

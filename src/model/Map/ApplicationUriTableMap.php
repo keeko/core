@@ -16,7 +16,7 @@ use keeko\core\model\ApplicationUriQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_application_uri' table.
+ * This class defines the structure of the 'kk_application_uri' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class ApplicationUriTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_application_uri';
+    const TABLE_NAME = 'kk_application_uri';
 
     /**
      * The related Propel class for this table
@@ -74,32 +74,32 @@ class ApplicationUriTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_application_uri.ID';
+    const COL_ID = 'kk_application_uri.ID';
 
     /**
      * the column name for the HTTPHOST field
      */
-    const COL_HTTPHOST = 'keeko_application_uri.HTTPHOST';
+    const COL_HTTPHOST = 'kk_application_uri.HTTPHOST';
 
     /**
      * the column name for the BASEPATH field
      */
-    const COL_BASEPATH = 'keeko_application_uri.BASEPATH';
+    const COL_BASEPATH = 'kk_application_uri.BASEPATH';
 
     /**
      * the column name for the SECURE field
      */
-    const COL_SECURE = 'keeko_application_uri.SECURE';
+    const COL_SECURE = 'kk_application_uri.SECURE';
 
     /**
      * the column name for the APPLICATION_ID field
      */
-    const COL_APPLICATION_ID = 'keeko_application_uri.APPLICATION_ID';
+    const COL_APPLICATION_ID = 'kk_application_uri.APPLICATION_ID';
 
     /**
      * the column name for the LOCALIZATION_ID field
      */
-    const COL_LOCALIZATION_ID = 'keeko_application_uri.LOCALIZATION_ID';
+    const COL_LOCALIZATION_ID = 'kk_application_uri.LOCALIZATION_ID';
 
     /**
      * The default string format for model objects of the related table
@@ -146,7 +146,7 @@ class ApplicationUriTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_application_uri');
+        $this->setName('kk_application_uri');
         $this->setPhpName('ApplicationUri');
         $this->setClassName('\\keeko\\core\\model\\ApplicationUri');
         $this->setPackage('keeko.core.model');
@@ -156,8 +156,8 @@ class ApplicationUriTableMap extends TableMap
         $this->addColumn('HTTPHOST', 'Httphost', 'VARCHAR', true, 255, null);
         $this->addColumn('BASEPATH', 'Basepath', 'VARCHAR', true, 255, null);
         $this->addColumn('SECURE', 'Secure', 'BOOLEAN', false, 1, null);
-        $this->addForeignKey('APPLICATION_ID', 'ApplicationId', 'INTEGER', 'keeko_application', 'ID', true, 10, null);
-        $this->addForeignKey('LOCALIZATION_ID', 'LocalizationId', 'INTEGER', 'keeko_localization', 'ID', true, 10, null);
+        $this->addForeignKey('APPLICATION_ID', 'ApplicationId', 'INTEGER', 'kk_application', 'ID', true, 10, null);
+        $this->addForeignKey('LOCALIZATION_ID', 'LocalizationId', 'INTEGER', 'kk_localization', 'ID', true, 10, null);
     } // initialize()
 
     /**
@@ -391,7 +391,7 @@ class ApplicationUriTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_application_uri table.
+     * Deletes all rows from the kk_application_uri table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

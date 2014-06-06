@@ -16,7 +16,7 @@ use keeko\core\model\LanguageQuery as ChildLanguageQuery;
 use keeko\core\model\Map\LanguageTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_language' table.
+ * Base class that represents a query for the 'kk_language' table.
  *
  *
  *
@@ -174,7 +174,7 @@ abstract class LanguageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, ALPHA_2, ALPHA_3T, ALPHA_3B, ALPHA_3, LOCAL_NAME, EN_NAME, COLLATE, SCOPE_ID, TYPE_ID FROM keeko_language WHERE ID = :p0';
+        $sql = 'SELECT ID, ALPHA_2, ALPHA_3T, ALPHA_3B, ALPHA_3, LOCAL_NAME, EN_NAME, COLLATE, SCOPE_ID, TYPE_ID FROM kk_language WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -834,7 +834,7 @@ abstract class LanguageQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_language table.
+     * Deletes all rows from the kk_language table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

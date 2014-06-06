@@ -16,7 +16,7 @@ use keeko\core\model\SubdivisionQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_subdivision' table.
+ * This class defines the structure of the 'kk_subdivision' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class SubdivisionTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_subdivision';
+    const TABLE_NAME = 'kk_subdivision';
 
     /**
      * The related Propel class for this table
@@ -74,47 +74,47 @@ class SubdivisionTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_subdivision.ID';
+    const COL_ID = 'kk_subdivision.ID';
 
     /**
      * the column name for the ISO field
      */
-    const COL_ISO = 'keeko_subdivision.ISO';
+    const COL_ISO = 'kk_subdivision.ISO';
 
     /**
      * the column name for the NAME field
      */
-    const COL_NAME = 'keeko_subdivision.NAME';
+    const COL_NAME = 'kk_subdivision.NAME';
 
     /**
      * the column name for the LOCAL_NAME field
      */
-    const COL_LOCAL_NAME = 'keeko_subdivision.LOCAL_NAME';
+    const COL_LOCAL_NAME = 'kk_subdivision.LOCAL_NAME';
 
     /**
      * the column name for the EN_NAME field
      */
-    const COL_EN_NAME = 'keeko_subdivision.EN_NAME';
+    const COL_EN_NAME = 'kk_subdivision.EN_NAME';
 
     /**
      * the column name for the ALT_NAMES field
      */
-    const COL_ALT_NAMES = 'keeko_subdivision.ALT_NAMES';
+    const COL_ALT_NAMES = 'kk_subdivision.ALT_NAMES';
 
     /**
      * the column name for the PARENT_ID field
      */
-    const COL_PARENT_ID = 'keeko_subdivision.PARENT_ID';
+    const COL_PARENT_ID = 'kk_subdivision.PARENT_ID';
 
     /**
      * the column name for the COUNTRY_ISO_NR field
      */
-    const COL_COUNTRY_ISO_NR = 'keeko_subdivision.COUNTRY_ISO_NR';
+    const COL_COUNTRY_ISO_NR = 'kk_subdivision.COUNTRY_ISO_NR';
 
     /**
      * the column name for the SUBDIVISION_TYPE_ID field
      */
-    const COL_SUBDIVISION_TYPE_ID = 'keeko_subdivision.SUBDIVISION_TYPE_ID';
+    const COL_SUBDIVISION_TYPE_ID = 'kk_subdivision.SUBDIVISION_TYPE_ID';
 
     /**
      * The default string format for model objects of the related table
@@ -161,7 +161,7 @@ class SubdivisionTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_subdivision');
+        $this->setName('kk_subdivision');
         $this->setPhpName('Subdivision');
         $this->setClassName('\\keeko\\core\\model\\Subdivision');
         $this->setPackage('keeko.core.model');
@@ -174,8 +174,8 @@ class SubdivisionTableMap extends TableMap
         $this->addColumn('EN_NAME', 'EnName', 'VARCHAR', false, 128, null);
         $this->addColumn('ALT_NAMES', 'AltNames', 'VARCHAR', false, 255, null);
         $this->addColumn('PARENT_ID', 'ParentId', 'INTEGER', false, null, null);
-        $this->addForeignKey('COUNTRY_ISO_NR', 'CountryIsoNr', 'INTEGER', 'keeko_country', 'ISO_NR', true, null, null);
-        $this->addForeignKey('SUBDIVISION_TYPE_ID', 'SubdivisionTypeId', 'INTEGER', 'keeko_subdivision_type', 'ID', false, null, null);
+        $this->addForeignKey('COUNTRY_ISO_NR', 'CountryIsoNr', 'INTEGER', 'kk_country', 'ISO_NR', true, null, null);
+        $this->addForeignKey('SUBDIVISION_TYPE_ID', 'SubdivisionTypeId', 'INTEGER', 'kk_subdivision_type', 'ID', false, null, null);
     } // initialize()
 
     /**
@@ -416,7 +416,7 @@ class SubdivisionTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_subdivision table.
+     * Deletes all rows from the kk_subdivision table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

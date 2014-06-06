@@ -1041,7 +1041,7 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_module (%s) VALUES (%s)',
+            'INSERT INTO kk_module (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1437,7 +1437,7 @@ abstract class Module extends ChildPackage implements ActiveRecordInterface
         $validPrimaryKeyFKs = 1;
         $primaryKeyFKs = [];
 
-        //relation keeko_module_fk_7d823f to table keeko_package
+        //relation kk_module_fk_080aef to table kk_package
         if ($this->aPackage && $hash = spl_object_hash($this->aPackage)) {
             $primaryKeyFKs[] = $hash;
         } else {

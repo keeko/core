@@ -16,7 +16,7 @@ use keeko\core\model\LanguageQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_language' table.
+ * This class defines the structure of the 'kk_language' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class LanguageTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_language';
+    const TABLE_NAME = 'kk_language';
 
     /**
      * The related Propel class for this table
@@ -74,52 +74,52 @@ class LanguageTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_language.ID';
+    const COL_ID = 'kk_language.ID';
 
     /**
      * the column name for the ALPHA_2 field
      */
-    const COL_ALPHA_2 = 'keeko_language.ALPHA_2';
+    const COL_ALPHA_2 = 'kk_language.ALPHA_2';
 
     /**
      * the column name for the ALPHA_3T field
      */
-    const COL_ALPHA_3T = 'keeko_language.ALPHA_3T';
+    const COL_ALPHA_3T = 'kk_language.ALPHA_3T';
 
     /**
      * the column name for the ALPHA_3B field
      */
-    const COL_ALPHA_3B = 'keeko_language.ALPHA_3B';
+    const COL_ALPHA_3B = 'kk_language.ALPHA_3B';
 
     /**
      * the column name for the ALPHA_3 field
      */
-    const COL_ALPHA_3 = 'keeko_language.ALPHA_3';
+    const COL_ALPHA_3 = 'kk_language.ALPHA_3';
 
     /**
      * the column name for the LOCAL_NAME field
      */
-    const COL_LOCAL_NAME = 'keeko_language.LOCAL_NAME';
+    const COL_LOCAL_NAME = 'kk_language.LOCAL_NAME';
 
     /**
      * the column name for the EN_NAME field
      */
-    const COL_EN_NAME = 'keeko_language.EN_NAME';
+    const COL_EN_NAME = 'kk_language.EN_NAME';
 
     /**
      * the column name for the COLLATE field
      */
-    const COL_COLLATE = 'keeko_language.COLLATE';
+    const COL_COLLATE = 'kk_language.COLLATE';
 
     /**
      * the column name for the SCOPE_ID field
      */
-    const COL_SCOPE_ID = 'keeko_language.SCOPE_ID';
+    const COL_SCOPE_ID = 'kk_language.SCOPE_ID';
 
     /**
      * the column name for the TYPE_ID field
      */
-    const COL_TYPE_ID = 'keeko_language.TYPE_ID';
+    const COL_TYPE_ID = 'kk_language.TYPE_ID';
 
     /**
      * The default string format for model objects of the related table
@@ -166,7 +166,7 @@ class LanguageTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_language');
+        $this->setName('kk_language');
         $this->setPhpName('Language');
         $this->setClassName('\\keeko\\core\\model\\Language');
         $this->setPackage('keeko.core.model');
@@ -180,8 +180,8 @@ class LanguageTableMap extends TableMap
         $this->addColumn('LOCAL_NAME', 'LocalName', 'VARCHAR', false, 128, null);
         $this->addColumn('EN_NAME', 'EnName', 'VARCHAR', false, 128, null);
         $this->addColumn('COLLATE', 'Collate', 'VARCHAR', false, 10, null);
-        $this->addForeignKey('SCOPE_ID', 'ScopeId', 'INTEGER', 'keeko_language_scope', 'ID', false, 10, null);
-        $this->addForeignKey('TYPE_ID', 'TypeId', 'INTEGER', 'keeko_language_type', 'ID', false, 10, null);
+        $this->addForeignKey('SCOPE_ID', 'ScopeId', 'INTEGER', 'kk_language_scope', 'ID', false, 10, null);
+        $this->addForeignKey('TYPE_ID', 'TypeId', 'INTEGER', 'kk_language_type', 'ID', false, 10, null);
     } // initialize()
 
     /**
@@ -424,7 +424,7 @@ class LanguageTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_language table.
+     * Deletes all rows from the kk_language table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

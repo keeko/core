@@ -928,7 +928,7 @@ abstract class Currency implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_currency (%s) VALUES (%s)',
+            'INSERT INTO kk_currency (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

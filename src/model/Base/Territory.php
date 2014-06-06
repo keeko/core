@@ -676,7 +676,7 @@ abstract class Territory implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_territory (%s) VALUES (%s)',
+            'INSERT INTO kk_territory (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

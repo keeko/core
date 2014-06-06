@@ -16,7 +16,7 @@ use keeko\core\model\GroupUserQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_group_user' table.
+ * This class defines the structure of the 'kk_group_user' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class GroupUserTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_group_user';
+    const TABLE_NAME = 'kk_group_user';
 
     /**
      * The related Propel class for this table
@@ -74,12 +74,12 @@ class GroupUserTableMap extends TableMap
     /**
      * the column name for the USER_ID field
      */
-    const COL_USER_ID = 'keeko_group_user.USER_ID';
+    const COL_USER_ID = 'kk_group_user.USER_ID';
 
     /**
      * the column name for the GROUP_ID field
      */
-    const COL_GROUP_ID = 'keeko_group_user.GROUP_ID';
+    const COL_GROUP_ID = 'kk_group_user.GROUP_ID';
 
     /**
      * The default string format for model objects of the related table
@@ -126,15 +126,15 @@ class GroupUserTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_group_user');
+        $this->setName('kk_group_user');
         $this->setPhpName('GroupUser');
         $this->setClassName('\\keeko\\core\\model\\GroupUser');
         $this->setPackage('keeko.core.model');
         $this->setUseIdGenerator(false);
         $this->setIsCrossRef(true);
         // columns
-        $this->addForeignPrimaryKey('USER_ID', 'UserId', 'INTEGER' , 'keeko_user', 'ID', true, 10, null);
-        $this->addForeignPrimaryKey('GROUP_ID', 'GroupId', 'INTEGER' , 'keeko_group', 'ID', true, 10, null);
+        $this->addForeignPrimaryKey('USER_ID', 'UserId', 'INTEGER' , 'kk_user', 'ID', true, 10, null);
+        $this->addForeignPrimaryKey('GROUP_ID', 'GroupId', 'INTEGER' , 'kk_group', 'ID', true, 10, null);
     } // initialize()
 
     /**
@@ -432,7 +432,7 @@ class GroupUserTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_group_user table.
+     * Deletes all rows from the kk_group_user table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

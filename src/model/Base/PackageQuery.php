@@ -16,7 +16,7 @@ use keeko\core\model\PackageQuery as ChildPackageQuery;
 use keeko\core\model\Map\PackageTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_package' table.
+ * Base class that represents a query for the 'kk_package' table.
  *
  *
  *
@@ -154,7 +154,7 @@ abstract class PackageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, NAME, TITLE, DESCRIPTION, INSTALLED_VERSION, DESCENDANT_CLASS FROM keeko_package WHERE ID = :p0';
+        $sql = 'SELECT ID, NAME, TITLE, DESCRIPTION, INSTALLED_VERSION, DESCENDANT_CLASS FROM kk_package WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -593,7 +593,7 @@ abstract class PackageQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_package table.
+     * Deletes all rows from the kk_package table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

@@ -16,7 +16,7 @@ use keeko\core\model\ApiQuery as ChildApiQuery;
 use keeko\core\model\Map\ApiTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_api' table.
+ * Base class that represents a query for the 'kk_api' table.
  *
  *
  *
@@ -146,7 +146,7 @@ abstract class ApiQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, ROUTE, METHOD, ACTION_ID, REQUIRED_PARAMS FROM keeko_api WHERE ID = :p0';
+        $sql = 'SELECT ID, ROUTE, METHOD, ACTION_ID, REQUIRED_PARAMS FROM kk_api WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -499,7 +499,7 @@ abstract class ApiQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_api table.
+     * Deletes all rows from the kk_api table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

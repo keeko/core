@@ -16,7 +16,7 @@ use keeko\core\model\ModuleQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_module' table.
+ * This class defines the structure of the 'kk_module' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class ModuleTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_module';
+    const TABLE_NAME = 'kk_module';
 
     /**
      * The related Propel class for this table
@@ -74,52 +74,52 @@ class ModuleTableMap extends TableMap
     /**
      * the column name for the CLASS_NAME field
      */
-    const COL_CLASS_NAME = 'keeko_module.CLASS_NAME';
+    const COL_CLASS_NAME = 'kk_module.CLASS_NAME';
 
     /**
      * the column name for the ACTIVATED_VERSION field
      */
-    const COL_ACTIVATED_VERSION = 'keeko_module.ACTIVATED_VERSION';
+    const COL_ACTIVATED_VERSION = 'kk_module.ACTIVATED_VERSION';
 
     /**
      * the column name for the DEFAULT_ACTION field
      */
-    const COL_DEFAULT_ACTION = 'keeko_module.DEFAULT_ACTION';
+    const COL_DEFAULT_ACTION = 'kk_module.DEFAULT_ACTION';
 
     /**
      * the column name for the SLUG field
      */
-    const COL_SLUG = 'keeko_module.SLUG';
+    const COL_SLUG = 'kk_module.SLUG';
 
     /**
      * the column name for the HAS_API field
      */
-    const COL_HAS_API = 'keeko_module.HAS_API';
+    const COL_HAS_API = 'kk_module.HAS_API';
 
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_module.ID';
+    const COL_ID = 'kk_module.ID';
 
     /**
      * the column name for the NAME field
      */
-    const COL_NAME = 'keeko_module.NAME';
+    const COL_NAME = 'kk_module.NAME';
 
     /**
      * the column name for the TITLE field
      */
-    const COL_TITLE = 'keeko_module.TITLE';
+    const COL_TITLE = 'kk_module.TITLE';
 
     /**
      * the column name for the DESCRIPTION field
      */
-    const COL_DESCRIPTION = 'keeko_module.DESCRIPTION';
+    const COL_DESCRIPTION = 'kk_module.DESCRIPTION';
 
     /**
      * the column name for the INSTALLED_VERSION field
      */
-    const COL_INSTALLED_VERSION = 'keeko_module.INSTALLED_VERSION';
+    const COL_INSTALLED_VERSION = 'kk_module.INSTALLED_VERSION';
 
     /**
      * The default string format for model objects of the related table
@@ -166,7 +166,7 @@ class ModuleTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_module');
+        $this->setName('kk_module');
         $this->setPhpName('Module');
         $this->setClassName('\\keeko\\core\\model\\Module');
         $this->setPackage('keeko.core.model');
@@ -177,7 +177,7 @@ class ModuleTableMap extends TableMap
         $this->addColumn('DEFAULT_ACTION', 'DefaultAction', 'VARCHAR', false, 255, null);
         $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 255, null);
         $this->addColumn('HAS_API', 'Api', 'BOOLEAN', false, 1, false);
-        $this->addForeignPrimaryKey('ID', 'Id', 'INTEGER' , 'keeko_package', 'ID', true, null, null);
+        $this->addForeignPrimaryKey('ID', 'Id', 'INTEGER' , 'kk_package', 'ID', true, null, null);
         $this->addColumn('NAME', 'Name', 'VARCHAR', false, 255, null);
         $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 255, null);
         $this->addColumn('DESCRIPTION', 'Description', 'LONGVARCHAR', false, null, null);
@@ -206,7 +206,7 @@ class ModuleTableMap extends TableMap
         );
     } // getBehaviors()
     /**
-     * Method to invalidate the instance pool of all tables related to keeko_module     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to kk_module     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
@@ -445,7 +445,7 @@ class ModuleTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_module table.
+     * Deletes all rows from the kk_module table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

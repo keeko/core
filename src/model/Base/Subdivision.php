@@ -982,7 +982,7 @@ abstract class Subdivision implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_subdivision (%s) VALUES (%s)',
+            'INSERT INTO kk_subdivision (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

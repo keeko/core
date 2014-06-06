@@ -883,7 +883,7 @@ abstract class Localization implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_localization (%s) VALUES (%s)',
+            'INSERT INTO kk_localization (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

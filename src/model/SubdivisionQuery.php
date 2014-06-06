@@ -6,7 +6,7 @@ use keeko\core\model\Base\SubdivisionQuery as BaseSubdivisionQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_subdivision' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_subdivision' table.
  *
  *
  *

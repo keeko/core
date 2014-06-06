@@ -648,7 +648,7 @@ abstract class GroupAction implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_group_action (%s) VALUES (%s)',
+            'INSERT INTO kk_group_action (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -918,14 +918,14 @@ abstract class GroupAction implements ActiveRecordInterface
         $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
 
-        //relation keeko_group_action_fk_b2818c to table keeko_group
+        //relation kk_group_action_fk_8134fe to table kk_group
         if ($this->aGroup && $hash = spl_object_hash($this->aGroup)) {
             $primaryKeyFKs[] = $hash;
         } else {
             $validPrimaryKeyFKs = false;
         }
 
-        //relation keeko_group_action_fk_9295a3 to table keeko_action
+        //relation kk_group_action_fk_716bac to table kk_action
         if ($this->aAction && $hash = spl_object_hash($this->aAction)) {
             $primaryKeyFKs[] = $hash;
         } else {

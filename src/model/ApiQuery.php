@@ -6,7 +6,7 @@ use keeko\core\model\Base\ApiQuery as BaseApiQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_api' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_api' table.
  *
  *
  *

@@ -16,7 +16,7 @@ use keeko\core\model\PackageQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_package' table.
+ * This class defines the structure of the 'kk_package' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class PackageTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_package';
+    const TABLE_NAME = 'kk_package';
 
     /**
      * The related Propel class for this table
@@ -74,32 +74,32 @@ class PackageTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_package.ID';
+    const COL_ID = 'kk_package.ID';
 
     /**
      * the column name for the NAME field
      */
-    const COL_NAME = 'keeko_package.NAME';
+    const COL_NAME = 'kk_package.NAME';
 
     /**
      * the column name for the TITLE field
      */
-    const COL_TITLE = 'keeko_package.TITLE';
+    const COL_TITLE = 'kk_package.TITLE';
 
     /**
      * the column name for the DESCRIPTION field
      */
-    const COL_DESCRIPTION = 'keeko_package.DESCRIPTION';
+    const COL_DESCRIPTION = 'kk_package.DESCRIPTION';
 
     /**
      * the column name for the INSTALLED_VERSION field
      */
-    const COL_INSTALLED_VERSION = 'keeko_package.INSTALLED_VERSION';
+    const COL_INSTALLED_VERSION = 'kk_package.INSTALLED_VERSION';
 
     /**
      * the column name for the DESCENDANT_CLASS field
      */
-    const COL_DESCENDANT_CLASS = 'keeko_package.DESCENDANT_CLASS';
+    const COL_DESCENDANT_CLASS = 'kk_package.DESCENDANT_CLASS';
 
     /**
      * The default string format for model objects of the related table
@@ -146,7 +146,7 @@ class PackageTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_package');
+        $this->setName('kk_package');
         $this->setPhpName('Package');
         $this->setClassName('\\keeko\\core\\model\\Package');
         $this->setPackage('keeko.core.model');
@@ -182,7 +182,7 @@ class PackageTableMap extends TableMap
         );
     } // getBehaviors()
     /**
-     * Method to invalidate the instance pool of all tables related to keeko_package     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to kk_package     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
@@ -414,7 +414,7 @@ class PackageTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_package table.
+     * Deletes all rows from the kk_package table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

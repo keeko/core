@@ -16,7 +16,7 @@ use keeko\core\model\GroupActionQuery as ChildGroupActionQuery;
 use keeko\core\model\Map\GroupActionTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_group_action' table.
+ * Base class that represents a query for the 'kk_group_action' table.
  *
  *
  *
@@ -138,7 +138,7 @@ abstract class GroupActionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT GROUP_ID, ACTION_ID FROM keeko_group_action WHERE GROUP_ID = :p0 AND ACTION_ID = :p1';
+        $sql = 'SELECT GROUP_ID, ACTION_ID FROM kk_group_action WHERE GROUP_ID = :p0 AND ACTION_ID = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -495,7 +495,7 @@ abstract class GroupActionQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_group_action table.
+     * Deletes all rows from the kk_group_action table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

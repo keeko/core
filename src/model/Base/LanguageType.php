@@ -639,7 +639,7 @@ abstract class LanguageType implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_language_type (%s) VALUES (%s)',
+            'INSERT INTO kk_language_type (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

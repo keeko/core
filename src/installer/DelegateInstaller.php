@@ -14,13 +14,6 @@ use Composer\Repository\WritableRepositoryInterface;
 
 class DelegateInstaller {
 
-	private static $isKeekoCorePresent = false;
-
-	public static function preInstall(CommandEvent $event) {
-		$packages = $event->getComposer()->getRepositoryManager()->getLocalRepository()->findPackages('keeko/core');
-		self::$isKeekoCorePresent = count($packages) > 0;
-	}
-
 	public static function installPackage(PackageEvent $event) {
 		if (!self::bootstrap()) {
 			return;

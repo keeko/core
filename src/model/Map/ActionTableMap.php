@@ -16,7 +16,7 @@ use keeko\core\model\ActionQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_action' table.
+ * This class defines the structure of the 'kk_action' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class ActionTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_action';
+    const TABLE_NAME = 'kk_action';
 
     /**
      * The related Propel class for this table
@@ -74,32 +74,32 @@ class ActionTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_action.ID';
+    const COL_ID = 'kk_action.ID';
 
     /**
      * the column name for the NAME field
      */
-    const COL_NAME = 'keeko_action.NAME';
+    const COL_NAME = 'kk_action.NAME';
 
     /**
      * the column name for the TITLE field
      */
-    const COL_TITLE = 'keeko_action.TITLE';
+    const COL_TITLE = 'kk_action.TITLE';
 
     /**
      * the column name for the DESCRIPTION field
      */
-    const COL_DESCRIPTION = 'keeko_action.DESCRIPTION';
+    const COL_DESCRIPTION = 'kk_action.DESCRIPTION';
 
     /**
      * the column name for the CLASS_NAME field
      */
-    const COL_CLASS_NAME = 'keeko_action.CLASS_NAME';
+    const COL_CLASS_NAME = 'kk_action.CLASS_NAME';
 
     /**
      * the column name for the MODULE_ID field
      */
-    const COL_MODULE_ID = 'keeko_action.MODULE_ID';
+    const COL_MODULE_ID = 'kk_action.MODULE_ID';
 
     /**
      * The default string format for model objects of the related table
@@ -146,7 +146,7 @@ class ActionTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_action');
+        $this->setName('kk_action');
         $this->setPhpName('Action');
         $this->setClassName('\\keeko\\core\\model\\Action');
         $this->setPackage('keeko.core.model');
@@ -157,7 +157,7 @@ class ActionTableMap extends TableMap
         $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 255, null);
         $this->addColumn('DESCRIPTION', 'Description', 'VARCHAR', false, 255, null);
         $this->addColumn('CLASS_NAME', 'ClassName', 'VARCHAR', true, 255, null);
-        $this->addForeignKey('MODULE_ID', 'ModuleId', 'INTEGER', 'keeko_module', 'ID', true, 10, null);
+        $this->addForeignKey('MODULE_ID', 'ModuleId', 'INTEGER', 'kk_module', 'ID', true, 10, null);
     } // initialize()
 
     /**
@@ -171,7 +171,7 @@ class ActionTableMap extends TableMap
         $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Groups');
     } // buildRelations()
     /**
-     * Method to invalidate the instance pool of all tables related to keeko_action     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to kk_action     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
@@ -402,7 +402,7 @@ class ActionTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_action table.
+     * Deletes all rows from the kk_action table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

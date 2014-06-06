@@ -1247,7 +1247,7 @@ abstract class Group implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_group (%s) VALUES (%s)',
+            'INSERT INTO kk_group (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -2349,7 +2349,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Gets a collection of ChildUser objects related by a many-to-many relationship
-     * to the current object by way of the keeko_group_user cross-reference table.
+     * to the current object by way of the kk_group_user cross-reference table.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -2399,7 +2399,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Sets a collection of User objects related by a many-to-many relationship
-     * to the current object by way of the keeko_group_user cross-reference table.
+     * to the current object by way of the kk_group_user cross-reference table.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
@@ -2432,7 +2432,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Gets the number of User objects related by a many-to-many relationship
-     * to the current object by way of the keeko_group_user cross-reference table.
+     * to the current object by way of the kk_group_user cross-reference table.
      *
      * @param      Criteria $criteria Optional query object to filter the query
      * @param      boolean $distinct Set to true to force count distinct
@@ -2468,7 +2468,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Associate a ChildUser to this object
-     * through the keeko_group_user cross reference table.
+     * through the kk_group_user cross reference table.
      *
      * @param ChildUser $user
      * @return ChildGroup The current object (for fluent API support)
@@ -2515,7 +2515,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Remove user of this object
-     * through the keeko_group_user cross reference table.
+     * through the kk_group_user cross reference table.
      *
      * @param ChildUser $user
      * @return ChildGroup The current object (for fluent API support)
@@ -2591,7 +2591,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Gets a collection of ChildAction objects related by a many-to-many relationship
-     * to the current object by way of the keeko_group_action cross-reference table.
+     * to the current object by way of the kk_group_action cross-reference table.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -2641,7 +2641,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Sets a collection of Action objects related by a many-to-many relationship
-     * to the current object by way of the keeko_group_action cross-reference table.
+     * to the current object by way of the kk_group_action cross-reference table.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
@@ -2674,7 +2674,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Gets the number of Action objects related by a many-to-many relationship
-     * to the current object by way of the keeko_group_action cross-reference table.
+     * to the current object by way of the kk_group_action cross-reference table.
      *
      * @param      Criteria $criteria Optional query object to filter the query
      * @param      boolean $distinct Set to true to force count distinct
@@ -2710,7 +2710,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Associate a ChildAction to this object
-     * through the keeko_group_action cross reference table.
+     * through the kk_group_action cross reference table.
      *
      * @param ChildAction $action
      * @return ChildGroup The current object (for fluent API support)
@@ -2757,7 +2757,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Remove action of this object
-     * through the keeko_group_action cross reference table.
+     * through the kk_group_action cross reference table.
      *
      * @param ChildAction $action
      * @return ChildGroup The current object (for fluent API support)

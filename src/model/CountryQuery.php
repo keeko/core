@@ -6,7 +6,7 @@ use keeko\core\model\Base\CountryQuery as BaseCountryQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_country' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_country' table.
  *
  *
  *

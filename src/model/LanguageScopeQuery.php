@@ -6,7 +6,7 @@ use keeko\core\model\Base\LanguageScopeQuery as BaseLanguageScopeQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_language_scope' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_language_scope' table.
  *
  *
  *

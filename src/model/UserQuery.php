@@ -6,7 +6,7 @@ use keeko\core\model\Base\UserQuery as BaseUserQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_user' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_user' table.
  *
  *
  *

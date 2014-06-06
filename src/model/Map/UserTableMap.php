@@ -16,7 +16,7 @@ use keeko\core\model\UserQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_user' table.
+ * This class defines the structure of the 'kk_user' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class UserTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_user';
+    const TABLE_NAME = 'kk_user';
 
     /**
      * The related Propel class for this table
@@ -74,112 +74,112 @@ class UserTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_user.ID';
+    const COL_ID = 'kk_user.ID';
 
     /**
      * the column name for the LOGIN_NAME field
      */
-    const COL_LOGIN_NAME = 'keeko_user.LOGIN_NAME';
+    const COL_LOGIN_NAME = 'kk_user.LOGIN_NAME';
 
     /**
      * the column name for the PASSWORD field
      */
-    const COL_PASSWORD = 'keeko_user.PASSWORD';
+    const COL_PASSWORD = 'kk_user.PASSWORD';
 
     /**
      * the column name for the GIVEN_NAME field
      */
-    const COL_GIVEN_NAME = 'keeko_user.GIVEN_NAME';
+    const COL_GIVEN_NAME = 'kk_user.GIVEN_NAME';
 
     /**
      * the column name for the FAMILY_NAME field
      */
-    const COL_FAMILY_NAME = 'keeko_user.FAMILY_NAME';
+    const COL_FAMILY_NAME = 'kk_user.FAMILY_NAME';
 
     /**
      * the column name for the DISPLAY_NAME field
      */
-    const COL_DISPLAY_NAME = 'keeko_user.DISPLAY_NAME';
+    const COL_DISPLAY_NAME = 'kk_user.DISPLAY_NAME';
 
     /**
      * the column name for the EMAIL field
      */
-    const COL_EMAIL = 'keeko_user.EMAIL';
+    const COL_EMAIL = 'kk_user.EMAIL';
 
     /**
      * the column name for the COUNTRY_ISO_NR field
      */
-    const COL_COUNTRY_ISO_NR = 'keeko_user.COUNTRY_ISO_NR';
+    const COL_COUNTRY_ISO_NR = 'kk_user.COUNTRY_ISO_NR';
 
     /**
      * the column name for the SUBDIVISION_ID field
      */
-    const COL_SUBDIVISION_ID = 'keeko_user.SUBDIVISION_ID';
+    const COL_SUBDIVISION_ID = 'kk_user.SUBDIVISION_ID';
 
     /**
      * the column name for the ADDRESS field
      */
-    const COL_ADDRESS = 'keeko_user.ADDRESS';
+    const COL_ADDRESS = 'kk_user.ADDRESS';
 
     /**
      * the column name for the ADDRESS2 field
      */
-    const COL_ADDRESS2 = 'keeko_user.ADDRESS2';
+    const COL_ADDRESS2 = 'kk_user.ADDRESS2';
 
     /**
      * the column name for the BIRTHDAY field
      */
-    const COL_BIRTHDAY = 'keeko_user.BIRTHDAY';
+    const COL_BIRTHDAY = 'kk_user.BIRTHDAY';
 
     /**
      * the column name for the SEX field
      */
-    const COL_SEX = 'keeko_user.SEX';
+    const COL_SEX = 'kk_user.SEX';
 
     /**
      * the column name for the CITY field
      */
-    const COL_CITY = 'keeko_user.CITY';
+    const COL_CITY = 'kk_user.CITY';
 
     /**
      * the column name for the POSTAL_CODE field
      */
-    const COL_POSTAL_CODE = 'keeko_user.POSTAL_CODE';
+    const COL_POSTAL_CODE = 'kk_user.POSTAL_CODE';
 
     /**
      * the column name for the PASSWORD_RECOVER_CODE field
      */
-    const COL_PASSWORD_RECOVER_CODE = 'keeko_user.PASSWORD_RECOVER_CODE';
+    const COL_PASSWORD_RECOVER_CODE = 'kk_user.PASSWORD_RECOVER_CODE';
 
     /**
      * the column name for the PASSWORD_RECOVER_TIME field
      */
-    const COL_PASSWORD_RECOVER_TIME = 'keeko_user.PASSWORD_RECOVER_TIME';
+    const COL_PASSWORD_RECOVER_TIME = 'kk_user.PASSWORD_RECOVER_TIME';
 
     /**
      * the column name for the LOCATION_STATUS field
      */
-    const COL_LOCATION_STATUS = 'keeko_user.LOCATION_STATUS';
+    const COL_LOCATION_STATUS = 'kk_user.LOCATION_STATUS';
 
     /**
      * the column name for the LATITUDE field
      */
-    const COL_LATITUDE = 'keeko_user.LATITUDE';
+    const COL_LATITUDE = 'kk_user.LATITUDE';
 
     /**
      * the column name for the LONGITUDE field
      */
-    const COL_LONGITUDE = 'keeko_user.LONGITUDE';
+    const COL_LONGITUDE = 'kk_user.LONGITUDE';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = 'keeko_user.CREATED_AT';
+    const COL_CREATED_AT = 'kk_user.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = 'keeko_user.UPDATED_AT';
+    const COL_UPDATED_AT = 'kk_user.UPDATED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -226,7 +226,7 @@ class UserTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_user');
+        $this->setName('kk_user');
         $this->setPhpName('User');
         $this->setClassName('\\keeko\\core\\model\\User');
         $this->setPackage('keeko.core.model');
@@ -239,8 +239,8 @@ class UserTableMap extends TableMap
         $this->addColumn('FAMILY_NAME', 'FamilyName', 'VARCHAR', false, 100, null);
         $this->addColumn('DISPLAY_NAME', 'DisplayName', 'VARCHAR', false, 100, null);
         $this->addColumn('EMAIL', 'Email', 'VARCHAR', true, 255, null);
-        $this->addForeignKey('COUNTRY_ISO_NR', 'CountryIsoNr', 'INTEGER', 'keeko_country', 'ISO_NR', false, null, null);
-        $this->addForeignKey('SUBDIVISION_ID', 'SubdivisionId', 'INTEGER', 'keeko_subdivision', 'ID', false, null, null);
+        $this->addForeignKey('COUNTRY_ISO_NR', 'CountryIsoNr', 'INTEGER', 'kk_country', 'ISO_NR', false, null, null);
+        $this->addForeignKey('SUBDIVISION_ID', 'SubdivisionId', 'INTEGER', 'kk_subdivision', 'ID', false, null, null);
         $this->addColumn('ADDRESS', 'Address', 'LONGVARCHAR', false, null, null);
         $this->addColumn('ADDRESS2', 'Address2', 'LONGVARCHAR', false, null, null);
         $this->addColumn('BIRTHDAY', 'Birthday', 'DATE', false, null, null);
@@ -536,7 +536,7 @@ class UserTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_user table.
+     * Deletes all rows from the kk_user table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

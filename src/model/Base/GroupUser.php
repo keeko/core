@@ -648,7 +648,7 @@ abstract class GroupUser implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO keeko_group_user (%s) VALUES (%s)',
+            'INSERT INTO kk_group_user (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -918,14 +918,14 @@ abstract class GroupUser implements ActiveRecordInterface
         $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
 
-        //relation keeko_group_user_fk_b2818c to table keeko_group
+        //relation kk_group_user_fk_8134fe to table kk_group
         if ($this->aGroup && $hash = spl_object_hash($this->aGroup)) {
             $primaryKeyFKs[] = $hash;
         } else {
             $validPrimaryKeyFKs = false;
         }
 
-        //relation keeko_group_user_fk_9f6960 to table keeko_user
+        //relation kk_group_user_fk_1efe60 to table kk_user
         if ($this->aUser && $hash = spl_object_hash($this->aUser)) {
             $primaryKeyFKs[] = $hash;
         } else {

@@ -16,7 +16,7 @@ use keeko\core\model\TerritoryQuery as ChildTerritoryQuery;
 use keeko\core\model\Map\TerritoryTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_territory' table.
+ * Base class that represents a query for the 'kk_territory' table.
  *
  *
  *
@@ -138,7 +138,7 @@ abstract class TerritoryQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ISO_NR, PARENT_ISO_NR, NAME_EN FROM keeko_territory WHERE ISO_NR = :p0';
+        $sql = 'SELECT ISO_NR, PARENT_ISO_NR, NAME_EN FROM kk_territory WHERE ISO_NR = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -429,7 +429,7 @@ abstract class TerritoryQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_territory table.
+     * Deletes all rows from the kk_territory table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

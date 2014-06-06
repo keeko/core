@@ -16,7 +16,7 @@ use keeko\core\model\ActionQuery as ChildActionQuery;
 use keeko\core\model\Map\ActionTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_action' table.
+ * Base class that represents a query for the 'kk_action' table.
  *
  *
  *
@@ -158,7 +158,7 @@ abstract class ActionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, NAME, TITLE, DESCRIPTION, CLASS_NAME, MODULE_ID FROM keeko_action WHERE ID = :p0';
+        $sql = 'SELECT ID, NAME, TITLE, DESCRIPTION, CLASS_NAME, MODULE_ID FROM kk_action WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -671,7 +671,7 @@ abstract class ActionQuery extends ModelCriteria
 
     /**
      * Filter the query by a related Group object
-     * using the keeko_group_action table as cross reference
+     * using the kk_group_action table as cross reference
      *
      * @param Group $group the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -703,7 +703,7 @@ abstract class ActionQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_action table.
+     * Deletes all rows from the kk_action table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

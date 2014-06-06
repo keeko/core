@@ -16,7 +16,7 @@ use keeko\core\model\LocalizationQuery as ChildLocalizationQuery;
 use keeko\core\model\Map\LocalizationTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_localization' table.
+ * Base class that represents a query for the 'kk_localization' table.
  *
  *
  *
@@ -162,7 +162,7 @@ abstract class LocalizationQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, PARENT_ID, LANGUAGE_ID, COUNTRY_ISO_NR, IS_DEFAULT FROM keeko_localization WHERE ID = :p0';
+        $sql = 'SELECT ID, PARENT_ID, LANGUAGE_ID, COUNTRY_ISO_NR, IS_DEFAULT FROM kk_localization WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -837,7 +837,7 @@ abstract class LocalizationQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_localization table.
+     * Deletes all rows from the kk_localization table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

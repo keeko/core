@@ -6,7 +6,7 @@ use keeko\core\model\Base\GroupUserQuery as BaseGroupUserQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'keeko_group_user' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_group_user' table.
  *
  *
  *

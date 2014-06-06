@@ -16,7 +16,7 @@ use keeko\core\model\ApplicationQuery;
 
 
 /**
- * This class defines the structure of the 'keeko_application' table.
+ * This class defines the structure of the 'kk_application' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class ApplicationTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'keeko_application';
+    const TABLE_NAME = 'kk_application';
 
     /**
      * The related Propel class for this table
@@ -74,32 +74,32 @@ class ApplicationTableMap extends TableMap
     /**
      * the column name for the CLASS_NAME field
      */
-    const COL_CLASS_NAME = 'keeko_application.CLASS_NAME';
+    const COL_CLASS_NAME = 'kk_application.CLASS_NAME';
 
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'keeko_application.ID';
+    const COL_ID = 'kk_application.ID';
 
     /**
      * the column name for the NAME field
      */
-    const COL_NAME = 'keeko_application.NAME';
+    const COL_NAME = 'kk_application.NAME';
 
     /**
      * the column name for the TITLE field
      */
-    const COL_TITLE = 'keeko_application.TITLE';
+    const COL_TITLE = 'kk_application.TITLE';
 
     /**
      * the column name for the DESCRIPTION field
      */
-    const COL_DESCRIPTION = 'keeko_application.DESCRIPTION';
+    const COL_DESCRIPTION = 'kk_application.DESCRIPTION';
 
     /**
      * the column name for the INSTALLED_VERSION field
      */
-    const COL_INSTALLED_VERSION = 'keeko_application.INSTALLED_VERSION';
+    const COL_INSTALLED_VERSION = 'kk_application.INSTALLED_VERSION';
 
     /**
      * The default string format for model objects of the related table
@@ -146,14 +146,14 @@ class ApplicationTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('keeko_application');
+        $this->setName('kk_application');
         $this->setPhpName('Application');
         $this->setClassName('\\keeko\\core\\model\\Application');
         $this->setPackage('keeko.core.model');
         $this->setUseIdGenerator(false);
         // columns
         $this->addColumn('CLASS_NAME', 'ClassName', 'VARCHAR', true, 255, null);
-        $this->addForeignPrimaryKey('ID', 'Id', 'INTEGER' , 'keeko_package', 'ID', true, null, null);
+        $this->addForeignPrimaryKey('ID', 'Id', 'INTEGER' , 'kk_package', 'ID', true, null, null);
         $this->addColumn('NAME', 'Name', 'VARCHAR', false, 255, null);
         $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 255, null);
         $this->addColumn('DESCRIPTION', 'Description', 'LONGVARCHAR', false, null, null);
@@ -404,7 +404,7 @@ class ApplicationTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the keeko_application table.
+     * Deletes all rows from the kk_application table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

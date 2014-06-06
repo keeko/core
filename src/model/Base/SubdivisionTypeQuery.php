@@ -16,7 +16,7 @@ use keeko\core\model\SubdivisionTypeQuery as ChildSubdivisionTypeQuery;
 use keeko\core\model\Map\SubdivisionTypeTableMap;
 
 /**
- * Base class that represents a query for the 'keeko_subdivision_type' table.
+ * Base class that represents a query for the 'kk_subdivision_type' table.
  *
  *
  *
@@ -134,7 +134,7 @@ abstract class SubdivisionTypeQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, NAME FROM keeko_subdivision_type WHERE ID = :p0';
+        $sql = 'SELECT ID, NAME FROM kk_subdivision_type WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -384,7 +384,7 @@ abstract class SubdivisionTypeQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the keeko_subdivision_type table.
+     * Deletes all rows from the kk_subdivision_type table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
