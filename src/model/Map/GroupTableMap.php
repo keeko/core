@@ -77,9 +77,9 @@ class GroupTableMap extends TableMap
     const COL_ID = 'kk_group.ID';
 
     /**
-     * the column name for the USER_ID field
+     * the column name for the OWNER_ID field
      */
-    const COL_USER_ID = 'kk_group.USER_ID';
+    const COL_OWNER_ID = 'kk_group.OWNER_ID';
 
     /**
      * the column name for the NAME field
@@ -128,11 +128,11 @@ class GroupTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'UserId', 'Name', 'IsGuest', 'IsDefault', 'IsActive', 'IsSystem', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'userId', 'name', 'isGuest', 'isDefault', 'isActive', 'isSystem', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(GroupTableMap::COL_ID, GroupTableMap::COL_USER_ID, GroupTableMap::COL_NAME, GroupTableMap::COL_IS_GUEST, GroupTableMap::COL_IS_DEFAULT, GroupTableMap::COL_IS_ACTIVE, GroupTableMap::COL_IS_SYSTEM, GroupTableMap::COL_CREATED_AT, GroupTableMap::COL_UPDATED_AT, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_USER_ID', 'COL_NAME', 'COL_IS_GUEST', 'COL_IS_DEFAULT', 'COL_IS_ACTIVE', 'COL_IS_SYSTEM', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
-        self::TYPE_FIELDNAME     => array('id', 'user_id', 'name', 'is_guest', 'is_default', 'is_active', 'is_system', 'created_at', 'updated_at', ),
+        self::TYPE_PHPNAME       => array('Id', 'OwnerId', 'Name', 'IsGuest', 'IsDefault', 'IsActive', 'IsSystem', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'ownerId', 'name', 'isGuest', 'isDefault', 'isActive', 'isSystem', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(GroupTableMap::COL_ID, GroupTableMap::COL_OWNER_ID, GroupTableMap::COL_NAME, GroupTableMap::COL_IS_GUEST, GroupTableMap::COL_IS_DEFAULT, GroupTableMap::COL_IS_ACTIVE, GroupTableMap::COL_IS_SYSTEM, GroupTableMap::COL_CREATED_AT, GroupTableMap::COL_UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_OWNER_ID', 'COL_NAME', 'COL_IS_GUEST', 'COL_IS_DEFAULT', 'COL_IS_ACTIVE', 'COL_IS_SYSTEM', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('id', 'owner_id', 'name', 'is_guest', 'is_default', 'is_active', 'is_system', 'created_at', 'updated_at', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
@@ -143,11 +143,11 @@ class GroupTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'UserId' => 1, 'Name' => 2, 'IsGuest' => 3, 'IsDefault' => 4, 'IsActive' => 5, 'IsSystem' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'userId' => 1, 'name' => 2, 'isGuest' => 3, 'isDefault' => 4, 'isActive' => 5, 'isSystem' => 6, 'createdAt' => 7, 'updatedAt' => 8, ),
-        self::TYPE_COLNAME       => array(GroupTableMap::COL_ID => 0, GroupTableMap::COL_USER_ID => 1, GroupTableMap::COL_NAME => 2, GroupTableMap::COL_IS_GUEST => 3, GroupTableMap::COL_IS_DEFAULT => 4, GroupTableMap::COL_IS_ACTIVE => 5, GroupTableMap::COL_IS_SYSTEM => 6, GroupTableMap::COL_CREATED_AT => 7, GroupTableMap::COL_UPDATED_AT => 8, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_USER_ID' => 1, 'COL_NAME' => 2, 'COL_IS_GUEST' => 3, 'COL_IS_DEFAULT' => 4, 'COL_IS_ACTIVE' => 5, 'COL_IS_SYSTEM' => 6, 'COL_CREATED_AT' => 7, 'COL_UPDATED_AT' => 8, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'user_id' => 1, 'name' => 2, 'is_guest' => 3, 'is_default' => 4, 'is_active' => 5, 'is_system' => 6, 'created_at' => 7, 'updated_at' => 8, ),
+        self::TYPE_PHPNAME       => array('Id' => 0, 'OwnerId' => 1, 'Name' => 2, 'IsGuest' => 3, 'IsDefault' => 4, 'IsActive' => 5, 'IsSystem' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'ownerId' => 1, 'name' => 2, 'isGuest' => 3, 'isDefault' => 4, 'isActive' => 5, 'isSystem' => 6, 'createdAt' => 7, 'updatedAt' => 8, ),
+        self::TYPE_COLNAME       => array(GroupTableMap::COL_ID => 0, GroupTableMap::COL_OWNER_ID => 1, GroupTableMap::COL_NAME => 2, GroupTableMap::COL_IS_GUEST => 3, GroupTableMap::COL_IS_DEFAULT => 4, GroupTableMap::COL_IS_ACTIVE => 5, GroupTableMap::COL_IS_SYSTEM => 6, GroupTableMap::COL_CREATED_AT => 7, GroupTableMap::COL_UPDATED_AT => 8, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_OWNER_ID' => 1, 'COL_NAME' => 2, 'COL_IS_GUEST' => 3, 'COL_IS_DEFAULT' => 4, 'COL_IS_ACTIVE' => 5, 'COL_IS_SYSTEM' => 6, 'COL_CREATED_AT' => 7, 'COL_UPDATED_AT' => 8, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'owner_id' => 1, 'name' => 2, 'is_guest' => 3, 'is_default' => 4, 'is_active' => 5, 'is_system' => 6, 'created_at' => 7, 'updated_at' => 8, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
@@ -168,7 +168,7 @@ class GroupTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-        $this->addForeignKey('USER_ID', 'UserId', 'INTEGER', 'kk_user', 'ID', false, 10, null);
+        $this->addForeignKey('OWNER_ID', 'OwnerId', 'INTEGER', 'kk_user', 'ID', false, 10, null);
         $this->addColumn('NAME', 'Name', 'VARCHAR', false, 64, null);
         $this->addColumn('IS_GUEST', 'IsGuest', 'BOOLEAN', false, 1, null);
         $this->addColumn('IS_DEFAULT', 'IsDefault', 'BOOLEAN', false, 1, null);
@@ -183,7 +183,7 @@ class GroupTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), 'RESTRICT', null);
+        $this->addRelation('Owner', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_ONE, array('owner_id' => 'id', ), 'RESTRICT', null);
         $this->addRelation('GroupUser', '\\keeko\\core\\model\\GroupUser', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), 'RESTRICT', null, 'GroupUsers');
         $this->addRelation('GroupAction', '\\keeko\\core\\model\\GroupAction', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), 'RESTRICT', null, 'GroupActions');
         $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Users');
@@ -346,7 +346,7 @@ class GroupTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(GroupTableMap::COL_ID);
-            $criteria->addSelectColumn(GroupTableMap::COL_USER_ID);
+            $criteria->addSelectColumn(GroupTableMap::COL_OWNER_ID);
             $criteria->addSelectColumn(GroupTableMap::COL_NAME);
             $criteria->addSelectColumn(GroupTableMap::COL_IS_GUEST);
             $criteria->addSelectColumn(GroupTableMap::COL_IS_DEFAULT);
@@ -356,7 +356,7 @@ class GroupTableMap extends TableMap
             $criteria->addSelectColumn(GroupTableMap::COL_UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.USER_ID');
+            $criteria->addSelectColumn($alias . '.OWNER_ID');
             $criteria->addSelectColumn($alias . '.NAME');
             $criteria->addSelectColumn($alias . '.IS_GUEST');
             $criteria->addSelectColumn($alias . '.IS_DEFAULT');

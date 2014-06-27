@@ -1260,7 +1260,7 @@ abstract class UserQuery extends ModelCriteria
     {
         if ($group instanceof \keeko\core\model\Group) {
             return $this
-                ->addUsingAlias(UserTableMap::COL_ID, $group->getUserId(), $comparison);
+                ->addUsingAlias(UserTableMap::COL_ID, $group->getOwnerId(), $comparison);
         } elseif ($group instanceof ObjectCollection) {
             return $this
                 ->useGroupQuery()

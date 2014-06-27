@@ -115,6 +115,7 @@ abstract class AbstractModule {
 	 * @param Action $action
 	 */
 	private function checkPermission($action) {
+		
 	}
 
 	abstract public function install();

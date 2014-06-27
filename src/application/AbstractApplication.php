@@ -6,6 +6,7 @@ use keeko\core\model\Localization;
 use keeko\core\module\ModuleManager;
 use Symfony\Component\HttpFoundation\Request;
 use keeko\core\package\PackageManager;
+use keeko\core\auth\AuthManager;
 
 abstract class AbstractApplication {
 
@@ -28,6 +29,9 @@ abstract class AbstractApplication {
 	 * @var PackageManager
 	 */
 	protected $packageManager;
+	
+	/** @var AuthManager */
+	protected $authManager;
 
 	protected $prefix;
 
@@ -42,10 +46,15 @@ abstract class AbstractApplication {
 		$this->model = $model;
 		$this->packageManager = new PackageManager();
 		$this->moduleManager = new ModuleManager($this->packageManager, $this);
+		$this->authManager = new AuthManager();
 	}
 
 	public function getPackageManager() {
 		return $this->packageManager;
+	}
+	
+	public function getAuthManager() {
+		return $this->authManager;
 	}
 
 	public function setModel(Application $model) {

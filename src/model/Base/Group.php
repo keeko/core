@@ -79,10 +79,10 @@ abstract class Group implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the user_id field.
+     * The value for the owner_id field.
      * @var        int
      */
-    protected $user_id;
+    protected $owner_id;
 
     /**
      * The value for the name field.
@@ -131,7 +131,7 @@ abstract class Group implements ActiveRecordInterface
     /**
      * @var        ChildUser
      */
-    protected $aUser;
+    protected $aOwner;
 
     /**
      * @var        ObjectCollection|ChildGroupUser[] Collection to store aggregation of ChildGroupUser objects.
@@ -456,13 +456,13 @@ abstract class Group implements ActiveRecordInterface
     }
 
     /**
-     * Get the [user_id] column value.
+     * Get the [owner_id] column value.
      *
      * @return int
      */
-    public function getUserId()
+    public function getOwnerId()
     {
-        return $this->user_id;
+        return $this->owner_id;
     }
 
     /**
@@ -642,8 +642,8 @@ abstract class Group implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GroupTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GroupTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->user_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GroupTableMap::translateFieldName('OwnerId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->owner_id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : GroupTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
@@ -701,8 +701,8 @@ abstract class Group implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aUser !== null && $this->user_id !== $this->aUser->getId()) {
-            $this->aUser = null;
+        if ($this->aOwner !== null && $this->owner_id !== $this->aOwner->getId()) {
+            $this->aOwner = null;
         }
     } // ensureConsistency
 
@@ -727,28 +727,28 @@ abstract class Group implements ActiveRecordInterface
     } // setId()
 
     /**
-     * Set the value of [user_id] column.
+     * Set the value of [owner_id] column.
      *
      * @param  int $v new value
      * @return $this|\keeko\core\model\Group The current object (for fluent API support)
      */
-    public function setUserId($v)
+    public function setOwnerId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->user_id !== $v) {
-            $this->user_id = $v;
-            $this->modifiedColumns[GroupTableMap::COL_USER_ID] = true;
+        if ($this->owner_id !== $v) {
+            $this->owner_id = $v;
+            $this->modifiedColumns[GroupTableMap::COL_OWNER_ID] = true;
         }
 
-        if ($this->aUser !== null && $this->aUser->getId() !== $v) {
-            $this->aUser = null;
+        if ($this->aOwner !== null && $this->aOwner->getId() !== $v) {
+            $this->aOwner = null;
         }
 
         return $this;
-    } // setUserId()
+    } // setOwnerId()
 
     /**
      * Set the value of [name] column.
@@ -959,7 +959,7 @@ abstract class Group implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aUser = null;
+            $this->aOwner = null;
             $this->collGroupUsers = null;
 
             $this->collGroupActions = null;
@@ -1082,11 +1082,11 @@ abstract class Group implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aUser !== null) {
-                if ($this->aUser->isModified() || $this->aUser->isNew()) {
-                    $affectedRows += $this->aUser->save($con);
+            if ($this->aOwner !== null) {
+                if ($this->aOwner->isModified() || $this->aOwner->isNew()) {
+                    $affectedRows += $this->aOwner->save($con);
                 }
-                $this->setUser($this->aUser);
+                $this->setOwner($this->aOwner);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -1221,8 +1221,8 @@ abstract class Group implements ActiveRecordInterface
         if ($this->isColumnModified(GroupTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'ID';
         }
-        if ($this->isColumnModified(GroupTableMap::COL_USER_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_ID';
+        if ($this->isColumnModified(GroupTableMap::COL_OWNER_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'OWNER_ID';
         }
         if ($this->isColumnModified(GroupTableMap::COL_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'NAME';
@@ -1259,8 +1259,8 @@ abstract class Group implements ActiveRecordInterface
                     case 'ID':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'USER_ID':
-                        $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
+                    case 'OWNER_ID':
+                        $stmt->bindValue($identifier, $this->owner_id, PDO::PARAM_INT);
                         break;
                     case 'NAME':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
@@ -1349,7 +1349,7 @@ abstract class Group implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getUserId();
+                return $this->getOwnerId();
                 break;
             case 2:
                 return $this->getName();
@@ -1402,7 +1402,7 @@ abstract class Group implements ActiveRecordInterface
         $keys = GroupTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getUserId(),
+            $keys[1] => $this->getOwnerId(),
             $keys[2] => $this->getName(),
             $keys[3] => $this->getIsGuest(),
             $keys[4] => $this->getIsDefault(),
@@ -1417,8 +1417,8 @@ abstract class Group implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aUser) {
-                $result['User'] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            if (null !== $this->aOwner) {
+                $result['Owner'] = $this->aOwner->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collGroupUsers) {
                 $result['GroupUsers'] = $this->collGroupUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1464,7 +1464,7 @@ abstract class Group implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setUserId($value);
+                $this->setOwnerId($value);
                 break;
             case 2:
                 $this->setName($value);
@@ -1517,7 +1517,7 @@ abstract class Group implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setUserId($arr[$keys[1]]);
+            $this->setOwnerId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setName($arr[$keys[2]]);
@@ -1578,8 +1578,8 @@ abstract class Group implements ActiveRecordInterface
         if ($this->isColumnModified(GroupTableMap::COL_ID)) {
             $criteria->add(GroupTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(GroupTableMap::COL_USER_ID)) {
-            $criteria->add(GroupTableMap::COL_USER_ID, $this->user_id);
+        if ($this->isColumnModified(GroupTableMap::COL_OWNER_ID)) {
+            $criteria->add(GroupTableMap::COL_OWNER_ID, $this->owner_id);
         }
         if ($this->isColumnModified(GroupTableMap::COL_NAME)) {
             $criteria->add(GroupTableMap::COL_NAME, $this->name);
@@ -1688,7 +1688,7 @@ abstract class Group implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setUserId($this->getUserId());
+        $copyObj->setOwnerId($this->getOwnerId());
         $copyObj->setName($this->getName());
         $copyObj->setIsGuest($this->getIsGuest());
         $copyObj->setIsDefault($this->getIsDefault());
@@ -1751,15 +1751,15 @@ abstract class Group implements ActiveRecordInterface
      * @return $this|\keeko\core\model\Group The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setUser(ChildUser $v = null)
+    public function setOwner(ChildUser $v = null)
     {
         if ($v === null) {
-            $this->setUserId(NULL);
+            $this->setOwnerId(NULL);
         } else {
-            $this->setUserId($v->getId());
+            $this->setOwnerId($v->getId());
         }
 
-        $this->aUser = $v;
+        $this->aOwner = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildUser object, it will not be re-added.
@@ -1779,20 +1779,20 @@ abstract class Group implements ActiveRecordInterface
      * @return ChildUser The associated ChildUser object.
      * @throws PropelException
      */
-    public function getUser(ConnectionInterface $con = null)
+    public function getOwner(ConnectionInterface $con = null)
     {
-        if ($this->aUser === null && ($this->user_id !== null)) {
-            $this->aUser = ChildUserQuery::create()->findPk($this->user_id, $con);
+        if ($this->aOwner === null && ($this->owner_id !== null)) {
+            $this->aOwner = ChildUserQuery::create()->findPk($this->owner_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aUser->addGroups($this);
+                $this->aOwner->addGroups($this);
              */
         }
 
-        return $this->aUser;
+        return $this->aOwner;
     }
 
 
@@ -2797,11 +2797,11 @@ abstract class Group implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aUser) {
-            $this->aUser->removeGroup($this);
+        if (null !== $this->aOwner) {
+            $this->aOwner->removeGroup($this);
         }
         $this->id = null;
-        $this->user_id = null;
+        $this->owner_id = null;
         $this->name = null;
         $this->is_guest = null;
         $this->is_default = null;
@@ -2854,7 +2854,7 @@ abstract class Group implements ActiveRecordInterface
         $this->collGroupActions = null;
         $this->collUsers = null;
         $this->collActions = null;
-        $this->aUser = null;
+        $this->aOwner = null;
     }
 
     /**
@@ -2919,9 +2919,9 @@ abstract class Group implements ActiveRecordInterface
             // foreign key reference.
 
             // If validate() method exists, the validate-behavior is configured for related object
-            if (method_exists($this->aUser, 'validate')) {
-                if (!$this->aUser->validate($validator)) {
-                    $failureMap->addAll($this->aUser->getValidationFailures());
+            if (method_exists($this->aOwner, 'validate')) {
+                if (!$this->aOwner->validate($validator)) {
+                    $failureMap->addAll($this->aOwner->getValidationFailures());
                 }
             }
 

@@ -232,7 +232,7 @@ class UserTableMap extends TableMap
         $this->setPackage('keeko.core.model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
         $this->addColumn('LOGIN_NAME', 'LoginName', 'VARCHAR', true, 100, null);
         $this->addColumn('PASSWORD', 'Password', 'VARCHAR', true, 100, null);
         $this->addColumn('GIVEN_NAME', 'GivenName', 'VARCHAR', false, 100, null);
@@ -263,7 +263,7 @@ class UserTableMap extends TableMap
     {
         $this->addRelation('Country', '\\keeko\\core\\model\\Country', RelationMap::MANY_TO_ONE, array('country_iso_nr' => 'iso_nr', ), null, null);
         $this->addRelation('Subdivision', '\\keeko\\core\\model\\Subdivision', RelationMap::MANY_TO_ONE, array('subdivision_id' => 'id', ), null, null);
-        $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'RESTRICT', null, 'Groups');
+        $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), 'RESTRICT', null, 'Groups');
         $this->addRelation('GroupUser', '\\keeko\\core\\model\\GroupUser', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'RESTRICT', null, 'GroupUsers');
         $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Groups');
     } // buildRelations()

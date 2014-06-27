@@ -2607,7 +2607,7 @@ abstract class User implements ActiveRecordInterface
                 $this->initGroups();
             } else {
                 $collGroups = ChildGroupQuery::create(null, $criteria)
-                    ->filterByUser($this)
+                    ->filterByOwner($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -2661,7 +2661,7 @@ abstract class User implements ActiveRecordInterface
         $this->groupsScheduledForDeletion = $groupsToDelete;
 
         foreach ($groupsToDelete as $groupRemoved) {
-            $groupRemoved->setUser(null);
+            $groupRemoved->setOwner(null);
         }
 
         $this->collGroups = null;
@@ -2702,7 +2702,7 @@ abstract class User implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByUser($this)
+                ->filterByOwner($this)
                 ->count($con);
         }
 
@@ -2736,7 +2736,7 @@ abstract class User implements ActiveRecordInterface
     protected function doAddGroup(ChildGroup $group)
     {
         $this->collGroups[]= $group;
-        $group->setUser($this);
+        $group->setOwner($this);
     }
 
     /**
@@ -2753,7 +2753,7 @@ abstract class User implements ActiveRecordInterface
                 $this->groupsScheduledForDeletion->clear();
             }
             $this->groupsScheduledForDeletion[]= $group;
-            $group->setUser(null);
+            $group->setOwner(null);
         }
 
         return $this;

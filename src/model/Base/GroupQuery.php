@@ -21,7 +21,7 @@ use keeko\core\model\Map\GroupTableMap;
  *
  *
  * @method     ChildGroupQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildGroupQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
+ * @method     ChildGroupQuery orderByOwnerId($order = Criteria::ASC) Order by the owner_id column
  * @method     ChildGroupQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildGroupQuery orderByIsGuest($order = Criteria::ASC) Order by the is_guest column
  * @method     ChildGroupQuery orderByIsDefault($order = Criteria::ASC) Order by the is_default column
@@ -31,7 +31,7 @@ use keeko\core\model\Map\GroupTableMap;
  * @method     ChildGroupQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method     ChildGroupQuery groupById() Group by the id column
- * @method     ChildGroupQuery groupByUserId() Group by the user_id column
+ * @method     ChildGroupQuery groupByOwnerId() Group by the owner_id column
  * @method     ChildGroupQuery groupByName() Group by the name column
  * @method     ChildGroupQuery groupByIsGuest() Group by the is_guest column
  * @method     ChildGroupQuery groupByIsDefault() Group by the is_default column
@@ -44,9 +44,9 @@ use keeko\core\model\Map\GroupTableMap;
  * @method     ChildGroupQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildGroupQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildGroupQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
- * @method     ChildGroupQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
- * @method     ChildGroupQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
+ * @method     ChildGroupQuery leftJoinOwner($relationAlias = null) Adds a LEFT JOIN clause to the query using the Owner relation
+ * @method     ChildGroupQuery rightJoinOwner($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Owner relation
+ * @method     ChildGroupQuery innerJoinOwner($relationAlias = null) Adds a INNER JOIN clause to the query using the Owner relation
  *
  * @method     ChildGroupQuery leftJoinGroupUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the GroupUser relation
  * @method     ChildGroupQuery rightJoinGroupUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GroupUser relation
@@ -62,7 +62,7 @@ use keeko\core\model\Map\GroupTableMap;
  * @method     ChildGroup findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGroup matching the query, or a new ChildGroup object populated from the query conditions when no match is found
  *
  * @method     ChildGroup findOneById(int $id) Return the first ChildGroup filtered by the id column
- * @method     ChildGroup findOneByUserId(int $user_id) Return the first ChildGroup filtered by the user_id column
+ * @method     ChildGroup findOneByOwnerId(int $owner_id) Return the first ChildGroup filtered by the owner_id column
  * @method     ChildGroup findOneByName(string $name) Return the first ChildGroup filtered by the name column
  * @method     ChildGroup findOneByIsGuest(boolean $is_guest) Return the first ChildGroup filtered by the is_guest column
  * @method     ChildGroup findOneByIsDefault(boolean $is_default) Return the first ChildGroup filtered by the is_default column
@@ -73,7 +73,7 @@ use keeko\core\model\Map\GroupTableMap;
  *
  * @method     ChildGroup[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGroup objects based on current ModelCriteria
  * @method     ChildGroup[]|ObjectCollection findById(int $id) Return ChildGroup objects filtered by the id column
- * @method     ChildGroup[]|ObjectCollection findByUserId(int $user_id) Return ChildGroup objects filtered by the user_id column
+ * @method     ChildGroup[]|ObjectCollection findByOwnerId(int $owner_id) Return ChildGroup objects filtered by the owner_id column
  * @method     ChildGroup[]|ObjectCollection findByName(string $name) Return ChildGroup objects filtered by the name column
  * @method     ChildGroup[]|ObjectCollection findByIsGuest(boolean $is_guest) Return ChildGroup objects filtered by the is_guest column
  * @method     ChildGroup[]|ObjectCollection findByIsDefault(boolean $is_default) Return ChildGroup objects filtered by the is_default column
@@ -170,7 +170,7 @@ abstract class GroupQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, USER_ID, NAME, IS_GUEST, IS_DEFAULT, IS_ACTIVE, IS_SYSTEM, CREATED_AT, UPDATED_AT FROM kk_group WHERE ID = :p0';
+        $sql = 'SELECT ID, OWNER_ID, NAME, IS_GUEST, IS_DEFAULT, IS_ACTIVE, IS_SYSTEM, CREATED_AT, UPDATED_AT FROM kk_group WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -302,18 +302,18 @@ abstract class GroupQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the user_id column
+     * Filter the query on the owner_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByUserId(1234); // WHERE user_id = 1234
-     * $query->filterByUserId(array(12, 34)); // WHERE user_id IN (12, 34)
-     * $query->filterByUserId(array('min' => 12)); // WHERE user_id > 12
+     * $query->filterByOwnerId(1234); // WHERE owner_id = 1234
+     * $query->filterByOwnerId(array(12, 34)); // WHERE owner_id IN (12, 34)
+     * $query->filterByOwnerId(array('min' => 12)); // WHERE owner_id > 12
      * </code>
      *
-     * @see       filterByUser()
+     * @see       filterByOwner()
      *
-     * @param     mixed $userId The value to use as filter.
+     * @param     mixed $ownerId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -321,16 +321,16 @@ abstract class GroupQuery extends ModelCriteria
      *
      * @return $this|ChildGroupQuery The current query, for fluid interface
      */
-    public function filterByUserId($userId = null, $comparison = null)
+    public function filterByOwnerId($ownerId = null, $comparison = null)
     {
-        if (is_array($userId)) {
+        if (is_array($ownerId)) {
             $useMinMax = false;
-            if (isset($userId['min'])) {
-                $this->addUsingAlias(GroupTableMap::COL_USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
+            if (isset($ownerId['min'])) {
+                $this->addUsingAlias(GroupTableMap::COL_OWNER_ID, $ownerId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($userId['max'])) {
-                $this->addUsingAlias(GroupTableMap::COL_USER_ID, $userId['max'], Criteria::LESS_EQUAL);
+            if (isset($ownerId['max'])) {
+                $this->addUsingAlias(GroupTableMap::COL_OWNER_ID, $ownerId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -341,7 +341,7 @@ abstract class GroupQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(GroupTableMap::COL_USER_ID, $userId, $comparison);
+        return $this->addUsingAlias(GroupTableMap::COL_OWNER_ID, $ownerId, $comparison);
     }
 
     /**
@@ -575,35 +575,35 @@ abstract class GroupQuery extends ModelCriteria
      *
      * @return ChildGroupQuery The current query, for fluid interface
      */
-    public function filterByUser($user, $comparison = null)
+    public function filterByOwner($user, $comparison = null)
     {
         if ($user instanceof \keeko\core\model\User) {
             return $this
-                ->addUsingAlias(GroupTableMap::COL_USER_ID, $user->getId(), $comparison);
+                ->addUsingAlias(GroupTableMap::COL_OWNER_ID, $user->getId(), $comparison);
         } elseif ($user instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(GroupTableMap::COL_USER_ID, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(GroupTableMap::COL_OWNER_ID, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByUser() only accepts arguments of type \keeko\core\model\User or Collection');
+            throw new PropelException('filterByOwner() only accepts arguments of type \keeko\core\model\User or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the User relation
+     * Adds a JOIN clause to the query using the Owner relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildGroupQuery The current query, for fluid interface
      */
-    public function joinUser($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinOwner($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('User');
+        $relationMap = $tableMap->getRelation('Owner');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -618,14 +618,14 @@ abstract class GroupQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'User');
+            $this->addJoinObject($join, 'Owner');
         }
 
         return $this;
     }
 
     /**
-     * Use the User relation User object
+     * Use the Owner relation User object
      *
      * @see useQuery()
      *
@@ -635,11 +635,11 @@ abstract class GroupQuery extends ModelCriteria
      *
      * @return \keeko\core\model\UserQuery A secondary query class using the current class as primary query
      */
-    public function useUserQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useOwnerQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinUser($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'User', '\keeko\core\model\UserQuery');
+            ->joinOwner($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Owner', '\keeko\core\model\UserQuery');
     }
 
     /**

@@ -208,7 +208,7 @@
 
 	<table name="user" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" primaryKey="true" required="true"
-			autoIncrement="true" />
+			autoIncrement="true" size="10"/>
 		<column name="login_name" type="VARCHAR" size="100" required="true" />
 		<column name="password" type="VARCHAR" size="100" required="true" />
 		<column name="given_name" type="VARCHAR" size="100" />
@@ -253,7 +253,7 @@
 	<table name="group" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
-		<column name="user_id" type="INTEGER" size="10" />
+		<column name="owner_id" type="INTEGER" size="10" />
 		<column name="name" type="VARCHAR" size="64" />
 		<column name="is_guest" type="BOOLEAN" />
 		<column name="is_default" type="BOOLEAN" />
@@ -266,8 +266,8 @@
 			<parameter name="rule1" value="{column: name, validator: NotNull}" />
 		</behavior>
 		
-		<foreign-key foreignTable="user" onDelete="restrict">
-			<reference local="user_id" foreign="id" />
+		<foreign-key foreignTable="user" phpName="Owner" onDelete="restrict">
+			<reference local="owner_id" foreign="id" />
 		</foreign-key>
 	</table>
 
