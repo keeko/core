@@ -7,12 +7,15 @@ use keeko\core\model\Action;
 use keeko\core\model\Module;
 use keeko\core\model\ActionQuery;
 use keeko\core\application\AbstractApplication;
+use keeko\core\package\PackageManager;
+use keeko\core\auth\AuthManager;
+use keeko\core\model\User;
 
 abstract class AbstractModule {
 
 	/**
 	 *
-	 * @var Keeko
+	 * @var AbstractApplication
 	 */
 	protected $application;
 
@@ -24,13 +27,24 @@ abstract class AbstractModule {
 
 	protected $actions;
 
+	/**
+	 * @var PackageManager
+	 */
 	private $packageManager;
+	
+	/** @var AuthManager */
+	protected $authManager;
+	
+	/** @var User */
+	protected $user;
 
 	public function __construct(Module $module, AbstractApplication $application) {
 		$this->model = $module;
 		$this->application = $application;
 		$this->packageManager = $application->getPackageManager();
 		$this->package = $this->packageManager->getModulePackage($module->getName());
+		$this->authManager = $application->getAuthManager();
+		$this->user = $this->authManager->getUser();
 		
 		$this->loadActions();
 	}
@@ -115,7 +129,10 @@ abstract class AbstractModule {
 	 * @param Action $action
 	 */
 	private function checkPermission($action) {
-		
+		if (!$this->user->hasPermission($this->model->getId(), $action)) {
+			// TODO
+			//throw PermissionDeniedException();
+		}
 	}
 
 	abstract public function install();

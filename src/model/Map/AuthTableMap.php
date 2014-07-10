@@ -11,12 +11,12 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
-use keeko\core\model\Group;
-use keeko\core\model\GroupQuery;
+use keeko\core\model\Auth;
+use keeko\core\model\AuthQuery;
 
 
 /**
- * This class defines the structure of the 'kk_group' table.
+ * This class defines the structure of the 'kk_auth' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use keeko\core\model\GroupQuery;
  * (i.e. if it's a text column type).
  *
  */
-class GroupTableMap extends TableMap
+class AuthTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class GroupTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.GroupTableMap';
+    const CLASS_NAME = 'keeko.core.model.Map.AuthTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class GroupTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'kk_group';
+    const TABLE_NAME = 'kk_auth';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\keeko\\core\\model\\Group';
+    const OM_CLASS = '\\keeko\\core\\model\\Auth';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.Group';
+    const CLASS_DEFAULT = 'keeko.core.model.Auth';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 9;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,52 +69,27 @@ class GroupTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 9;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
-     * the column name for the ID field
+     * the column name for the TOKEN field
      */
-    const COL_ID = 'kk_group.ID';
+    const COL_TOKEN = 'kk_auth.TOKEN';
 
     /**
-     * the column name for the OWNER_ID field
+     * the column name for the USER_ID field
      */
-    const COL_OWNER_ID = 'kk_group.OWNER_ID';
-
-    /**
-     * the column name for the NAME field
-     */
-    const COL_NAME = 'kk_group.NAME';
-
-    /**
-     * the column name for the IS_GUEST field
-     */
-    const COL_IS_GUEST = 'kk_group.IS_GUEST';
-
-    /**
-     * the column name for the IS_DEFAULT field
-     */
-    const COL_IS_DEFAULT = 'kk_group.IS_DEFAULT';
-
-    /**
-     * the column name for the IS_ACTIVE field
-     */
-    const COL_IS_ACTIVE = 'kk_group.IS_ACTIVE';
-
-    /**
-     * the column name for the IS_SYSTEM field
-     */
-    const COL_IS_SYSTEM = 'kk_group.IS_SYSTEM';
+    const COL_USER_ID = 'kk_auth.USER_ID';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = 'kk_group.CREATED_AT';
+    const COL_CREATED_AT = 'kk_auth.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = 'kk_group.UPDATED_AT';
+    const COL_UPDATED_AT = 'kk_auth.UPDATED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -128,12 +103,12 @@ class GroupTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'OwnerId', 'Name', 'IsGuest', 'IsDefault', 'IsActive', 'IsSystem', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'ownerId', 'name', 'isGuest', 'isDefault', 'isActive', 'isSystem', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(GroupTableMap::COL_ID, GroupTableMap::COL_OWNER_ID, GroupTableMap::COL_NAME, GroupTableMap::COL_IS_GUEST, GroupTableMap::COL_IS_DEFAULT, GroupTableMap::COL_IS_ACTIVE, GroupTableMap::COL_IS_SYSTEM, GroupTableMap::COL_CREATED_AT, GroupTableMap::COL_UPDATED_AT, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_OWNER_ID', 'COL_NAME', 'COL_IS_GUEST', 'COL_IS_DEFAULT', 'COL_IS_ACTIVE', 'COL_IS_SYSTEM', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
-        self::TYPE_FIELDNAME     => array('id', 'owner_id', 'name', 'is_guest', 'is_default', 'is_active', 'is_system', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('Token', 'UserId', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('token', 'userId', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(AuthTableMap::COL_TOKEN, AuthTableMap::COL_USER_ID, AuthTableMap::COL_CREATED_AT, AuthTableMap::COL_UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('COL_TOKEN', 'COL_USER_ID', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('token', 'user_id', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -143,12 +118,12 @@ class GroupTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'OwnerId' => 1, 'Name' => 2, 'IsGuest' => 3, 'IsDefault' => 4, 'IsActive' => 5, 'IsSystem' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'ownerId' => 1, 'name' => 2, 'isGuest' => 3, 'isDefault' => 4, 'isActive' => 5, 'isSystem' => 6, 'createdAt' => 7, 'updatedAt' => 8, ),
-        self::TYPE_COLNAME       => array(GroupTableMap::COL_ID => 0, GroupTableMap::COL_OWNER_ID => 1, GroupTableMap::COL_NAME => 2, GroupTableMap::COL_IS_GUEST => 3, GroupTableMap::COL_IS_DEFAULT => 4, GroupTableMap::COL_IS_ACTIVE => 5, GroupTableMap::COL_IS_SYSTEM => 6, GroupTableMap::COL_CREATED_AT => 7, GroupTableMap::COL_UPDATED_AT => 8, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_OWNER_ID' => 1, 'COL_NAME' => 2, 'COL_IS_GUEST' => 3, 'COL_IS_DEFAULT' => 4, 'COL_IS_ACTIVE' => 5, 'COL_IS_SYSTEM' => 6, 'COL_CREATED_AT' => 7, 'COL_UPDATED_AT' => 8, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'owner_id' => 1, 'name' => 2, 'is_guest' => 3, 'is_default' => 4, 'is_active' => 5, 'is_system' => 6, 'created_at' => 7, 'updated_at' => 8, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('Token' => 0, 'UserId' => 1, 'CreatedAt' => 2, 'UpdatedAt' => 3, ),
+        self::TYPE_STUDLYPHPNAME => array('token' => 0, 'userId' => 1, 'createdAt' => 2, 'updatedAt' => 3, ),
+        self::TYPE_COLNAME       => array(AuthTableMap::COL_TOKEN => 0, AuthTableMap::COL_USER_ID => 1, AuthTableMap::COL_CREATED_AT => 2, AuthTableMap::COL_UPDATED_AT => 3, ),
+        self::TYPE_RAW_COLNAME   => array('COL_TOKEN' => 0, 'COL_USER_ID' => 1, 'COL_CREATED_AT' => 2, 'COL_UPDATED_AT' => 3, ),
+        self::TYPE_FIELDNAME     => array('token' => 0, 'user_id' => 1, 'created_at' => 2, 'updated_at' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -161,19 +136,14 @@ class GroupTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('kk_group');
-        $this->setPhpName('Group');
-        $this->setClassName('\\keeko\\core\\model\\Group');
+        $this->setName('kk_auth');
+        $this->setPhpName('Auth');
+        $this->setClassName('\\keeko\\core\\model\\Auth');
         $this->setPackage('keeko.core.model');
-        $this->setUseIdGenerator(true);
+        $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-        $this->addColumn('OWNER_ID', 'OwnerId', 'INTEGER', false, 10, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', false, 64, null);
-        $this->addColumn('IS_GUEST', 'IsGuest', 'BOOLEAN', false, 1, null);
-        $this->addColumn('IS_DEFAULT', 'IsDefault', 'BOOLEAN', false, 1, null);
-        $this->addColumn('IS_ACTIVE', 'IsActive', 'BOOLEAN', false, 1, true);
-        $this->addColumn('IS_SYSTEM', 'IsSystem', 'BOOLEAN', false, 1, false);
+        $this->addPrimaryKey('TOKEN', 'Token', 'VARCHAR', true, 32, null);
+        $this->addForeignKey('USER_ID', 'UserId', 'INTEGER', 'kk_user', 'ID', true, 10, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -183,10 +153,7 @@ class GroupTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('GroupUser', '\\keeko\\core\\model\\GroupUser', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), 'RESTRICT', null, 'GroupUsers');
-        $this->addRelation('GroupAction', '\\keeko\\core\\model\\GroupAction', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), 'RESTRICT', null, 'GroupActions');
-        $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Users');
-        $this->addRelation('Action', '\\keeko\\core\\model\\Action', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Actions');
+        $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), null, null);
     } // buildRelations()
 
     /**
@@ -199,7 +166,6 @@ class GroupTableMap extends TableMap
     {
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
-            'validate' => array('rule1' => array ('column' => 'name','validator' => 'NotNull',), ),
         );
     } // getBehaviors()
 
@@ -219,11 +185,11 @@ class GroupTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Token', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Token', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -240,10 +206,10 @@ class GroupTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return (int) $row[
+        return (string) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('Token', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 
@@ -260,7 +226,7 @@ class GroupTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? GroupTableMap::CLASS_DEFAULT : GroupTableMap::OM_CLASS;
+        return $withPrefix ? AuthTableMap::CLASS_DEFAULT : AuthTableMap::OM_CLASS;
     }
 
     /**
@@ -274,22 +240,22 @@ class GroupTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Group object, last column rank)
+     * @return array           (Auth object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = GroupTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = GroupTableMap::getInstanceFromPool($key))) {
+        $key = AuthTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = AuthTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + GroupTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + AuthTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = GroupTableMap::OM_CLASS;
-            /** @var Group $obj */
+            $cls = AuthTableMap::OM_CLASS;
+            /** @var Auth $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            GroupTableMap::addInstanceToPool($obj, $key);
+            AuthTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -312,18 +278,18 @@ class GroupTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = GroupTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = GroupTableMap::getInstanceFromPool($key))) {
+            $key = AuthTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = AuthTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Group $obj */
+                /** @var Auth $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                GroupTableMap::addInstanceToPool($obj, $key);
+                AuthTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -344,23 +310,13 @@ class GroupTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(GroupTableMap::COL_ID);
-            $criteria->addSelectColumn(GroupTableMap::COL_OWNER_ID);
-            $criteria->addSelectColumn(GroupTableMap::COL_NAME);
-            $criteria->addSelectColumn(GroupTableMap::COL_IS_GUEST);
-            $criteria->addSelectColumn(GroupTableMap::COL_IS_DEFAULT);
-            $criteria->addSelectColumn(GroupTableMap::COL_IS_ACTIVE);
-            $criteria->addSelectColumn(GroupTableMap::COL_IS_SYSTEM);
-            $criteria->addSelectColumn(GroupTableMap::COL_CREATED_AT);
-            $criteria->addSelectColumn(GroupTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(AuthTableMap::COL_TOKEN);
+            $criteria->addSelectColumn(AuthTableMap::COL_USER_ID);
+            $criteria->addSelectColumn(AuthTableMap::COL_CREATED_AT);
+            $criteria->addSelectColumn(AuthTableMap::COL_UPDATED_AT);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.OWNER_ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.IS_GUEST');
-            $criteria->addSelectColumn($alias . '.IS_DEFAULT');
-            $criteria->addSelectColumn($alias . '.IS_ACTIVE');
-            $criteria->addSelectColumn($alias . '.IS_SYSTEM');
+            $criteria->addSelectColumn($alias . '.TOKEN');
+            $criteria->addSelectColumn($alias . '.USER_ID');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');
         }
@@ -375,7 +331,7 @@ class GroupTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(GroupTableMap::DATABASE_NAME)->getTable(GroupTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(AuthTableMap::DATABASE_NAME)->getTable(AuthTableMap::TABLE_NAME);
     }
 
     /**
@@ -383,16 +339,16 @@ class GroupTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(GroupTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(GroupTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new GroupTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(AuthTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(AuthTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new AuthTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Group or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Auth or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Group object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Auth object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -403,27 +359,27 @@ class GroupTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GroupTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AuthTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \keeko\core\model\Group) { // it's a model object
+        } elseif ($values instanceof \keeko\core\model\Auth) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(GroupTableMap::DATABASE_NAME);
-            $criteria->add(GroupTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(AuthTableMap::DATABASE_NAME);
+            $criteria->add(AuthTableMap::COL_TOKEN, (array) $values, Criteria::IN);
         }
 
-        $query = GroupQuery::create()->mergeWith($criteria);
+        $query = AuthQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            GroupTableMap::clearInstancePool();
+            AuthTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                GroupTableMap::removeInstanceFromPool($singleval);
+                AuthTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -431,20 +387,20 @@ class GroupTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the kk_group table.
+     * Deletes all rows from the kk_auth table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return GroupQuery::create()->doDeleteAll($con);
+        return AuthQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Group or Criteria object.
+     * Performs an INSERT on the database, given a Auth or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Group object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Auth object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -453,22 +409,18 @@ class GroupTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GroupTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AuthTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Group object
-        }
-
-        if ($criteria->containsKey(GroupTableMap::COL_ID) && $criteria->keyContainsValue(GroupTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.GroupTableMap::COL_ID.')');
+            $criteria = $criteria->buildCriteria(); // build Criteria from Auth object
         }
 
 
         // Set the correct dbName
-        $query = GroupQuery::create()->mergeWith($criteria);
+        $query = AuthQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -477,7 +429,7 @@ class GroupTableMap extends TableMap
         });
     }
 
-} // GroupTableMap
+} // AuthTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-GroupTableMap::buildTableMap();
+AuthTableMap::buildTableMap();

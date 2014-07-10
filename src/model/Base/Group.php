@@ -129,11 +129,6 @@ abstract class Group implements ActiveRecordInterface
     protected $updated_at;
 
     /**
-     * @var        ChildUser
-     */
-    protected $aOwner;
-
-    /**
      * @var        ObjectCollection|ChildGroupUser[] Collection to store aggregation of ChildGroupUser objects.
      */
     protected $collGroupUsers;
@@ -701,9 +696,6 @@ abstract class Group implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aOwner !== null && $this->owner_id !== $this->aOwner->getId()) {
-            $this->aOwner = null;
-        }
     } // ensureConsistency
 
     /**
@@ -741,10 +733,6 @@ abstract class Group implements ActiveRecordInterface
         if ($this->owner_id !== $v) {
             $this->owner_id = $v;
             $this->modifiedColumns[GroupTableMap::COL_OWNER_ID] = true;
-        }
-
-        if ($this->aOwner !== null && $this->aOwner->getId() !== $v) {
-            $this->aOwner = null;
         }
 
         return $this;
@@ -959,7 +947,6 @@ abstract class Group implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aOwner = null;
             $this->collGroupUsers = null;
 
             $this->collGroupActions = null;
@@ -1076,18 +1063,6 @@ abstract class Group implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
-
-            // We call the save method on the following object(s) if they
-            // were passed to this object by their corresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            if ($this->aOwner !== null) {
-                if ($this->aOwner->isModified() || $this->aOwner->isNew()) {
-                    $affectedRows += $this->aOwner->save($con);
-                }
-                $this->setOwner($this->aOwner);
-            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -1417,9 +1392,6 @@ abstract class Group implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aOwner) {
-                $result['Owner'] = $this->aOwner->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
             if (null !== $this->collGroupUsers) {
                 $result['GroupUsers'] = $this->collGroupUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
@@ -1742,57 +1714,6 @@ abstract class Group implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
-    }
-
-    /**
-     * Declares an association between this object and a ChildUser object.
-     *
-     * @param  ChildUser $v
-     * @return $this|\keeko\core\model\Group The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setOwner(ChildUser $v = null)
-    {
-        if ($v === null) {
-            $this->setOwnerId(NULL);
-        } else {
-            $this->setOwnerId($v->getId());
-        }
-
-        $this->aOwner = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildUser object, it will not be re-added.
-        if ($v !== null) {
-            $v->addGroup($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildUser object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildUser The associated ChildUser object.
-     * @throws PropelException
-     */
-    public function getOwner(ConnectionInterface $con = null)
-    {
-        if ($this->aOwner === null && ($this->owner_id !== null)) {
-            $this->aOwner = ChildUserQuery::create()->findPk($this->owner_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aOwner->addGroups($this);
-             */
-        }
-
-        return $this->aOwner;
     }
 
 
@@ -2797,9 +2718,6 @@ abstract class Group implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aOwner) {
-            $this->aOwner->removeGroup($this);
-        }
         $this->id = null;
         $this->owner_id = null;
         $this->name = null;
@@ -2854,7 +2772,6 @@ abstract class Group implements ActiveRecordInterface
         $this->collGroupActions = null;
         $this->collUsers = null;
         $this->collActions = null;
-        $this->aOwner = null;
     }
 
     /**
@@ -2913,17 +2830,6 @@ abstract class Group implements ActiveRecordInterface
             $this->alreadyInValidation = true;
             $retval = null;
 
-            // We call the validate method on the following object(s) if they
-            // were passed to this object by their corresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            // If validate() method exists, the validate-behavior is configured for related object
-            if (method_exists($this->aOwner, 'validate')) {
-                if (!$this->aOwner->validate($validator)) {
-                    $failureMap->addAll($this->aOwner->getValidationFailures());
-                }
-            }
 
             $retval = $validator->validate($this);
             if (count($retval) > 0) {

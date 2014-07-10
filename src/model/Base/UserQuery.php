@@ -78,15 +78,15 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery rightJoinSubdivision($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Subdivision relation
  * @method     ChildUserQuery innerJoinSubdivision($relationAlias = null) Adds a INNER JOIN clause to the query using the Subdivision relation
  *
- * @method     ChildUserQuery leftJoinGroup($relationAlias = null) Adds a LEFT JOIN clause to the query using the Group relation
- * @method     ChildUserQuery rightJoinGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Group relation
- * @method     ChildUserQuery innerJoinGroup($relationAlias = null) Adds a INNER JOIN clause to the query using the Group relation
+ * @method     ChildUserQuery leftJoinAuth($relationAlias = null) Adds a LEFT JOIN clause to the query using the Auth relation
+ * @method     ChildUserQuery rightJoinAuth($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Auth relation
+ * @method     ChildUserQuery innerJoinAuth($relationAlias = null) Adds a INNER JOIN clause to the query using the Auth relation
  *
  * @method     ChildUserQuery leftJoinGroupUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the GroupUser relation
  * @method     ChildUserQuery rightJoinGroupUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GroupUser relation
  * @method     ChildUserQuery innerJoinGroupUser($relationAlias = null) Adds a INNER JOIN clause to the query using the GroupUser relation
  *
- * @method     \keeko\core\model\CountryQuery|\keeko\core\model\SubdivisionQuery|\keeko\core\model\GroupQuery|\keeko\core\model\GroupUserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \keeko\core\model\CountryQuery|\keeko\core\model\SubdivisionQuery|\keeko\core\model\AuthQuery|\keeko\core\model\GroupUserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -1249,40 +1249,40 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \keeko\core\model\Group object
+     * Filter the query by a related \keeko\core\model\Auth object
      *
-     * @param \keeko\core\model\Group|ObjectCollection $group  the related object to use as filter
+     * @param \keeko\core\model\Auth|ObjectCollection $auth  the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildUserQuery The current query, for fluid interface
      */
-    public function filterByGroup($group, $comparison = null)
+    public function filterByAuth($auth, $comparison = null)
     {
-        if ($group instanceof \keeko\core\model\Group) {
+        if ($auth instanceof \keeko\core\model\Auth) {
             return $this
-                ->addUsingAlias(UserTableMap::COL_ID, $group->getOwnerId(), $comparison);
-        } elseif ($group instanceof ObjectCollection) {
+                ->addUsingAlias(UserTableMap::COL_ID, $auth->getUserId(), $comparison);
+        } elseif ($auth instanceof ObjectCollection) {
             return $this
-                ->useGroupQuery()
-                ->filterByPrimaryKeys($group->getPrimaryKeys())
+                ->useAuthQuery()
+                ->filterByPrimaryKeys($auth->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByGroup() only accepts arguments of type \keeko\core\model\Group or Collection');
+            throw new PropelException('filterByAuth() only accepts arguments of type \keeko\core\model\Auth or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Group relation
+     * Adds a JOIN clause to the query using the Auth relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
-    public function joinGroup($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinAuth($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Group');
+        $relationMap = $tableMap->getRelation('Auth');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -1297,14 +1297,14 @@ abstract class UserQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Group');
+            $this->addJoinObject($join, 'Auth');
         }
 
         return $this;
     }
 
     /**
-     * Use the Group relation Group object
+     * Use the Auth relation Auth object
      *
      * @see useQuery()
      *
@@ -1312,13 +1312,13 @@ abstract class UserQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \keeko\core\model\GroupQuery A secondary query class using the current class as primary query
+     * @return \keeko\core\model\AuthQuery A secondary query class using the current class as primary query
      */
-    public function useGroupQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useAuthQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinGroup($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Group', '\keeko\core\model\GroupQuery');
+            ->joinAuth($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Auth', '\keeko\core\model\AuthQuery');
     }
 
     /**

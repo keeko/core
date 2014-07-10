@@ -19,7 +19,8 @@
 		"symfony/yaml" : "~2",
 		"symfony/filesystem" : "~2",
 		"twig/twig" : "~1",
-		"propel/propel" : "dev-master"
+		"propel/propel" : "dev-master",
+		"ircmaxell/password-compat" : "~1"
 	},
 	"autoload" : {
 		"psr-4" : {

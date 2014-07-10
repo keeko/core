@@ -11,28 +11,28 @@ class User extends BaseUser {
 	
 	/** @var Group */
 	private $userGroup;
-
-	public $permissionsTable = [];
+	
+	private $permissionsTable = [];
 	
 	/**
 	 * Initializes internal state of User object.
-	 */
+	*/
 	public function __construct($isGuest = false) {
 		parent::__construct();
 	}
 	
-	public function getGroups() {
-		return $this->groups;
-	}
+// 	public function getGroups() {
+// 		return $this->groups;
+// 	}
 	
 	public function getUserGroup() {
 		return $this->userGroup;
 	}
 	
 	public function isGuest() {
-// 		return $this->isGuest;
+		// 		return $this->isGuest;
 	}
-
+	
 	private function readGroups() {
 		if ($this->isGuest) {
 			$this->groups = GroupQuery::create()->filterByIsGuest()->find();
@@ -41,13 +41,13 @@ class User extends BaseUser {
 			$this->groups = GroupQuery::create()->filterByUser($this)->find();
 		}
 	}
-
+	
 	private function readPermissions() {
 		$groups = $this->groups;
 		if ($this->userGroup) {
 			$groups[] = $this->userGroup;
 		}
-
+	
 		/* @var $group Group */
 		foreach ($groups as $group) {
 			foreach ($group->getActions() as $action) {
@@ -56,14 +56,14 @@ class User extends BaseUser {
 			}
 		}
 	}
-
+	
 	public function updatePermissions() {
 		$this->readGroups();
 		$this->readPermissions();
 	}
-
+	
 	public function hasPermission($moduleId, $action) {
 		return isset($this->permissionsTable[$moduleId])
-			&& isset($this->permissionsTable[$moduleId][$action]);
+		&& isset($this->permissionsTable[$moduleId][$action]);
 	}
 }

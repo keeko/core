@@ -19,7 +19,7 @@ abstract class AbstractAction {
 
 	/**
 	 *
-	 * @var Module
+	 * @var AbstractModule
 	 */
 	protected $module;
 
@@ -46,6 +46,10 @@ abstract class AbstractAction {
 
 	protected function setDefaultParams(OptionsResolverInterface $resolver) {
 		// does nothing, extend this method and provide functionality for your action
+	}
+	
+	protected function getModule() {
+		return $this->module;
 	}
 
 	protected function getParam($name) {

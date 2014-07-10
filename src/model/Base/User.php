@@ -27,6 +27,8 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
 use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
+use keeko\core\model\Auth as ChildAuth;
+use keeko\core\model\AuthQuery as ChildAuthQuery;
 use keeko\core\model\Country as ChildCountry;
 use keeko\core\model\CountryQuery as ChildCountryQuery;
 use keeko\core\model\Group as ChildGroup;
@@ -216,10 +218,10 @@ abstract class User implements ActiveRecordInterface
     protected $aSubdivision;
 
     /**
-     * @var        ObjectCollection|ChildGroup[] Collection to store aggregation of ChildGroup objects.
+     * @var        ObjectCollection|ChildAuth[] Collection to store aggregation of ChildAuth objects.
      */
-    protected $collGroups;
-    protected $collGroupsPartial;
+    protected $collAuths;
+    protected $collAuthsPartial;
 
     /**
      * @var        ObjectCollection|ChildGroupUser[] Collection to store aggregation of ChildGroupUser objects.
@@ -270,9 +272,9 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildGroup[]
+     * @var ObjectCollection|ChildAuth[]
      */
-    protected $groupsScheduledForDeletion = null;
+    protected $authsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -1395,7 +1397,7 @@ abstract class User implements ActiveRecordInterface
 
             $this->aCountry = null;
             $this->aSubdivision = null;
-            $this->collGroups = null;
+            $this->collAuths = null;
 
             $this->collGroupUsers = null;
 
@@ -1570,18 +1572,17 @@ abstract class User implements ActiveRecordInterface
             }
 
 
-            if ($this->groupsScheduledForDeletion !== null) {
-                if (!$this->groupsScheduledForDeletion->isEmpty()) {
-                    foreach ($this->groupsScheduledForDeletion as $group) {
-                        // need to save related object because we set the relation to null
-                        $group->save($con);
-                    }
-                    $this->groupsScheduledForDeletion = null;
+            if ($this->authsScheduledForDeletion !== null) {
+                if (!$this->authsScheduledForDeletion->isEmpty()) {
+                    \keeko\core\model\AuthQuery::create()
+                        ->filterByPrimaryKeys($this->authsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->authsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collGroups !== null) {
-                foreach ($this->collGroups as $referrerFK) {
+            if ($this->collAuths !== null) {
+                foreach ($this->collAuths as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1966,8 +1967,8 @@ abstract class User implements ActiveRecordInterface
             if (null !== $this->aSubdivision) {
                 $result['Subdivision'] = $this->aSubdivision->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collGroups) {
-                $result['Groups'] = $this->collGroups->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collAuths) {
+                $result['Auths'] = $this->collAuths->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collGroupUsers) {
                 $result['GroupUsers'] = $this->collGroupUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -2378,9 +2379,9 @@ abstract class User implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getGroups() as $relObj) {
+            foreach ($this->getAuths() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addGroup($relObj->copy($deepCopy));
+                    $copyObj->addAuth($relObj->copy($deepCopy));
                 }
             }
 
@@ -2533,8 +2534,8 @@ abstract class User implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('Group' == $relationName) {
-            return $this->initGroups();
+        if ('Auth' == $relationName) {
+            return $this->initAuths();
         }
         if ('GroupUser' == $relationName) {
             return $this->initGroupUsers();
@@ -2542,31 +2543,31 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collGroups collection
+     * Clears out the collAuths collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addGroups()
+     * @see        addAuths()
      */
-    public function clearGroups()
+    public function clearAuths()
     {
-        $this->collGroups = null; // important to set this to NULL since that means it is uninitialized
+        $this->collAuths = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collGroups collection loaded partially.
+     * Reset is the collAuths collection loaded partially.
      */
-    public function resetPartialGroups($v = true)
+    public function resetPartialAuths($v = true)
     {
-        $this->collGroupsPartial = $v;
+        $this->collAuthsPartial = $v;
     }
 
     /**
-     * Initializes the collGroups collection.
+     * Initializes the collAuths collection.
      *
-     * By default this just sets the collGroups collection to an empty array (like clearcollGroups());
+     * By default this just sets the collAuths collection to an empty array (like clearcollAuths());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -2575,17 +2576,17 @@ abstract class User implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initGroups($overrideExisting = true)
+    public function initAuths($overrideExisting = true)
     {
-        if (null !== $this->collGroups && !$overrideExisting) {
+        if (null !== $this->collAuths && !$overrideExisting) {
             return;
         }
-        $this->collGroups = new ObjectCollection();
-        $this->collGroups->setModel('\keeko\core\model\Group');
+        $this->collAuths = new ObjectCollection();
+        $this->collAuths->setModel('\keeko\core\model\Auth');
     }
 
     /**
-     * Gets an array of ChildGroup objects which contain a foreign key that references this object.
+     * Gets an array of ChildAuth objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -2595,165 +2596,165 @@ abstract class User implements ActiveRecordInterface
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildGroup[] List of ChildGroup objects
+     * @return ObjectCollection|ChildAuth[] List of ChildAuth objects
      * @throws PropelException
      */
-    public function getGroups(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getAuths(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collGroupsPartial && !$this->isNew();
-        if (null === $this->collGroups || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collGroups) {
+        $partial = $this->collAuthsPartial && !$this->isNew();
+        if (null === $this->collAuths || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collAuths) {
                 // return empty collection
-                $this->initGroups();
+                $this->initAuths();
             } else {
-                $collGroups = ChildGroupQuery::create(null, $criteria)
-                    ->filterByOwner($this)
+                $collAuths = ChildAuthQuery::create(null, $criteria)
+                    ->filterByUser($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collGroupsPartial && count($collGroups)) {
-                        $this->initGroups(false);
+                    if (false !== $this->collAuthsPartial && count($collAuths)) {
+                        $this->initAuths(false);
 
-                        foreach ($collGroups as $obj) {
-                            if (false == $this->collGroups->contains($obj)) {
-                                $this->collGroups->append($obj);
+                        foreach ($collAuths as $obj) {
+                            if (false == $this->collAuths->contains($obj)) {
+                                $this->collAuths->append($obj);
                             }
                         }
 
-                        $this->collGroupsPartial = true;
+                        $this->collAuthsPartial = true;
                     }
 
-                    return $collGroups;
+                    return $collAuths;
                 }
 
-                if ($partial && $this->collGroups) {
-                    foreach ($this->collGroups as $obj) {
+                if ($partial && $this->collAuths) {
+                    foreach ($this->collAuths as $obj) {
                         if ($obj->isNew()) {
-                            $collGroups[] = $obj;
+                            $collAuths[] = $obj;
                         }
                     }
                 }
 
-                $this->collGroups = $collGroups;
-                $this->collGroupsPartial = false;
+                $this->collAuths = $collAuths;
+                $this->collAuthsPartial = false;
             }
         }
 
-        return $this->collGroups;
+        return $this->collAuths;
     }
 
     /**
-     * Sets a collection of ChildGroup objects related by a one-to-many relationship
+     * Sets a collection of ChildAuth objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $groups A Propel collection.
+     * @param      Collection $auths A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildUser The current object (for fluent API support)
      */
-    public function setGroups(Collection $groups, ConnectionInterface $con = null)
+    public function setAuths(Collection $auths, ConnectionInterface $con = null)
     {
-        /** @var ChildGroup[] $groupsToDelete */
-        $groupsToDelete = $this->getGroups(new Criteria(), $con)->diff($groups);
+        /** @var ChildAuth[] $authsToDelete */
+        $authsToDelete = $this->getAuths(new Criteria(), $con)->diff($auths);
 
 
-        $this->groupsScheduledForDeletion = $groupsToDelete;
+        $this->authsScheduledForDeletion = $authsToDelete;
 
-        foreach ($groupsToDelete as $groupRemoved) {
-            $groupRemoved->setOwner(null);
+        foreach ($authsToDelete as $authRemoved) {
+            $authRemoved->setUser(null);
         }
 
-        $this->collGroups = null;
-        foreach ($groups as $group) {
-            $this->addGroup($group);
+        $this->collAuths = null;
+        foreach ($auths as $auth) {
+            $this->addAuth($auth);
         }
 
-        $this->collGroups = $groups;
-        $this->collGroupsPartial = false;
+        $this->collAuths = $auths;
+        $this->collAuthsPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related Group objects.
+     * Returns the number of related Auth objects.
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct
      * @param      ConnectionInterface $con
-     * @return int             Count of related Group objects.
+     * @return int             Count of related Auth objects.
      * @throws PropelException
      */
-    public function countGroups(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countAuths(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collGroupsPartial && !$this->isNew();
-        if (null === $this->collGroups || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collGroups) {
+        $partial = $this->collAuthsPartial && !$this->isNew();
+        if (null === $this->collAuths || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collAuths) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getGroups());
+                return count($this->getAuths());
             }
 
-            $query = ChildGroupQuery::create(null, $criteria);
+            $query = ChildAuthQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
 
             return $query
-                ->filterByOwner($this)
+                ->filterByUser($this)
                 ->count($con);
         }
 
-        return count($this->collGroups);
+        return count($this->collAuths);
     }
 
     /**
-     * Method called to associate a ChildGroup object to this object
-     * through the ChildGroup foreign key attribute.
+     * Method called to associate a ChildAuth object to this object
+     * through the ChildAuth foreign key attribute.
      *
-     * @param  ChildGroup $l ChildGroup
+     * @param  ChildAuth $l ChildAuth
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
-    public function addGroup(ChildGroup $l)
+    public function addAuth(ChildAuth $l)
     {
-        if ($this->collGroups === null) {
-            $this->initGroups();
-            $this->collGroupsPartial = true;
+        if ($this->collAuths === null) {
+            $this->initAuths();
+            $this->collAuthsPartial = true;
         }
 
-        if (!$this->collGroups->contains($l)) {
-            $this->doAddGroup($l);
+        if (!$this->collAuths->contains($l)) {
+            $this->doAddAuth($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildGroup $group The ChildGroup object to add.
+     * @param ChildAuth $auth The ChildAuth object to add.
      */
-    protected function doAddGroup(ChildGroup $group)
+    protected function doAddAuth(ChildAuth $auth)
     {
-        $this->collGroups[]= $group;
-        $group->setOwner($this);
+        $this->collAuths[]= $auth;
+        $auth->setUser($this);
     }
 
     /**
-     * @param  ChildGroup $group The ChildGroup object to remove.
+     * @param  ChildAuth $auth The ChildAuth object to remove.
      * @return $this|ChildUser The current object (for fluent API support)
      */
-    public function removeGroup(ChildGroup $group)
+    public function removeAuth(ChildAuth $auth)
     {
-        if ($this->getGroups()->contains($group)) {
-            $pos = $this->collGroups->search($group);
-            $this->collGroups->remove($pos);
-            if (null === $this->groupsScheduledForDeletion) {
-                $this->groupsScheduledForDeletion = clone $this->collGroups;
-                $this->groupsScheduledForDeletion->clear();
+        if ($this->getAuths()->contains($auth)) {
+            $pos = $this->collAuths->search($auth);
+            $this->collAuths->remove($pos);
+            if (null === $this->authsScheduledForDeletion) {
+                $this->authsScheduledForDeletion = clone $this->collAuths;
+                $this->authsScheduledForDeletion->clear();
             }
-            $this->groupsScheduledForDeletion[]= $group;
-            $group->setOwner(null);
+            $this->authsScheduledForDeletion[]= clone $auth;
+            $auth->setUser(null);
         }
 
         return $this;
@@ -3300,8 +3301,8 @@ abstract class User implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collGroups) {
-                foreach ($this->collGroups as $o) {
+            if ($this->collAuths) {
+                foreach ($this->collAuths as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -3317,7 +3318,7 @@ abstract class User implements ActiveRecordInterface
             }
         } // if ($deep)
 
-        $this->collGroups = null;
+        $this->collAuths = null;
         $this->collGroupUsers = null;
         $this->collGroups = null;
         $this->aCountry = null;
@@ -3406,8 +3407,8 @@ abstract class User implements ActiveRecordInterface
                 $failureMap->addAll($retval);
             }
 
-            if (null !== $this->collGroups) {
-                foreach ($this->collGroups as $referrerFK) {
+            if (null !== $this->collAuths) {
+                foreach ($this->collAuths as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
                         if (!$referrerFK->validate($validator)) {
                             $failureMap->addAll($referrerFK->getValidationFailures());

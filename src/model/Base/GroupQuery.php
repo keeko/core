@@ -44,10 +44,6 @@ use keeko\core\model\Map\GroupTableMap;
  * @method     ChildGroupQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildGroupQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildGroupQuery leftJoinOwner($relationAlias = null) Adds a LEFT JOIN clause to the query using the Owner relation
- * @method     ChildGroupQuery rightJoinOwner($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Owner relation
- * @method     ChildGroupQuery innerJoinOwner($relationAlias = null) Adds a INNER JOIN clause to the query using the Owner relation
- *
  * @method     ChildGroupQuery leftJoinGroupUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the GroupUser relation
  * @method     ChildGroupQuery rightJoinGroupUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GroupUser relation
  * @method     ChildGroupQuery innerJoinGroupUser($relationAlias = null) Adds a INNER JOIN clause to the query using the GroupUser relation
@@ -56,7 +52,7 @@ use keeko\core\model\Map\GroupTableMap;
  * @method     ChildGroupQuery rightJoinGroupAction($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GroupAction relation
  * @method     ChildGroupQuery innerJoinGroupAction($relationAlias = null) Adds a INNER JOIN clause to the query using the GroupAction relation
  *
- * @method     \keeko\core\model\UserQuery|\keeko\core\model\GroupUserQuery|\keeko\core\model\GroupActionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \keeko\core\model\GroupUserQuery|\keeko\core\model\GroupActionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildGroup findOne(ConnectionInterface $con = null) Return the first ChildGroup matching the query
  * @method     ChildGroup findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGroup matching the query, or a new ChildGroup object populated from the query conditions when no match is found
@@ -311,8 +307,6 @@ abstract class GroupQuery extends ModelCriteria
      * $query->filterByOwnerId(array('min' => 12)); // WHERE owner_id > 12
      * </code>
      *
-     * @see       filterByOwner()
-     *
      * @param     mixed $ownerId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -565,81 +559,6 @@ abstract class GroupQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(GroupTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
-    }
-
-    /**
-     * Filter the query by a related \keeko\core\model\User object
-     *
-     * @param \keeko\core\model\User|ObjectCollection $user The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildGroupQuery The current query, for fluid interface
-     */
-    public function filterByOwner($user, $comparison = null)
-    {
-        if ($user instanceof \keeko\core\model\User) {
-            return $this
-                ->addUsingAlias(GroupTableMap::COL_OWNER_ID, $user->getId(), $comparison);
-        } elseif ($user instanceof ObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(GroupTableMap::COL_OWNER_ID, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterByOwner() only accepts arguments of type \keeko\core\model\User or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Owner relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildGroupQuery The current query, for fluid interface
-     */
-    public function joinOwner($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Owner');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Owner');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Owner relation User object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \keeko\core\model\UserQuery A secondary query class using the current class as primary query
-     */
-    public function useOwnerQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinOwner($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Owner', '\keeko\core\model\UserQuery');
     }
 
     /**

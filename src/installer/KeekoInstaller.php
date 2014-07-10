@@ -12,6 +12,9 @@ use Composer\Composer;
 use keeko\core\package\PackageManager;
 use Composer\IO\NullIO;
 use Symfony\Component\HttpFoundation\Request;
+use keeko\core\model\User;
+use keeko\core\model\Group;
+use keeko\core\model\GroupUser;
 
 class KeekoInstaller {
 
@@ -33,7 +36,40 @@ class KeekoInstaller {
 		$this->moduleInstaller = new ModuleInstaller();
 		
 		$this->installStaticData();
+		$this->installGroupsAndUsers();
+		$this->installUsers();
 		$this->moduleManager = new ModuleManager($this->packageManager);
+	}
+	
+	public function installGroupsAndUsers() {
+		$guestGroup = new Group();
+		$guestGroup->setName('Guest');
+		$guestGroup->setIsGuest(true);
+		$guestGroup->save();
+		
+		$userGroup = new Group();
+		$userGroup->setName('Users');
+		$userGroup->setIsDefault(true);
+		$userGroup->save();
+		
+		$adminGroup = new Group();
+		$adminGroup->setName('Administrators');
+		$adminGroup->save();
+		
+		$root = new User();
+		$root->setDisplayName('root');
+		$root->setLoginName('root');
+		$root->setPassword(password_hash('root', PASSWORD_BCRYPT));
+		$root->save();
+		$root->addGroup($userGroup);
+		$root->addGroup($adminGroup);
+		
+		$guest = new User();
+		$guest->setDisplayName('Guest');
+		$guest->save();
+		$guest->addGroup($guestGroup);
+		
+		
 	}
 
 	public function installKeeko() {
