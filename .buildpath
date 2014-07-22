@@ -3,7 +3,6 @@
 	<buildpathentry kind="src" path="vendor/justinrainbow/json-schema/src"/>
 	<buildpathentry kind="src" path="vendor/symfony/config"/>
 	<buildpathentry kind="src" path="vendor/psr/log"/>
-	<buildpathentry kind="src" path="vendor/seld/jsonlint/src"/>
 	<buildpathentry kind="src" path="vendor/symfony/routing"/>
 	<buildpathentry kind="src" path="vendor/symfony/filesystem"/>
 	<buildpathentry kind="src" path="vendor/symfony/process"/>
@@ -19,6 +18,7 @@
 	<buildpathentry kind="src" path="vendor/propel/propel/src"/>
 	<buildpathentry kind="src" path="vendor/symfony/validator"/>
 	<buildpathentry excluding="composer/" kind="src" path="vendor/composer"/>
+	<buildpathentry kind="src" path="vendor/seld/jsonlint/src/Seld/JsonLint"/>
 	<buildpathentry kind="src" path="vendor/symfony/translation"/>
 	<buildpathentry kind="src" path="vendor/ircmaxell/password-compat/lib"/>
 	<buildpathentry kind="src" path="vendor/symfony/yaml"/>

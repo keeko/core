@@ -1,0 +1,30 @@
+propel:
+  general:
+    project: keeko
+
+  paths:
+    projectDir: .
+    schemaDir: %projectDir%/database
+    outputDir: %schemaDir%
+    phpDir: %outputDir%/generated-classes
+    phpConfDir: %outputDir%/generated-conf
+    sqlDir: %outputDir%/sql
+
+  database:
+    connections:
+      keeko:
+        adapter: mysql
+        dsn: mysql:host=localhost;dbname=keeko
+        user: root
+        password: 
+        settings:
+          charset: utf-8
+
+  generator:
+    defaultConnection: keeko
+    tablePrefix: kk_
+    targetPackage: keeko.core.model
+    namespaceAutoPackage: false
+
+  runtime:
+    defaultConnection: keeko

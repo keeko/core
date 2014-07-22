@@ -10,6 +10,7 @@ use keeko\core\application\AbstractApplication;
 use keeko\core\package\PackageManager;
 use keeko\core\auth\AuthManager;
 use keeko\core\model\User;
+use keeko\core\exceptions\PermissionDeniedException;
 
 abstract class AbstractModule {
 
@@ -31,10 +32,10 @@ abstract class AbstractModule {
 	 * @var PackageManager
 	 */
 	private $packageManager;
-	
+
 	/** @var AuthManager */
 	protected $authManager;
-	
+
 	/** @var User */
 	protected $user;
 
@@ -118,7 +119,7 @@ abstract class AbstractModule {
 			throw new ModuleException(sprintf('Action (%s) not found in Module (%s)', $className, $this->model->getName()));
 		}
 		
-		$class = new $className($action, $response);
+		$class = new $className($action, $this, $response);
 		
 		return $class;
 	}
@@ -128,10 +129,9 @@ abstract class AbstractModule {
 	 *
 	 * @param Action $action
 	 */
-	private function checkPermission($action) {
-		if (!$this->user->hasPermission($this->model->getId(), $action)) {
-			// TODO
-			//throw PermissionDeniedException();
+	private function checkPermission(Action $action) {
+		if (!$this->user->hasPermission($this->model->getId(), $action->getName())) {
+// 			throw new PermissionDeniedException(sprintf('Action %s in module %s is forbidden', $action->getName(), $this->model->getName()));
 		}
 	}
 

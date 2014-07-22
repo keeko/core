@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Request;
 use keeko\core\model\UserQuery;
 use keeko\core\model\User;
 use keeko\core\model\AuthQuery;
+use keeko\core\model\Auth;
 
 class AuthManager {
 	
@@ -13,24 +14,37 @@ class AuthManager {
 	 */
 	private $user;
 	
-	private $authenticated = false;
+	/** @var Auth */
+	private $auth;
 	
-	private $authorized = false;
+	private $recognized = false;
+	
+	private $authenticated = false;
 	
 	public function __construct() {
 		$request = Request::createFromGlobals();
 		$strategies = ['header', 'basic', 'cookie'];
 
+		$found = false;
 		foreach ($strategies as $strategy) {
 			$method = 'auth' . ucfirst($strategy);
 			if ($this->$method($request)) {
-				return;
+				$found = true;
+				break;
 			}
 		}
-
+		
+// 		print_r($this->user);
+		
 		// auth failed - fetch guest
-		$this->user = UserQuery::create()->findOneById(-1);
-		$this->initUser($this->user);
+		if (!$found) {
+			$this->user = $this->getGuest();
+			$this->initUser($this->user);
+		}
+	}
+	
+	private function getGuest() {
+		return UserQuery::create()->findOneById(2);
 	}
 	
 	private function authCookie(Request $request) {
@@ -42,22 +56,25 @@ class AuthManager {
 	}
 
 	private function authHeader(Request $request) {
-		if ($request->headers->has('Authorization')) {
-			$auth = $request->headers->get('Authorization');
-			list(, $bearer) = explode(' ', $auth);
-			return $this->authToken($bearer);
+		if ($request->headers->has('authorization')) {
+			$auth = $request->headers->get('authorization');
+			if (!empty($auth)) {
+				list(, $bearer) = explode(' ', $auth);
+				return $this->authToken($bearer);
+			}
 		}
 		return false;
 	}
 	
 	private function authToken($token) {
-		$user = AuthQuery::create()->innerJoinUser()->findOneByToken($token);
-		
-		if ($user !== null) {
-			$this->user = $user;
+		$auth = AuthQuery::create()->findOneByToken($token);
+
+		if ($auth !== null) {
+			$this->auth = $auth;
+			$this->user = $auth->getUser();
+			$this->recognized = true;
 			$this->authenticated = true;
-			$this->authorized = true;
-			$this->initUser($user);
+			$this->initUser($this->user);
 			return true;
 		}
 		
@@ -80,31 +97,63 @@ class AuthManager {
 
 		if ($user) {
 			$this->user = $user;
-			$this->authenticated = true;
+			$this->recognized = true;
 			
 			if (password_verify($password, $user->getPassword())) {
-				$this->authorized = true;
+				$this->authenticated = true;
 				$this->initUser($user);
+				
+				// delete an old auth-token first ...
+				AuthQuery::create()->filterByUserId($user->getId())->delete();
+				
+				// ... create a new one
+				$this->auth = new Auth();
+				$this->auth->setToken(self::generateToken());
+				$this->auth->setUser($user);
+				$this->auth->save();
 				return true;
 			}
 		}
 		
 		return false;
 	}
+
+	public function logout(User $user = null) {
+		if ($user === null) {
+			$user = $this->user;
+		}
+		$success = AuthQuery::create()->filterByUser($user)->delete() > 0;
+
+		if ($success) {
+			$this->user = $this->getGuest();
+			$this->recognized = false;
+			$this->authenticated = false;
+		}
+		
+		return $success;
+	}
+
+	public static function generateToken() {
+		return md5(uniqid(mt_rand(), true));
+	}
 	
 	private function initUser(User $user) {
-		$user->updatePermissions();
+// 		$user->updatePermissions();
 	}
 	
 	public function getUser() {
 		return $this->user;
 	}
 	
-	public function isAuthenticated() {
-		return $this->authenticated;
+	public function getAuth() {
+		return $this->auth;
 	}
 	
-	public function isAuthorized() {
-		return $this->authorized;
+	public function isRecognized() {
+		return $this->recognized;
+	}
+	
+	public function isAuthenticated() {
+		return $this->authenticated;
 	}
 }

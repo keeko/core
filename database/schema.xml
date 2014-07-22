@@ -193,6 +193,11 @@
 		</foreign-key>
 	</table>
 
+	<table name="configuration">
+		<column name="key" type="VARCHAR" size="255" primaryKey="true" required="true"/>
+		<column name="value" type="LONGVARCHAR"/>
+	</table>
+
 	<table name="api" namespace="\keeko\core\model">
 		<column name="id" type="INTEGER" size="10" primaryKey="true"
 			required="true" autoIncrement="true" />
@@ -225,7 +230,7 @@
 		<column name="given_name" type="VARCHAR" size="100" />
 		<column name="family_name" type="VARCHAR" size="100" />
 		<column name="display_name" type="VARCHAR" size="100" />
-		<column name="email" type="VARCHAR" size="255" required="true" />
+		<column name="email" type="VARCHAR" size="255"/>
 		<column name="country_iso_nr" type="INTEGER" />
 		<column name="subdivision_id" type="INTEGER" />
 		<column name="address" type="LONGVARCHAR" />

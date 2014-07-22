@@ -35,9 +35,13 @@ abstract class AbstractApplication {
 
 	protected $prefix;
 
-	protected $base;
+	protected $destination;
 
 	protected $root;
+	
+	protected $base;
+	
+	protected $config;
 
 	/**
 	 * Creates a new Keeko Application
@@ -47,12 +51,17 @@ abstract class AbstractApplication {
 		$this->packageManager = new PackageManager();
 		$this->moduleManager = new ModuleManager($this->packageManager, $this);
 		$this->authManager = new AuthManager();
+// 		$this->readConfiguration();
 	}
 
 	public function getPackageManager() {
 		return $this->packageManager;
 	}
 	
+	/**
+	 * 
+	 * @return AuthManager
+	 */
 	public function getAuthManager() {
 		return $this->authManager;
 	}
@@ -63,14 +72,32 @@ abstract class AbstractApplication {
 
 	public function setPrefix($prefix) {
 		$this->prefix = $prefix;
+		$this->updateBase();
 	}
 
-	public function setBase($base) {
-		$this->base = $base;
+	public function setDestination($destination) {
+		$this->destination = $destination;
 	}
 
 	public function setRoot($root) {
 		$this->root = $root;
+		$this->updateBase();
+	}
+	
+	private function updateBase() {
+		$this->base = $this->root . $this->prefix;
+	}
+	
+	public function getPlattformUrl() {
+		return $this->root;
+	}
+	
+	public function getDestinationUrl() {
+		return $this->destination;
+	}
+	
+	public function getAppUrl() {
+		return $this->base;
 	}
 
 	/**

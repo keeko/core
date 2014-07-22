@@ -33,8 +33,9 @@ abstract class AbstractAction {
 
 	protected $response;
 
-	public function __construct(Action $model, AbstractResponse $response) {
+	public function __construct(Action $model, AbstractModule $module, AbstractResponse $response) {
 		$this->model = $model;
+		$this->module = $module;
 		$this->response = $response;
 	}
 
@@ -48,6 +49,10 @@ abstract class AbstractAction {
 		// does nothing, extend this method and provide functionality for your action
 	}
 	
+	/**
+	 *
+	 * @return AbstractModule
+	 */
 	protected function getModule() {
 		return $this->module;
 	}
@@ -62,10 +67,12 @@ abstract class AbstractAction {
 
 	public function setModule(AbstractModule $module) {
 		$this->module = $module;
-		$templatePath = sprintf('%s/%s/templates/%s', KEEKO_PATH_MODULES, $module->getModel()->getName(), $module->getKeeko()->getEntity()->getApplicationType()->getName());
+		$templatePath = sprintf('%s/%s/templates/', KEEKO_PATH_MODULES, $module->getModel()->getName());
 		
-		$loader = new \Twig_Loader_Filesystem($templatePath);
-		$this->twig = new \Twig_Environment($loader);
+		if (file_exists($templatePath)) {
+			$loader = new \Twig_Loader_Filesystem($templatePath);
+			$this->twig = new \Twig_Environment($loader);
+		}
 	}
 	
 	abstract public function run(Request $request);

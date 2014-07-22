@@ -238,7 +238,7 @@ class UserTableMap extends TableMap
         $this->addColumn('GIVEN_NAME', 'GivenName', 'VARCHAR', false, 100, null);
         $this->addColumn('FAMILY_NAME', 'FamilyName', 'VARCHAR', false, 100, null);
         $this->addColumn('DISPLAY_NAME', 'DisplayName', 'VARCHAR', false, 100, null);
-        $this->addColumn('EMAIL', 'Email', 'VARCHAR', true, 255, null);
+        $this->addColumn('EMAIL', 'Email', 'VARCHAR', false, 255, null);
         $this->addForeignKey('COUNTRY_ISO_NR', 'CountryIsoNr', 'INTEGER', 'kk_country', 'ISO_NR', false, null, null);
         $this->addForeignKey('SUBDIVISION_ID', 'SubdivisionId', 'INTEGER', 'kk_subdivision', 'ID', false, null, null);
         $this->addColumn('ADDRESS', 'Address', 'LONGVARCHAR', false, null, null);

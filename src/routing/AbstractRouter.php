@@ -7,6 +7,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractRouter {
 
@@ -39,16 +40,22 @@ abstract class AbstractRouter {
 	 * @var UrlGenerator
 	 */
 	protected $generator;
+	
+	/** @var Request */
+	private $request;
 
-	public function __construct(array $options) {
+	public function __construct(Request $request, array $options) {
 		// options
 		$resolver = new OptionsResolver();
 		$this->setDefaultOptions($resolver);
 		$this->options = $resolver->resolve($options);
+		$this->request = $request;
 	}
 
 	protected function init(RouteCollection $routes) {
-		$context = new RequestContext($this->options['basepath']);
+		$context = new RequestContext();
+		$context->fromRequest($this->request);
+		$context->setBaseUrl($this->options['basepath']);
 		
 		$this->matcher = new UrlMatcher($routes, $context);
 		$this->generator = new UrlGenerator($routes, $context);

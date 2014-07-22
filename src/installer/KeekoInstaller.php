@@ -34,11 +34,13 @@ class KeekoInstaller {
 		$this->packageManager = new PackageManager();
 		$this->appInstaller = new AppInstaller();
 		$this->moduleInstaller = new ModuleInstaller();
-		
+		$this->moduleManager = new ModuleManager($this->packageManager);
+	}
+	
+	public function install() {
 		$this->installStaticData();
 		$this->installGroupsAndUsers();
-		$this->installUsers();
-		$this->moduleManager = new ModuleManager($this->packageManager);
+		$this->installKeeko();
 	}
 	
 	public function installGroupsAndUsers() {
@@ -68,8 +70,6 @@ class KeekoInstaller {
 		$guest->setDisplayName('Guest');
 		$guest->save();
 		$guest->addGroup($guestGroup);
-		
-		
 	}
 
 	public function installKeeko() {
@@ -126,6 +126,9 @@ class KeekoInstaller {
 		
 		$this->installModule('keeko/group');
 		$this->activateModule('keeko/group');
+		
+		$this->installModule('keeko/auth');
+		$this->activateModule('keeko/auth');
 	}
 	
 	public function installModule($packageName) {
