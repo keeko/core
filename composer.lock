@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "cec1627acf7ea66799ec43116b460fb52cf0ce75"
+                "reference": "0ce0cf42e80d68f5cf5c766457536e2894e32ffc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/cec1627acf7ea66799ec43116b460fb52cf0ce75",
-                "reference": "cec1627acf7ea66799ec43116b460fb52cf0ce75",
+                "url": "https://api.github.com/repos/composer/composer/zipball/0ce0cf42e80d68f5cf5c766457536e2894e32ffc",
+                "reference": "0ce0cf42e80d68f5cf5c766457536e2894e32ffc",
                 "shasum": ""
             },
             "require": {
@@ -72,7 +72,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2014-07-20 19:55:24"
+            "time": "2014-07-23 17:19:39"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -230,12 +230,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/propelorm/Propel2.git",
-                "reference": "fb7aa33479797a5e2fe794eeb3762691cb6416b2"
+                "reference": "b6bd044df8353bbf8c146e200067d2cfc9bace97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/propelorm/Propel2/zipball/fb7aa33479797a5e2fe794eeb3762691cb6416b2",
-                "reference": "fb7aa33479797a5e2fe794eeb3762691cb6416b2",
+                "url": "https://api.github.com/repos/propelorm/Propel2/zipball/b6bd044df8353bbf8c146e200067d2cfc9bace97",
+                "reference": "b6bd044df8353bbf8c146e200067d2cfc9bace97",
                 "shasum": ""
             },
             "require": {
@@ -277,8 +277,7 @@
             "authors": [
                 {
                     "name": "William Durand",
-                    "email": "william.durand1@gmail.com",
-                    "homepage": "http://www.willdurand.fr"
+                    "email": "william.durand1@gmail.com"
                 }
             ],
             "description": "Propel2 is an open-source Object-Relational Mapping (ORM) for PHP 5.4",
@@ -288,7 +287,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2014-07-15 20:18:33"
+            "time": "2014-07-22 21:22:21"
         },
         {
             "name": "psr/log",

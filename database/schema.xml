@@ -193,7 +193,7 @@
 		</foreign-key>
 	</table>
 
-	<table name="configuration">
+	<table name="configuration" namespace="\keeko\core\model">
 		<column name="key" type="VARCHAR" size="255" primaryKey="true" required="true"/>
 		<column name="value" type="LONGVARCHAR"/>
 	</table>
