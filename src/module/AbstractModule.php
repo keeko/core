@@ -11,43 +11,41 @@ use keeko\core\package\PackageManager;
 use keeko\core\auth\AuthManager;
 use keeko\core\model\User;
 use keeko\core\exceptions\PermissionDeniedException;
+use keeko\core\service\ServiceContainer;
+use keeko\core\preferences\Preferences;
 
 abstract class AbstractModule {
-
-	/**
-	 *
-	 * @var AbstractApplication
-	 */
-	protected $application;
-
-	/**
-	 *
-	 * @var Module
-	 */
+	
+	/** @var Module */
 	protected $model;
 
 	protected $actions;
 
-	/**
-	 * @var PackageManager
-	 */
-	private $packageManager;
-
-	/** @var AuthManager */
-	protected $authManager;
-
 	/** @var User */
 	protected $user;
+	
+	/** @var ServiceContainer */
+	protected $service;
+	
+	protected $preferences;
 
-	public function __construct(Module $module, AbstractApplication $application) {
+	public function __construct(Module $module, ServiceContainer $service) {
 		$this->model = $module;
-		$this->application = $application;
-		$this->packageManager = $application->getPackageManager();
-		$this->package = $this->packageManager->getModulePackage($module->getName());
-		$this->authManager = $application->getAuthManager();
-		$this->user = $this->authManager->getUser();
+		$this->service = $service;
+		
+		$packageManager = $service->getPackageManager();
+		$this->package = $packageManager->getModulePackage($module->getName());
 		
 		$this->loadActions();
+	}
+	
+	/**
+	 * Returns the service container
+	 *
+	 * @return ServiceContainer
+	 */
+	public function getServiceContainer() {
+		return $this->service;
 	}
 
 	/**
@@ -58,6 +56,19 @@ abstract class AbstractModule {
 	public function getModel() {
 		return $this->model;
 	}
+	
+	/**
+	 * Returns the module's preferences
+	 *
+	 * @return Preferences
+	 */
+	public function getPreferences() {
+		if ($this->preferences === null) {
+			$this->preferences = $this->service->getPreferenceLoader()->getModulePreferences($this->model->getId());
+		}
+		
+		return $this->preferences();
+	}
 
 	private function loadActions() {
 		$extra = $this->package->getExtra();
@@ -65,19 +76,6 @@ abstract class AbstractModule {
 		if (isset($extra['keeko']) && isset($extra['keeko']['module']) && isset($extra['keeko']['module']['actions'])) {
 			$this->actions = $extra['keeko']['module']['actions'];
 		}
-	}
-
-	public function setApplication(AbstractApplication $application) {
-		$this->application = $application;
-	}
-
-	/**
-	 * Returns the application
-	 *
-	 * @return AbstractApplication
-	 */
-	public function getApplication() {
-		return $this->application;
 	}
 
 	/**
@@ -130,9 +128,9 @@ abstract class AbstractModule {
 	 * @param Action $action
 	 */
 	private function checkPermission(Action $action) {
-		if (!$this->user->hasPermission($this->model->getId(), $action->getName())) {
+// 		if (!$this->user->hasPermission($this->model->getId(), $action->getName())) {
 // 			throw new PermissionDeniedException(sprintf('Action %s in module %s is forbidden', $action->getName(), $this->model->getName()));
-		}
+// 		}
 	}
 
 	abstract public function install();

@@ -44,15 +44,15 @@ use keeko\core\model\Map\GroupTableMap;
  * @method     ChildGroupQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildGroupQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildGroupQuery leftJoinGroupUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the GroupUser relation
- * @method     ChildGroupQuery rightJoinGroupUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GroupUser relation
- * @method     ChildGroupQuery innerJoinGroupUser($relationAlias = null) Adds a INNER JOIN clause to the query using the GroupUser relation
+ * @method     ChildGroupQuery leftJoinUserGroup($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserGroup relation
+ * @method     ChildGroupQuery rightJoinUserGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserGroup relation
+ * @method     ChildGroupQuery innerJoinUserGroup($relationAlias = null) Adds a INNER JOIN clause to the query using the UserGroup relation
  *
  * @method     ChildGroupQuery leftJoinGroupAction($relationAlias = null) Adds a LEFT JOIN clause to the query using the GroupAction relation
  * @method     ChildGroupQuery rightJoinGroupAction($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GroupAction relation
  * @method     ChildGroupQuery innerJoinGroupAction($relationAlias = null) Adds a INNER JOIN clause to the query using the GroupAction relation
  *
- * @method     \keeko\core\model\GroupUserQuery|\keeko\core\model\GroupActionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \keeko\core\model\UserGroupQuery|\keeko\core\model\GroupActionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildGroup findOne(ConnectionInterface $con = null) Return the first ChildGroup matching the query
  * @method     ChildGroup findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGroup matching the query, or a new ChildGroup object populated from the query conditions when no match is found
@@ -162,11 +162,13 @@ abstract class GroupQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildGroup A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, OWNER_ID, NAME, IS_GUEST, IS_DEFAULT, IS_ACTIVE, IS_SYSTEM, CREATED_AT, UPDATED_AT FROM kk_group WHERE ID = :p0';
+        $sql = 'SELECT `id`, `owner_id`, `name`, `is_guest`, `is_default`, `is_active`, `is_system`, `created_at`, `updated_at` FROM `kk_group` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -562,40 +564,40 @@ abstract class GroupQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \keeko\core\model\GroupUser object
+     * Filter the query by a related \keeko\core\model\UserGroup object
      *
-     * @param \keeko\core\model\GroupUser|ObjectCollection $groupUser  the related object to use as filter
+     * @param \keeko\core\model\UserGroup|ObjectCollection $userGroup  the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildGroupQuery The current query, for fluid interface
      */
-    public function filterByGroupUser($groupUser, $comparison = null)
+    public function filterByUserGroup($userGroup, $comparison = null)
     {
-        if ($groupUser instanceof \keeko\core\model\GroupUser) {
+        if ($userGroup instanceof \keeko\core\model\UserGroup) {
             return $this
-                ->addUsingAlias(GroupTableMap::COL_ID, $groupUser->getGroupId(), $comparison);
-        } elseif ($groupUser instanceof ObjectCollection) {
+                ->addUsingAlias(GroupTableMap::COL_ID, $userGroup->getGroupId(), $comparison);
+        } elseif ($userGroup instanceof ObjectCollection) {
             return $this
-                ->useGroupUserQuery()
-                ->filterByPrimaryKeys($groupUser->getPrimaryKeys())
+                ->useUserGroupQuery()
+                ->filterByPrimaryKeys($userGroup->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByGroupUser() only accepts arguments of type \keeko\core\model\GroupUser or Collection');
+            throw new PropelException('filterByUserGroup() only accepts arguments of type \keeko\core\model\UserGroup or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the GroupUser relation
+     * Adds a JOIN clause to the query using the UserGroup relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildGroupQuery The current query, for fluid interface
      */
-    public function joinGroupUser($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinUserGroup($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('GroupUser');
+        $relationMap = $tableMap->getRelation('UserGroup');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -610,14 +612,14 @@ abstract class GroupQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'GroupUser');
+            $this->addJoinObject($join, 'UserGroup');
         }
 
         return $this;
     }
 
     /**
-     * Use the GroupUser relation GroupUser object
+     * Use the UserGroup relation UserGroup object
      *
      * @see useQuery()
      *
@@ -625,13 +627,13 @@ abstract class GroupQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \keeko\core\model\GroupUserQuery A secondary query class using the current class as primary query
+     * @return \keeko\core\model\UserGroupQuery A secondary query class using the current class as primary query
      */
-    public function useGroupUserQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useUserGroupQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinGroupUser($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'GroupUser', '\keeko\core\model\GroupUserQuery');
+            ->joinUserGroup($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'UserGroup', '\keeko\core\model\UserGroupQuery');
     }
 
     /**
@@ -709,7 +711,7 @@ abstract class GroupQuery extends ModelCriteria
 
     /**
      * Filter the query by a related User object
-     * using the kk_group_user table as cross reference
+     * using the kk_user_group table as cross reference
      *
      * @param User $user the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -719,7 +721,7 @@ abstract class GroupQuery extends ModelCriteria
     public function filterByUser($user, $comparison = Criteria::EQUAL)
     {
         return $this
-            ->useGroupUserQuery()
+            ->useUserGroupQuery()
             ->filterByUser($user, $comparison)
             ->endUse();
     }

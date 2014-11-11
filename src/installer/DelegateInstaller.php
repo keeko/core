@@ -15,45 +15,45 @@ use Composer\Repository\WritableRepositoryInterface;
 class DelegateInstaller {
 
 	public static function installPackage(PackageEvent $event) {
-		if (!self::bootstrap()) {
-			return;
-		}
+// 		if (!self::bootstrap()) {
+// 			return;
+// 		}
 		
-		$operation = $event->getOperation();
-		if ($operation instanceof InstallOperation) {
-			/* @var $operation InstallOperation */
-			$package = $operation->getPackage();
-			$installer = self::getInstaller($package);
-			$installer->install($event->getIO(), $package);
-		}
+// 		$operation = $event->getOperation();
+// 		if ($operation instanceof InstallOperation) {
+// 			/* @var $operation InstallOperation */
+// 			$package = $operation->getPackage();
+// 			$installer = self::getInstaller($package);
+// 			$installer->install($event->getIO(), $package);
+// 		}
 	}
 
 	public static function updatePackage(PackageEvent $event) {
-		if (!self::bootstrap()) {
-			return;
-		}
+// 		if (!self::bootstrap()) {
+// 			return;
+// 		}
 		
-		$operation = $event->getOperation();
-		if ($operation instanceof UpdateOperation) {
-			/* @var $operation UpdateOperation */
-			$initial = $operation->getInitialPackage();
-			$target = $operation->getTargetPackage();
-			$installer = self::getInstaller($target);
-			$installer->update($event->getIO(), $initial, $target);
-		}
+// 		$operation = $event->getOperation();
+// 		if ($operation instanceof UpdateOperation) {
+// 			/* @var $operation UpdateOperation */
+// 			$initial = $operation->getInitialPackage();
+// 			$target = $operation->getTargetPackage();
+// 			$installer = self::getInstaller($target);
+// 			$installer->update($event->getIO(), $initial, $target);
+// 		}
 	}
 
 	public static function uninstallPackage(PackageEvent $event) {
-		if (!self::bootstrap()) {
-			return;
-		}
+// 		if (!self::bootstrap()) {
+// 			return;
+// 		}
 		
-		$operation = $event->getOperation();
-		if ($operation instanceof UninstallOperation) {
-			$package = $operation->getPackage();
-			$installer = self::getInstaller($package);
-			$installer->uninstall($event->getIO(), $package);
-		}
+// 		$operation = $event->getOperation();
+// 		if ($operation instanceof UninstallOperation) {
+// 			$package = $operation->getPackage();
+// 			$installer = self::getInstaller($package);
+// 			$installer->uninstall($event->getIO(), $package);
+// 		}
 	}
 
 	/**

@@ -166,11 +166,13 @@ abstract class SubdivisionQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildSubdivision A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, ISO, NAME, LOCAL_NAME, EN_NAME, ALT_NAMES, PARENT_ID, COUNTRY_ISO_NR, SUBDIVISION_TYPE_ID FROM kk_subdivision WHERE ID = :p0';
+        $sql = 'SELECT `id`, `iso`, `name`, `local_name`, `en_name`, `alt_names`, `parent_id`, `country_iso_nr`, `subdivision_type_id` FROM `kk_subdivision` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -579,6 +581,8 @@ abstract class SubdivisionQuery extends ModelCriteria
      * @param \keeko\core\model\Country|ObjectCollection $country The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildSubdivisionQuery The current query, for fluid interface
      */
     public function filterByCountry($country, $comparison = null)
@@ -653,6 +657,8 @@ abstract class SubdivisionQuery extends ModelCriteria
      *
      * @param \keeko\core\model\SubdivisionType|ObjectCollection $subdivisionType The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildSubdivisionQuery The current query, for fluid interface
      */

@@ -34,7 +34,7 @@ class LocalizationTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.LocalizationTableMap';
+    const CLASS_NAME = '.Map.LocalizationTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class LocalizationTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.Localization';
+    const CLASS_DEFAULT = 'Localization';
 
     /**
      * The total number of columns
@@ -72,29 +72,29 @@ class LocalizationTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 5;
 
     /**
-     * the column name for the ID field
+     * the column name for the id field
      */
-    const COL_ID = 'kk_localization.ID';
+    const COL_ID = 'kk_localization.id';
 
     /**
-     * the column name for the PARENT_ID field
+     * the column name for the parent_id field
      */
-    const COL_PARENT_ID = 'kk_localization.PARENT_ID';
+    const COL_PARENT_ID = 'kk_localization.parent_id';
 
     /**
-     * the column name for the LANGUAGE_ID field
+     * the column name for the language_id field
      */
-    const COL_LANGUAGE_ID = 'kk_localization.LANGUAGE_ID';
+    const COL_LANGUAGE_ID = 'kk_localization.language_id';
 
     /**
-     * the column name for the COUNTRY_ISO_NR field
+     * the column name for the country_iso_nr field
      */
-    const COL_COUNTRY_ISO_NR = 'kk_localization.COUNTRY_ISO_NR';
+    const COL_COUNTRY_ISO_NR = 'kk_localization.country_iso_nr';
 
     /**
-     * the column name for the IS_DEFAULT field
+     * the column name for the is_default field
      */
-    const COL_IS_DEFAULT = 'kk_localization.IS_DEFAULT';
+    const COL_IS_DEFAULT = 'kk_localization.is_default';
 
     /**
      * The default string format for model objects of the related table
@@ -109,9 +109,8 @@ class LocalizationTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('Id', 'ParentId', 'LanguageId', 'CountryIsoNr', 'IsDefault', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'parentId', 'languageId', 'countryIsoNr', 'isDefault', ),
+        self::TYPE_CAMELNAME     => array('id', 'parentId', 'languageId', 'countryIsoNr', 'isDefault', ),
         self::TYPE_COLNAME       => array(LocalizationTableMap::COL_ID, LocalizationTableMap::COL_PARENT_ID, LocalizationTableMap::COL_LANGUAGE_ID, LocalizationTableMap::COL_COUNTRY_ISO_NR, LocalizationTableMap::COL_IS_DEFAULT, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_PARENT_ID', 'COL_LANGUAGE_ID', 'COL_COUNTRY_ISO_NR', 'COL_IS_DEFAULT', ),
         self::TYPE_FIELDNAME     => array('id', 'parent_id', 'language_id', 'country_iso_nr', 'is_default', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
@@ -124,9 +123,8 @@ class LocalizationTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('Id' => 0, 'ParentId' => 1, 'LanguageId' => 2, 'CountryIsoNr' => 3, 'IsDefault' => 4, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'parentId' => 1, 'languageId' => 2, 'countryIsoNr' => 3, 'isDefault' => 4, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'parentId' => 1, 'languageId' => 2, 'countryIsoNr' => 3, 'isDefault' => 4, ),
         self::TYPE_COLNAME       => array(LocalizationTableMap::COL_ID => 0, LocalizationTableMap::COL_PARENT_ID => 1, LocalizationTableMap::COL_LANGUAGE_ID => 2, LocalizationTableMap::COL_COUNTRY_ISO_NR => 3, LocalizationTableMap::COL_IS_DEFAULT => 4, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_PARENT_ID' => 1, 'COL_LANGUAGE_ID' => 2, 'COL_COUNTRY_ISO_NR' => 3, 'COL_IS_DEFAULT' => 4, ),
         self::TYPE_FIELDNAME     => array('id' => 0, 'parent_id' => 1, 'language_id' => 2, 'country_iso_nr' => 3, 'is_default' => 4, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
@@ -143,15 +141,16 @@ class LocalizationTableMap extends TableMap
         // attributes
         $this->setName('kk_localization');
         $this->setPhpName('Localization');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\Localization');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addForeignKey('PARENT_ID', 'ParentId', 'INTEGER', 'kk_localization', 'ID', false, 10, null);
-        $this->addForeignKey('LANGUAGE_ID', 'LanguageId', 'INTEGER', 'kk_language', 'ID', false, 10, null);
-        $this->addForeignKey('COUNTRY_ISO_NR', 'CountryIsoNr', 'INTEGER', 'kk_country', 'ISO_NR', false, 10, null);
-        $this->addColumn('IS_DEFAULT', 'IsDefault', 'BOOLEAN', false, 1, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addForeignKey('parent_id', 'ParentId', 'INTEGER', 'kk_localization', 'id', false, 10, null);
+        $this->addForeignKey('language_id', 'LanguageId', 'INTEGER', 'kk_language', 'id', false, 10, null);
+        $this->addForeignKey('country_iso_nr', 'CountryIsoNr', 'INTEGER', 'kk_country', 'iso_nr', false, 10, null);
+        $this->addColumn('is_default', 'IsDefault', 'BOOLEAN', false, 1, null);
     } // initialize()
 
     /**
@@ -174,7 +173,7 @@ class LocalizationTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -196,7 +195,7 @@ class LocalizationTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -232,7 +231,7 @@ class LocalizationTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -313,11 +312,11 @@ class LocalizationTableMap extends TableMap
             $criteria->addSelectColumn(LocalizationTableMap::COL_COUNTRY_ISO_NR);
             $criteria->addSelectColumn(LocalizationTableMap::COL_IS_DEFAULT);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.PARENT_ID');
-            $criteria->addSelectColumn($alias . '.LANGUAGE_ID');
-            $criteria->addSelectColumn($alias . '.COUNTRY_ISO_NR');
-            $criteria->addSelectColumn($alias . '.IS_DEFAULT');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.parent_id');
+            $criteria->addSelectColumn($alias . '.language_id');
+            $criteria->addSelectColumn($alias . '.country_iso_nr');
+            $criteria->addSelectColumn($alias . '.is_default');
         }
     }
 

@@ -142,11 +142,13 @@ abstract class ApiQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildApi A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, ROUTE, METHOD, ACTION_ID, REQUIRED_PARAMS FROM kk_api WHERE ID = :p0';
+        $sql = 'SELECT `id`, `route`, `method`, `action_id`, `required_params` FROM `kk_api` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -412,6 +414,8 @@ abstract class ApiQuery extends ModelCriteria
      *
      * @param \keeko\core\model\Action|ObjectCollection $action The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildApiQuery The current query, for fluid interface
      */

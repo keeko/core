@@ -1,7 +1,6 @@
 <?php
 namespace keeko\core\module;
 
-use Symfony\Component\Finder\Finder;
 use keeko\core\exceptions\ModuleException;
 use keeko\core\package\PackageManager;
 use keeko\core\application\AbstractApplication;
@@ -10,6 +9,7 @@ use keeko\core\model\Module;
 use keeko\core\model\Action;
 use keeko\core\installer\ModuleInstaller;
 use keeko\core\model\Api;
+use keeko\core\service\ServiceContainer;
 
 class ModuleManager {
 
@@ -18,24 +18,12 @@ class ModuleManager {
 	private $activatedModules = [];
 
 	private $installedModules = [];
+	
+	/** @var ServiceContainer */
+	private $service;
 
-	/**
-	 *
-	 * @var PackageManager
-	 */
-	private $packageManager;
-
-	/**
-	 * @var AbstractApplication
-	 */
-	private $application;
-
-	public function __construct(PackageManager $packageManager = null, AbstractApplication $application = null) {
-		if ($packageManager === null) {
-			$packageManager = new PackageManager();
-		}
-		$this->packageManager = $packageManager;
-		$this->application = $application;
+	public function __construct(ServiceContainer $service) {
+		$this->service = $service;
 		
 		// load modules
 		$modules = ModuleQuery::create()->find();
@@ -47,10 +35,6 @@ class ModuleManager {
 				$this->installedModules[$module->getName()] = $module;
 			}
 		}
-	}
-
-	public function getPackageManager() {
-		return $this->packageManager;
 	}
 	
 	// public function getInstalledModules() {
@@ -88,7 +72,7 @@ class ModuleManager {
 		$className = $model->getClassName();
 		
 		/* @var $mod AbstractModule */
-		$mod = new $className($model, $this->application);
+		$mod = new $className($model, $this->service);
 		$this->loadedModules[$packageName] = $mod;
 		
 		return $mod;
@@ -106,7 +90,7 @@ class ModuleManager {
 		}
 		$module->setActivatedVersion($module->getInstalledVersion());
 		$module->save();
-		$package = $this->packageManager->getModulePackage($packageName);
+		$package = $this->service->getPackageManager()->getModulePackage($packageName);
 		
 		// install actions
 		$extra = $package->getExtra();

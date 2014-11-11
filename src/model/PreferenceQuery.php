@@ -2,11 +2,10 @@
 
 namespace keeko\core\model;
 
-use keeko\core\model\Base\GroupUserQuery as BaseGroupUserQuery;
-
+use keeko\core\model\Base\PreferenceQuery as BasePreferenceQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the 'kk_group_user' table.
+ * Skeleton subclass for performing query and update operations on the 'kk_preference' table.
  *
  *
  *
@@ -15,7 +14,7 @@ use keeko\core\model\Base\GroupUserQuery as BaseGroupUserQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class GroupUserQuery extends BaseGroupUserQuery
+class PreferenceQuery extends BasePreferenceQuery
 {
 
-} // GroupUserQuery
+} // PreferenceQuery

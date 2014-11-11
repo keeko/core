@@ -9,6 +9,7 @@ script_path=`cd $dir;pwd`
 database_path=${script_path}/database
 propel_bin=${script_path}/vendor/bin/propel
 src_path=${script_path}/src
+model_path=${src_path}/model
 backup_path=${script_path}/backup
 output_path=${database_path}/generated-classes
 sql_path=${database_path}/sql
@@ -18,15 +19,17 @@ config_file=propel.php
 # backing up
 mkdir $backup_path
 cp $src_path/model/User.php $backup_path/User.php
+rm -rf $model_path
 
 # running propel
 #cd $database_path
-$propel_bin build --recursive #--output-dir=$output_path
-$propel_bin sql:build --recursive #--output-dir=$sql_path
-#$propel_bin convert-conf --output-dir=$config_path --output-file=$config_file
+$propel_bin build
+$propel_bin build-sql --table-prefix kk_ 
+$propel_bin convert-conf #--output-dir=$config_path --output-file=$config_file
 
 # copy files
-cp -Rf $output_path/keeko/core/model $src_path/
+mkdir $model_path
+cp -Rf $output_path/ $model_path/
 
 # restore
 cp -f $backup_path/User.php $src_path/model/User.php

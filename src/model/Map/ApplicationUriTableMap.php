@@ -34,7 +34,7 @@ class ApplicationUriTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.ApplicationUriTableMap';
+    const CLASS_NAME = '.Map.ApplicationUriTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class ApplicationUriTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.ApplicationUri';
+    const CLASS_DEFAULT = 'ApplicationUri';
 
     /**
      * The total number of columns
@@ -72,34 +72,34 @@ class ApplicationUriTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 6;
 
     /**
-     * the column name for the ID field
+     * the column name for the id field
      */
-    const COL_ID = 'kk_application_uri.ID';
+    const COL_ID = 'kk_application_uri.id';
 
     /**
-     * the column name for the HTTPHOST field
+     * the column name for the httphost field
      */
-    const COL_HTTPHOST = 'kk_application_uri.HTTPHOST';
+    const COL_HTTPHOST = 'kk_application_uri.httphost';
 
     /**
-     * the column name for the BASEPATH field
+     * the column name for the basepath field
      */
-    const COL_BASEPATH = 'kk_application_uri.BASEPATH';
+    const COL_BASEPATH = 'kk_application_uri.basepath';
 
     /**
-     * the column name for the SECURE field
+     * the column name for the secure field
      */
-    const COL_SECURE = 'kk_application_uri.SECURE';
+    const COL_SECURE = 'kk_application_uri.secure';
 
     /**
-     * the column name for the APPLICATION_ID field
+     * the column name for the application_id field
      */
-    const COL_APPLICATION_ID = 'kk_application_uri.APPLICATION_ID';
+    const COL_APPLICATION_ID = 'kk_application_uri.application_id';
 
     /**
-     * the column name for the LOCALIZATION_ID field
+     * the column name for the localization_id field
      */
-    const COL_LOCALIZATION_ID = 'kk_application_uri.LOCALIZATION_ID';
+    const COL_LOCALIZATION_ID = 'kk_application_uri.localization_id';
 
     /**
      * The default string format for model objects of the related table
@@ -114,9 +114,8 @@ class ApplicationUriTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('Id', 'Httphost', 'Basepath', 'Secure', 'ApplicationId', 'LocalizationId', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'httphost', 'basepath', 'secure', 'applicationId', 'localizationId', ),
+        self::TYPE_CAMELNAME     => array('id', 'httphost', 'basepath', 'secure', 'applicationId', 'localizationId', ),
         self::TYPE_COLNAME       => array(ApplicationUriTableMap::COL_ID, ApplicationUriTableMap::COL_HTTPHOST, ApplicationUriTableMap::COL_BASEPATH, ApplicationUriTableMap::COL_SECURE, ApplicationUriTableMap::COL_APPLICATION_ID, ApplicationUriTableMap::COL_LOCALIZATION_ID, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_HTTPHOST', 'COL_BASEPATH', 'COL_SECURE', 'COL_APPLICATION_ID', 'COL_LOCALIZATION_ID', ),
         self::TYPE_FIELDNAME     => array('id', 'httphost', 'basepath', 'secure', 'application_id', 'localization_id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
@@ -129,9 +128,8 @@ class ApplicationUriTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('Id' => 0, 'Httphost' => 1, 'Basepath' => 2, 'Secure' => 3, 'ApplicationId' => 4, 'LocalizationId' => 5, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'httphost' => 1, 'basepath' => 2, 'secure' => 3, 'applicationId' => 4, 'localizationId' => 5, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'httphost' => 1, 'basepath' => 2, 'secure' => 3, 'applicationId' => 4, 'localizationId' => 5, ),
         self::TYPE_COLNAME       => array(ApplicationUriTableMap::COL_ID => 0, ApplicationUriTableMap::COL_HTTPHOST => 1, ApplicationUriTableMap::COL_BASEPATH => 2, ApplicationUriTableMap::COL_SECURE => 3, ApplicationUriTableMap::COL_APPLICATION_ID => 4, ApplicationUriTableMap::COL_LOCALIZATION_ID => 5, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_HTTPHOST' => 1, 'COL_BASEPATH' => 2, 'COL_SECURE' => 3, 'COL_APPLICATION_ID' => 4, 'COL_LOCALIZATION_ID' => 5, ),
         self::TYPE_FIELDNAME     => array('id' => 0, 'httphost' => 1, 'basepath' => 2, 'secure' => 3, 'application_id' => 4, 'localization_id' => 5, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
@@ -148,16 +146,17 @@ class ApplicationUriTableMap extends TableMap
         // attributes
         $this->setName('kk_application_uri');
         $this->setPhpName('ApplicationUri');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\ApplicationUri');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-        $this->addColumn('HTTPHOST', 'Httphost', 'VARCHAR', true, 255, null);
-        $this->addColumn('BASEPATH', 'Basepath', 'VARCHAR', true, 255, null);
-        $this->addColumn('SECURE', 'Secure', 'BOOLEAN', false, 1, null);
-        $this->addForeignKey('APPLICATION_ID', 'ApplicationId', 'INTEGER', 'kk_application', 'ID', true, 10, null);
-        $this->addForeignKey('LOCALIZATION_ID', 'LocalizationId', 'INTEGER', 'kk_localization', 'ID', true, 10, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
+        $this->addColumn('httphost', 'Httphost', 'VARCHAR', true, 255, null);
+        $this->addColumn('basepath', 'Basepath', 'VARCHAR', true, 255, null);
+        $this->addColumn('secure', 'Secure', 'BOOLEAN', false, 1, null);
+        $this->addForeignKey('application_id', 'ApplicationId', 'INTEGER', 'kk_application', 'id', true, 10, null);
+        $this->addForeignKey('localization_id', 'LocalizationId', 'INTEGER', 'kk_localization', 'id', true, 10, null);
     } // initialize()
 
     /**
@@ -177,7 +176,7 @@ class ApplicationUriTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -199,7 +198,7 @@ class ApplicationUriTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -235,7 +234,7 @@ class ApplicationUriTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -317,12 +316,12 @@ class ApplicationUriTableMap extends TableMap
             $criteria->addSelectColumn(ApplicationUriTableMap::COL_APPLICATION_ID);
             $criteria->addSelectColumn(ApplicationUriTableMap::COL_LOCALIZATION_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.HTTPHOST');
-            $criteria->addSelectColumn($alias . '.BASEPATH');
-            $criteria->addSelectColumn($alias . '.SECURE');
-            $criteria->addSelectColumn($alias . '.APPLICATION_ID');
-            $criteria->addSelectColumn($alias . '.LOCALIZATION_ID');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.httphost');
+            $criteria->addSelectColumn($alias . '.basepath');
+            $criteria->addSelectColumn($alias . '.secure');
+            $criteria->addSelectColumn($alias . '.application_id');
+            $criteria->addSelectColumn($alias . '.localization_id');
         }
     }
 

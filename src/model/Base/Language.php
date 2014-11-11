@@ -26,6 +26,13 @@ use keeko\core\model\Localization as ChildLocalization;
 use keeko\core\model\LocalizationQuery as ChildLocalizationQuery;
 use keeko\core\model\Map\LanguageTableMap;
 
+/**
+ * Base class that represents a row from the 'kk_language' table.
+ *
+ *
+ *
+* @package    propel.generator..Base
+*/
 abstract class Language implements ActiveRecordInterface
 {
     /**
@@ -468,109 +475,6 @@ abstract class Language implements ActiveRecordInterface
     }
 
     /**
-     * Indicates whether the columns in this object are only set to default values.
-     *
-     * This method can be used in conjunction with isModified() to indicate whether an object is both
-     * modified _and_ has some values set which are non-default.
-     *
-     * @return boolean Whether the columns in this object are only been set with default values.
-     */
-    public function hasOnlyDefaultValues()
-    {
-        // otherwise, everything was equal, so return TRUE
-        return true;
-    } // hasOnlyDefaultValues()
-
-    /**
-     * Hydrates (populates) the object variables with values from the database resultset.
-     *
-     * An offset (0-based "start column") is specified so that objects can be hydrated
-     * with a subset of the columns in the resultset rows.  This is needed, for example,
-     * for results of JOIN queries where the resultset row includes columns from two or
-     * more tables.
-     *
-     * @param array   $row       The row returned by DataFetcher->fetch().
-     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
-     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
-     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *
-     * @return int             next starting column
-     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
-     */
-    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
-    {
-        try {
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : LanguageTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : LanguageTableMap::translateFieldName('Alpha2', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->alpha_2 = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : LanguageTableMap::translateFieldName('Alpha3T', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->alpha_3t = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : LanguageTableMap::translateFieldName('Alpha3B', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->alpha_3b = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : LanguageTableMap::translateFieldName('Alpha3', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->alpha_3 = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : LanguageTableMap::translateFieldName('LocalName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->local_name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : LanguageTableMap::translateFieldName('EnName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->en_name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : LanguageTableMap::translateFieldName('Collate', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->collate = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : LanguageTableMap::translateFieldName('ScopeId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->scope_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : LanguageTableMap::translateFieldName('TypeId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->type_id = (null !== $col) ? (int) $col : null;
-            $this->resetModified();
-
-            $this->setNew(false);
-
-            if ($rehydrate) {
-                $this->ensureConsistency();
-            }
-
-            return $startcol + 10; // 10 = LanguageTableMap::NUM_HYDRATE_COLUMNS.
-
-        } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Language'), 0, $e);
-        }
-    }
-
-    /**
-     * Checks and repairs the internal consistency of the object.
-     *
-     * This method is executed after an already-instantiated object is re-hydrated
-     * from the database.  It exists to check any foreign keys to make sure that
-     * the objects related to the current object are correct based on foreign key.
-     *
-     * You can override this method in the stub class, but you should always invoke
-     * the base method from the overridden method (i.e. parent::ensureConsistency()),
-     * in case your model changes.
-     *
-     * @throws PropelException
-     */
-    public function ensureConsistency()
-    {
-        if ($this->aLanguageScope !== null && $this->scope_id !== $this->aLanguageScope->getId()) {
-            $this->aLanguageScope = null;
-        }
-        if ($this->aLanguageType !== null && $this->type_id !== $this->aLanguageType->getId()) {
-            $this->aLanguageType = null;
-        }
-    } // ensureConsistency
-
-    /**
      * Set the value of [id] column.
      *
      * @param  int $v new value
@@ -777,6 +681,109 @@ abstract class Language implements ActiveRecordInterface
 
         return $this;
     } // setTypeId()
+
+    /**
+     * Indicates whether the columns in this object are only set to default values.
+     *
+     * This method can be used in conjunction with isModified() to indicate whether an object is both
+     * modified _and_ has some values set which are non-default.
+     *
+     * @return boolean Whether the columns in this object are only been set with default values.
+     */
+    public function hasOnlyDefaultValues()
+    {
+        // otherwise, everything was equal, so return TRUE
+        return true;
+    } // hasOnlyDefaultValues()
+
+    /**
+     * Hydrates (populates) the object variables with values from the database resultset.
+     *
+     * An offset (0-based "start column") is specified so that objects can be hydrated
+     * with a subset of the columns in the resultset rows.  This is needed, for example,
+     * for results of JOIN queries where the resultset row includes columns from two or
+     * more tables.
+     *
+     * @param array   $row       The row returned by DataFetcher->fetch().
+     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
+     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
+     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
+                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+     *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *
+     * @return int             next starting column
+     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
+     */
+    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
+    {
+        try {
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : LanguageTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : LanguageTableMap::translateFieldName('Alpha2', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->alpha_2 = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : LanguageTableMap::translateFieldName('Alpha3T', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->alpha_3t = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : LanguageTableMap::translateFieldName('Alpha3B', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->alpha_3b = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : LanguageTableMap::translateFieldName('Alpha3', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->alpha_3 = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : LanguageTableMap::translateFieldName('LocalName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->local_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : LanguageTableMap::translateFieldName('EnName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->en_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : LanguageTableMap::translateFieldName('Collate', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->collate = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : LanguageTableMap::translateFieldName('ScopeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->scope_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : LanguageTableMap::translateFieldName('TypeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->type_id = (null !== $col) ? (int) $col : null;
+            $this->resetModified();
+
+            $this->setNew(false);
+
+            if ($rehydrate) {
+                $this->ensureConsistency();
+            }
+
+            return $startcol + 10; // 10 = LanguageTableMap::NUM_HYDRATE_COLUMNS.
+
+        } catch (Exception $e) {
+            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Language'), 0, $e);
+        }
+    }
+
+    /**
+     * Checks and repairs the internal consistency of the object.
+     *
+     * This method is executed after an already-instantiated object is re-hydrated
+     * from the database.  It exists to check any foreign keys to make sure that
+     * the objects related to the current object are correct based on foreign key.
+     *
+     * You can override this method in the stub class, but you should always invoke
+     * the base method from the overridden method (i.e. parent::ensureConsistency()),
+     * in case your model changes.
+     *
+     * @throws PropelException
+     */
+    public function ensureConsistency()
+    {
+        if ($this->aLanguageScope !== null && $this->scope_id !== $this->aLanguageScope->getId()) {
+            $this->aLanguageScope = null;
+        }
+        if ($this->aLanguageType !== null && $this->type_id !== $this->aLanguageType->getId()) {
+            $this->aLanguageType = null;
+        }
+    } // ensureConsistency
 
     /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
@@ -993,38 +1000,38 @@ abstract class Language implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(LanguageTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'ID';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_ALPHA_2)) {
-            $modifiedColumns[':p' . $index++]  = 'ALPHA_2';
+            $modifiedColumns[':p' . $index++]  = '`alpha_2`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_ALPHA_3T)) {
-            $modifiedColumns[':p' . $index++]  = 'ALPHA_3T';
+            $modifiedColumns[':p' . $index++]  = '`alpha_3T`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_ALPHA_3B)) {
-            $modifiedColumns[':p' . $index++]  = 'ALPHA_3B';
+            $modifiedColumns[':p' . $index++]  = '`alpha_3B`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_ALPHA_3)) {
-            $modifiedColumns[':p' . $index++]  = 'ALPHA_3';
+            $modifiedColumns[':p' . $index++]  = '`alpha_3`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_LOCAL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'LOCAL_NAME';
+            $modifiedColumns[':p' . $index++]  = '`local_name`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_EN_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'EN_NAME';
+            $modifiedColumns[':p' . $index++]  = '`en_name`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_COLLATE)) {
-            $modifiedColumns[':p' . $index++]  = 'COLLATE';
+            $modifiedColumns[':p' . $index++]  = '`collate`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_SCOPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'SCOPE_ID';
+            $modifiedColumns[':p' . $index++]  = '`scope_id`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'TYPE_ID';
+            $modifiedColumns[':p' . $index++]  = '`type_id`';
         }
 
         $sql = sprintf(
-            'INSERT INTO kk_language (%s) VALUES (%s)',
+            'INSERT INTO `kk_language` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1033,34 +1040,34 @@ abstract class Language implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'ALPHA_2':
+                    case '`alpha_2`':
                         $stmt->bindValue($identifier, $this->alpha_2, PDO::PARAM_STR);
                         break;
-                    case 'ALPHA_3T':
+                    case '`alpha_3T`':
                         $stmt->bindValue($identifier, $this->alpha_3t, PDO::PARAM_STR);
                         break;
-                    case 'ALPHA_3B':
+                    case '`alpha_3B`':
                         $stmt->bindValue($identifier, $this->alpha_3b, PDO::PARAM_STR);
                         break;
-                    case 'ALPHA_3':
+                    case '`alpha_3`':
                         $stmt->bindValue($identifier, $this->alpha_3, PDO::PARAM_STR);
                         break;
-                    case 'LOCAL_NAME':
+                    case '`local_name`':
                         $stmt->bindValue($identifier, $this->local_name, PDO::PARAM_STR);
                         break;
-                    case 'EN_NAME':
+                    case '`en_name`':
                         $stmt->bindValue($identifier, $this->en_name, PDO::PARAM_STR);
                         break;
-                    case 'COLLATE':
+                    case '`collate`':
                         $stmt->bindValue($identifier, $this->collate, PDO::PARAM_STR);
                         break;
-                    case 'SCOPE_ID':
+                    case '`scope_id`':
                         $stmt->bindValue($identifier, $this->scope_id, PDO::PARAM_INT);
                         break;
-                    case 'TYPE_ID':
+                    case '`type_id`':
                         $stmt->bindValue($identifier, $this->type_id, PDO::PARAM_INT);
                         break;
                 }
@@ -1102,7 +1109,7 @@ abstract class Language implements ActiveRecordInterface
      *
      * @param      string $name name
      * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                     Defaults to TableMap::TYPE_PHPNAME.
      * @return mixed Value of field.
@@ -1167,7 +1174,7 @@ abstract class Language implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
@@ -1178,10 +1185,11 @@ abstract class Language implements ActiveRecordInterface
      */
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Language'][$this->getPrimaryKey()])) {
+
+        if (isset($alreadyDumpedObjects['Language'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Language'][$this->getPrimaryKey()] = true;
+        $alreadyDumpedObjects['Language'][$this->hashCode()] = true;
         $keys = LanguageTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
@@ -1202,13 +1210,49 @@ abstract class Language implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->aLanguageScope) {
-                $result['LanguageScope'] = $this->aLanguageScope->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'languageScope';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_language_scope';
+                        break;
+                    default:
+                        $key = 'LanguageScope';
+                }
+
+                $result[$key] = $this->aLanguageScope->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aLanguageType) {
-                $result['LanguageType'] = $this->aLanguageType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'languageType';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_language_type';
+                        break;
+                    default:
+                        $key = 'LanguageType';
+                }
+
+                $result[$key] = $this->aLanguageType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collLocalizations) {
-                $result['Localizations'] = $this->collLocalizations->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'localizations';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_localizations';
+                        break;
+                    default:
+                        $key = 'Localizations';
+                }
+
+                $result[$key] = $this->collLocalizations->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1221,7 +1265,7 @@ abstract class Language implements ActiveRecordInterface
      * @param  string $name
      * @param  mixed  $value field value
      * @param  string $type The type of fieldname the $name is of:
-     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
      * @return $this|\keeko\core\model\Language
@@ -1288,7 +1332,7 @@ abstract class Language implements ActiveRecordInterface
      * array. If so the setByName() method is called for that column.
      *
      * You can specify the key type of the array by additionally passing one
-     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
@@ -1339,19 +1383,25 @@ abstract class Language implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
+     * You can specify the key type of the array by additionally passing one
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
+     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     * The default key type is the column's TableMap::TYPE_PHPNAME.
+     *
      * @param mixed $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
+     * @param string $keyType The type of keys the array uses.
      *
      * @return $this|\keeko\core\model\Language The current object, for fluid interface
      */
-    public function importFrom($parser, $data)
+    public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        $this->fromArray($parser->toArray($data), TableMap::TYPE_PHPNAME);
+        $this->fromArray($parser->toArray($data), $keyType);
 
         return $this;
     }
@@ -1411,7 +1461,7 @@ abstract class Language implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(LanguageTableMap::DATABASE_NAME);
+        $criteria = ChildLanguageQuery::create();
         $criteria->add(LanguageTableMap::COL_ID, $this->id);
 
         return $criteria;

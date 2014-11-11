@@ -206,11 +206,13 @@ abstract class CountryQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildCountry A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ISO_NR, ALPHA_2, ALPHA_3, IOC, CAPITAL, TLD, PHONE, TERRITORY_ISO_NR, CURRENCY_ISO_NR, OFFICIAL_LOCAL_NAME, OFFICIAL_EN_NAME, SHORT_LOCAL_NAME, SHORT_EN_NAME, BBOX_SW_LAT, BBOX_SW_LNG, BBOX_NE_LAT, BBOX_NE_LNG FROM kk_country WHERE ISO_NR = :p0';
+        $sql = 'SELECT `iso_nr`, `alpha_2`, `alpha_3`, `ioc`, `capital`, `tld`, `phone`, `territory_iso_nr`, `currency_iso_nr`, `official_local_name`, `official_en_name`, `short_local_name`, `short_en_name`, `bbox_sw_lat`, `bbox_sw_lng`, `bbox_ne_lat`, `bbox_ne_lng` FROM `kk_country` WHERE `iso_nr` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -887,6 +889,8 @@ abstract class CountryQuery extends ModelCriteria
      * @param \keeko\core\model\Territory|ObjectCollection $territory The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildCountryQuery The current query, for fluid interface
      */
     public function filterByTerritory($territory, $comparison = null)
@@ -961,6 +965,8 @@ abstract class CountryQuery extends ModelCriteria
      *
      * @param \keeko\core\model\Currency|ObjectCollection $currency The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildCountryQuery The current query, for fluid interface
      */

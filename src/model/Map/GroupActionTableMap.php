@@ -34,7 +34,7 @@ class GroupActionTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.GroupActionTableMap';
+    const CLASS_NAME = '.Map.GroupActionTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class GroupActionTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.GroupAction';
+    const CLASS_DEFAULT = 'GroupAction';
 
     /**
      * The total number of columns
@@ -72,14 +72,14 @@ class GroupActionTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 2;
 
     /**
-     * the column name for the GROUP_ID field
+     * the column name for the group_id field
      */
-    const COL_GROUP_ID = 'kk_group_action.GROUP_ID';
+    const COL_GROUP_ID = 'kk_group_action.group_id';
 
     /**
-     * the column name for the ACTION_ID field
+     * the column name for the action_id field
      */
-    const COL_ACTION_ID = 'kk_group_action.ACTION_ID';
+    const COL_ACTION_ID = 'kk_group_action.action_id';
 
     /**
      * The default string format for model objects of the related table
@@ -94,9 +94,8 @@ class GroupActionTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('GroupId', 'ActionId', ),
-        self::TYPE_STUDLYPHPNAME => array('groupId', 'actionId', ),
+        self::TYPE_CAMELNAME     => array('groupId', 'actionId', ),
         self::TYPE_COLNAME       => array(GroupActionTableMap::COL_GROUP_ID, GroupActionTableMap::COL_ACTION_ID, ),
-        self::TYPE_RAW_COLNAME   => array('COL_GROUP_ID', 'COL_ACTION_ID', ),
         self::TYPE_FIELDNAME     => array('group_id', 'action_id', ),
         self::TYPE_NUM           => array(0, 1, )
     );
@@ -109,9 +108,8 @@ class GroupActionTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('GroupId' => 0, 'ActionId' => 1, ),
-        self::TYPE_STUDLYPHPNAME => array('groupId' => 0, 'actionId' => 1, ),
+        self::TYPE_CAMELNAME     => array('groupId' => 0, 'actionId' => 1, ),
         self::TYPE_COLNAME       => array(GroupActionTableMap::COL_GROUP_ID => 0, GroupActionTableMap::COL_ACTION_ID => 1, ),
-        self::TYPE_RAW_COLNAME   => array('COL_GROUP_ID' => 0, 'COL_ACTION_ID' => 1, ),
         self::TYPE_FIELDNAME     => array('group_id' => 0, 'action_id' => 1, ),
         self::TYPE_NUM           => array(0, 1, )
     );
@@ -128,13 +126,14 @@ class GroupActionTableMap extends TableMap
         // attributes
         $this->setName('kk_group_action');
         $this->setPhpName('GroupAction');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\GroupAction');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(false);
         $this->setIsCrossRef(true);
         // columns
-        $this->addForeignPrimaryKey('GROUP_ID', 'GroupId', 'INTEGER' , 'kk_group', 'ID', true, 10, null);
-        $this->addForeignPrimaryKey('ACTION_ID', 'ActionId', 'INTEGER' , 'kk_action', 'ID', true, 10, null);
+        $this->addForeignPrimaryKey('group_id', 'GroupId', 'INTEGER' , 'kk_group', 'id', true, 10, null);
+        $this->addForeignPrimaryKey('action_id', 'ActionId', 'INTEGER' , 'kk_action', 'id', true, 10, null);
     } // initialize()
 
     /**
@@ -207,7 +206,7 @@ class GroupActionTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -229,7 +228,7 @@ class GroupActionTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -274,7 +273,7 @@ class GroupActionTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -352,8 +351,8 @@ class GroupActionTableMap extends TableMap
             $criteria->addSelectColumn(GroupActionTableMap::COL_GROUP_ID);
             $criteria->addSelectColumn(GroupActionTableMap::COL_ACTION_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.GROUP_ID');
-            $criteria->addSelectColumn($alias . '.ACTION_ID');
+            $criteria->addSelectColumn($alias . '.group_id');
+            $criteria->addSelectColumn($alias . '.action_id');
         }
     }
 

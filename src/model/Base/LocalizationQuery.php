@@ -158,11 +158,13 @@ abstract class LocalizationQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildLocalization A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, PARENT_ID, LANGUAGE_ID, COUNTRY_ISO_NR, IS_DEFAULT FROM kk_localization WHERE ID = :p0';
+        $sql = 'SELECT `id`, `parent_id`, `language_id`, `country_iso_nr`, `is_default` FROM `kk_localization` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -455,6 +457,8 @@ abstract class LocalizationQuery extends ModelCriteria
      * @param \keeko\core\model\Localization|ObjectCollection $localization The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildLocalizationQuery The current query, for fluid interface
      */
     public function filterByLocalizationRelatedByParentId($localization, $comparison = null)
@@ -530,6 +534,8 @@ abstract class LocalizationQuery extends ModelCriteria
      * @param \keeko\core\model\Language|ObjectCollection $language The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildLocalizationQuery The current query, for fluid interface
      */
     public function filterByLanguage($language, $comparison = null)
@@ -604,6 +610,8 @@ abstract class LocalizationQuery extends ModelCriteria
      *
      * @param \keeko\core\model\Country|ObjectCollection $country The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildLocalizationQuery The current query, for fluid interface
      */

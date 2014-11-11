@@ -21,23 +21,32 @@ use Propel\Runtime\Util\PropelDateTime;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\DefaultTranslator;
-use Symfony\Component\Validator\Validator;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Context\ExecutionContextFactory;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
 use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
+use Symfony\Component\Validator\Validator\LegacyValidator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use keeko\core\model\Action as ChildAction;
 use keeko\core\model\ActionQuery as ChildActionQuery;
 use keeko\core\model\Group as ChildGroup;
 use keeko\core\model\GroupAction as ChildGroupAction;
 use keeko\core\model\GroupActionQuery as ChildGroupActionQuery;
 use keeko\core\model\GroupQuery as ChildGroupQuery;
-use keeko\core\model\GroupUser as ChildGroupUser;
-use keeko\core\model\GroupUserQuery as ChildGroupUserQuery;
 use keeko\core\model\User as ChildUser;
+use keeko\core\model\UserGroup as ChildUserGroup;
+use keeko\core\model\UserGroupQuery as ChildUserGroupQuery;
 use keeko\core\model\UserQuery as ChildUserQuery;
 use keeko\core\model\Map\GroupTableMap;
 
+/**
+ * Base class that represents a row from the 'kk_group' table.
+ *
+ *
+ *
+* @package    propel.generator..Base
+*/
 abstract class Group implements ActiveRecordInterface
 {
     /**
@@ -129,10 +138,10 @@ abstract class Group implements ActiveRecordInterface
     protected $updated_at;
 
     /**
-     * @var        ObjectCollection|ChildGroupUser[] Collection to store aggregation of ChildGroupUser objects.
+     * @var        ObjectCollection|ChildUserGroup[] Collection to store aggregation of ChildUserGroup objects.
      */
-    protected $collGroupUsers;
-    protected $collGroupUsersPartial;
+    protected $collUserGroups;
+    protected $collUserGroupsPartial;
 
     /**
      * @var        ObjectCollection|ChildGroupAction[] Collection to store aggregation of ChildGroupAction objects.
@@ -199,9 +208,9 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildGroupUser[]
+     * @var ObjectCollection|ChildUserGroup[]
      */
-    protected $groupUsersScheduledForDeletion = null;
+    protected $userGroupsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -555,9 +564,9 @@ abstract class Group implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -575,9 +584,9 @@ abstract class Group implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -589,114 +598,6 @@ abstract class Group implements ActiveRecordInterface
             return $this->updated_at instanceof \DateTime ? $this->updated_at->format($format) : null;
         }
     }
-
-    /**
-     * Indicates whether the columns in this object are only set to default values.
-     *
-     * This method can be used in conjunction with isModified() to indicate whether an object is both
-     * modified _and_ has some values set which are non-default.
-     *
-     * @return boolean Whether the columns in this object are only been set with default values.
-     */
-    public function hasOnlyDefaultValues()
-    {
-            if ($this->is_active !== true) {
-                return false;
-            }
-
-            if ($this->is_system !== false) {
-                return false;
-            }
-
-        // otherwise, everything was equal, so return TRUE
-        return true;
-    } // hasOnlyDefaultValues()
-
-    /**
-     * Hydrates (populates) the object variables with values from the database resultset.
-     *
-     * An offset (0-based "start column") is specified so that objects can be hydrated
-     * with a subset of the columns in the resultset rows.  This is needed, for example,
-     * for results of JOIN queries where the resultset row includes columns from two or
-     * more tables.
-     *
-     * @param array   $row       The row returned by DataFetcher->fetch().
-     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
-     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
-     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *
-     * @return int             next starting column
-     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
-     */
-    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
-    {
-        try {
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GroupTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GroupTableMap::translateFieldName('OwnerId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->owner_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : GroupTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GroupTableMap::translateFieldName('IsGuest', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->is_guest = (null !== $col) ? (boolean) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GroupTableMap::translateFieldName('IsDefault', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->is_default = (null !== $col) ? (boolean) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : GroupTableMap::translateFieldName('IsActive', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->is_active = (null !== $col) ? (boolean) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GroupTableMap::translateFieldName('IsSystem', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->is_system = (null !== $col) ? (boolean) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : GroupTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : GroupTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
-            $this->resetModified();
-
-            $this->setNew(false);
-
-            if ($rehydrate) {
-                $this->ensureConsistency();
-            }
-
-            return $startcol + 9; // 9 = GroupTableMap::NUM_HYDRATE_COLUMNS.
-
-        } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Group'), 0, $e);
-        }
-    }
-
-    /**
-     * Checks and repairs the internal consistency of the object.
-     *
-     * This method is executed after an already-instantiated object is re-hydrated
-     * from the database.  It exists to check any foreign keys to make sure that
-     * the objects related to the current object are correct based on foreign key.
-     *
-     * You can override this method in the stub class, but you should always invoke
-     * the base method from the overridden method (i.e. parent::ensureConsistency()),
-     * in case your model changes.
-     *
-     * @throws PropelException
-     */
-    public function ensureConsistency()
-    {
-    } // ensureConsistency
 
     /**
      * Set the value of [id] column.
@@ -879,7 +780,7 @@ abstract class Group implements ActiveRecordInterface
      */
     public function setCreatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
             if ($dt !== $this->created_at) {
                 $this->created_at = $dt;
@@ -899,7 +800,7 @@ abstract class Group implements ActiveRecordInterface
      */
     public function setUpdatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
             if ($dt !== $this->updated_at) {
                 $this->updated_at = $dt;
@@ -909,6 +810,114 @@ abstract class Group implements ActiveRecordInterface
 
         return $this;
     } // setUpdatedAt()
+
+    /**
+     * Indicates whether the columns in this object are only set to default values.
+     *
+     * This method can be used in conjunction with isModified() to indicate whether an object is both
+     * modified _and_ has some values set which are non-default.
+     *
+     * @return boolean Whether the columns in this object are only been set with default values.
+     */
+    public function hasOnlyDefaultValues()
+    {
+            if ($this->is_active !== true) {
+                return false;
+            }
+
+            if ($this->is_system !== false) {
+                return false;
+            }
+
+        // otherwise, everything was equal, so return TRUE
+        return true;
+    } // hasOnlyDefaultValues()
+
+    /**
+     * Hydrates (populates) the object variables with values from the database resultset.
+     *
+     * An offset (0-based "start column") is specified so that objects can be hydrated
+     * with a subset of the columns in the resultset rows.  This is needed, for example,
+     * for results of JOIN queries where the resultset row includes columns from two or
+     * more tables.
+     *
+     * @param array   $row       The row returned by DataFetcher->fetch().
+     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
+     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
+     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
+                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+     *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *
+     * @return int             next starting column
+     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
+     */
+    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
+    {
+        try {
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GroupTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GroupTableMap::translateFieldName('OwnerId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->owner_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : GroupTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GroupTableMap::translateFieldName('IsGuest', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_guest = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GroupTableMap::translateFieldName('IsDefault', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_default = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : GroupTableMap::translateFieldName('IsActive', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_active = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GroupTableMap::translateFieldName('IsSystem', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_system = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : GroupTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : GroupTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->resetModified();
+
+            $this->setNew(false);
+
+            if ($rehydrate) {
+                $this->ensureConsistency();
+            }
+
+            return $startcol + 9; // 9 = GroupTableMap::NUM_HYDRATE_COLUMNS.
+
+        } catch (Exception $e) {
+            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Group'), 0, $e);
+        }
+    }
+
+    /**
+     * Checks and repairs the internal consistency of the object.
+     *
+     * This method is executed after an already-instantiated object is re-hydrated
+     * from the database.  It exists to check any foreign keys to make sure that
+     * the objects related to the current object are correct based on foreign key.
+     *
+     * You can override this method in the stub class, but you should always invoke
+     * the base method from the overridden method (i.e. parent::ensureConsistency()),
+     * in case your model changes.
+     *
+     * @throws PropelException
+     */
+    public function ensureConsistency()
+    {
+    } // ensureConsistency
 
     /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
@@ -947,7 +956,7 @@ abstract class Group implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collGroupUsers = null;
+            $this->collUserGroups = null;
 
             $this->collGroupActions = null;
 
@@ -1086,7 +1095,7 @@ abstract class Group implements ActiveRecordInterface
                         $pks[] = $entryPk;
                     }
 
-                    \keeko\core\model\GroupUserQuery::create()
+                    \keeko\core\model\UserGroupQuery::create()
                         ->filterByPrimaryKeys($pks)
                         ->delete($con);
 
@@ -1133,17 +1142,17 @@ abstract class Group implements ActiveRecordInterface
             }
 
 
-            if ($this->groupUsersScheduledForDeletion !== null) {
-                if (!$this->groupUsersScheduledForDeletion->isEmpty()) {
-                    \keeko\core\model\GroupUserQuery::create()
-                        ->filterByPrimaryKeys($this->groupUsersScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->userGroupsScheduledForDeletion !== null) {
+                if (!$this->userGroupsScheduledForDeletion->isEmpty()) {
+                    \keeko\core\model\UserGroupQuery::create()
+                        ->filterByPrimaryKeys($this->userGroupsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->groupUsersScheduledForDeletion = null;
+                    $this->userGroupsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collGroupUsers !== null) {
-                foreach ($this->collGroupUsers as $referrerFK) {
+            if ($this->collUserGroups !== null) {
+                foreach ($this->collUserGroups as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1194,35 +1203,35 @@ abstract class Group implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(GroupTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'ID';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(GroupTableMap::COL_OWNER_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'OWNER_ID';
+            $modifiedColumns[':p' . $index++]  = '`owner_id`';
         }
         if ($this->isColumnModified(GroupTableMap::COL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'NAME';
+            $modifiedColumns[':p' . $index++]  = '`name`';
         }
         if ($this->isColumnModified(GroupTableMap::COL_IS_GUEST)) {
-            $modifiedColumns[':p' . $index++]  = 'IS_GUEST';
+            $modifiedColumns[':p' . $index++]  = '`is_guest`';
         }
         if ($this->isColumnModified(GroupTableMap::COL_IS_DEFAULT)) {
-            $modifiedColumns[':p' . $index++]  = 'IS_DEFAULT';
+            $modifiedColumns[':p' . $index++]  = '`is_default`';
         }
         if ($this->isColumnModified(GroupTableMap::COL_IS_ACTIVE)) {
-            $modifiedColumns[':p' . $index++]  = 'IS_ACTIVE';
+            $modifiedColumns[':p' . $index++]  = '`is_active`';
         }
         if ($this->isColumnModified(GroupTableMap::COL_IS_SYSTEM)) {
-            $modifiedColumns[':p' . $index++]  = 'IS_SYSTEM';
+            $modifiedColumns[':p' . $index++]  = '`is_system`';
         }
         if ($this->isColumnModified(GroupTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`created_at`';
         }
         if ($this->isColumnModified(GroupTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`updated_at`';
         }
 
         $sql = sprintf(
-            'INSERT INTO kk_group (%s) VALUES (%s)',
+            'INSERT INTO `kk_group` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1231,31 +1240,31 @@ abstract class Group implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'OWNER_ID':
+                    case '`owner_id`':
                         $stmt->bindValue($identifier, $this->owner_id, PDO::PARAM_INT);
                         break;
-                    case 'NAME':
+                    case '`name`':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case 'IS_GUEST':
+                    case '`is_guest`':
                         $stmt->bindValue($identifier, (int) $this->is_guest, PDO::PARAM_INT);
                         break;
-                    case 'IS_DEFAULT':
+                    case '`is_default`':
                         $stmt->bindValue($identifier, (int) $this->is_default, PDO::PARAM_INT);
                         break;
-                    case 'IS_ACTIVE':
+                    case '`is_active`':
                         $stmt->bindValue($identifier, (int) $this->is_active, PDO::PARAM_INT);
                         break;
-                    case 'IS_SYSTEM':
+                    case '`is_system`':
                         $stmt->bindValue($identifier, (int) $this->is_system, PDO::PARAM_INT);
                         break;
-                    case 'CREATED_AT':
+                    case '`created_at`':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'UPDATED_AT':
+                    case '`updated_at`':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                 }
@@ -1297,7 +1306,7 @@ abstract class Group implements ActiveRecordInterface
      *
      * @param      string $name name
      * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                     Defaults to TableMap::TYPE_PHPNAME.
      * @return mixed Value of field.
@@ -1359,7 +1368,7 @@ abstract class Group implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
@@ -1370,10 +1379,11 @@ abstract class Group implements ActiveRecordInterface
      */
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Group'][$this->getPrimaryKey()])) {
+
+        if (isset($alreadyDumpedObjects['Group'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Group'][$this->getPrimaryKey()] = true;
+        $alreadyDumpedObjects['Group'][$this->hashCode()] = true;
         $keys = GroupTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
@@ -1392,11 +1402,35 @@ abstract class Group implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collGroupUsers) {
-                $result['GroupUsers'] = $this->collGroupUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collUserGroups) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'userGroups';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_user_groups';
+                        break;
+                    default:
+                        $key = 'UserGroups';
+                }
+
+                $result[$key] = $this->collUserGroups->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collGroupActions) {
-                $result['GroupActions'] = $this->collGroupActions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'groupActions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_group_actions';
+                        break;
+                    default:
+                        $key = 'GroupActions';
+                }
+
+                $result[$key] = $this->collGroupActions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1409,7 +1443,7 @@ abstract class Group implements ActiveRecordInterface
      * @param  string $name
      * @param  mixed  $value field value
      * @param  string $type The type of fieldname the $name is of:
-     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
      * @return $this|\keeko\core\model\Group
@@ -1473,7 +1507,7 @@ abstract class Group implements ActiveRecordInterface
      * array. If so the setByName() method is called for that column.
      *
      * You can specify the key type of the array by additionally passing one
-     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
@@ -1521,19 +1555,25 @@ abstract class Group implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
+     * You can specify the key type of the array by additionally passing one
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
+     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     * The default key type is the column's TableMap::TYPE_PHPNAME.
+     *
      * @param mixed $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
+     * @param string $keyType The type of keys the array uses.
      *
      * @return $this|\keeko\core\model\Group The current object, for fluid interface
      */
-    public function importFrom($parser, $data)
+    public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        $this->fromArray($parser->toArray($data), TableMap::TYPE_PHPNAME);
+        $this->fromArray($parser->toArray($data), $keyType);
 
         return $this;
     }
@@ -1590,7 +1630,7 @@ abstract class Group implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(GroupTableMap::DATABASE_NAME);
+        $criteria = ChildGroupQuery::create();
         $criteria->add(GroupTableMap::COL_ID, $this->id);
 
         return $criteria;
@@ -1674,9 +1714,9 @@ abstract class Group implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getGroupUsers() as $relObj) {
+            foreach ($this->getUserGroups() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addGroupUser($relObj->copy($deepCopy));
+                    $copyObj->addUserGroup($relObj->copy($deepCopy));
                 }
             }
 
@@ -1727,8 +1767,8 @@ abstract class Group implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('GroupUser' == $relationName) {
-            return $this->initGroupUsers();
+        if ('UserGroup' == $relationName) {
+            return $this->initUserGroups();
         }
         if ('GroupAction' == $relationName) {
             return $this->initGroupActions();
@@ -1736,31 +1776,31 @@ abstract class Group implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collGroupUsers collection
+     * Clears out the collUserGroups collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addGroupUsers()
+     * @see        addUserGroups()
      */
-    public function clearGroupUsers()
+    public function clearUserGroups()
     {
-        $this->collGroupUsers = null; // important to set this to NULL since that means it is uninitialized
+        $this->collUserGroups = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collGroupUsers collection loaded partially.
+     * Reset is the collUserGroups collection loaded partially.
      */
-    public function resetPartialGroupUsers($v = true)
+    public function resetPartialUserGroups($v = true)
     {
-        $this->collGroupUsersPartial = $v;
+        $this->collUserGroupsPartial = $v;
     }
 
     /**
-     * Initializes the collGroupUsers collection.
+     * Initializes the collUserGroups collection.
      *
-     * By default this just sets the collGroupUsers collection to an empty array (like clearcollGroupUsers());
+     * By default this just sets the collUserGroups collection to an empty array (like clearcollUserGroups());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1769,17 +1809,17 @@ abstract class Group implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initGroupUsers($overrideExisting = true)
+    public function initUserGroups($overrideExisting = true)
     {
-        if (null !== $this->collGroupUsers && !$overrideExisting) {
+        if (null !== $this->collUserGroups && !$overrideExisting) {
             return;
         }
-        $this->collGroupUsers = new ObjectCollection();
-        $this->collGroupUsers->setModel('\keeko\core\model\GroupUser');
+        $this->collUserGroups = new ObjectCollection();
+        $this->collUserGroups->setModel('\keeko\core\model\UserGroup');
     }
 
     /**
-     * Gets an array of ChildGroupUser objects which contain a foreign key that references this object.
+     * Gets an array of ChildUserGroup objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -1789,111 +1829,111 @@ abstract class Group implements ActiveRecordInterface
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildGroupUser[] List of ChildGroupUser objects
+     * @return ObjectCollection|ChildUserGroup[] List of ChildUserGroup objects
      * @throws PropelException
      */
-    public function getGroupUsers(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getUserGroups(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collGroupUsersPartial && !$this->isNew();
-        if (null === $this->collGroupUsers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collGroupUsers) {
+        $partial = $this->collUserGroupsPartial && !$this->isNew();
+        if (null === $this->collUserGroups || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collUserGroups) {
                 // return empty collection
-                $this->initGroupUsers();
+                $this->initUserGroups();
             } else {
-                $collGroupUsers = ChildGroupUserQuery::create(null, $criteria)
+                $collUserGroups = ChildUserGroupQuery::create(null, $criteria)
                     ->filterByGroup($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collGroupUsersPartial && count($collGroupUsers)) {
-                        $this->initGroupUsers(false);
+                    if (false !== $this->collUserGroupsPartial && count($collUserGroups)) {
+                        $this->initUserGroups(false);
 
-                        foreach ($collGroupUsers as $obj) {
-                            if (false == $this->collGroupUsers->contains($obj)) {
-                                $this->collGroupUsers->append($obj);
+                        foreach ($collUserGroups as $obj) {
+                            if (false == $this->collUserGroups->contains($obj)) {
+                                $this->collUserGroups->append($obj);
                             }
                         }
 
-                        $this->collGroupUsersPartial = true;
+                        $this->collUserGroupsPartial = true;
                     }
 
-                    return $collGroupUsers;
+                    return $collUserGroups;
                 }
 
-                if ($partial && $this->collGroupUsers) {
-                    foreach ($this->collGroupUsers as $obj) {
+                if ($partial && $this->collUserGroups) {
+                    foreach ($this->collUserGroups as $obj) {
                         if ($obj->isNew()) {
-                            $collGroupUsers[] = $obj;
+                            $collUserGroups[] = $obj;
                         }
                     }
                 }
 
-                $this->collGroupUsers = $collGroupUsers;
-                $this->collGroupUsersPartial = false;
+                $this->collUserGroups = $collUserGroups;
+                $this->collUserGroupsPartial = false;
             }
         }
 
-        return $this->collGroupUsers;
+        return $this->collUserGroups;
     }
 
     /**
-     * Sets a collection of ChildGroupUser objects related by a one-to-many relationship
+     * Sets a collection of ChildUserGroup objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $groupUsers A Propel collection.
+     * @param      Collection $userGroups A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildGroup The current object (for fluent API support)
      */
-    public function setGroupUsers(Collection $groupUsers, ConnectionInterface $con = null)
+    public function setUserGroups(Collection $userGroups, ConnectionInterface $con = null)
     {
-        /** @var ChildGroupUser[] $groupUsersToDelete */
-        $groupUsersToDelete = $this->getGroupUsers(new Criteria(), $con)->diff($groupUsers);
+        /** @var ChildUserGroup[] $userGroupsToDelete */
+        $userGroupsToDelete = $this->getUserGroups(new Criteria(), $con)->diff($userGroups);
 
 
         //since at least one column in the foreign key is at the same time a PK
         //we can not just set a PK to NULL in the lines below. We have to store
         //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
-        $this->groupUsersScheduledForDeletion = clone $groupUsersToDelete;
+        $this->userGroupsScheduledForDeletion = clone $userGroupsToDelete;
 
-        foreach ($groupUsersToDelete as $groupUserRemoved) {
-            $groupUserRemoved->setGroup(null);
+        foreach ($userGroupsToDelete as $userGroupRemoved) {
+            $userGroupRemoved->setGroup(null);
         }
 
-        $this->collGroupUsers = null;
-        foreach ($groupUsers as $groupUser) {
-            $this->addGroupUser($groupUser);
+        $this->collUserGroups = null;
+        foreach ($userGroups as $userGroup) {
+            $this->addUserGroup($userGroup);
         }
 
-        $this->collGroupUsers = $groupUsers;
-        $this->collGroupUsersPartial = false;
+        $this->collUserGroups = $userGroups;
+        $this->collUserGroupsPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related GroupUser objects.
+     * Returns the number of related UserGroup objects.
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct
      * @param      ConnectionInterface $con
-     * @return int             Count of related GroupUser objects.
+     * @return int             Count of related UserGroup objects.
      * @throws PropelException
      */
-    public function countGroupUsers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countUserGroups(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collGroupUsersPartial && !$this->isNew();
-        if (null === $this->collGroupUsers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collGroupUsers) {
+        $partial = $this->collUserGroupsPartial && !$this->isNew();
+        if (null === $this->collUserGroups || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collUserGroups) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getGroupUsers());
+                return count($this->getUserGroups());
             }
 
-            $query = ChildGroupUserQuery::create(null, $criteria);
+            $query = ChildUserGroupQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
@@ -1903,54 +1943,54 @@ abstract class Group implements ActiveRecordInterface
                 ->count($con);
         }
 
-        return count($this->collGroupUsers);
+        return count($this->collUserGroups);
     }
 
     /**
-     * Method called to associate a ChildGroupUser object to this object
-     * through the ChildGroupUser foreign key attribute.
+     * Method called to associate a ChildUserGroup object to this object
+     * through the ChildUserGroup foreign key attribute.
      *
-     * @param  ChildGroupUser $l ChildGroupUser
+     * @param  ChildUserGroup $l ChildUserGroup
      * @return $this|\keeko\core\model\Group The current object (for fluent API support)
      */
-    public function addGroupUser(ChildGroupUser $l)
+    public function addUserGroup(ChildUserGroup $l)
     {
-        if ($this->collGroupUsers === null) {
-            $this->initGroupUsers();
-            $this->collGroupUsersPartial = true;
+        if ($this->collUserGroups === null) {
+            $this->initUserGroups();
+            $this->collUserGroupsPartial = true;
         }
 
-        if (!$this->collGroupUsers->contains($l)) {
-            $this->doAddGroupUser($l);
+        if (!$this->collUserGroups->contains($l)) {
+            $this->doAddUserGroup($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildGroupUser $groupUser The ChildGroupUser object to add.
+     * @param ChildUserGroup $userGroup The ChildUserGroup object to add.
      */
-    protected function doAddGroupUser(ChildGroupUser $groupUser)
+    protected function doAddUserGroup(ChildUserGroup $userGroup)
     {
-        $this->collGroupUsers[]= $groupUser;
-        $groupUser->setGroup($this);
+        $this->collUserGroups[]= $userGroup;
+        $userGroup->setGroup($this);
     }
 
     /**
-     * @param  ChildGroupUser $groupUser The ChildGroupUser object to remove.
+     * @param  ChildUserGroup $userGroup The ChildUserGroup object to remove.
      * @return $this|ChildGroup The current object (for fluent API support)
      */
-    public function removeGroupUser(ChildGroupUser $groupUser)
+    public function removeUserGroup(ChildUserGroup $userGroup)
     {
-        if ($this->getGroupUsers()->contains($groupUser)) {
-            $pos = $this->collGroupUsers->search($groupUser);
-            $this->collGroupUsers->remove($pos);
-            if (null === $this->groupUsersScheduledForDeletion) {
-                $this->groupUsersScheduledForDeletion = clone $this->collGroupUsers;
-                $this->groupUsersScheduledForDeletion->clear();
+        if ($this->getUserGroups()->contains($userGroup)) {
+            $pos = $this->collUserGroups->search($userGroup);
+            $this->collUserGroups->remove($pos);
+            if (null === $this->userGroupsScheduledForDeletion) {
+                $this->userGroupsScheduledForDeletion = clone $this->collUserGroups;
+                $this->userGroupsScheduledForDeletion->clear();
             }
-            $this->groupUsersScheduledForDeletion[]= clone $groupUser;
-            $groupUser->setGroup(null);
+            $this->userGroupsScheduledForDeletion[]= clone $userGroup;
+            $userGroup->setGroup(null);
         }
 
         return $this;
@@ -1962,7 +2002,7 @@ abstract class Group implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Group is new, it will return
      * an empty collection; or if this Group has previously
-     * been saved, it will retrieve related GroupUsers from storage.
+     * been saved, it will retrieve related UserGroups from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1971,14 +2011,14 @@ abstract class Group implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildGroupUser[] List of ChildGroupUser objects
+     * @return ObjectCollection|ChildUserGroup[] List of ChildUserGroup objects
      */
-    public function getGroupUsersJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getUserGroupsJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildGroupUserQuery::create(null, $criteria);
+        $query = ChildUserGroupQuery::create(null, $criteria);
         $query->joinWith('User', $joinBehavior);
 
-        return $this->getGroupUsers($query, $con);
+        return $this->getUserGroups($query, $con);
     }
 
     /**
@@ -2242,7 +2282,7 @@ abstract class Group implements ActiveRecordInterface
     }
 
     /**
-     * Initializes the collUsers collection.
+     * Initializes the collUsers crossRef collection.
      *
      * By default this just sets the collUsers collection to an empty collection (like clearUsers());
      * however, you may wish to override this method in your stub class to provide setting appropriate
@@ -2270,7 +2310,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Gets a collection of ChildUser objects related by a many-to-many relationship
-     * to the current object by way of the kk_group_user cross-reference table.
+     * to the current object by way of the kk_user_group cross-reference table.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -2320,7 +2360,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Sets a collection of User objects related by a many-to-many relationship
-     * to the current object by way of the kk_group_user cross-reference table.
+     * to the current object by way of the kk_user_group cross-reference table.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
@@ -2353,7 +2393,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Gets the number of User objects related by a many-to-many relationship
-     * to the current object by way of the kk_group_user cross-reference table.
+     * to the current object by way of the kk_user_group cross-reference table.
      *
      * @param      Criteria $criteria Optional query object to filter the query
      * @param      boolean $distinct Set to true to force count distinct
@@ -2389,7 +2429,7 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Associate a ChildUser to this object
-     * through the kk_group_user cross reference table.
+     * through the kk_user_group cross reference table.
      *
      * @param ChildUser $user
      * @return ChildGroup The current object (for fluent API support)
@@ -2415,13 +2455,13 @@ abstract class Group implements ActiveRecordInterface
      */
     protected function doAddUser(ChildUser $user)
     {
-        $groupUser = new ChildGroupUser();
+        $userGroup = new ChildUserGroup();
 
-        $groupUser->setUser($user);
+        $userGroup->setUser($user);
 
-        $groupUser->setGroup($this);
+        $userGroup->setGroup($this);
 
-        $this->addGroupUser($groupUser);
+        $this->addUserGroup($userGroup);
 
         // set the back reference to this object directly as using provided method either results
         // in endless loop or in multiple relations
@@ -2436,24 +2476,24 @@ abstract class Group implements ActiveRecordInterface
 
     /**
      * Remove user of this object
-     * through the kk_group_user cross reference table.
+     * through the kk_user_group cross reference table.
      *
      * @param ChildUser $user
      * @return ChildGroup The current object (for fluent API support)
      */
     public function removeUser(ChildUser $user)
     {
-        if ($this->getUsers()->contains($user)) { $groupUser = new ChildGroupUser();
+        if ($this->getUsers()->contains($user)) { $userGroup = new ChildUserGroup();
 
-            $groupUser->setUser($user);
+            $userGroup->setUser($user);
             if ($user->isGroupsLoaded()) {
                 //remove the back reference if available
                 $user->getGroups()->removeObject($this);
             }
 
-            $groupUser->setGroup($this);
-            $this->removeGroupUser(clone $groupUser);
-            $groupUser->clear();
+            $userGroup->setGroup($this);
+            $this->removeUserGroup(clone $userGroup);
+            $userGroup->clear();
 
             $this->collUsers->remove($this->collUsers->search($user));
 
@@ -2484,7 +2524,7 @@ abstract class Group implements ActiveRecordInterface
     }
 
     /**
-     * Initializes the collActions collection.
+     * Initializes the collActions crossRef collection.
      *
      * By default this just sets the collActions collection to an empty collection (like clearActions());
      * however, you may wish to override this method in your stub class to provide setting appropriate
@@ -2746,8 +2786,8 @@ abstract class Group implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collGroupUsers) {
-                foreach ($this->collGroupUsers as $o) {
+            if ($this->collUserGroups) {
+                foreach ($this->collUserGroups as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -2768,7 +2808,7 @@ abstract class Group implements ActiveRecordInterface
             }
         } // if ($deep)
 
-        $this->collGroupUsers = null;
+        $this->collUserGroups = null;
         $this->collGroupActions = null;
         $this->collUsers = null;
         $this->collActions = null;
@@ -2818,10 +2858,22 @@ abstract class Group implements ActiveRecordInterface
      * @param      object $validator A Validator class instance
      * @return     boolean Whether all objects pass validation.
      */
-    public function validate(Validator $validator = null)
+    public function validate(ValidatorInterface $validator = null)
     {
         if (null === $validator) {
-            $validator = new Validator(new ClassMetadataFactory(new StaticMethodLoader()), new ConstraintValidatorFactory(), new DefaultTranslator());
+            if(class_exists('Symfony\\Component\\Validator\\Validator\\LegacyValidator')){
+                $validator = new LegacyValidator(
+                            new ExecutionContextFactory(new DefaultTranslator()),
+                            new ClassMetaDataFactory(new StaticMethodLoader()),
+                            new ConstraintValidatorFactory()
+                );
+            }else{
+                $validator = new Validator(
+                            new ClassMetadataFactory(new StaticMethodLoader()),
+                            new ConstraintValidatorFactory(),
+                            new DefaultTranslator()
+                );
+            }
         }
 
         $failureMap = new ConstraintViolationList();
@@ -2836,8 +2888,8 @@ abstract class Group implements ActiveRecordInterface
                 $failureMap->addAll($retval);
             }
 
-            if (null !== $this->collGroupUsers) {
-                foreach ($this->collGroupUsers as $referrerFK) {
+            if (null !== $this->collUserGroups) {
+                foreach ($this->collUserGroups as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
                         if (!$referrerFK->validate($validator)) {
                             $failureMap->addAll($referrerFK->getValidationFailures());

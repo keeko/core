@@ -17,17 +17,24 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use keeko\core\model\Group as ChildGroup;
 use keeko\core\model\GroupQuery as ChildGroupQuery;
-use keeko\core\model\GroupUserQuery as ChildGroupUserQuery;
 use keeko\core\model\User as ChildUser;
+use keeko\core\model\UserGroupQuery as ChildUserGroupQuery;
 use keeko\core\model\UserQuery as ChildUserQuery;
-use keeko\core\model\Map\GroupUserTableMap;
+use keeko\core\model\Map\UserGroupTableMap;
 
-abstract class GroupUser implements ActiveRecordInterface
+/**
+ * Base class that represents a row from the 'kk_user_group' table.
+ *
+ *
+ *
+* @package    propel.generator..Base
+*/
+abstract class UserGroup implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\keeko\\core\\model\\Map\\GroupUserTableMap';
+    const TABLE_MAP = '\\keeko\\core\\model\\Map\\UserGroupTableMap';
 
 
     /**
@@ -87,7 +94,7 @@ abstract class GroupUser implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of keeko\core\model\Base\GroupUser object.
+     * Initializes internal state of keeko\core\model\Base\UserGroup object.
      */
     public function __construct()
     {
@@ -182,9 +189,9 @@ abstract class GroupUser implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>GroupUser</code> instance.  If
-     * <code>obj</code> is an instance of <code>GroupUser</code>, delegates to
-     * <code>equals(GroupUser)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>UserGroup</code> instance.  If
+     * <code>obj</code> is an instance of <code>UserGroup</code>, delegates to
+     * <code>equals(UserGroup)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -250,7 +257,7 @@ abstract class GroupUser implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|GroupUser The current object, for fluid interface
+     * @return $this|UserGroup The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -324,6 +331,54 @@ abstract class GroupUser implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [user_id] column.
+     *
+     * @param  int $v new value
+     * @return $this|\keeko\core\model\UserGroup The current object (for fluent API support)
+     */
+    public function setUserId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->user_id !== $v) {
+            $this->user_id = $v;
+            $this->modifiedColumns[UserGroupTableMap::COL_USER_ID] = true;
+        }
+
+        if ($this->aUser !== null && $this->aUser->getId() !== $v) {
+            $this->aUser = null;
+        }
+
+        return $this;
+    } // setUserId()
+
+    /**
+     * Set the value of [group_id] column.
+     *
+     * @param  int $v new value
+     * @return $this|\keeko\core\model\UserGroup The current object (for fluent API support)
+     */
+    public function setGroupId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->group_id !== $v) {
+            $this->group_id = $v;
+            $this->modifiedColumns[UserGroupTableMap::COL_GROUP_ID] = true;
+        }
+
+        if ($this->aGroup !== null && $this->aGroup->getId() !== $v) {
+            $this->aGroup = null;
+        }
+
+        return $this;
+    } // setGroupId()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -349,7 +404,7 @@ abstract class GroupUser implements ActiveRecordInterface
      * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
      * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
      * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @return int             next starting column
@@ -359,10 +414,10 @@ abstract class GroupUser implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GroupUserTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UserGroupTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GroupUserTableMap::translateFieldName('GroupId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserGroupTableMap::translateFieldName('GroupId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->group_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -372,10 +427,10 @@ abstract class GroupUser implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 2; // 2 = GroupUserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 2; // 2 = UserGroupTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\GroupUser'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\UserGroup'), 0, $e);
         }
     }
 
@@ -403,54 +458,6 @@ abstract class GroupUser implements ActiveRecordInterface
     } // ensureConsistency
 
     /**
-     * Set the value of [user_id] column.
-     *
-     * @param  int $v new value
-     * @return $this|\keeko\core\model\GroupUser The current object (for fluent API support)
-     */
-    public function setUserId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->user_id !== $v) {
-            $this->user_id = $v;
-            $this->modifiedColumns[GroupUserTableMap::COL_USER_ID] = true;
-        }
-
-        if ($this->aUser !== null && $this->aUser->getId() !== $v) {
-            $this->aUser = null;
-        }
-
-        return $this;
-    } // setUserId()
-
-    /**
-     * Set the value of [group_id] column.
-     *
-     * @param  int $v new value
-     * @return $this|\keeko\core\model\GroupUser The current object (for fluent API support)
-     */
-    public function setGroupId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->group_id !== $v) {
-            $this->group_id = $v;
-            $this->modifiedColumns[GroupUserTableMap::COL_GROUP_ID] = true;
-        }
-
-        if ($this->aGroup !== null && $this->aGroup->getId() !== $v) {
-            $this->aGroup = null;
-        }
-
-        return $this;
-    } // setGroupId()
-
-    /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
      *
      * This will only work if the object has been saved and has a valid primary key set.
@@ -471,13 +478,13 @@ abstract class GroupUser implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(GroupUserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(UserGroupTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildGroupUserQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildUserGroupQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -498,8 +505,8 @@ abstract class GroupUser implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see GroupUser::setDeleted()
-     * @see GroupUser::isDeleted()
+     * @see UserGroup::setDeleted()
+     * @see UserGroup::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -508,11 +515,11 @@ abstract class GroupUser implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GroupUserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserGroupTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildGroupUserQuery::create()
+            $deleteQuery = ChildUserGroupQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -543,7 +550,7 @@ abstract class GroupUser implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GroupUserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserGroupTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -562,7 +569,7 @@ abstract class GroupUser implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                GroupUserTableMap::addInstanceToPool($this);
+                UserGroupTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -640,15 +647,15 @@ abstract class GroupUser implements ActiveRecordInterface
 
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(GroupUserTableMap::COL_USER_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_ID';
+        if ($this->isColumnModified(UserGroupTableMap::COL_USER_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`user_id`';
         }
-        if ($this->isColumnModified(GroupUserTableMap::COL_GROUP_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'GROUP_ID';
+        if ($this->isColumnModified(UserGroupTableMap::COL_GROUP_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`group_id`';
         }
 
         $sql = sprintf(
-            'INSERT INTO kk_group_user (%s) VALUES (%s)',
+            'INSERT INTO `kk_user_group` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -657,10 +664,10 @@ abstract class GroupUser implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'USER_ID':
+                    case '`user_id`':
                         $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
                         break;
-                    case 'GROUP_ID':
+                    case '`group_id`':
                         $stmt->bindValue($identifier, $this->group_id, PDO::PARAM_INT);
                         break;
                 }
@@ -695,14 +702,14 @@ abstract class GroupUser implements ActiveRecordInterface
      *
      * @param      string $name name
      * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                     Defaults to TableMap::TYPE_PHPNAME.
      * @return mixed Value of field.
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = GroupUserTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = UserGroupTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -736,7 +743,7 @@ abstract class GroupUser implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
@@ -747,11 +754,12 @@ abstract class GroupUser implements ActiveRecordInterface
      */
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['GroupUser'][serialize($this->getPrimaryKey())])) {
+
+        if (isset($alreadyDumpedObjects['UserGroup'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['GroupUser'][serialize($this->getPrimaryKey())] = true;
-        $keys = GroupUserTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['UserGroup'][$this->hashCode()] = true;
+        $keys = UserGroupTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getUserId(),
             $keys[1] => $this->getGroupId(),
@@ -763,10 +771,34 @@ abstract class GroupUser implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->aGroup) {
-                $result['Group'] = $this->aGroup->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'group';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_group';
+                        break;
+                    default:
+                        $key = 'Group';
+                }
+
+                $result[$key] = $this->aGroup->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aUser) {
-                $result['User'] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'user';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_user';
+                        break;
+                    default:
+                        $key = 'User';
+                }
+
+                $result[$key] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -779,14 +811,14 @@ abstract class GroupUser implements ActiveRecordInterface
      * @param  string $name
      * @param  mixed  $value field value
      * @param  string $type The type of fieldname the $name is of:
-     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\keeko\core\model\GroupUser
+     * @return $this|\keeko\core\model\UserGroup
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = GroupUserTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = UserGroupTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -797,7 +829,7 @@ abstract class GroupUser implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\keeko\core\model\GroupUser
+     * @return $this|\keeko\core\model\UserGroup
      */
     public function setByPosition($pos, $value)
     {
@@ -822,7 +854,7 @@ abstract class GroupUser implements ActiveRecordInterface
      * array. If so the setByName() method is called for that column.
      *
      * You can specify the key type of the array by additionally passing one
-     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
@@ -832,7 +864,7 @@ abstract class GroupUser implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = GroupUserTableMap::getFieldNames($keyType);
+        $keys = UserGroupTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setUserId($arr[$keys[0]]);
@@ -849,19 +881,25 @@ abstract class GroupUser implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
+     * You can specify the key type of the array by additionally passing one
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
+     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     * The default key type is the column's TableMap::TYPE_PHPNAME.
+     *
      * @param mixed $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
+     * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\keeko\core\model\GroupUser The current object, for fluid interface
+     * @return $this|\keeko\core\model\UserGroup The current object, for fluid interface
      */
-    public function importFrom($parser, $data)
+    public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        $this->fromArray($parser->toArray($data), TableMap::TYPE_PHPNAME);
+        $this->fromArray($parser->toArray($data), $keyType);
 
         return $this;
     }
@@ -873,13 +911,13 @@ abstract class GroupUser implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(GroupUserTableMap::DATABASE_NAME);
+        $criteria = new Criteria(UserGroupTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(GroupUserTableMap::COL_USER_ID)) {
-            $criteria->add(GroupUserTableMap::COL_USER_ID, $this->user_id);
+        if ($this->isColumnModified(UserGroupTableMap::COL_USER_ID)) {
+            $criteria->add(UserGroupTableMap::COL_USER_ID, $this->user_id);
         }
-        if ($this->isColumnModified(GroupUserTableMap::COL_GROUP_ID)) {
-            $criteria->add(GroupUserTableMap::COL_GROUP_ID, $this->group_id);
+        if ($this->isColumnModified(UserGroupTableMap::COL_GROUP_ID)) {
+            $criteria->add(UserGroupTableMap::COL_GROUP_ID, $this->group_id);
         }
 
         return $criteria;
@@ -897,9 +935,9 @@ abstract class GroupUser implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(GroupUserTableMap::DATABASE_NAME);
-        $criteria->add(GroupUserTableMap::COL_USER_ID, $this->user_id);
-        $criteria->add(GroupUserTableMap::COL_GROUP_ID, $this->group_id);
+        $criteria = ChildUserGroupQuery::create();
+        $criteria->add(UserGroupTableMap::COL_USER_ID, $this->user_id);
+        $criteria->add(UserGroupTableMap::COL_GROUP_ID, $this->group_id);
 
         return $criteria;
     }
@@ -918,14 +956,14 @@ abstract class GroupUser implements ActiveRecordInterface
         $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
 
-        //relation kk_group_user_fk_8134fe to table kk_group
+        //relation kk_user_group_fk_8134fe to table kk_group
         if ($this->aGroup && $hash = spl_object_hash($this->aGroup)) {
             $primaryKeyFKs[] = $hash;
         } else {
             $validPrimaryKeyFKs = false;
         }
 
-        //relation kk_group_user_fk_1efe60 to table kk_user
+        //relation kk_user_group_fk_1efe60 to table kk_user
         if ($this->aUser && $hash = spl_object_hash($this->aUser)) {
             $primaryKeyFKs[] = $hash;
         } else {
@@ -982,7 +1020,7 @@ abstract class GroupUser implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \keeko\core\model\GroupUser (or compatible) type.
+     * @param      object $copyObj An object of \keeko\core\model\UserGroup (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
@@ -1005,7 +1043,7 @@ abstract class GroupUser implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \keeko\core\model\GroupUser Clone of current object.
+     * @return \keeko\core\model\UserGroup Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1022,7 +1060,7 @@ abstract class GroupUser implements ActiveRecordInterface
      * Declares an association between this object and a ChildGroup object.
      *
      * @param  ChildGroup $v
-     * @return $this|\keeko\core\model\GroupUser The current object (for fluent API support)
+     * @return $this|\keeko\core\model\UserGroup The current object (for fluent API support)
      * @throws PropelException
      */
     public function setGroup(ChildGroup $v = null)
@@ -1038,7 +1076,7 @@ abstract class GroupUser implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildGroup object, it will not be re-added.
         if ($v !== null) {
-            $v->addGroupUser($this);
+            $v->addUserGroup($this);
         }
 
 
@@ -1062,7 +1100,7 @@ abstract class GroupUser implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aGroup->addGroupUsers($this);
+                $this->aGroup->addUserGroups($this);
              */
         }
 
@@ -1073,7 +1111,7 @@ abstract class GroupUser implements ActiveRecordInterface
      * Declares an association between this object and a ChildUser object.
      *
      * @param  ChildUser $v
-     * @return $this|\keeko\core\model\GroupUser The current object (for fluent API support)
+     * @return $this|\keeko\core\model\UserGroup The current object (for fluent API support)
      * @throws PropelException
      */
     public function setUser(ChildUser $v = null)
@@ -1089,7 +1127,7 @@ abstract class GroupUser implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildUser object, it will not be re-added.
         if ($v !== null) {
-            $v->addGroupUser($this);
+            $v->addUserGroup($this);
         }
 
 
@@ -1113,7 +1151,7 @@ abstract class GroupUser implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aUser->addGroupUsers($this);
+                $this->aUser->addUserGroups($this);
              */
         }
 
@@ -1128,10 +1166,10 @@ abstract class GroupUser implements ActiveRecordInterface
     public function clear()
     {
         if (null !== $this->aGroup) {
-            $this->aGroup->removeGroupUser($this);
+            $this->aGroup->removeUserGroup($this);
         }
         if (null !== $this->aUser) {
-            $this->aUser->removeGroupUser($this);
+            $this->aUser->removeUserGroup($this);
         }
         $this->user_id = null;
         $this->group_id = null;
@@ -1166,7 +1204,7 @@ abstract class GroupUser implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(GroupUserTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(UserGroupTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

@@ -154,11 +154,13 @@ abstract class ActionQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildAction A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, NAME, TITLE, DESCRIPTION, CLASS_NAME, MODULE_ID FROM kk_action WHERE ID = :p0';
+        $sql = 'SELECT `id`, `name`, `title`, `description`, `class_name`, `module_id` FROM `kk_action` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -453,6 +455,8 @@ abstract class ActionQuery extends ModelCriteria
      *
      * @param \keeko\core\model\Module|ObjectCollection $module The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildActionQuery The current query, for fluid interface
      */

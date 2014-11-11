@@ -6,37 +6,55 @@ use keeko\core\module\AbstractModule;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
+use keeko\core\service\ServiceContainer;
+use keeko\core\preferences\Preferences;
 
 abstract class AbstractAction {
-
-	const MAX_PER_PAGE = 50;
 	
-	/**
-	 *
-	 * @var Action
-	 */
+	/** @var Action */
 	protected $model;
 
-	/**
-	 *
-	 * @var AbstractModule
-	 */
+	/** @var AbstractModule */
 	protected $module;
 
-	/**
-	 *
-	 * @var \Twig_Environment
-	 */
+	/** @var \Twig_Environment */
 	protected $twig;
 
+	/** @var array */
 	protected $params = [];
 
+	/** @var AbstractResponse */
 	protected $response;
 
 	public function __construct(Action $model, AbstractModule $module, AbstractResponse $response) {
 		$this->model = $model;
-		$this->module = $module;
 		$this->response = $response;
+		
+		$this->module = $module;
+		$templatePath = sprintf('%s/%s/templates/', KEEKO_PATH_MODULES, $module->getModel()->getName());
+	
+		if (file_exists($templatePath)) {
+			$loader = new \Twig_Loader_Filesystem($templatePath);
+			$this->twig = new \Twig_Environment($loader);
+		}
+	}
+
+	/**
+	 * Returns the service container
+	 *
+	 * @return ServiceContainer
+	 */
+	protected function getServiceContainer() {
+		return $this->module->getServiceContainer();
+	}
+	
+	/**
+	 * Returns the module's preferences
+	 *
+	 * @return Preferences
+	 */
+	protected function getPreferences() {
+		return $this->module->getPreferences();
 	}
 
 	public function setParams($params) {
@@ -48,31 +66,33 @@ abstract class AbstractAction {
 	protected function setDefaultParams(OptionsResolverInterface $resolver) {
 		// does nothing, extend this method and provide functionality for your action
 	}
+
+	/**
+	 * Returns the param
+	 *
+	 * @param string $name the param name
+	 * @return mixed
+	 */
+	protected function getParam($name) {
+		return $this->params[$name];
+	}
 	
 	/**
+	 * Returns the model for this action
+	 *
+	 * @return Action
+	 */
+	public function getModel() {
+		return $this->model;
+	}
+
+	/**
+	 * Returns the associated module
 	 *
 	 * @return AbstractModule
 	 */
 	protected function getModule() {
 		return $this->module;
-	}
-
-	protected function getParam($name) {
-		return $this->params[$name];
-	}
-
-	public function setModel(Action $action) {
-		$this->model = $action;
-	}
-
-	public function setModule(AbstractModule $module) {
-		$this->module = $module;
-		$templatePath = sprintf('%s/%s/templates/', KEEKO_PATH_MODULES, $module->getModel()->getName());
-		
-		if (file_exists($templatePath)) {
-			$loader = new \Twig_Loader_Filesystem($templatePath);
-			$this->twig = new \Twig_Environment($loader);
-		}
 	}
 	
 	abstract public function run(Request $request);

@@ -34,7 +34,7 @@ class CountryTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.CountryTableMap';
+    const CLASS_NAME = '.Map.CountryTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class CountryTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.Country';
+    const CLASS_DEFAULT = 'Country';
 
     /**
      * The total number of columns
@@ -72,89 +72,89 @@ class CountryTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 17;
 
     /**
-     * the column name for the ISO_NR field
+     * the column name for the iso_nr field
      */
-    const COL_ISO_NR = 'kk_country.ISO_NR';
+    const COL_ISO_NR = 'kk_country.iso_nr';
 
     /**
-     * the column name for the ALPHA_2 field
+     * the column name for the alpha_2 field
      */
-    const COL_ALPHA_2 = 'kk_country.ALPHA_2';
+    const COL_ALPHA_2 = 'kk_country.alpha_2';
 
     /**
-     * the column name for the ALPHA_3 field
+     * the column name for the alpha_3 field
      */
-    const COL_ALPHA_3 = 'kk_country.ALPHA_3';
+    const COL_ALPHA_3 = 'kk_country.alpha_3';
 
     /**
-     * the column name for the IOC field
+     * the column name for the ioc field
      */
-    const COL_IOC = 'kk_country.IOC';
+    const COL_IOC = 'kk_country.ioc';
 
     /**
-     * the column name for the CAPITAL field
+     * the column name for the capital field
      */
-    const COL_CAPITAL = 'kk_country.CAPITAL';
+    const COL_CAPITAL = 'kk_country.capital';
 
     /**
-     * the column name for the TLD field
+     * the column name for the tld field
      */
-    const COL_TLD = 'kk_country.TLD';
+    const COL_TLD = 'kk_country.tld';
 
     /**
-     * the column name for the PHONE field
+     * the column name for the phone field
      */
-    const COL_PHONE = 'kk_country.PHONE';
+    const COL_PHONE = 'kk_country.phone';
 
     /**
-     * the column name for the TERRITORY_ISO_NR field
+     * the column name for the territory_iso_nr field
      */
-    const COL_TERRITORY_ISO_NR = 'kk_country.TERRITORY_ISO_NR';
+    const COL_TERRITORY_ISO_NR = 'kk_country.territory_iso_nr';
 
     /**
-     * the column name for the CURRENCY_ISO_NR field
+     * the column name for the currency_iso_nr field
      */
-    const COL_CURRENCY_ISO_NR = 'kk_country.CURRENCY_ISO_NR';
+    const COL_CURRENCY_ISO_NR = 'kk_country.currency_iso_nr';
 
     /**
-     * the column name for the OFFICIAL_LOCAL_NAME field
+     * the column name for the official_local_name field
      */
-    const COL_OFFICIAL_LOCAL_NAME = 'kk_country.OFFICIAL_LOCAL_NAME';
+    const COL_OFFICIAL_LOCAL_NAME = 'kk_country.official_local_name';
 
     /**
-     * the column name for the OFFICIAL_EN_NAME field
+     * the column name for the official_en_name field
      */
-    const COL_OFFICIAL_EN_NAME = 'kk_country.OFFICIAL_EN_NAME';
+    const COL_OFFICIAL_EN_NAME = 'kk_country.official_en_name';
 
     /**
-     * the column name for the SHORT_LOCAL_NAME field
+     * the column name for the short_local_name field
      */
-    const COL_SHORT_LOCAL_NAME = 'kk_country.SHORT_LOCAL_NAME';
+    const COL_SHORT_LOCAL_NAME = 'kk_country.short_local_name';
 
     /**
-     * the column name for the SHORT_EN_NAME field
+     * the column name for the short_en_name field
      */
-    const COL_SHORT_EN_NAME = 'kk_country.SHORT_EN_NAME';
+    const COL_SHORT_EN_NAME = 'kk_country.short_en_name';
 
     /**
-     * the column name for the BBOX_SW_LAT field
+     * the column name for the bbox_sw_lat field
      */
-    const COL_BBOX_SW_LAT = 'kk_country.BBOX_SW_LAT';
+    const COL_BBOX_SW_LAT = 'kk_country.bbox_sw_lat';
 
     /**
-     * the column name for the BBOX_SW_LNG field
+     * the column name for the bbox_sw_lng field
      */
-    const COL_BBOX_SW_LNG = 'kk_country.BBOX_SW_LNG';
+    const COL_BBOX_SW_LNG = 'kk_country.bbox_sw_lng';
 
     /**
-     * the column name for the BBOX_NE_LAT field
+     * the column name for the bbox_ne_lat field
      */
-    const COL_BBOX_NE_LAT = 'kk_country.BBOX_NE_LAT';
+    const COL_BBOX_NE_LAT = 'kk_country.bbox_ne_lat';
 
     /**
-     * the column name for the BBOX_NE_LNG field
+     * the column name for the bbox_ne_lng field
      */
-    const COL_BBOX_NE_LNG = 'kk_country.BBOX_NE_LNG';
+    const COL_BBOX_NE_LNG = 'kk_country.bbox_ne_lng';
 
     /**
      * The default string format for model objects of the related table
@@ -169,9 +169,8 @@ class CountryTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('IsoNr', 'Alpha2', 'Alpha3', 'Ioc', 'Capital', 'Tld', 'Phone', 'TerritoryIsoNr', 'CurrencyIsoNr', 'OfficialLocalName', 'OfficialEnName', 'ShortLocalName', 'ShortEnName', 'BboxSwLat', 'BboxSwLng', 'BboxNeLat', 'BboxNeLng', ),
-        self::TYPE_STUDLYPHPNAME => array('isoNr', 'alpha2', 'alpha3', 'ioc', 'capital', 'tld', 'phone', 'territoryIsoNr', 'currencyIsoNr', 'officialLocalName', 'officialEnName', 'shortLocalName', 'shortEnName', 'bboxSwLat', 'bboxSwLng', 'bboxNeLat', 'bboxNeLng', ),
+        self::TYPE_CAMELNAME     => array('isoNr', 'alpha2', 'alpha3', 'ioc', 'capital', 'tld', 'phone', 'territoryIsoNr', 'currencyIsoNr', 'officialLocalName', 'officialEnName', 'shortLocalName', 'shortEnName', 'bboxSwLat', 'bboxSwLng', 'bboxNeLat', 'bboxNeLng', ),
         self::TYPE_COLNAME       => array(CountryTableMap::COL_ISO_NR, CountryTableMap::COL_ALPHA_2, CountryTableMap::COL_ALPHA_3, CountryTableMap::COL_IOC, CountryTableMap::COL_CAPITAL, CountryTableMap::COL_TLD, CountryTableMap::COL_PHONE, CountryTableMap::COL_TERRITORY_ISO_NR, CountryTableMap::COL_CURRENCY_ISO_NR, CountryTableMap::COL_OFFICIAL_LOCAL_NAME, CountryTableMap::COL_OFFICIAL_EN_NAME, CountryTableMap::COL_SHORT_LOCAL_NAME, CountryTableMap::COL_SHORT_EN_NAME, CountryTableMap::COL_BBOX_SW_LAT, CountryTableMap::COL_BBOX_SW_LNG, CountryTableMap::COL_BBOX_NE_LAT, CountryTableMap::COL_BBOX_NE_LNG, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ISO_NR', 'COL_ALPHA_2', 'COL_ALPHA_3', 'COL_IOC', 'COL_CAPITAL', 'COL_TLD', 'COL_PHONE', 'COL_TERRITORY_ISO_NR', 'COL_CURRENCY_ISO_NR', 'COL_OFFICIAL_LOCAL_NAME', 'COL_OFFICIAL_EN_NAME', 'COL_SHORT_LOCAL_NAME', 'COL_SHORT_EN_NAME', 'COL_BBOX_SW_LAT', 'COL_BBOX_SW_LNG', 'COL_BBOX_NE_LAT', 'COL_BBOX_NE_LNG', ),
         self::TYPE_FIELDNAME     => array('iso_nr', 'alpha_2', 'alpha_3', 'ioc', 'capital', 'tld', 'phone', 'territory_iso_nr', 'currency_iso_nr', 'official_local_name', 'official_en_name', 'short_local_name', 'short_en_name', 'bbox_sw_lat', 'bbox_sw_lng', 'bbox_ne_lat', 'bbox_ne_lng', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
     );
@@ -184,9 +183,8 @@ class CountryTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('IsoNr' => 0, 'Alpha2' => 1, 'Alpha3' => 2, 'Ioc' => 3, 'Capital' => 4, 'Tld' => 5, 'Phone' => 6, 'TerritoryIsoNr' => 7, 'CurrencyIsoNr' => 8, 'OfficialLocalName' => 9, 'OfficialEnName' => 10, 'ShortLocalName' => 11, 'ShortEnName' => 12, 'BboxSwLat' => 13, 'BboxSwLng' => 14, 'BboxNeLat' => 15, 'BboxNeLng' => 16, ),
-        self::TYPE_STUDLYPHPNAME => array('isoNr' => 0, 'alpha2' => 1, 'alpha3' => 2, 'ioc' => 3, 'capital' => 4, 'tld' => 5, 'phone' => 6, 'territoryIsoNr' => 7, 'currencyIsoNr' => 8, 'officialLocalName' => 9, 'officialEnName' => 10, 'shortLocalName' => 11, 'shortEnName' => 12, 'bboxSwLat' => 13, 'bboxSwLng' => 14, 'bboxNeLat' => 15, 'bboxNeLng' => 16, ),
+        self::TYPE_CAMELNAME     => array('isoNr' => 0, 'alpha2' => 1, 'alpha3' => 2, 'ioc' => 3, 'capital' => 4, 'tld' => 5, 'phone' => 6, 'territoryIsoNr' => 7, 'currencyIsoNr' => 8, 'officialLocalName' => 9, 'officialEnName' => 10, 'shortLocalName' => 11, 'shortEnName' => 12, 'bboxSwLat' => 13, 'bboxSwLng' => 14, 'bboxNeLat' => 15, 'bboxNeLng' => 16, ),
         self::TYPE_COLNAME       => array(CountryTableMap::COL_ISO_NR => 0, CountryTableMap::COL_ALPHA_2 => 1, CountryTableMap::COL_ALPHA_3 => 2, CountryTableMap::COL_IOC => 3, CountryTableMap::COL_CAPITAL => 4, CountryTableMap::COL_TLD => 5, CountryTableMap::COL_PHONE => 6, CountryTableMap::COL_TERRITORY_ISO_NR => 7, CountryTableMap::COL_CURRENCY_ISO_NR => 8, CountryTableMap::COL_OFFICIAL_LOCAL_NAME => 9, CountryTableMap::COL_OFFICIAL_EN_NAME => 10, CountryTableMap::COL_SHORT_LOCAL_NAME => 11, CountryTableMap::COL_SHORT_EN_NAME => 12, CountryTableMap::COL_BBOX_SW_LAT => 13, CountryTableMap::COL_BBOX_SW_LNG => 14, CountryTableMap::COL_BBOX_NE_LAT => 15, CountryTableMap::COL_BBOX_NE_LNG => 16, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ISO_NR' => 0, 'COL_ALPHA_2' => 1, 'COL_ALPHA_3' => 2, 'COL_IOC' => 3, 'COL_CAPITAL' => 4, 'COL_TLD' => 5, 'COL_PHONE' => 6, 'COL_TERRITORY_ISO_NR' => 7, 'COL_CURRENCY_ISO_NR' => 8, 'COL_OFFICIAL_LOCAL_NAME' => 9, 'COL_OFFICIAL_EN_NAME' => 10, 'COL_SHORT_LOCAL_NAME' => 11, 'COL_SHORT_EN_NAME' => 12, 'COL_BBOX_SW_LAT' => 13, 'COL_BBOX_SW_LNG' => 14, 'COL_BBOX_NE_LAT' => 15, 'COL_BBOX_NE_LNG' => 16, ),
         self::TYPE_FIELDNAME     => array('iso_nr' => 0, 'alpha_2' => 1, 'alpha_3' => 2, 'ioc' => 3, 'capital' => 4, 'tld' => 5, 'phone' => 6, 'territory_iso_nr' => 7, 'currency_iso_nr' => 8, 'official_local_name' => 9, 'official_en_name' => 10, 'short_local_name' => 11, 'short_en_name' => 12, 'bbox_sw_lat' => 13, 'bbox_sw_lng' => 14, 'bbox_ne_lat' => 15, 'bbox_ne_lng' => 16, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
     );
@@ -203,27 +201,28 @@ class CountryTableMap extends TableMap
         // attributes
         $this->setName('kk_country');
         $this->setPhpName('Country');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\Country');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('ISO_NR', 'IsoNr', 'INTEGER', true, null, null);
-        $this->addColumn('ALPHA_2', 'Alpha2', 'CHAR', false, 2, null);
-        $this->addColumn('ALPHA_3', 'Alpha3', 'CHAR', false, 3, null);
-        $this->addColumn('IOC', 'Ioc', 'CHAR', false, 3, null);
-        $this->addColumn('CAPITAL', 'Capital', 'VARCHAR', false, 128, null);
-        $this->addColumn('TLD', 'Tld', 'VARCHAR', false, 3, null);
-        $this->addColumn('PHONE', 'Phone', 'VARCHAR', false, 16, null);
-        $this->addForeignKey('TERRITORY_ISO_NR', 'TerritoryIsoNr', 'INTEGER', 'kk_territory', 'ISO_NR', true, null, null);
-        $this->addForeignKey('CURRENCY_ISO_NR', 'CurrencyIsoNr', 'INTEGER', 'kk_currency', 'ISO_NR', true, null, null);
-        $this->addColumn('OFFICIAL_LOCAL_NAME', 'OfficialLocalName', 'VARCHAR', false, 128, null);
-        $this->addColumn('OFFICIAL_EN_NAME', 'OfficialEnName', 'VARCHAR', false, 128, null);
-        $this->addColumn('SHORT_LOCAL_NAME', 'ShortLocalName', 'VARCHAR', false, 128, null);
-        $this->addColumn('SHORT_EN_NAME', 'ShortEnName', 'VARCHAR', false, 128, null);
-        $this->addColumn('BBOX_SW_LAT', 'BboxSwLat', 'FLOAT', false, null, null);
-        $this->addColumn('BBOX_SW_LNG', 'BboxSwLng', 'FLOAT', false, null, null);
-        $this->addColumn('BBOX_NE_LAT', 'BboxNeLat', 'FLOAT', false, null, null);
-        $this->addColumn('BBOX_NE_LNG', 'BboxNeLng', 'FLOAT', false, null, null);
+        $this->addPrimaryKey('iso_nr', 'IsoNr', 'INTEGER', true, null, null);
+        $this->addColumn('alpha_2', 'Alpha2', 'CHAR', false, 2, null);
+        $this->addColumn('alpha_3', 'Alpha3', 'CHAR', false, 3, null);
+        $this->addColumn('ioc', 'Ioc', 'CHAR', false, 3, null);
+        $this->addColumn('capital', 'Capital', 'VARCHAR', false, 128, null);
+        $this->addColumn('tld', 'Tld', 'VARCHAR', false, 3, null);
+        $this->addColumn('phone', 'Phone', 'VARCHAR', false, 16, null);
+        $this->addForeignKey('territory_iso_nr', 'TerritoryIsoNr', 'INTEGER', 'kk_territory', 'iso_nr', true, null, null);
+        $this->addForeignKey('currency_iso_nr', 'CurrencyIsoNr', 'INTEGER', 'kk_currency', 'iso_nr', true, null, null);
+        $this->addColumn('official_local_name', 'OfficialLocalName', 'VARCHAR', false, 128, null);
+        $this->addColumn('official_en_name', 'OfficialEnName', 'VARCHAR', false, 128, null);
+        $this->addColumn('short_local_name', 'ShortLocalName', 'VARCHAR', false, 128, null);
+        $this->addColumn('short_en_name', 'ShortEnName', 'VARCHAR', false, 128, null);
+        $this->addColumn('bbox_sw_lat', 'BboxSwLat', 'FLOAT', false, null, null);
+        $this->addColumn('bbox_sw_lng', 'BboxSwLng', 'FLOAT', false, null, null);
+        $this->addColumn('bbox_ne_lat', 'BboxNeLat', 'FLOAT', false, null, null);
+        $this->addColumn('bbox_ne_lng', 'BboxNeLng', 'FLOAT', false, null, null);
     } // initialize()
 
     /**
@@ -246,7 +245,7 @@ class CountryTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -268,7 +267,7 @@ class CountryTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -304,7 +303,7 @@ class CountryTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -397,23 +396,23 @@ class CountryTableMap extends TableMap
             $criteria->addSelectColumn(CountryTableMap::COL_BBOX_NE_LAT);
             $criteria->addSelectColumn(CountryTableMap::COL_BBOX_NE_LNG);
         } else {
-            $criteria->addSelectColumn($alias . '.ISO_NR');
-            $criteria->addSelectColumn($alias . '.ALPHA_2');
-            $criteria->addSelectColumn($alias . '.ALPHA_3');
-            $criteria->addSelectColumn($alias . '.IOC');
-            $criteria->addSelectColumn($alias . '.CAPITAL');
-            $criteria->addSelectColumn($alias . '.TLD');
-            $criteria->addSelectColumn($alias . '.PHONE');
-            $criteria->addSelectColumn($alias . '.TERRITORY_ISO_NR');
-            $criteria->addSelectColumn($alias . '.CURRENCY_ISO_NR');
-            $criteria->addSelectColumn($alias . '.OFFICIAL_LOCAL_NAME');
-            $criteria->addSelectColumn($alias . '.OFFICIAL_EN_NAME');
-            $criteria->addSelectColumn($alias . '.SHORT_LOCAL_NAME');
-            $criteria->addSelectColumn($alias . '.SHORT_EN_NAME');
-            $criteria->addSelectColumn($alias . '.BBOX_SW_LAT');
-            $criteria->addSelectColumn($alias . '.BBOX_SW_LNG');
-            $criteria->addSelectColumn($alias . '.BBOX_NE_LAT');
-            $criteria->addSelectColumn($alias . '.BBOX_NE_LNG');
+            $criteria->addSelectColumn($alias . '.iso_nr');
+            $criteria->addSelectColumn($alias . '.alpha_2');
+            $criteria->addSelectColumn($alias . '.alpha_3');
+            $criteria->addSelectColumn($alias . '.ioc');
+            $criteria->addSelectColumn($alias . '.capital');
+            $criteria->addSelectColumn($alias . '.tld');
+            $criteria->addSelectColumn($alias . '.phone');
+            $criteria->addSelectColumn($alias . '.territory_iso_nr');
+            $criteria->addSelectColumn($alias . '.currency_iso_nr');
+            $criteria->addSelectColumn($alias . '.official_local_name');
+            $criteria->addSelectColumn($alias . '.official_en_name');
+            $criteria->addSelectColumn($alias . '.short_local_name');
+            $criteria->addSelectColumn($alias . '.short_en_name');
+            $criteria->addSelectColumn($alias . '.bbox_sw_lat');
+            $criteria->addSelectColumn($alias . '.bbox_sw_lng');
+            $criteria->addSelectColumn($alias . '.bbox_ne_lat');
+            $criteria->addSelectColumn($alias . '.bbox_ne_lng');
         }
     }
 

@@ -34,7 +34,7 @@ class ApiTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.ApiTableMap';
+    const CLASS_NAME = '.Map.ApiTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class ApiTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.Api';
+    const CLASS_DEFAULT = 'Api';
 
     /**
      * The total number of columns
@@ -72,29 +72,29 @@ class ApiTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 5;
 
     /**
-     * the column name for the ID field
+     * the column name for the id field
      */
-    const COL_ID = 'kk_api.ID';
+    const COL_ID = 'kk_api.id';
 
     /**
-     * the column name for the ROUTE field
+     * the column name for the route field
      */
-    const COL_ROUTE = 'kk_api.ROUTE';
+    const COL_ROUTE = 'kk_api.route';
 
     /**
-     * the column name for the METHOD field
+     * the column name for the method field
      */
-    const COL_METHOD = 'kk_api.METHOD';
+    const COL_METHOD = 'kk_api.method';
 
     /**
-     * the column name for the ACTION_ID field
+     * the column name for the action_id field
      */
-    const COL_ACTION_ID = 'kk_api.ACTION_ID';
+    const COL_ACTION_ID = 'kk_api.action_id';
 
     /**
-     * the column name for the REQUIRED_PARAMS field
+     * the column name for the required_params field
      */
-    const COL_REQUIRED_PARAMS = 'kk_api.REQUIRED_PARAMS';
+    const COL_REQUIRED_PARAMS = 'kk_api.required_params';
 
     /**
      * The default string format for model objects of the related table
@@ -109,9 +109,8 @@ class ApiTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('Id', 'Route', 'Method', 'ActionId', 'RequiredParams', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'route', 'method', 'actionId', 'requiredParams', ),
+        self::TYPE_CAMELNAME     => array('id', 'route', 'method', 'actionId', 'requiredParams', ),
         self::TYPE_COLNAME       => array(ApiTableMap::COL_ID, ApiTableMap::COL_ROUTE, ApiTableMap::COL_METHOD, ApiTableMap::COL_ACTION_ID, ApiTableMap::COL_REQUIRED_PARAMS, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_ROUTE', 'COL_METHOD', 'COL_ACTION_ID', 'COL_REQUIRED_PARAMS', ),
         self::TYPE_FIELDNAME     => array('id', 'route', 'method', 'action_id', 'required_params', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
@@ -124,9 +123,8 @@ class ApiTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('Id' => 0, 'Route' => 1, 'Method' => 2, 'ActionId' => 3, 'RequiredParams' => 4, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'route' => 1, 'method' => 2, 'actionId' => 3, 'requiredParams' => 4, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'route' => 1, 'method' => 2, 'actionId' => 3, 'requiredParams' => 4, ),
         self::TYPE_COLNAME       => array(ApiTableMap::COL_ID => 0, ApiTableMap::COL_ROUTE => 1, ApiTableMap::COL_METHOD => 2, ApiTableMap::COL_ACTION_ID => 3, ApiTableMap::COL_REQUIRED_PARAMS => 4, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_ROUTE' => 1, 'COL_METHOD' => 2, 'COL_ACTION_ID' => 3, 'COL_REQUIRED_PARAMS' => 4, ),
         self::TYPE_FIELDNAME     => array('id' => 0, 'route' => 1, 'method' => 2, 'action_id' => 3, 'required_params' => 4, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
@@ -143,15 +141,16 @@ class ApiTableMap extends TableMap
         // attributes
         $this->setName('kk_api');
         $this->setPhpName('Api');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\Api');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-        $this->addColumn('ROUTE', 'Route', 'VARCHAR', true, 255, null);
-        $this->addColumn('METHOD', 'Method', 'VARCHAR', true, 255, null);
-        $this->addForeignKey('ACTION_ID', 'ActionId', 'INTEGER', 'kk_action', 'ID', true, 10, null);
-        $this->addColumn('REQUIRED_PARAMS', 'RequiredParams', 'VARCHAR', false, 255, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
+        $this->addColumn('route', 'Route', 'VARCHAR', true, 255, null);
+        $this->addColumn('method', 'Method', 'VARCHAR', true, 255, null);
+        $this->addForeignKey('action_id', 'ActionId', 'INTEGER', 'kk_action', 'id', true, 10, null);
+        $this->addColumn('required_params', 'RequiredParams', 'VARCHAR', false, 255, null);
     } // initialize()
 
     /**
@@ -170,7 +169,7 @@ class ApiTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -192,7 +191,7 @@ class ApiTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -228,7 +227,7 @@ class ApiTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -309,11 +308,11 @@ class ApiTableMap extends TableMap
             $criteria->addSelectColumn(ApiTableMap::COL_ACTION_ID);
             $criteria->addSelectColumn(ApiTableMap::COL_REQUIRED_PARAMS);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.ROUTE');
-            $criteria->addSelectColumn($alias . '.METHOD');
-            $criteria->addSelectColumn($alias . '.ACTION_ID');
-            $criteria->addSelectColumn($alias . '.REQUIRED_PARAMS');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.route');
+            $criteria->addSelectColumn($alias . '.method');
+            $criteria->addSelectColumn($alias . '.action_id');
+            $criteria->addSelectColumn($alias . '.required_params');
         }
     }
 

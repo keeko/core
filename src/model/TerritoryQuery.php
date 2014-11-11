@@ -4,7 +4,6 @@ namespace keeko\core\model;
 
 use keeko\core\model\Base\TerritoryQuery as BaseTerritoryQuery;
 
-
 /**
  * Skeleton subclass for performing query and update operations on the 'kk_territory' table.
  *

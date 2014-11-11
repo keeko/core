@@ -11,12 +11,12 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
-use keeko\core\model\GroupUser;
-use keeko\core\model\GroupUserQuery;
+use keeko\core\model\UserGroup;
+use keeko\core\model\UserGroupQuery;
 
 
 /**
- * This class defines the structure of the 'kk_group_user' table.
+ * This class defines the structure of the 'kk_user_group' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use keeko\core\model\GroupUserQuery;
  * (i.e. if it's a text column type).
  *
  */
-class GroupUserTableMap extends TableMap
+class UserGroupTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class GroupUserTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.GroupUserTableMap';
+    const CLASS_NAME = '.Map.UserGroupTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +44,17 @@ class GroupUserTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'kk_group_user';
+    const TABLE_NAME = 'kk_user_group';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\keeko\\core\\model\\GroupUser';
+    const OM_CLASS = '\\keeko\\core\\model\\UserGroup';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.GroupUser';
+    const CLASS_DEFAULT = 'UserGroup';
 
     /**
      * The total number of columns
@@ -72,14 +72,14 @@ class GroupUserTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 2;
 
     /**
-     * the column name for the USER_ID field
+     * the column name for the user_id field
      */
-    const COL_USER_ID = 'kk_group_user.USER_ID';
+    const COL_USER_ID = 'kk_user_group.user_id';
 
     /**
-     * the column name for the GROUP_ID field
+     * the column name for the group_id field
      */
-    const COL_GROUP_ID = 'kk_group_user.GROUP_ID';
+    const COL_GROUP_ID = 'kk_user_group.group_id';
 
     /**
      * The default string format for model objects of the related table
@@ -94,9 +94,8 @@ class GroupUserTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('UserId', 'GroupId', ),
-        self::TYPE_STUDLYPHPNAME => array('userId', 'groupId', ),
-        self::TYPE_COLNAME       => array(GroupUserTableMap::COL_USER_ID, GroupUserTableMap::COL_GROUP_ID, ),
-        self::TYPE_RAW_COLNAME   => array('COL_USER_ID', 'COL_GROUP_ID', ),
+        self::TYPE_CAMELNAME     => array('userId', 'groupId', ),
+        self::TYPE_COLNAME       => array(UserGroupTableMap::COL_USER_ID, UserGroupTableMap::COL_GROUP_ID, ),
         self::TYPE_FIELDNAME     => array('user_id', 'group_id', ),
         self::TYPE_NUM           => array(0, 1, )
     );
@@ -109,9 +108,8 @@ class GroupUserTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('UserId' => 0, 'GroupId' => 1, ),
-        self::TYPE_STUDLYPHPNAME => array('userId' => 0, 'groupId' => 1, ),
-        self::TYPE_COLNAME       => array(GroupUserTableMap::COL_USER_ID => 0, GroupUserTableMap::COL_GROUP_ID => 1, ),
-        self::TYPE_RAW_COLNAME   => array('COL_USER_ID' => 0, 'COL_GROUP_ID' => 1, ),
+        self::TYPE_CAMELNAME     => array('userId' => 0, 'groupId' => 1, ),
+        self::TYPE_COLNAME       => array(UserGroupTableMap::COL_USER_ID => 0, UserGroupTableMap::COL_GROUP_ID => 1, ),
         self::TYPE_FIELDNAME     => array('user_id' => 0, 'group_id' => 1, ),
         self::TYPE_NUM           => array(0, 1, )
     );
@@ -126,15 +124,16 @@ class GroupUserTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('kk_group_user');
-        $this->setPhpName('GroupUser');
-        $this->setClassName('\\keeko\\core\\model\\GroupUser');
-        $this->setPackage('keeko.core.model');
+        $this->setName('kk_user_group');
+        $this->setPhpName('UserGroup');
+        $this->setIdentifierQuoting(true);
+        $this->setClassName('\\keeko\\core\\model\\UserGroup');
+        $this->setPackage('');
         $this->setUseIdGenerator(false);
         $this->setIsCrossRef(true);
         // columns
-        $this->addForeignPrimaryKey('USER_ID', 'UserId', 'INTEGER' , 'kk_user', 'ID', true, 10, null);
-        $this->addForeignPrimaryKey('GROUP_ID', 'GroupId', 'INTEGER' , 'kk_group', 'ID', true, 10, null);
+        $this->addForeignPrimaryKey('user_id', 'UserId', 'INTEGER' , 'kk_user', 'id', true, 10, null);
+        $this->addForeignPrimaryKey('group_id', 'GroupId', 'INTEGER' , 'kk_group', 'id', true, 10, null);
     } // initialize()
 
     /**
@@ -154,7 +153,7 @@ class GroupUserTableMap extends TableMap
      * to the cache in order to ensure that the same objects are always returned by find*()
      * and findPk*() calls.
      *
-     * @param \keeko\core\model\GroupUser $obj A \keeko\core\model\GroupUser object.
+     * @param \keeko\core\model\UserGroup $obj A \keeko\core\model\UserGroup object.
      * @param string $key             (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
@@ -175,12 +174,12 @@ class GroupUserTableMap extends TableMap
      * methods in your stub classes -- you may need to explicitly remove objects
      * from the cache in order to prevent returning objects that no longer exist.
      *
-     * @param mixed $value A \keeko\core\model\GroupUser object or a primary key value.
+     * @param mixed $value A \keeko\core\model\UserGroup object or a primary key value.
      */
     public static function removeInstanceFromPool($value)
     {
         if (Propel::isInstancePoolingEnabled() && null !== $value) {
-            if (is_object($value) && $value instanceof \keeko\core\model\GroupUser) {
+            if (is_object($value) && $value instanceof \keeko\core\model\UserGroup) {
                 $key = serialize(array((string) $value->getUserId(), (string) $value->getGroupId()));
 
             } elseif (is_array($value) && count($value) === 2) {
@@ -191,7 +190,7 @@ class GroupUserTableMap extends TableMap
 
                 return;
             } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \keeko\core\model\GroupUser object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \keeko\core\model\UserGroup object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
                 throw $e;
             }
 
@@ -207,7 +206,7 @@ class GroupUserTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -229,7 +228,7 @@ class GroupUserTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -265,7 +264,7 @@ class GroupUserTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? GroupUserTableMap::CLASS_DEFAULT : GroupUserTableMap::OM_CLASS;
+        return $withPrefix ? UserGroupTableMap::CLASS_DEFAULT : UserGroupTableMap::OM_CLASS;
     }
 
     /**
@@ -274,27 +273,27 @@ class GroupUserTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (GroupUser object, last column rank)
+     * @return array           (UserGroup object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = GroupUserTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = GroupUserTableMap::getInstanceFromPool($key))) {
+        $key = UserGroupTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = UserGroupTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + GroupUserTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + UserGroupTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = GroupUserTableMap::OM_CLASS;
-            /** @var GroupUser $obj */
+            $cls = UserGroupTableMap::OM_CLASS;
+            /** @var UserGroup $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            GroupUserTableMap::addInstanceToPool($obj, $key);
+            UserGroupTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -317,18 +316,18 @@ class GroupUserTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = GroupUserTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = GroupUserTableMap::getInstanceFromPool($key))) {
+            $key = UserGroupTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = UserGroupTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var GroupUser $obj */
+                /** @var UserGroup $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                GroupUserTableMap::addInstanceToPool($obj, $key);
+                UserGroupTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -349,11 +348,11 @@ class GroupUserTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(GroupUserTableMap::COL_USER_ID);
-            $criteria->addSelectColumn(GroupUserTableMap::COL_GROUP_ID);
+            $criteria->addSelectColumn(UserGroupTableMap::COL_USER_ID);
+            $criteria->addSelectColumn(UserGroupTableMap::COL_GROUP_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.USER_ID');
-            $criteria->addSelectColumn($alias . '.GROUP_ID');
+            $criteria->addSelectColumn($alias . '.user_id');
+            $criteria->addSelectColumn($alias . '.group_id');
         }
     }
 
@@ -366,7 +365,7 @@ class GroupUserTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(GroupUserTableMap::DATABASE_NAME)->getTable(GroupUserTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(UserGroupTableMap::DATABASE_NAME)->getTable(UserGroupTableMap::TABLE_NAME);
     }
 
     /**
@@ -374,16 +373,16 @@ class GroupUserTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(GroupUserTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(GroupUserTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new GroupUserTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(UserGroupTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(UserGroupTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new UserGroupTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a GroupUser or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a UserGroup or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or GroupUser object or primary key or array of primary keys
+     * @param mixed               $values Criteria or UserGroup object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -394,17 +393,17 @@ class GroupUserTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GroupUserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserGroupTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \keeko\core\model\GroupUser) { // it's a model object
+        } elseif ($values instanceof \keeko\core\model\UserGroup) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(GroupUserTableMap::DATABASE_NAME);
+            $criteria = new Criteria(UserGroupTableMap::DATABASE_NAME);
             // primary key is composite; we therefore, expect
             // the primary key passed to be an array of pkey values
             if (count($values) == count($values, COUNT_RECURSIVE)) {
@@ -412,19 +411,19 @@ class GroupUserTableMap extends TableMap
                 $values = array($values);
             }
             foreach ($values as $value) {
-                $criterion = $criteria->getNewCriterion(GroupUserTableMap::COL_USER_ID, $value[0]);
-                $criterion->addAnd($criteria->getNewCriterion(GroupUserTableMap::COL_GROUP_ID, $value[1]));
+                $criterion = $criteria->getNewCriterion(UserGroupTableMap::COL_USER_ID, $value[0]);
+                $criterion->addAnd($criteria->getNewCriterion(UserGroupTableMap::COL_GROUP_ID, $value[1]));
                 $criteria->addOr($criterion);
             }
         }
 
-        $query = GroupUserQuery::create()->mergeWith($criteria);
+        $query = UserGroupQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            GroupUserTableMap::clearInstancePool();
+            UserGroupTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                GroupUserTableMap::removeInstanceFromPool($singleval);
+                UserGroupTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -432,20 +431,20 @@ class GroupUserTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the kk_group_user table.
+     * Deletes all rows from the kk_user_group table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return GroupUserQuery::create()->doDeleteAll($con);
+        return UserGroupQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a GroupUser or Criteria object.
+     * Performs an INSERT on the database, given a UserGroup or Criteria object.
      *
-     * @param mixed               $criteria Criteria or GroupUser object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or UserGroup object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -454,18 +453,18 @@ class GroupUserTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GroupUserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserGroupTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from GroupUser object
+            $criteria = $criteria->buildCriteria(); // build Criteria from UserGroup object
         }
 
 
         // Set the correct dbName
-        $query = GroupUserQuery::create()->mergeWith($criteria);
+        $query = UserGroupQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -474,7 +473,7 @@ class GroupUserTableMap extends TableMap
         });
     }
 
-} // GroupUserTableMap
+} // UserGroupTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-GroupUserTableMap::buildTableMap();
+UserGroupTableMap::buildTableMap();

@@ -30,6 +30,13 @@ use keeko\core\model\User as ChildUser;
 use keeko\core\model\UserQuery as ChildUserQuery;
 use keeko\core\model\Map\CountryTableMap;
 
+/**
+ * Base class that represents a row from the 'kk_country' table.
+ *
+ *
+ *
+* @package    propel.generator..Base
+*/
 abstract class Country implements ActiveRecordInterface
 {
     /**
@@ -608,130 +615,6 @@ abstract class Country implements ActiveRecordInterface
     }
 
     /**
-     * Indicates whether the columns in this object are only set to default values.
-     *
-     * This method can be used in conjunction with isModified() to indicate whether an object is both
-     * modified _and_ has some values set which are non-default.
-     *
-     * @return boolean Whether the columns in this object are only been set with default values.
-     */
-    public function hasOnlyDefaultValues()
-    {
-        // otherwise, everything was equal, so return TRUE
-        return true;
-    } // hasOnlyDefaultValues()
-
-    /**
-     * Hydrates (populates) the object variables with values from the database resultset.
-     *
-     * An offset (0-based "start column") is specified so that objects can be hydrated
-     * with a subset of the columns in the resultset rows.  This is needed, for example,
-     * for results of JOIN queries where the resultset row includes columns from two or
-     * more tables.
-     *
-     * @param array   $row       The row returned by DataFetcher->fetch().
-     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
-     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
-     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *
-     * @return int             next starting column
-     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
-     */
-    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
-    {
-        try {
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CountryTableMap::translateFieldName('IsoNr', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->iso_nr = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CountryTableMap::translateFieldName('Alpha2', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->alpha_2 = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CountryTableMap::translateFieldName('Alpha3', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->alpha_3 = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CountryTableMap::translateFieldName('Ioc', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->ioc = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CountryTableMap::translateFieldName('Capital', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->capital = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CountryTableMap::translateFieldName('Tld', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->tld = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CountryTableMap::translateFieldName('Phone', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->phone = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CountryTableMap::translateFieldName('TerritoryIsoNr', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->territory_iso_nr = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : CountryTableMap::translateFieldName('CurrencyIsoNr', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->currency_iso_nr = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : CountryTableMap::translateFieldName('OfficialLocalName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->official_local_name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : CountryTableMap::translateFieldName('OfficialEnName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->official_en_name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : CountryTableMap::translateFieldName('ShortLocalName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->short_local_name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : CountryTableMap::translateFieldName('ShortEnName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->short_en_name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : CountryTableMap::translateFieldName('BboxSwLat', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->bbox_sw_lat = (null !== $col) ? (double) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : CountryTableMap::translateFieldName('BboxSwLng', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->bbox_sw_lng = (null !== $col) ? (double) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : CountryTableMap::translateFieldName('BboxNeLat', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->bbox_ne_lat = (null !== $col) ? (double) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : CountryTableMap::translateFieldName('BboxNeLng', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->bbox_ne_lng = (null !== $col) ? (double) $col : null;
-            $this->resetModified();
-
-            $this->setNew(false);
-
-            if ($rehydrate) {
-                $this->ensureConsistency();
-            }
-
-            return $startcol + 17; // 17 = CountryTableMap::NUM_HYDRATE_COLUMNS.
-
-        } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Country'), 0, $e);
-        }
-    }
-
-    /**
-     * Checks and repairs the internal consistency of the object.
-     *
-     * This method is executed after an already-instantiated object is re-hydrated
-     * from the database.  It exists to check any foreign keys to make sure that
-     * the objects related to the current object are correct based on foreign key.
-     *
-     * You can override this method in the stub class, but you should always invoke
-     * the base method from the overridden method (i.e. parent::ensureConsistency()),
-     * in case your model changes.
-     *
-     * @throws PropelException
-     */
-    public function ensureConsistency()
-    {
-        if ($this->aTerritory !== null && $this->territory_iso_nr !== $this->aTerritory->getIsoNr()) {
-            $this->aTerritory = null;
-        }
-        if ($this->aCurrency !== null && $this->currency_iso_nr !== $this->aCurrency->getIsoNr()) {
-            $this->aCurrency = null;
-        }
-    } // ensureConsistency
-
-    /**
      * Set the value of [iso_nr] column.
      *
      * @param  int $v new value
@@ -1080,6 +963,130 @@ abstract class Country implements ActiveRecordInterface
     } // setBboxNeLng()
 
     /**
+     * Indicates whether the columns in this object are only set to default values.
+     *
+     * This method can be used in conjunction with isModified() to indicate whether an object is both
+     * modified _and_ has some values set which are non-default.
+     *
+     * @return boolean Whether the columns in this object are only been set with default values.
+     */
+    public function hasOnlyDefaultValues()
+    {
+        // otherwise, everything was equal, so return TRUE
+        return true;
+    } // hasOnlyDefaultValues()
+
+    /**
+     * Hydrates (populates) the object variables with values from the database resultset.
+     *
+     * An offset (0-based "start column") is specified so that objects can be hydrated
+     * with a subset of the columns in the resultset rows.  This is needed, for example,
+     * for results of JOIN queries where the resultset row includes columns from two or
+     * more tables.
+     *
+     * @param array   $row       The row returned by DataFetcher->fetch().
+     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
+     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
+     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
+                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+     *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *
+     * @return int             next starting column
+     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
+     */
+    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
+    {
+        try {
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CountryTableMap::translateFieldName('IsoNr', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->iso_nr = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CountryTableMap::translateFieldName('Alpha2', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->alpha_2 = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CountryTableMap::translateFieldName('Alpha3', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->alpha_3 = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CountryTableMap::translateFieldName('Ioc', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->ioc = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CountryTableMap::translateFieldName('Capital', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->capital = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CountryTableMap::translateFieldName('Tld', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->tld = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CountryTableMap::translateFieldName('Phone', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->phone = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CountryTableMap::translateFieldName('TerritoryIsoNr', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->territory_iso_nr = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : CountryTableMap::translateFieldName('CurrencyIsoNr', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->currency_iso_nr = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : CountryTableMap::translateFieldName('OfficialLocalName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->official_local_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : CountryTableMap::translateFieldName('OfficialEnName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->official_en_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : CountryTableMap::translateFieldName('ShortLocalName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->short_local_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : CountryTableMap::translateFieldName('ShortEnName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->short_en_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : CountryTableMap::translateFieldName('BboxSwLat', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->bbox_sw_lat = (null !== $col) ? (double) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : CountryTableMap::translateFieldName('BboxSwLng', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->bbox_sw_lng = (null !== $col) ? (double) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : CountryTableMap::translateFieldName('BboxNeLat', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->bbox_ne_lat = (null !== $col) ? (double) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : CountryTableMap::translateFieldName('BboxNeLng', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->bbox_ne_lng = (null !== $col) ? (double) $col : null;
+            $this->resetModified();
+
+            $this->setNew(false);
+
+            if ($rehydrate) {
+                $this->ensureConsistency();
+            }
+
+            return $startcol + 17; // 17 = CountryTableMap::NUM_HYDRATE_COLUMNS.
+
+        } catch (Exception $e) {
+            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Country'), 0, $e);
+        }
+    }
+
+    /**
+     * Checks and repairs the internal consistency of the object.
+     *
+     * This method is executed after an already-instantiated object is re-hydrated
+     * from the database.  It exists to check any foreign keys to make sure that
+     * the objects related to the current object are correct based on foreign key.
+     *
+     * You can override this method in the stub class, but you should always invoke
+     * the base method from the overridden method (i.e. parent::ensureConsistency()),
+     * in case your model changes.
+     *
+     * @throws PropelException
+     */
+    public function ensureConsistency()
+    {
+        if ($this->aTerritory !== null && $this->territory_iso_nr !== $this->aTerritory->getIsoNr()) {
+            $this->aTerritory = null;
+        }
+        if ($this->aCurrency !== null && $this->currency_iso_nr !== $this->aCurrency->getIsoNr()) {
+            $this->aCurrency = null;
+        }
+    } // ensureConsistency
+
+    /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
      *
      * This will only work if the object has been saved and has a valid primary key set.
@@ -1329,59 +1336,59 @@ abstract class Country implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(CountryTableMap::COL_ISO_NR)) {
-            $modifiedColumns[':p' . $index++]  = 'ISO_NR';
+            $modifiedColumns[':p' . $index++]  = '`iso_nr`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_ALPHA_2)) {
-            $modifiedColumns[':p' . $index++]  = 'ALPHA_2';
+            $modifiedColumns[':p' . $index++]  = '`alpha_2`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_ALPHA_3)) {
-            $modifiedColumns[':p' . $index++]  = 'ALPHA_3';
+            $modifiedColumns[':p' . $index++]  = '`alpha_3`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_IOC)) {
-            $modifiedColumns[':p' . $index++]  = 'IOC';
+            $modifiedColumns[':p' . $index++]  = '`ioc`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_CAPITAL)) {
-            $modifiedColumns[':p' . $index++]  = 'CAPITAL';
+            $modifiedColumns[':p' . $index++]  = '`capital`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_TLD)) {
-            $modifiedColumns[':p' . $index++]  = 'TLD';
+            $modifiedColumns[':p' . $index++]  = '`tld`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_PHONE)) {
-            $modifiedColumns[':p' . $index++]  = 'PHONE';
+            $modifiedColumns[':p' . $index++]  = '`phone`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_TERRITORY_ISO_NR)) {
-            $modifiedColumns[':p' . $index++]  = 'TERRITORY_ISO_NR';
+            $modifiedColumns[':p' . $index++]  = '`territory_iso_nr`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_CURRENCY_ISO_NR)) {
-            $modifiedColumns[':p' . $index++]  = 'CURRENCY_ISO_NR';
+            $modifiedColumns[':p' . $index++]  = '`currency_iso_nr`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_OFFICIAL_LOCAL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'OFFICIAL_LOCAL_NAME';
+            $modifiedColumns[':p' . $index++]  = '`official_local_name`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_OFFICIAL_EN_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'OFFICIAL_EN_NAME';
+            $modifiedColumns[':p' . $index++]  = '`official_en_name`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_SHORT_LOCAL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'SHORT_LOCAL_NAME';
+            $modifiedColumns[':p' . $index++]  = '`short_local_name`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_SHORT_EN_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'SHORT_EN_NAME';
+            $modifiedColumns[':p' . $index++]  = '`short_en_name`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_BBOX_SW_LAT)) {
-            $modifiedColumns[':p' . $index++]  = 'BBOX_SW_LAT';
+            $modifiedColumns[':p' . $index++]  = '`bbox_sw_lat`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_BBOX_SW_LNG)) {
-            $modifiedColumns[':p' . $index++]  = 'BBOX_SW_LNG';
+            $modifiedColumns[':p' . $index++]  = '`bbox_sw_lng`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_BBOX_NE_LAT)) {
-            $modifiedColumns[':p' . $index++]  = 'BBOX_NE_LAT';
+            $modifiedColumns[':p' . $index++]  = '`bbox_ne_lat`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_BBOX_NE_LNG)) {
-            $modifiedColumns[':p' . $index++]  = 'BBOX_NE_LNG';
+            $modifiedColumns[':p' . $index++]  = '`bbox_ne_lng`';
         }
 
         $sql = sprintf(
-            'INSERT INTO kk_country (%s) VALUES (%s)',
+            'INSERT INTO `kk_country` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1390,55 +1397,55 @@ abstract class Country implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ISO_NR':
+                    case '`iso_nr`':
                         $stmt->bindValue($identifier, $this->iso_nr, PDO::PARAM_INT);
                         break;
-                    case 'ALPHA_2':
+                    case '`alpha_2`':
                         $stmt->bindValue($identifier, $this->alpha_2, PDO::PARAM_STR);
                         break;
-                    case 'ALPHA_3':
+                    case '`alpha_3`':
                         $stmt->bindValue($identifier, $this->alpha_3, PDO::PARAM_STR);
                         break;
-                    case 'IOC':
+                    case '`ioc`':
                         $stmt->bindValue($identifier, $this->ioc, PDO::PARAM_STR);
                         break;
-                    case 'CAPITAL':
+                    case '`capital`':
                         $stmt->bindValue($identifier, $this->capital, PDO::PARAM_STR);
                         break;
-                    case 'TLD':
+                    case '`tld`':
                         $stmt->bindValue($identifier, $this->tld, PDO::PARAM_STR);
                         break;
-                    case 'PHONE':
+                    case '`phone`':
                         $stmt->bindValue($identifier, $this->phone, PDO::PARAM_STR);
                         break;
-                    case 'TERRITORY_ISO_NR':
+                    case '`territory_iso_nr`':
                         $stmt->bindValue($identifier, $this->territory_iso_nr, PDO::PARAM_INT);
                         break;
-                    case 'CURRENCY_ISO_NR':
+                    case '`currency_iso_nr`':
                         $stmt->bindValue($identifier, $this->currency_iso_nr, PDO::PARAM_INT);
                         break;
-                    case 'OFFICIAL_LOCAL_NAME':
+                    case '`official_local_name`':
                         $stmt->bindValue($identifier, $this->official_local_name, PDO::PARAM_STR);
                         break;
-                    case 'OFFICIAL_EN_NAME':
+                    case '`official_en_name`':
                         $stmt->bindValue($identifier, $this->official_en_name, PDO::PARAM_STR);
                         break;
-                    case 'SHORT_LOCAL_NAME':
+                    case '`short_local_name`':
                         $stmt->bindValue($identifier, $this->short_local_name, PDO::PARAM_STR);
                         break;
-                    case 'SHORT_EN_NAME':
+                    case '`short_en_name`':
                         $stmt->bindValue($identifier, $this->short_en_name, PDO::PARAM_STR);
                         break;
-                    case 'BBOX_SW_LAT':
+                    case '`bbox_sw_lat`':
                         $stmt->bindValue($identifier, $this->bbox_sw_lat, PDO::PARAM_STR);
                         break;
-                    case 'BBOX_SW_LNG':
+                    case '`bbox_sw_lng`':
                         $stmt->bindValue($identifier, $this->bbox_sw_lng, PDO::PARAM_STR);
                         break;
-                    case 'BBOX_NE_LAT':
+                    case '`bbox_ne_lat`':
                         $stmt->bindValue($identifier, $this->bbox_ne_lat, PDO::PARAM_STR);
                         break;
-                    case 'BBOX_NE_LNG':
+                    case '`bbox_ne_lng`':
                         $stmt->bindValue($identifier, $this->bbox_ne_lng, PDO::PARAM_STR);
                         break;
                 }
@@ -1473,7 +1480,7 @@ abstract class Country implements ActiveRecordInterface
      *
      * @param      string $name name
      * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                     Defaults to TableMap::TYPE_PHPNAME.
      * @return mixed Value of field.
@@ -1559,7 +1566,7 @@ abstract class Country implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
@@ -1570,10 +1577,11 @@ abstract class Country implements ActiveRecordInterface
      */
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Country'][$this->getPrimaryKey()])) {
+
+        if (isset($alreadyDumpedObjects['Country'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Country'][$this->getPrimaryKey()] = true;
+        $alreadyDumpedObjects['Country'][$this->hashCode()] = true;
         $keys = CountryTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getIsoNr(),
@@ -1601,19 +1609,79 @@ abstract class Country implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->aTerritory) {
-                $result['Territory'] = $this->aTerritory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'territory';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_territory';
+                        break;
+                    default:
+                        $key = 'Territory';
+                }
+
+                $result[$key] = $this->aTerritory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aCurrency) {
-                $result['Currency'] = $this->aCurrency->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'currency';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_currency';
+                        break;
+                    default:
+                        $key = 'Currency';
+                }
+
+                $result[$key] = $this->aCurrency->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collLocalizations) {
-                $result['Localizations'] = $this->collLocalizations->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'localizations';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_localizations';
+                        break;
+                    default:
+                        $key = 'Localizations';
+                }
+
+                $result[$key] = $this->collLocalizations->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collSubdivisions) {
-                $result['Subdivisions'] = $this->collSubdivisions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'subdivisions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_subdivisions';
+                        break;
+                    default:
+                        $key = 'Subdivisions';
+                }
+
+                $result[$key] = $this->collSubdivisions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collUsers) {
-                $result['Users'] = $this->collUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'users';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_users';
+                        break;
+                    default:
+                        $key = 'Users';
+                }
+
+                $result[$key] = $this->collUsers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1626,7 +1694,7 @@ abstract class Country implements ActiveRecordInterface
      * @param  string $name
      * @param  mixed  $value field value
      * @param  string $type The type of fieldname the $name is of:
-     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
      * @return $this|\keeko\core\model\Country
@@ -1714,7 +1782,7 @@ abstract class Country implements ActiveRecordInterface
      * array. If so the setByName() method is called for that column.
      *
      * You can specify the key type of the array by additionally passing one
-     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
@@ -1786,19 +1854,25 @@ abstract class Country implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
+     * You can specify the key type of the array by additionally passing one
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
+     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     * The default key type is the column's TableMap::TYPE_PHPNAME.
+     *
      * @param mixed $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
+     * @param string $keyType The type of keys the array uses.
      *
      * @return $this|\keeko\core\model\Country The current object, for fluid interface
      */
-    public function importFrom($parser, $data)
+    public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        $this->fromArray($parser->toArray($data), TableMap::TYPE_PHPNAME);
+        $this->fromArray($parser->toArray($data), $keyType);
 
         return $this;
     }
@@ -1879,7 +1953,7 @@ abstract class Country implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(CountryTableMap::DATABASE_NAME);
+        $criteria = ChildCountryQuery::create();
         $criteria->add(CountryTableMap::COL_ISO_NR, $this->iso_nr);
 
         return $criteria;

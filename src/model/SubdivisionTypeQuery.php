@@ -4,7 +4,6 @@ namespace keeko\core\model;
 
 use keeko\core\model\Base\SubdivisionTypeQuery as BaseSubdivisionTypeQuery;
 
-
 /**
  * Skeleton subclass for performing query and update operations on the 'kk_subdivision_type' table.
  *

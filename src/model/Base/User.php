@@ -21,26 +21,35 @@ use Propel\Runtime\Util\PropelDateTime;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\DefaultTranslator;
-use Symfony\Component\Validator\Validator;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Context\ExecutionContextFactory;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
 use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
+use Symfony\Component\Validator\Validator\LegacyValidator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use keeko\core\model\Auth as ChildAuth;
 use keeko\core\model\AuthQuery as ChildAuthQuery;
 use keeko\core\model\Country as ChildCountry;
 use keeko\core\model\CountryQuery as ChildCountryQuery;
 use keeko\core\model\Group as ChildGroup;
 use keeko\core\model\GroupQuery as ChildGroupQuery;
-use keeko\core\model\GroupUser as ChildGroupUser;
-use keeko\core\model\GroupUserQuery as ChildGroupUserQuery;
 use keeko\core\model\Subdivision as ChildSubdivision;
 use keeko\core\model\SubdivisionQuery as ChildSubdivisionQuery;
 use keeko\core\model\User as ChildUser;
+use keeko\core\model\UserGroup as ChildUserGroup;
+use keeko\core\model\UserGroupQuery as ChildUserGroupQuery;
 use keeko\core\model\UserQuery as ChildUserQuery;
 use keeko\core\model\Map\UserTableMap;
 
+/**
+ * Base class that represents a row from the 'kk_user' table.
+ *
+ *
+ *
+* @package    propel.generator..Base
+*/
 abstract class User implements ActiveRecordInterface
 {
     /**
@@ -224,10 +233,10 @@ abstract class User implements ActiveRecordInterface
     protected $collAuthsPartial;
 
     /**
-     * @var        ObjectCollection|ChildGroupUser[] Collection to store aggregation of ChildGroupUser objects.
+     * @var        ObjectCollection|ChildUserGroup[] Collection to store aggregation of ChildUserGroup objects.
      */
-    protected $collGroupUsers;
-    protected $collGroupUsersPartial;
+    protected $collUserGroups;
+    protected $collUserGroupsPartial;
 
     /**
      * @var        ObjectCollection|ChildGroup[] Cross Collection to store aggregation of ChildGroup objects.
@@ -278,9 +287,9 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildGroupUser[]
+     * @var ObjectCollection|ChildUserGroup[]
      */
-    protected $groupUsersScheduledForDeletion = null;
+    protected $userGroupsScheduledForDeletion = null;
 
     /**
      * Initializes internal state of keeko\core\model\Base\User object.
@@ -614,9 +623,9 @@ abstract class User implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -674,9 +683,9 @@ abstract class User implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -724,9 +733,9 @@ abstract class User implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -744,9 +753,9 @@ abstract class User implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -758,157 +767,6 @@ abstract class User implements ActiveRecordInterface
             return $this->updated_at instanceof \DateTime ? $this->updated_at->format($format) : null;
         }
     }
-
-    /**
-     * Indicates whether the columns in this object are only set to default values.
-     *
-     * This method can be used in conjunction with isModified() to indicate whether an object is both
-     * modified _and_ has some values set which are non-default.
-     *
-     * @return boolean Whether the columns in this object are only been set with default values.
-     */
-    public function hasOnlyDefaultValues()
-    {
-        // otherwise, everything was equal, so return TRUE
-        return true;
-    } // hasOnlyDefaultValues()
-
-    /**
-     * Hydrates (populates) the object variables with values from the database resultset.
-     *
-     * An offset (0-based "start column") is specified so that objects can be hydrated
-     * with a subset of the columns in the resultset rows.  This is needed, for example,
-     * for results of JOIN queries where the resultset row includes columns from two or
-     * more tables.
-     *
-     * @param array   $row       The row returned by DataFetcher->fetch().
-     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
-     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
-     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *
-     * @return int             next starting column
-     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
-     */
-    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
-    {
-        try {
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UserTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserTableMap::translateFieldName('LoginName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->login_name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UserTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->password = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserTableMap::translateFieldName('GivenName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->given_name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserTableMap::translateFieldName('FamilyName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->family_name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserTableMap::translateFieldName('DisplayName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->display_name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->email = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('CountryIsoNr', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->country_iso_nr = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('SubdivisionId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->subdivision_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('Address', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->address = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('Address2', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->address2 = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('Birthday', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00') {
-                $col = null;
-            }
-            $this->birthday = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('Sex', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->sex = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->city = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('PostalCode', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->postal_code = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('PasswordRecoverCode', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->password_recover_code = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : UserTableMap::translateFieldName('PasswordRecoverTime', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->password_recover_time = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 17 + $startcol : UserTableMap::translateFieldName('LocationStatus', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->location_status = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 18 + $startcol : UserTableMap::translateFieldName('Latitude', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->latitude = (null !== $col) ? (double) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 19 + $startcol : UserTableMap::translateFieldName('Longitude', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->longitude = (null !== $col) ? (double) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 20 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 21 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
-            $this->resetModified();
-
-            $this->setNew(false);
-
-            if ($rehydrate) {
-                $this->ensureConsistency();
-            }
-
-            return $startcol + 22; // 22 = UserTableMap::NUM_HYDRATE_COLUMNS.
-
-        } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\User'), 0, $e);
-        }
-    }
-
-    /**
-     * Checks and repairs the internal consistency of the object.
-     *
-     * This method is executed after an already-instantiated object is re-hydrated
-     * from the database.  It exists to check any foreign keys to make sure that
-     * the objects related to the current object are correct based on foreign key.
-     *
-     * You can override this method in the stub class, but you should always invoke
-     * the base method from the overridden method (i.e. parent::ensureConsistency()),
-     * in case your model changes.
-     *
-     * @throws PropelException
-     */
-    public function ensureConsistency()
-    {
-        if ($this->aCountry !== null && $this->country_iso_nr !== $this->aCountry->getIsoNr()) {
-            $this->aCountry = null;
-        }
-        if ($this->aSubdivision !== null && $this->subdivision_id !== $this->aSubdivision->getId()) {
-            $this->aSubdivision = null;
-        }
-    } // ensureConsistency
 
     /**
      * Set the value of [id] column.
@@ -1147,7 +1005,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function setBirthday($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->birthday !== null || $dt !== null) {
             if ($dt !== $this->birthday) {
                 $this->birthday = $dt;
@@ -1247,7 +1105,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function setPasswordRecoverTime($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->password_recover_time !== null || $dt !== null) {
             if ($dt !== $this->password_recover_time) {
                 $this->password_recover_time = $dt;
@@ -1327,7 +1185,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function setCreatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
             if ($dt !== $this->created_at) {
                 $this->created_at = $dt;
@@ -1347,7 +1205,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function setUpdatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
             if ($dt !== $this->updated_at) {
                 $this->updated_at = $dt;
@@ -1357,6 +1215,157 @@ abstract class User implements ActiveRecordInterface
 
         return $this;
     } // setUpdatedAt()
+
+    /**
+     * Indicates whether the columns in this object are only set to default values.
+     *
+     * This method can be used in conjunction with isModified() to indicate whether an object is both
+     * modified _and_ has some values set which are non-default.
+     *
+     * @return boolean Whether the columns in this object are only been set with default values.
+     */
+    public function hasOnlyDefaultValues()
+    {
+        // otherwise, everything was equal, so return TRUE
+        return true;
+    } // hasOnlyDefaultValues()
+
+    /**
+     * Hydrates (populates) the object variables with values from the database resultset.
+     *
+     * An offset (0-based "start column") is specified so that objects can be hydrated
+     * with a subset of the columns in the resultset rows.  This is needed, for example,
+     * for results of JOIN queries where the resultset row includes columns from two or
+     * more tables.
+     *
+     * @param array   $row       The row returned by DataFetcher->fetch().
+     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
+     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
+     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
+                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+     *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *
+     * @return int             next starting column
+     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
+     */
+    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
+    {
+        try {
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UserTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserTableMap::translateFieldName('LoginName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->login_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UserTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->password = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserTableMap::translateFieldName('GivenName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->given_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserTableMap::translateFieldName('FamilyName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->family_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserTableMap::translateFieldName('DisplayName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->display_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->email = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('CountryIsoNr', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->country_iso_nr = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('SubdivisionId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->subdivision_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('Address', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->address = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('Address2', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->address2 = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('Birthday', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00') {
+                $col = null;
+            }
+            $this->birthday = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('Sex', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->sex = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->city = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('PostalCode', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->postal_code = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('PasswordRecoverCode', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->password_recover_code = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : UserTableMap::translateFieldName('PasswordRecoverTime', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->password_recover_time = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 17 + $startcol : UserTableMap::translateFieldName('LocationStatus', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->location_status = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 18 + $startcol : UserTableMap::translateFieldName('Latitude', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->latitude = (null !== $col) ? (double) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 19 + $startcol : UserTableMap::translateFieldName('Longitude', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->longitude = (null !== $col) ? (double) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 20 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 21 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->resetModified();
+
+            $this->setNew(false);
+
+            if ($rehydrate) {
+                $this->ensureConsistency();
+            }
+
+            return $startcol + 22; // 22 = UserTableMap::NUM_HYDRATE_COLUMNS.
+
+        } catch (Exception $e) {
+            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\User'), 0, $e);
+        }
+    }
+
+    /**
+     * Checks and repairs the internal consistency of the object.
+     *
+     * This method is executed after an already-instantiated object is re-hydrated
+     * from the database.  It exists to check any foreign keys to make sure that
+     * the objects related to the current object are correct based on foreign key.
+     *
+     * You can override this method in the stub class, but you should always invoke
+     * the base method from the overridden method (i.e. parent::ensureConsistency()),
+     * in case your model changes.
+     *
+     * @throws PropelException
+     */
+    public function ensureConsistency()
+    {
+        if ($this->aCountry !== null && $this->country_iso_nr !== $this->aCountry->getIsoNr()) {
+            $this->aCountry = null;
+        }
+        if ($this->aSubdivision !== null && $this->subdivision_id !== $this->aSubdivision->getId()) {
+            $this->aSubdivision = null;
+        }
+    } // ensureConsistency
 
     /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
@@ -1399,7 +1408,7 @@ abstract class User implements ActiveRecordInterface
             $this->aSubdivision = null;
             $this->collAuths = null;
 
-            $this->collGroupUsers = null;
+            $this->collUserGroups = null;
 
             $this->collGroups = null;
         } // if (deep)
@@ -1554,7 +1563,7 @@ abstract class User implements ActiveRecordInterface
                         $pks[] = $entryPk;
                     }
 
-                    \keeko\core\model\GroupUserQuery::create()
+                    \keeko\core\model\UserGroupQuery::create()
                         ->filterByPrimaryKeys($pks)
                         ->delete($con);
 
@@ -1589,17 +1598,17 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
-            if ($this->groupUsersScheduledForDeletion !== null) {
-                if (!$this->groupUsersScheduledForDeletion->isEmpty()) {
-                    \keeko\core\model\GroupUserQuery::create()
-                        ->filterByPrimaryKeys($this->groupUsersScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->userGroupsScheduledForDeletion !== null) {
+                if (!$this->userGroupsScheduledForDeletion->isEmpty()) {
+                    \keeko\core\model\UserGroupQuery::create()
+                        ->filterByPrimaryKeys($this->userGroupsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->groupUsersScheduledForDeletion = null;
+                    $this->userGroupsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collGroupUsers !== null) {
-                foreach ($this->collGroupUsers as $referrerFK) {
+            if ($this->collUserGroups !== null) {
+                foreach ($this->collUserGroups as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1633,74 +1642,74 @@ abstract class User implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(UserTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'ID';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(UserTableMap::COL_LOGIN_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'LOGIN_NAME';
+            $modifiedColumns[':p' . $index++]  = '`login_name`';
         }
         if ($this->isColumnModified(UserTableMap::COL_PASSWORD)) {
-            $modifiedColumns[':p' . $index++]  = 'PASSWORD';
+            $modifiedColumns[':p' . $index++]  = '`password`';
         }
         if ($this->isColumnModified(UserTableMap::COL_GIVEN_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'GIVEN_NAME';
+            $modifiedColumns[':p' . $index++]  = '`given_name`';
         }
         if ($this->isColumnModified(UserTableMap::COL_FAMILY_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'FAMILY_NAME';
+            $modifiedColumns[':p' . $index++]  = '`family_name`';
         }
         if ($this->isColumnModified(UserTableMap::COL_DISPLAY_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'DISPLAY_NAME';
+            $modifiedColumns[':p' . $index++]  = '`display_name`';
         }
         if ($this->isColumnModified(UserTableMap::COL_EMAIL)) {
-            $modifiedColumns[':p' . $index++]  = 'EMAIL';
+            $modifiedColumns[':p' . $index++]  = '`email`';
         }
         if ($this->isColumnModified(UserTableMap::COL_COUNTRY_ISO_NR)) {
-            $modifiedColumns[':p' . $index++]  = 'COUNTRY_ISO_NR';
+            $modifiedColumns[':p' . $index++]  = '`country_iso_nr`';
         }
         if ($this->isColumnModified(UserTableMap::COL_SUBDIVISION_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBDIVISION_ID';
+            $modifiedColumns[':p' . $index++]  = '`subdivision_id`';
         }
         if ($this->isColumnModified(UserTableMap::COL_ADDRESS)) {
-            $modifiedColumns[':p' . $index++]  = 'ADDRESS';
+            $modifiedColumns[':p' . $index++]  = '`address`';
         }
         if ($this->isColumnModified(UserTableMap::COL_ADDRESS2)) {
-            $modifiedColumns[':p' . $index++]  = 'ADDRESS2';
+            $modifiedColumns[':p' . $index++]  = '`address2`';
         }
         if ($this->isColumnModified(UserTableMap::COL_BIRTHDAY)) {
-            $modifiedColumns[':p' . $index++]  = 'BIRTHDAY';
+            $modifiedColumns[':p' . $index++]  = '`birthday`';
         }
         if ($this->isColumnModified(UserTableMap::COL_SEX)) {
-            $modifiedColumns[':p' . $index++]  = 'SEX';
+            $modifiedColumns[':p' . $index++]  = '`sex`';
         }
         if ($this->isColumnModified(UserTableMap::COL_CITY)) {
-            $modifiedColumns[':p' . $index++]  = 'CITY';
+            $modifiedColumns[':p' . $index++]  = '`city`';
         }
         if ($this->isColumnModified(UserTableMap::COL_POSTAL_CODE)) {
-            $modifiedColumns[':p' . $index++]  = 'POSTAL_CODE';
+            $modifiedColumns[':p' . $index++]  = '`postal_code`';
         }
         if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_CODE)) {
-            $modifiedColumns[':p' . $index++]  = 'PASSWORD_RECOVER_CODE';
+            $modifiedColumns[':p' . $index++]  = '`password_recover_code`';
         }
         if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_TIME)) {
-            $modifiedColumns[':p' . $index++]  = 'PASSWORD_RECOVER_TIME';
+            $modifiedColumns[':p' . $index++]  = '`password_recover_time`';
         }
         if ($this->isColumnModified(UserTableMap::COL_LOCATION_STATUS)) {
-            $modifiedColumns[':p' . $index++]  = 'LOCATION_STATUS';
+            $modifiedColumns[':p' . $index++]  = '`location_status`';
         }
         if ($this->isColumnModified(UserTableMap::COL_LATITUDE)) {
-            $modifiedColumns[':p' . $index++]  = 'LATITUDE';
+            $modifiedColumns[':p' . $index++]  = '`latitude`';
         }
         if ($this->isColumnModified(UserTableMap::COL_LONGITUDE)) {
-            $modifiedColumns[':p' . $index++]  = 'LONGITUDE';
+            $modifiedColumns[':p' . $index++]  = '`longitude`';
         }
         if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`created_at`';
         }
         if ($this->isColumnModified(UserTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`updated_at`';
         }
 
         $sql = sprintf(
-            'INSERT INTO kk_user (%s) VALUES (%s)',
+            'INSERT INTO `kk_user` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1709,70 +1718,70 @@ abstract class User implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'LOGIN_NAME':
+                    case '`login_name`':
                         $stmt->bindValue($identifier, $this->login_name, PDO::PARAM_STR);
                         break;
-                    case 'PASSWORD':
+                    case '`password`':
                         $stmt->bindValue($identifier, $this->password, PDO::PARAM_STR);
                         break;
-                    case 'GIVEN_NAME':
+                    case '`given_name`':
                         $stmt->bindValue($identifier, $this->given_name, PDO::PARAM_STR);
                         break;
-                    case 'FAMILY_NAME':
+                    case '`family_name`':
                         $stmt->bindValue($identifier, $this->family_name, PDO::PARAM_STR);
                         break;
-                    case 'DISPLAY_NAME':
+                    case '`display_name`':
                         $stmt->bindValue($identifier, $this->display_name, PDO::PARAM_STR);
                         break;
-                    case 'EMAIL':
+                    case '`email`':
                         $stmt->bindValue($identifier, $this->email, PDO::PARAM_STR);
                         break;
-                    case 'COUNTRY_ISO_NR':
+                    case '`country_iso_nr`':
                         $stmt->bindValue($identifier, $this->country_iso_nr, PDO::PARAM_INT);
                         break;
-                    case 'SUBDIVISION_ID':
+                    case '`subdivision_id`':
                         $stmt->bindValue($identifier, $this->subdivision_id, PDO::PARAM_INT);
                         break;
-                    case 'ADDRESS':
+                    case '`address`':
                         $stmt->bindValue($identifier, $this->address, PDO::PARAM_STR);
                         break;
-                    case 'ADDRESS2':
+                    case '`address2`':
                         $stmt->bindValue($identifier, $this->address2, PDO::PARAM_STR);
                         break;
-                    case 'BIRTHDAY':
+                    case '`birthday`':
                         $stmt->bindValue($identifier, $this->birthday ? $this->birthday->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'SEX':
+                    case '`sex`':
                         $stmt->bindValue($identifier, $this->sex, PDO::PARAM_INT);
                         break;
-                    case 'CITY':
+                    case '`city`':
                         $stmt->bindValue($identifier, $this->city, PDO::PARAM_STR);
                         break;
-                    case 'POSTAL_CODE':
+                    case '`postal_code`':
                         $stmt->bindValue($identifier, $this->postal_code, PDO::PARAM_STR);
                         break;
-                    case 'PASSWORD_RECOVER_CODE':
+                    case '`password_recover_code`':
                         $stmt->bindValue($identifier, $this->password_recover_code, PDO::PARAM_STR);
                         break;
-                    case 'PASSWORD_RECOVER_TIME':
+                    case '`password_recover_time`':
                         $stmt->bindValue($identifier, $this->password_recover_time ? $this->password_recover_time->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'LOCATION_STATUS':
+                    case '`location_status`':
                         $stmt->bindValue($identifier, $this->location_status, PDO::PARAM_INT);
                         break;
-                    case 'LATITUDE':
+                    case '`latitude`':
                         $stmt->bindValue($identifier, $this->latitude, PDO::PARAM_STR);
                         break;
-                    case 'LONGITUDE':
+                    case '`longitude`':
                         $stmt->bindValue($identifier, $this->longitude, PDO::PARAM_STR);
                         break;
-                    case 'CREATED_AT':
+                    case '`created_at`':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'UPDATED_AT':
+                    case '`updated_at`':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                 }
@@ -1814,7 +1823,7 @@ abstract class User implements ActiveRecordInterface
      *
      * @param      string $name name
      * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                     Defaults to TableMap::TYPE_PHPNAME.
      * @return mixed Value of field.
@@ -1915,7 +1924,7 @@ abstract class User implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
@@ -1926,10 +1935,11 @@ abstract class User implements ActiveRecordInterface
      */
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['User'][$this->getPrimaryKey()])) {
+
+        if (isset($alreadyDumpedObjects['User'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['User'][$this->getPrimaryKey()] = true;
+        $alreadyDumpedObjects['User'][$this->hashCode()] = true;
         $keys = UserTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
@@ -1962,16 +1972,64 @@ abstract class User implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->aCountry) {
-                $result['Country'] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'country';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_country';
+                        break;
+                    default:
+                        $key = 'Country';
+                }
+
+                $result[$key] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aSubdivision) {
-                $result['Subdivision'] = $this->aSubdivision->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'subdivision';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_subdivision';
+                        break;
+                    default:
+                        $key = 'Subdivision';
+                }
+
+                $result[$key] = $this->aSubdivision->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collAuths) {
-                $result['Auths'] = $this->collAuths->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'auths';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_auths';
+                        break;
+                    default:
+                        $key = 'Auths';
+                }
+
+                $result[$key] = $this->collAuths->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collGroupUsers) {
-                $result['GroupUsers'] = $this->collGroupUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collUserGroups) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'userGroups';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_user_groups';
+                        break;
+                    default:
+                        $key = 'UserGroups';
+                }
+
+                $result[$key] = $this->collUserGroups->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1984,7 +2042,7 @@ abstract class User implements ActiveRecordInterface
      * @param  string $name
      * @param  mixed  $value field value
      * @param  string $type The type of fieldname the $name is of:
-     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
      * @return $this|\keeko\core\model\User
@@ -2087,7 +2145,7 @@ abstract class User implements ActiveRecordInterface
      * array. If so the setByName() method is called for that column.
      *
      * You can specify the key type of the array by additionally passing one
-     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
@@ -2174,19 +2232,25 @@ abstract class User implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
+     * You can specify the key type of the array by additionally passing one
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
+     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     * The default key type is the column's TableMap::TYPE_PHPNAME.
+     *
      * @param mixed $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
+     * @param string $keyType The type of keys the array uses.
      *
      * @return $this|\keeko\core\model\User The current object, for fluid interface
      */
-    public function importFrom($parser, $data)
+    public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        $this->fromArray($parser->toArray($data), TableMap::TYPE_PHPNAME);
+        $this->fromArray($parser->toArray($data), $keyType);
 
         return $this;
     }
@@ -2282,7 +2346,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(UserTableMap::DATABASE_NAME);
+        $criteria = ChildUserQuery::create();
         $criteria->add(UserTableMap::COL_ID, $this->id);
 
         return $criteria;
@@ -2385,9 +2449,9 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getGroupUsers() as $relObj) {
+            foreach ($this->getUserGroups() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addGroupUser($relObj->copy($deepCopy));
+                    $copyObj->addUserGroup($relObj->copy($deepCopy));
                 }
             }
 
@@ -2537,8 +2601,8 @@ abstract class User implements ActiveRecordInterface
         if ('Auth' == $relationName) {
             return $this->initAuths();
         }
-        if ('GroupUser' == $relationName) {
-            return $this->initGroupUsers();
+        if ('UserGroup' == $relationName) {
+            return $this->initUserGroups();
         }
     }
 
@@ -2761,31 +2825,31 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collGroupUsers collection
+     * Clears out the collUserGroups collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addGroupUsers()
+     * @see        addUserGroups()
      */
-    public function clearGroupUsers()
+    public function clearUserGroups()
     {
-        $this->collGroupUsers = null; // important to set this to NULL since that means it is uninitialized
+        $this->collUserGroups = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collGroupUsers collection loaded partially.
+     * Reset is the collUserGroups collection loaded partially.
      */
-    public function resetPartialGroupUsers($v = true)
+    public function resetPartialUserGroups($v = true)
     {
-        $this->collGroupUsersPartial = $v;
+        $this->collUserGroupsPartial = $v;
     }
 
     /**
-     * Initializes the collGroupUsers collection.
+     * Initializes the collUserGroups collection.
      *
-     * By default this just sets the collGroupUsers collection to an empty array (like clearcollGroupUsers());
+     * By default this just sets the collUserGroups collection to an empty array (like clearcollUserGroups());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -2794,17 +2858,17 @@ abstract class User implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initGroupUsers($overrideExisting = true)
+    public function initUserGroups($overrideExisting = true)
     {
-        if (null !== $this->collGroupUsers && !$overrideExisting) {
+        if (null !== $this->collUserGroups && !$overrideExisting) {
             return;
         }
-        $this->collGroupUsers = new ObjectCollection();
-        $this->collGroupUsers->setModel('\keeko\core\model\GroupUser');
+        $this->collUserGroups = new ObjectCollection();
+        $this->collUserGroups->setModel('\keeko\core\model\UserGroup');
     }
 
     /**
-     * Gets an array of ChildGroupUser objects which contain a foreign key that references this object.
+     * Gets an array of ChildUserGroup objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -2814,111 +2878,111 @@ abstract class User implements ActiveRecordInterface
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildGroupUser[] List of ChildGroupUser objects
+     * @return ObjectCollection|ChildUserGroup[] List of ChildUserGroup objects
      * @throws PropelException
      */
-    public function getGroupUsers(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getUserGroups(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collGroupUsersPartial && !$this->isNew();
-        if (null === $this->collGroupUsers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collGroupUsers) {
+        $partial = $this->collUserGroupsPartial && !$this->isNew();
+        if (null === $this->collUserGroups || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collUserGroups) {
                 // return empty collection
-                $this->initGroupUsers();
+                $this->initUserGroups();
             } else {
-                $collGroupUsers = ChildGroupUserQuery::create(null, $criteria)
+                $collUserGroups = ChildUserGroupQuery::create(null, $criteria)
                     ->filterByUser($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collGroupUsersPartial && count($collGroupUsers)) {
-                        $this->initGroupUsers(false);
+                    if (false !== $this->collUserGroupsPartial && count($collUserGroups)) {
+                        $this->initUserGroups(false);
 
-                        foreach ($collGroupUsers as $obj) {
-                            if (false == $this->collGroupUsers->contains($obj)) {
-                                $this->collGroupUsers->append($obj);
+                        foreach ($collUserGroups as $obj) {
+                            if (false == $this->collUserGroups->contains($obj)) {
+                                $this->collUserGroups->append($obj);
                             }
                         }
 
-                        $this->collGroupUsersPartial = true;
+                        $this->collUserGroupsPartial = true;
                     }
 
-                    return $collGroupUsers;
+                    return $collUserGroups;
                 }
 
-                if ($partial && $this->collGroupUsers) {
-                    foreach ($this->collGroupUsers as $obj) {
+                if ($partial && $this->collUserGroups) {
+                    foreach ($this->collUserGroups as $obj) {
                         if ($obj->isNew()) {
-                            $collGroupUsers[] = $obj;
+                            $collUserGroups[] = $obj;
                         }
                     }
                 }
 
-                $this->collGroupUsers = $collGroupUsers;
-                $this->collGroupUsersPartial = false;
+                $this->collUserGroups = $collUserGroups;
+                $this->collUserGroupsPartial = false;
             }
         }
 
-        return $this->collGroupUsers;
+        return $this->collUserGroups;
     }
 
     /**
-     * Sets a collection of ChildGroupUser objects related by a one-to-many relationship
+     * Sets a collection of ChildUserGroup objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $groupUsers A Propel collection.
+     * @param      Collection $userGroups A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildUser The current object (for fluent API support)
      */
-    public function setGroupUsers(Collection $groupUsers, ConnectionInterface $con = null)
+    public function setUserGroups(Collection $userGroups, ConnectionInterface $con = null)
     {
-        /** @var ChildGroupUser[] $groupUsersToDelete */
-        $groupUsersToDelete = $this->getGroupUsers(new Criteria(), $con)->diff($groupUsers);
+        /** @var ChildUserGroup[] $userGroupsToDelete */
+        $userGroupsToDelete = $this->getUserGroups(new Criteria(), $con)->diff($userGroups);
 
 
         //since at least one column in the foreign key is at the same time a PK
         //we can not just set a PK to NULL in the lines below. We have to store
         //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
-        $this->groupUsersScheduledForDeletion = clone $groupUsersToDelete;
+        $this->userGroupsScheduledForDeletion = clone $userGroupsToDelete;
 
-        foreach ($groupUsersToDelete as $groupUserRemoved) {
-            $groupUserRemoved->setUser(null);
+        foreach ($userGroupsToDelete as $userGroupRemoved) {
+            $userGroupRemoved->setUser(null);
         }
 
-        $this->collGroupUsers = null;
-        foreach ($groupUsers as $groupUser) {
-            $this->addGroupUser($groupUser);
+        $this->collUserGroups = null;
+        foreach ($userGroups as $userGroup) {
+            $this->addUserGroup($userGroup);
         }
 
-        $this->collGroupUsers = $groupUsers;
-        $this->collGroupUsersPartial = false;
+        $this->collUserGroups = $userGroups;
+        $this->collUserGroupsPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related GroupUser objects.
+     * Returns the number of related UserGroup objects.
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct
      * @param      ConnectionInterface $con
-     * @return int             Count of related GroupUser objects.
+     * @return int             Count of related UserGroup objects.
      * @throws PropelException
      */
-    public function countGroupUsers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countUserGroups(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collGroupUsersPartial && !$this->isNew();
-        if (null === $this->collGroupUsers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collGroupUsers) {
+        $partial = $this->collUserGroupsPartial && !$this->isNew();
+        if (null === $this->collUserGroups || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collUserGroups) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getGroupUsers());
+                return count($this->getUserGroups());
             }
 
-            $query = ChildGroupUserQuery::create(null, $criteria);
+            $query = ChildUserGroupQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
@@ -2928,54 +2992,54 @@ abstract class User implements ActiveRecordInterface
                 ->count($con);
         }
 
-        return count($this->collGroupUsers);
+        return count($this->collUserGroups);
     }
 
     /**
-     * Method called to associate a ChildGroupUser object to this object
-     * through the ChildGroupUser foreign key attribute.
+     * Method called to associate a ChildUserGroup object to this object
+     * through the ChildUserGroup foreign key attribute.
      *
-     * @param  ChildGroupUser $l ChildGroupUser
+     * @param  ChildUserGroup $l ChildUserGroup
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
-    public function addGroupUser(ChildGroupUser $l)
+    public function addUserGroup(ChildUserGroup $l)
     {
-        if ($this->collGroupUsers === null) {
-            $this->initGroupUsers();
-            $this->collGroupUsersPartial = true;
+        if ($this->collUserGroups === null) {
+            $this->initUserGroups();
+            $this->collUserGroupsPartial = true;
         }
 
-        if (!$this->collGroupUsers->contains($l)) {
-            $this->doAddGroupUser($l);
+        if (!$this->collUserGroups->contains($l)) {
+            $this->doAddUserGroup($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildGroupUser $groupUser The ChildGroupUser object to add.
+     * @param ChildUserGroup $userGroup The ChildUserGroup object to add.
      */
-    protected function doAddGroupUser(ChildGroupUser $groupUser)
+    protected function doAddUserGroup(ChildUserGroup $userGroup)
     {
-        $this->collGroupUsers[]= $groupUser;
-        $groupUser->setUser($this);
+        $this->collUserGroups[]= $userGroup;
+        $userGroup->setUser($this);
     }
 
     /**
-     * @param  ChildGroupUser $groupUser The ChildGroupUser object to remove.
+     * @param  ChildUserGroup $userGroup The ChildUserGroup object to remove.
      * @return $this|ChildUser The current object (for fluent API support)
      */
-    public function removeGroupUser(ChildGroupUser $groupUser)
+    public function removeUserGroup(ChildUserGroup $userGroup)
     {
-        if ($this->getGroupUsers()->contains($groupUser)) {
-            $pos = $this->collGroupUsers->search($groupUser);
-            $this->collGroupUsers->remove($pos);
-            if (null === $this->groupUsersScheduledForDeletion) {
-                $this->groupUsersScheduledForDeletion = clone $this->collGroupUsers;
-                $this->groupUsersScheduledForDeletion->clear();
+        if ($this->getUserGroups()->contains($userGroup)) {
+            $pos = $this->collUserGroups->search($userGroup);
+            $this->collUserGroups->remove($pos);
+            if (null === $this->userGroupsScheduledForDeletion) {
+                $this->userGroupsScheduledForDeletion = clone $this->collUserGroups;
+                $this->userGroupsScheduledForDeletion->clear();
             }
-            $this->groupUsersScheduledForDeletion[]= clone $groupUser;
-            $groupUser->setUser(null);
+            $this->userGroupsScheduledForDeletion[]= clone $userGroup;
+            $userGroup->setUser(null);
         }
 
         return $this;
@@ -2987,7 +3051,7 @@ abstract class User implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this User is new, it will return
      * an empty collection; or if this User has previously
-     * been saved, it will retrieve related GroupUsers from storage.
+     * been saved, it will retrieve related UserGroups from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -2996,14 +3060,14 @@ abstract class User implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildGroupUser[] List of ChildGroupUser objects
+     * @return ObjectCollection|ChildUserGroup[] List of ChildUserGroup objects
      */
-    public function getGroupUsersJoinGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getUserGroupsJoinGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildGroupUserQuery::create(null, $criteria);
+        $query = ChildUserGroupQuery::create(null, $criteria);
         $query->joinWith('Group', $joinBehavior);
 
-        return $this->getGroupUsers($query, $con);
+        return $this->getUserGroups($query, $con);
     }
 
     /**
@@ -3021,7 +3085,7 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Initializes the collGroups collection.
+     * Initializes the collGroups crossRef collection.
      *
      * By default this just sets the collGroups collection to an empty collection (like clearGroups());
      * however, you may wish to override this method in your stub class to provide setting appropriate
@@ -3049,7 +3113,7 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * Gets a collection of ChildGroup objects related by a many-to-many relationship
-     * to the current object by way of the kk_group_user cross-reference table.
+     * to the current object by way of the kk_user_group cross-reference table.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -3099,7 +3163,7 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * Sets a collection of Group objects related by a many-to-many relationship
-     * to the current object by way of the kk_group_user cross-reference table.
+     * to the current object by way of the kk_user_group cross-reference table.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
@@ -3132,7 +3196,7 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * Gets the number of Group objects related by a many-to-many relationship
-     * to the current object by way of the kk_group_user cross-reference table.
+     * to the current object by way of the kk_user_group cross-reference table.
      *
      * @param      Criteria $criteria Optional query object to filter the query
      * @param      boolean $distinct Set to true to force count distinct
@@ -3168,7 +3232,7 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * Associate a ChildGroup to this object
-     * through the kk_group_user cross reference table.
+     * through the kk_user_group cross reference table.
      *
      * @param ChildGroup $group
      * @return ChildUser The current object (for fluent API support)
@@ -3194,13 +3258,13 @@ abstract class User implements ActiveRecordInterface
      */
     protected function doAddGroup(ChildGroup $group)
     {
-        $groupUser = new ChildGroupUser();
+        $userGroup = new ChildUserGroup();
 
-        $groupUser->setGroup($group);
+        $userGroup->setGroup($group);
 
-        $groupUser->setUser($this);
+        $userGroup->setUser($this);
 
-        $this->addGroupUser($groupUser);
+        $this->addUserGroup($userGroup);
 
         // set the back reference to this object directly as using provided method either results
         // in endless loop or in multiple relations
@@ -3215,24 +3279,24 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * Remove group of this object
-     * through the kk_group_user cross reference table.
+     * through the kk_user_group cross reference table.
      *
      * @param ChildGroup $group
      * @return ChildUser The current object (for fluent API support)
      */
     public function removeGroup(ChildGroup $group)
     {
-        if ($this->getGroups()->contains($group)) { $groupUser = new ChildGroupUser();
+        if ($this->getGroups()->contains($group)) { $userGroup = new ChildUserGroup();
 
-            $groupUser->setGroup($group);
+            $userGroup->setGroup($group);
             if ($group->isUsersLoaded()) {
                 //remove the back reference if available
                 $group->getUsers()->removeObject($this);
             }
 
-            $groupUser->setUser($this);
-            $this->removeGroupUser(clone $groupUser);
-            $groupUser->clear();
+            $userGroup->setUser($this);
+            $this->removeUserGroup(clone $userGroup);
+            $userGroup->clear();
 
             $this->collGroups->remove($this->collGroups->search($group));
 
@@ -3306,8 +3370,8 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collGroupUsers) {
-                foreach ($this->collGroupUsers as $o) {
+            if ($this->collUserGroups) {
+                foreach ($this->collUserGroups as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -3319,7 +3383,7 @@ abstract class User implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collAuths = null;
-        $this->collGroupUsers = null;
+        $this->collUserGroups = null;
         $this->collGroups = null;
         $this->aCountry = null;
         $this->aSubdivision = null;
@@ -3372,10 +3436,22 @@ abstract class User implements ActiveRecordInterface
      * @param      object $validator A Validator class instance
      * @return     boolean Whether all objects pass validation.
      */
-    public function validate(Validator $validator = null)
+    public function validate(ValidatorInterface $validator = null)
     {
         if (null === $validator) {
-            $validator = new Validator(new ClassMetadataFactory(new StaticMethodLoader()), new ConstraintValidatorFactory(), new DefaultTranslator());
+            if(class_exists('Symfony\\Component\\Validator\\Validator\\LegacyValidator')){
+                $validator = new LegacyValidator(
+                            new ExecutionContextFactory(new DefaultTranslator()),
+                            new ClassMetaDataFactory(new StaticMethodLoader()),
+                            new ConstraintValidatorFactory()
+                );
+            }else{
+                $validator = new Validator(
+                            new ClassMetadataFactory(new StaticMethodLoader()),
+                            new ConstraintValidatorFactory(),
+                            new DefaultTranslator()
+                );
+            }
         }
 
         $failureMap = new ConstraintViolationList();
@@ -3416,8 +3492,8 @@ abstract class User implements ActiveRecordInterface
                     }
                 }
             }
-            if (null !== $this->collGroupUsers) {
-                foreach ($this->collGroupUsers as $referrerFK) {
+            if (null !== $this->collUserGroups) {
+                foreach ($this->collUserGroups as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
                         if (!$referrerFK->validate($validator)) {
                             $failureMap->addAll($referrerFK->getValidationFailures());

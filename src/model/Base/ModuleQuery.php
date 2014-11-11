@@ -167,11 +167,13 @@ abstract class ModuleQuery extends ChildPackageQuery
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildModule A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT CLASS_NAME, ACTIVATED_VERSION, DEFAULT_ACTION, SLUG, HAS_API, ID, NAME, TITLE, DESCRIPTION, INSTALLED_VERSION FROM kk_module WHERE ID = :p0';
+        $sql = 'SELECT `class_name`, `activated_version`, `default_action`, `slug`, `has_api`, `id`, `name`, `title`, `description`, `installed_version` FROM `kk_module` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -568,6 +570,8 @@ abstract class ModuleQuery extends ChildPackageQuery
      *
      * @param \keeko\core\model\Package|ObjectCollection $package The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildModuleQuery The current query, for fluid interface
      */

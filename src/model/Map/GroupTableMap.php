@@ -34,7 +34,7 @@ class GroupTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.GroupTableMap';
+    const CLASS_NAME = '.Map.GroupTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class GroupTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.Group';
+    const CLASS_DEFAULT = 'Group';
 
     /**
      * The total number of columns
@@ -72,49 +72,49 @@ class GroupTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 9;
 
     /**
-     * the column name for the ID field
+     * the column name for the id field
      */
-    const COL_ID = 'kk_group.ID';
+    const COL_ID = 'kk_group.id';
 
     /**
-     * the column name for the OWNER_ID field
+     * the column name for the owner_id field
      */
-    const COL_OWNER_ID = 'kk_group.OWNER_ID';
+    const COL_OWNER_ID = 'kk_group.owner_id';
 
     /**
-     * the column name for the NAME field
+     * the column name for the name field
      */
-    const COL_NAME = 'kk_group.NAME';
+    const COL_NAME = 'kk_group.name';
 
     /**
-     * the column name for the IS_GUEST field
+     * the column name for the is_guest field
      */
-    const COL_IS_GUEST = 'kk_group.IS_GUEST';
+    const COL_IS_GUEST = 'kk_group.is_guest';
 
     /**
-     * the column name for the IS_DEFAULT field
+     * the column name for the is_default field
      */
-    const COL_IS_DEFAULT = 'kk_group.IS_DEFAULT';
+    const COL_IS_DEFAULT = 'kk_group.is_default';
 
     /**
-     * the column name for the IS_ACTIVE field
+     * the column name for the is_active field
      */
-    const COL_IS_ACTIVE = 'kk_group.IS_ACTIVE';
+    const COL_IS_ACTIVE = 'kk_group.is_active';
 
     /**
-     * the column name for the IS_SYSTEM field
+     * the column name for the is_system field
      */
-    const COL_IS_SYSTEM = 'kk_group.IS_SYSTEM';
+    const COL_IS_SYSTEM = 'kk_group.is_system';
 
     /**
-     * the column name for the CREATED_AT field
+     * the column name for the created_at field
      */
-    const COL_CREATED_AT = 'kk_group.CREATED_AT';
+    const COL_CREATED_AT = 'kk_group.created_at';
 
     /**
-     * the column name for the UPDATED_AT field
+     * the column name for the updated_at field
      */
-    const COL_UPDATED_AT = 'kk_group.UPDATED_AT';
+    const COL_UPDATED_AT = 'kk_group.updated_at';
 
     /**
      * The default string format for model objects of the related table
@@ -129,9 +129,8 @@ class GroupTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('Id', 'OwnerId', 'Name', 'IsGuest', 'IsDefault', 'IsActive', 'IsSystem', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'ownerId', 'name', 'isGuest', 'isDefault', 'isActive', 'isSystem', 'createdAt', 'updatedAt', ),
+        self::TYPE_CAMELNAME     => array('id', 'ownerId', 'name', 'isGuest', 'isDefault', 'isActive', 'isSystem', 'createdAt', 'updatedAt', ),
         self::TYPE_COLNAME       => array(GroupTableMap::COL_ID, GroupTableMap::COL_OWNER_ID, GroupTableMap::COL_NAME, GroupTableMap::COL_IS_GUEST, GroupTableMap::COL_IS_DEFAULT, GroupTableMap::COL_IS_ACTIVE, GroupTableMap::COL_IS_SYSTEM, GroupTableMap::COL_CREATED_AT, GroupTableMap::COL_UPDATED_AT, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_OWNER_ID', 'COL_NAME', 'COL_IS_GUEST', 'COL_IS_DEFAULT', 'COL_IS_ACTIVE', 'COL_IS_SYSTEM', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
         self::TYPE_FIELDNAME     => array('id', 'owner_id', 'name', 'is_guest', 'is_default', 'is_active', 'is_system', 'created_at', 'updated_at', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
@@ -144,9 +143,8 @@ class GroupTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('Id' => 0, 'OwnerId' => 1, 'Name' => 2, 'IsGuest' => 3, 'IsDefault' => 4, 'IsActive' => 5, 'IsSystem' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'ownerId' => 1, 'name' => 2, 'isGuest' => 3, 'isDefault' => 4, 'isActive' => 5, 'isSystem' => 6, 'createdAt' => 7, 'updatedAt' => 8, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'ownerId' => 1, 'name' => 2, 'isGuest' => 3, 'isDefault' => 4, 'isActive' => 5, 'isSystem' => 6, 'createdAt' => 7, 'updatedAt' => 8, ),
         self::TYPE_COLNAME       => array(GroupTableMap::COL_ID => 0, GroupTableMap::COL_OWNER_ID => 1, GroupTableMap::COL_NAME => 2, GroupTableMap::COL_IS_GUEST => 3, GroupTableMap::COL_IS_DEFAULT => 4, GroupTableMap::COL_IS_ACTIVE => 5, GroupTableMap::COL_IS_SYSTEM => 6, GroupTableMap::COL_CREATED_AT => 7, GroupTableMap::COL_UPDATED_AT => 8, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_OWNER_ID' => 1, 'COL_NAME' => 2, 'COL_IS_GUEST' => 3, 'COL_IS_DEFAULT' => 4, 'COL_IS_ACTIVE' => 5, 'COL_IS_SYSTEM' => 6, 'COL_CREATED_AT' => 7, 'COL_UPDATED_AT' => 8, ),
         self::TYPE_FIELDNAME     => array('id' => 0, 'owner_id' => 1, 'name' => 2, 'is_guest' => 3, 'is_default' => 4, 'is_active' => 5, 'is_system' => 6, 'created_at' => 7, 'updated_at' => 8, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
@@ -163,19 +161,20 @@ class GroupTableMap extends TableMap
         // attributes
         $this->setName('kk_group');
         $this->setPhpName('Group');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\Group');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-        $this->addColumn('OWNER_ID', 'OwnerId', 'INTEGER', false, 10, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', false, 64, null);
-        $this->addColumn('IS_GUEST', 'IsGuest', 'BOOLEAN', false, 1, null);
-        $this->addColumn('IS_DEFAULT', 'IsDefault', 'BOOLEAN', false, 1, null);
-        $this->addColumn('IS_ACTIVE', 'IsActive', 'BOOLEAN', false, 1, true);
-        $this->addColumn('IS_SYSTEM', 'IsSystem', 'BOOLEAN', false, 1, false);
-        $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
+        $this->addColumn('owner_id', 'OwnerId', 'INTEGER', false, 10, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 64, null);
+        $this->addColumn('is_guest', 'IsGuest', 'BOOLEAN', false, 1, null);
+        $this->addColumn('is_default', 'IsDefault', 'BOOLEAN', false, 1, null);
+        $this->addColumn('is_active', 'IsActive', 'BOOLEAN', false, 1, true);
+        $this->addColumn('is_system', 'IsSystem', 'BOOLEAN', false, 1, false);
+        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
 
     /**
@@ -183,7 +182,7 @@ class GroupTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('GroupUser', '\\keeko\\core\\model\\GroupUser', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), 'RESTRICT', null, 'GroupUsers');
+        $this->addRelation('UserGroup', '\\keeko\\core\\model\\UserGroup', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), 'RESTRICT', null, 'UserGroups');
         $this->addRelation('GroupAction', '\\keeko\\core\\model\\GroupAction', RelationMap::ONE_TO_MANY, array('id' => 'group_id', ), 'RESTRICT', null, 'GroupActions');
         $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Users');
         $this->addRelation('Action', '\\keeko\\core\\model\\Action', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Actions');
@@ -211,7 +210,7 @@ class GroupTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -233,7 +232,7 @@ class GroupTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -269,7 +268,7 @@ class GroupTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -354,15 +353,15 @@ class GroupTableMap extends TableMap
             $criteria->addSelectColumn(GroupTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(GroupTableMap::COL_UPDATED_AT);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.OWNER_ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.IS_GUEST');
-            $criteria->addSelectColumn($alias . '.IS_DEFAULT');
-            $criteria->addSelectColumn($alias . '.IS_ACTIVE');
-            $criteria->addSelectColumn($alias . '.IS_SYSTEM');
-            $criteria->addSelectColumn($alias . '.CREATED_AT');
-            $criteria->addSelectColumn($alias . '.UPDATED_AT');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.owner_id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.is_guest');
+            $criteria->addSelectColumn($alias . '.is_default');
+            $criteria->addSelectColumn($alias . '.is_active');
+            $criteria->addSelectColumn($alias . '.is_system');
+            $criteria->addSelectColumn($alias . '.created_at');
+            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 

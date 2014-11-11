@@ -150,11 +150,13 @@ abstract class PackageQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildPackage A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, NAME, TITLE, DESCRIPTION, INSTALLED_VERSION, DESCENDANT_CLASS FROM kk_package WHERE ID = :p0';
+        $sql = 'SELECT `id`, `name`, `title`, `description`, `installed_version`, `descendant_class` FROM `kk_package` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

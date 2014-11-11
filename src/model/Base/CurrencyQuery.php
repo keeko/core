@@ -158,11 +158,13 @@ abstract class CurrencyQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildCurrency A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ISO_NR, ISO3, EN_NAME, SYMBOL_LEFT, SYMBOL_RIGHT, DECIMAL_DIGITS, SUB_DIVISOR, SUB_SYMBOL_LEFT, SUB_SYMBOL_RIGHT FROM kk_currency WHERE ISO_NR = :p0';
+        $sql = 'SELECT `iso_nr`, `iso3`, `en_name`, `symbol_left`, `symbol_right`, `decimal_digits`, `sub_divisor`, `sub_symbol_left`, `sub_symbol_right` FROM `kk_currency` WHERE `iso_nr` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

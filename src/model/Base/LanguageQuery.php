@@ -170,11 +170,13 @@ abstract class LanguageQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildLanguage A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, ALPHA_2, ALPHA_3T, ALPHA_3B, ALPHA_3, LOCAL_NAME, EN_NAME, COLLATE, SCOPE_ID, TYPE_ID FROM kk_language WHERE ID = :p0';
+        $sql = 'SELECT `id`, `alpha_2`, `alpha_3T`, `alpha_3B`, `alpha_3`, `local_name`, `en_name`, `collate`, `scope_id`, `type_id` FROM `kk_language` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -600,6 +602,8 @@ abstract class LanguageQuery extends ModelCriteria
      * @param \keeko\core\model\LanguageScope|ObjectCollection $languageScope The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildLanguageQuery The current query, for fluid interface
      */
     public function filterByLanguageScope($languageScope, $comparison = null)
@@ -674,6 +678,8 @@ abstract class LanguageQuery extends ModelCriteria
      *
      * @param \keeko\core\model\LanguageType|ObjectCollection $languageType The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildLanguageQuery The current query, for fluid interface
      */

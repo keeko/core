@@ -134,11 +134,13 @@ abstract class TerritoryQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildTerritory A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ISO_NR, PARENT_ISO_NR, NAME_EN FROM kk_territory WHERE ISO_NR = :p0';
+        $sql = 'SELECT `iso_nr`, `parent_iso_nr`, `name_en` FROM `kk_territory` WHERE `iso_nr` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

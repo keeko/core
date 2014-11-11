@@ -4,7 +4,6 @@ namespace keeko\core\model;
 
 use keeko\core\model\Base\ActionQuery as BaseActionQuery;
 
-
 /**
  * Skeleton subclass for performing query and update operations on the 'kk_action' table.
  *

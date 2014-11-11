@@ -11,11 +11,10 @@ abstract class AbstractJsonResponse extends AbstractResponse {
 	 * Returns the passed data as JsonResponse
 	 *
 	 * @param Request $request
-     * @return JsonResponse
+	 * @return JsonResponse
 	 */
-	public function run(Request $request)
-    {
-        return new JsonResponse($this->data);
-    }
+	public function run(Request $request) {
+		return new JsonResponse($this->data);
+	}
 
 }

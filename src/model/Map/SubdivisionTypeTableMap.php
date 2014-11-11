@@ -34,7 +34,7 @@ class SubdivisionTypeTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.SubdivisionTypeTableMap';
+    const CLASS_NAME = '.Map.SubdivisionTypeTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class SubdivisionTypeTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.SubdivisionType';
+    const CLASS_DEFAULT = 'SubdivisionType';
 
     /**
      * The total number of columns
@@ -72,14 +72,14 @@ class SubdivisionTypeTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 2;
 
     /**
-     * the column name for the ID field
+     * the column name for the id field
      */
-    const COL_ID = 'kk_subdivision_type.ID';
+    const COL_ID = 'kk_subdivision_type.id';
 
     /**
-     * the column name for the NAME field
+     * the column name for the name field
      */
-    const COL_NAME = 'kk_subdivision_type.NAME';
+    const COL_NAME = 'kk_subdivision_type.name';
 
     /**
      * The default string format for model objects of the related table
@@ -94,9 +94,8 @@ class SubdivisionTypeTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('Id', 'Name', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'name', ),
+        self::TYPE_CAMELNAME     => array('id', 'name', ),
         self::TYPE_COLNAME       => array(SubdivisionTypeTableMap::COL_ID, SubdivisionTypeTableMap::COL_NAME, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_NAME', ),
         self::TYPE_FIELDNAME     => array('id', 'name', ),
         self::TYPE_NUM           => array(0, 1, )
     );
@@ -109,9 +108,8 @@ class SubdivisionTypeTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'name' => 1, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'name' => 1, ),
         self::TYPE_COLNAME       => array(SubdivisionTypeTableMap::COL_ID => 0, SubdivisionTypeTableMap::COL_NAME => 1, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_NAME' => 1, ),
         self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, ),
         self::TYPE_NUM           => array(0, 1, )
     );
@@ -128,12 +126,13 @@ class SubdivisionTypeTableMap extends TableMap
         // attributes
         $this->setName('kk_subdivision_type');
         $this->setPhpName('SubdivisionType');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\SubdivisionType');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', false, 128, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 128, null);
     } // initialize()
 
     /**
@@ -152,7 +151,7 @@ class SubdivisionTypeTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -174,7 +173,7 @@ class SubdivisionTypeTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -210,7 +209,7 @@ class SubdivisionTypeTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -288,8 +287,8 @@ class SubdivisionTypeTableMap extends TableMap
             $criteria->addSelectColumn(SubdivisionTypeTableMap::COL_ID);
             $criteria->addSelectColumn(SubdivisionTypeTableMap::COL_NAME);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NAME');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
         }
     }
 

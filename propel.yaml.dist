@@ -17,13 +17,10 @@ propel:
         dsn: mysql:host=localhost;dbname=keeko
         user: root
         password: 
-        settings:
-          charset: utf-8
 
   generator:
     defaultConnection: keeko
     tablePrefix: kk_
-    targetPackage: keeko.core.model
     namespaceAutoPackage: false
 
   runtime:

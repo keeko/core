@@ -138,11 +138,13 @@ abstract class AuthQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildAuth A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT TOKEN, USER_ID, CREATED_AT, UPDATED_AT FROM kk_auth WHERE TOKEN = :p0';
+        $sql = 'SELECT `token`, `user_id`, `created_at`, `updated_at` FROM `kk_auth` WHERE `token` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_STR);
@@ -395,6 +397,8 @@ abstract class AuthQuery extends ModelCriteria
      *
      * @param \keeko\core\model\User|ObjectCollection $user The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildAuthQuery The current query, for fluid interface
      */

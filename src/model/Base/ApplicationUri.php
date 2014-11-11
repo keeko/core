@@ -22,6 +22,13 @@ use keeko\core\model\Localization as ChildLocalization;
 use keeko\core\model\LocalizationQuery as ChildLocalizationQuery;
 use keeko\core\model\Map\ApplicationUriTableMap;
 
+/**
+ * Base class that represents a row from the 'kk_application_uri' table.
+ *
+ *
+ *
+* @package    propel.generator..Base
+*/
 abstract class ApplicationUri implements ActiveRecordInterface
 {
     /**
@@ -398,97 +405,6 @@ abstract class ApplicationUri implements ActiveRecordInterface
     }
 
     /**
-     * Indicates whether the columns in this object are only set to default values.
-     *
-     * This method can be used in conjunction with isModified() to indicate whether an object is both
-     * modified _and_ has some values set which are non-default.
-     *
-     * @return boolean Whether the columns in this object are only been set with default values.
-     */
-    public function hasOnlyDefaultValues()
-    {
-        // otherwise, everything was equal, so return TRUE
-        return true;
-    } // hasOnlyDefaultValues()
-
-    /**
-     * Hydrates (populates) the object variables with values from the database resultset.
-     *
-     * An offset (0-based "start column") is specified so that objects can be hydrated
-     * with a subset of the columns in the resultset rows.  This is needed, for example,
-     * for results of JOIN queries where the resultset row includes columns from two or
-     * more tables.
-     *
-     * @param array   $row       The row returned by DataFetcher->fetch().
-     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
-     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
-     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *
-     * @return int             next starting column
-     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
-     */
-    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
-    {
-        try {
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ApplicationUriTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ApplicationUriTableMap::translateFieldName('Httphost', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->httphost = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ApplicationUriTableMap::translateFieldName('Basepath', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->basepath = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ApplicationUriTableMap::translateFieldName('Secure', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->secure = (null !== $col) ? (boolean) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ApplicationUriTableMap::translateFieldName('ApplicationId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->application_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ApplicationUriTableMap::translateFieldName('LocalizationId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->localization_id = (null !== $col) ? (int) $col : null;
-            $this->resetModified();
-
-            $this->setNew(false);
-
-            if ($rehydrate) {
-                $this->ensureConsistency();
-            }
-
-            return $startcol + 6; // 6 = ApplicationUriTableMap::NUM_HYDRATE_COLUMNS.
-
-        } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\ApplicationUri'), 0, $e);
-        }
-    }
-
-    /**
-     * Checks and repairs the internal consistency of the object.
-     *
-     * This method is executed after an already-instantiated object is re-hydrated
-     * from the database.  It exists to check any foreign keys to make sure that
-     * the objects related to the current object are correct based on foreign key.
-     *
-     * You can override this method in the stub class, but you should always invoke
-     * the base method from the overridden method (i.e. parent::ensureConsistency()),
-     * in case your model changes.
-     *
-     * @throws PropelException
-     */
-    public function ensureConsistency()
-    {
-        if ($this->aApplication !== null && $this->application_id !== $this->aApplication->getId()) {
-            $this->aApplication = null;
-        }
-        if ($this->aLocalization !== null && $this->localization_id !== $this->aLocalization->getId()) {
-            $this->aLocalization = null;
-        }
-    } // ensureConsistency
-
-    /**
      * Set the value of [id] column.
      *
      * @param  int $v new value
@@ -623,6 +539,97 @@ abstract class ApplicationUri implements ActiveRecordInterface
 
         return $this;
     } // setLocalizationId()
+
+    /**
+     * Indicates whether the columns in this object are only set to default values.
+     *
+     * This method can be used in conjunction with isModified() to indicate whether an object is both
+     * modified _and_ has some values set which are non-default.
+     *
+     * @return boolean Whether the columns in this object are only been set with default values.
+     */
+    public function hasOnlyDefaultValues()
+    {
+        // otherwise, everything was equal, so return TRUE
+        return true;
+    } // hasOnlyDefaultValues()
+
+    /**
+     * Hydrates (populates) the object variables with values from the database resultset.
+     *
+     * An offset (0-based "start column") is specified so that objects can be hydrated
+     * with a subset of the columns in the resultset rows.  This is needed, for example,
+     * for results of JOIN queries where the resultset row includes columns from two or
+     * more tables.
+     *
+     * @param array   $row       The row returned by DataFetcher->fetch().
+     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
+     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
+     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
+                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+     *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *
+     * @return int             next starting column
+     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
+     */
+    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
+    {
+        try {
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ApplicationUriTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ApplicationUriTableMap::translateFieldName('Httphost', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->httphost = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ApplicationUriTableMap::translateFieldName('Basepath', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->basepath = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ApplicationUriTableMap::translateFieldName('Secure', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->secure = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ApplicationUriTableMap::translateFieldName('ApplicationId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->application_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ApplicationUriTableMap::translateFieldName('LocalizationId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->localization_id = (null !== $col) ? (int) $col : null;
+            $this->resetModified();
+
+            $this->setNew(false);
+
+            if ($rehydrate) {
+                $this->ensureConsistency();
+            }
+
+            return $startcol + 6; // 6 = ApplicationUriTableMap::NUM_HYDRATE_COLUMNS.
+
+        } catch (Exception $e) {
+            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\ApplicationUri'), 0, $e);
+        }
+    }
+
+    /**
+     * Checks and repairs the internal consistency of the object.
+     *
+     * This method is executed after an already-instantiated object is re-hydrated
+     * from the database.  It exists to check any foreign keys to make sure that
+     * the objects related to the current object are correct based on foreign key.
+     *
+     * You can override this method in the stub class, but you should always invoke
+     * the base method from the overridden method (i.e. parent::ensureConsistency()),
+     * in case your model changes.
+     *
+     * @throws PropelException
+     */
+    public function ensureConsistency()
+    {
+        if ($this->aApplication !== null && $this->application_id !== $this->aApplication->getId()) {
+            $this->aApplication = null;
+        }
+        if ($this->aLocalization !== null && $this->localization_id !== $this->aLocalization->getId()) {
+            $this->aLocalization = null;
+        }
+    } // ensureConsistency
 
     /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
@@ -819,26 +826,26 @@ abstract class ApplicationUri implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(ApplicationUriTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'ID';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(ApplicationUriTableMap::COL_HTTPHOST)) {
-            $modifiedColumns[':p' . $index++]  = 'HTTPHOST';
+            $modifiedColumns[':p' . $index++]  = '`httphost`';
         }
         if ($this->isColumnModified(ApplicationUriTableMap::COL_BASEPATH)) {
-            $modifiedColumns[':p' . $index++]  = 'BASEPATH';
+            $modifiedColumns[':p' . $index++]  = '`basepath`';
         }
         if ($this->isColumnModified(ApplicationUriTableMap::COL_SECURE)) {
-            $modifiedColumns[':p' . $index++]  = 'SECURE';
+            $modifiedColumns[':p' . $index++]  = '`secure`';
         }
         if ($this->isColumnModified(ApplicationUriTableMap::COL_APPLICATION_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'APPLICATION_ID';
+            $modifiedColumns[':p' . $index++]  = '`application_id`';
         }
         if ($this->isColumnModified(ApplicationUriTableMap::COL_LOCALIZATION_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'LOCALIZATION_ID';
+            $modifiedColumns[':p' . $index++]  = '`localization_id`';
         }
 
         $sql = sprintf(
-            'INSERT INTO kk_application_uri (%s) VALUES (%s)',
+            'INSERT INTO `kk_application_uri` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -847,22 +854,22 @@ abstract class ApplicationUri implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'HTTPHOST':
+                    case '`httphost`':
                         $stmt->bindValue($identifier, $this->httphost, PDO::PARAM_STR);
                         break;
-                    case 'BASEPATH':
+                    case '`basepath`':
                         $stmt->bindValue($identifier, $this->basepath, PDO::PARAM_STR);
                         break;
-                    case 'SECURE':
+                    case '`secure`':
                         $stmt->bindValue($identifier, (int) $this->secure, PDO::PARAM_INT);
                         break;
-                    case 'APPLICATION_ID':
+                    case '`application_id`':
                         $stmt->bindValue($identifier, $this->application_id, PDO::PARAM_INT);
                         break;
-                    case 'LOCALIZATION_ID':
+                    case '`localization_id`':
                         $stmt->bindValue($identifier, $this->localization_id, PDO::PARAM_INT);
                         break;
                 }
@@ -904,7 +911,7 @@ abstract class ApplicationUri implements ActiveRecordInterface
      *
      * @param      string $name name
      * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                     Defaults to TableMap::TYPE_PHPNAME.
      * @return mixed Value of field.
@@ -957,7 +964,7 @@ abstract class ApplicationUri implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
@@ -968,10 +975,11 @@ abstract class ApplicationUri implements ActiveRecordInterface
      */
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['ApplicationUri'][$this->getPrimaryKey()])) {
+
+        if (isset($alreadyDumpedObjects['ApplicationUri'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['ApplicationUri'][$this->getPrimaryKey()] = true;
+        $alreadyDumpedObjects['ApplicationUri'][$this->hashCode()] = true;
         $keys = ApplicationUriTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
@@ -988,10 +996,34 @@ abstract class ApplicationUri implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->aApplication) {
-                $result['Application'] = $this->aApplication->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'application';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_application';
+                        break;
+                    default:
+                        $key = 'Application';
+                }
+
+                $result[$key] = $this->aApplication->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aLocalization) {
-                $result['Localization'] = $this->aLocalization->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'localization';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_localization';
+                        break;
+                    default:
+                        $key = 'Localization';
+                }
+
+                $result[$key] = $this->aLocalization->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1004,7 +1036,7 @@ abstract class ApplicationUri implements ActiveRecordInterface
      * @param  string $name
      * @param  mixed  $value field value
      * @param  string $type The type of fieldname the $name is of:
-     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
      * @return $this|\keeko\core\model\ApplicationUri
@@ -1059,7 +1091,7 @@ abstract class ApplicationUri implements ActiveRecordInterface
      * array. If so the setByName() method is called for that column.
      *
      * You can specify the key type of the array by additionally passing one
-     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
@@ -1098,19 +1130,25 @@ abstract class ApplicationUri implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
+     * You can specify the key type of the array by additionally passing one
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
+     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     * The default key type is the column's TableMap::TYPE_PHPNAME.
+     *
      * @param mixed $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
+     * @param string $keyType The type of keys the array uses.
      *
      * @return $this|\keeko\core\model\ApplicationUri The current object, for fluid interface
      */
-    public function importFrom($parser, $data)
+    public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        $this->fromArray($parser->toArray($data), TableMap::TYPE_PHPNAME);
+        $this->fromArray($parser->toArray($data), $keyType);
 
         return $this;
     }
@@ -1158,7 +1196,7 @@ abstract class ApplicationUri implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(ApplicationUriTableMap::DATABASE_NAME);
+        $criteria = ChildApplicationUriQuery::create();
         $criteria->add(ApplicationUriTableMap::COL_ID, $this->id);
 
         return $criteria;

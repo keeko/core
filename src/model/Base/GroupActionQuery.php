@@ -134,11 +134,13 @@ abstract class GroupActionQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildGroupAction A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT GROUP_ID, ACTION_ID FROM kk_group_action WHERE GROUP_ID = :p0 AND ACTION_ID = :p1';
+        $sql = 'SELECT `group_id`, `action_id` FROM `kk_group_action` WHERE `group_id` = :p0 AND `action_id` = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -332,6 +334,8 @@ abstract class GroupActionQuery extends ModelCriteria
      * @param \keeko\core\model\Group|ObjectCollection $group The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildGroupActionQuery The current query, for fluid interface
      */
     public function filterByGroup($group, $comparison = null)
@@ -406,6 +410,8 @@ abstract class GroupActionQuery extends ModelCriteria
      *
      * @param \keeko\core\model\Action|ObjectCollection $action The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildGroupActionQuery The current query, for fluid interface
      */

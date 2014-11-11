@@ -150,11 +150,13 @@ abstract class ApplicationUriQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildApplicationUri A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, HTTPHOST, BASEPATH, SECURE, APPLICATION_ID, LOCALIZATION_ID FROM kk_application_uri WHERE ID = :p0';
+        $sql = 'SELECT `id`, `httphost`, `basepath`, `secure`, `application_id`, `localization_id` FROM `kk_application_uri` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -462,6 +464,8 @@ abstract class ApplicationUriQuery extends ModelCriteria
      * @param \keeko\core\model\Application|ObjectCollection $application The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
      * @return ChildApplicationUriQuery The current query, for fluid interface
      */
     public function filterByApplication($application, $comparison = null)
@@ -536,6 +540,8 @@ abstract class ApplicationUriQuery extends ModelCriteria
      *
      * @param \keeko\core\model\Localization|ObjectCollection $localization The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildApplicationUriQuery The current query, for fluid interface
      */

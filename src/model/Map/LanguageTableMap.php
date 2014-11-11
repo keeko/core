@@ -34,7 +34,7 @@ class LanguageTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.LanguageTableMap';
+    const CLASS_NAME = '.Map.LanguageTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class LanguageTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.Language';
+    const CLASS_DEFAULT = 'Language';
 
     /**
      * The total number of columns
@@ -72,54 +72,54 @@ class LanguageTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 10;
 
     /**
-     * the column name for the ID field
+     * the column name for the id field
      */
-    const COL_ID = 'kk_language.ID';
+    const COL_ID = 'kk_language.id';
 
     /**
-     * the column name for the ALPHA_2 field
+     * the column name for the alpha_2 field
      */
-    const COL_ALPHA_2 = 'kk_language.ALPHA_2';
+    const COL_ALPHA_2 = 'kk_language.alpha_2';
 
     /**
-     * the column name for the ALPHA_3T field
+     * the column name for the alpha_3T field
      */
-    const COL_ALPHA_3T = 'kk_language.ALPHA_3T';
+    const COL_ALPHA_3T = 'kk_language.alpha_3T';
 
     /**
-     * the column name for the ALPHA_3B field
+     * the column name for the alpha_3B field
      */
-    const COL_ALPHA_3B = 'kk_language.ALPHA_3B';
+    const COL_ALPHA_3B = 'kk_language.alpha_3B';
 
     /**
-     * the column name for the ALPHA_3 field
+     * the column name for the alpha_3 field
      */
-    const COL_ALPHA_3 = 'kk_language.ALPHA_3';
+    const COL_ALPHA_3 = 'kk_language.alpha_3';
 
     /**
-     * the column name for the LOCAL_NAME field
+     * the column name for the local_name field
      */
-    const COL_LOCAL_NAME = 'kk_language.LOCAL_NAME';
+    const COL_LOCAL_NAME = 'kk_language.local_name';
 
     /**
-     * the column name for the EN_NAME field
+     * the column name for the en_name field
      */
-    const COL_EN_NAME = 'kk_language.EN_NAME';
+    const COL_EN_NAME = 'kk_language.en_name';
 
     /**
-     * the column name for the COLLATE field
+     * the column name for the collate field
      */
-    const COL_COLLATE = 'kk_language.COLLATE';
+    const COL_COLLATE = 'kk_language.collate';
 
     /**
-     * the column name for the SCOPE_ID field
+     * the column name for the scope_id field
      */
-    const COL_SCOPE_ID = 'kk_language.SCOPE_ID';
+    const COL_SCOPE_ID = 'kk_language.scope_id';
 
     /**
-     * the column name for the TYPE_ID field
+     * the column name for the type_id field
      */
-    const COL_TYPE_ID = 'kk_language.TYPE_ID';
+    const COL_TYPE_ID = 'kk_language.type_id';
 
     /**
      * The default string format for model objects of the related table
@@ -134,9 +134,8 @@ class LanguageTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('Id', 'Alpha2', 'Alpha3T', 'Alpha3B', 'Alpha3', 'LocalName', 'EnName', 'Collate', 'ScopeId', 'TypeId', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'alpha2', 'alpha3T', 'alpha3B', 'alpha3', 'localName', 'enName', 'collate', 'scopeId', 'typeId', ),
+        self::TYPE_CAMELNAME     => array('id', 'alpha2', 'alpha3T', 'alpha3B', 'alpha3', 'localName', 'enName', 'collate', 'scopeId', 'typeId', ),
         self::TYPE_COLNAME       => array(LanguageTableMap::COL_ID, LanguageTableMap::COL_ALPHA_2, LanguageTableMap::COL_ALPHA_3T, LanguageTableMap::COL_ALPHA_3B, LanguageTableMap::COL_ALPHA_3, LanguageTableMap::COL_LOCAL_NAME, LanguageTableMap::COL_EN_NAME, LanguageTableMap::COL_COLLATE, LanguageTableMap::COL_SCOPE_ID, LanguageTableMap::COL_TYPE_ID, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_ALPHA_2', 'COL_ALPHA_3T', 'COL_ALPHA_3B', 'COL_ALPHA_3', 'COL_LOCAL_NAME', 'COL_EN_NAME', 'COL_COLLATE', 'COL_SCOPE_ID', 'COL_TYPE_ID', ),
         self::TYPE_FIELDNAME     => array('id', 'alpha_2', 'alpha_3T', 'alpha_3B', 'alpha_3', 'local_name', 'en_name', 'collate', 'scope_id', 'type_id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
@@ -149,9 +148,8 @@ class LanguageTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('Id' => 0, 'Alpha2' => 1, 'Alpha3T' => 2, 'Alpha3B' => 3, 'Alpha3' => 4, 'LocalName' => 5, 'EnName' => 6, 'Collate' => 7, 'ScopeId' => 8, 'TypeId' => 9, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'alpha2' => 1, 'alpha3T' => 2, 'alpha3B' => 3, 'alpha3' => 4, 'localName' => 5, 'enName' => 6, 'collate' => 7, 'scopeId' => 8, 'typeId' => 9, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'alpha2' => 1, 'alpha3T' => 2, 'alpha3B' => 3, 'alpha3' => 4, 'localName' => 5, 'enName' => 6, 'collate' => 7, 'scopeId' => 8, 'typeId' => 9, ),
         self::TYPE_COLNAME       => array(LanguageTableMap::COL_ID => 0, LanguageTableMap::COL_ALPHA_2 => 1, LanguageTableMap::COL_ALPHA_3T => 2, LanguageTableMap::COL_ALPHA_3B => 3, LanguageTableMap::COL_ALPHA_3 => 4, LanguageTableMap::COL_LOCAL_NAME => 5, LanguageTableMap::COL_EN_NAME => 6, LanguageTableMap::COL_COLLATE => 7, LanguageTableMap::COL_SCOPE_ID => 8, LanguageTableMap::COL_TYPE_ID => 9, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_ALPHA_2' => 1, 'COL_ALPHA_3T' => 2, 'COL_ALPHA_3B' => 3, 'COL_ALPHA_3' => 4, 'COL_LOCAL_NAME' => 5, 'COL_EN_NAME' => 6, 'COL_COLLATE' => 7, 'COL_SCOPE_ID' => 8, 'COL_TYPE_ID' => 9, ),
         self::TYPE_FIELDNAME     => array('id' => 0, 'alpha_2' => 1, 'alpha_3T' => 2, 'alpha_3B' => 3, 'alpha_3' => 4, 'local_name' => 5, 'en_name' => 6, 'collate' => 7, 'scope_id' => 8, 'type_id' => 9, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
@@ -168,20 +166,21 @@ class LanguageTableMap extends TableMap
         // attributes
         $this->setName('kk_language');
         $this->setPhpName('Language');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\Language');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('ALPHA_2', 'Alpha2', 'VARCHAR', false, 2, null);
-        $this->addColumn('ALPHA_3T', 'Alpha3T', 'VARCHAR', false, 3, null);
-        $this->addColumn('ALPHA_3B', 'Alpha3B', 'VARCHAR', false, 3, null);
-        $this->addColumn('ALPHA_3', 'Alpha3', 'VARCHAR', false, 3, null);
-        $this->addColumn('LOCAL_NAME', 'LocalName', 'VARCHAR', false, 128, null);
-        $this->addColumn('EN_NAME', 'EnName', 'VARCHAR', false, 128, null);
-        $this->addColumn('COLLATE', 'Collate', 'VARCHAR', false, 10, null);
-        $this->addForeignKey('SCOPE_ID', 'ScopeId', 'INTEGER', 'kk_language_scope', 'ID', false, 10, null);
-        $this->addForeignKey('TYPE_ID', 'TypeId', 'INTEGER', 'kk_language_type', 'ID', false, 10, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('alpha_2', 'Alpha2', 'VARCHAR', false, 2, null);
+        $this->addColumn('alpha_3T', 'Alpha3T', 'VARCHAR', false, 3, null);
+        $this->addColumn('alpha_3B', 'Alpha3B', 'VARCHAR', false, 3, null);
+        $this->addColumn('alpha_3', 'Alpha3', 'VARCHAR', false, 3, null);
+        $this->addColumn('local_name', 'LocalName', 'VARCHAR', false, 128, null);
+        $this->addColumn('en_name', 'EnName', 'VARCHAR', false, 128, null);
+        $this->addColumn('collate', 'Collate', 'VARCHAR', false, 10, null);
+        $this->addForeignKey('scope_id', 'ScopeId', 'INTEGER', 'kk_language_scope', 'id', false, 10, null);
+        $this->addForeignKey('type_id', 'TypeId', 'INTEGER', 'kk_language_type', 'id', false, 10, null);
     } // initialize()
 
     /**
@@ -202,7 +201,7 @@ class LanguageTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -224,7 +223,7 @@ class LanguageTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -260,7 +259,7 @@ class LanguageTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -346,16 +345,16 @@ class LanguageTableMap extends TableMap
             $criteria->addSelectColumn(LanguageTableMap::COL_SCOPE_ID);
             $criteria->addSelectColumn(LanguageTableMap::COL_TYPE_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.ALPHA_2');
-            $criteria->addSelectColumn($alias . '.ALPHA_3T');
-            $criteria->addSelectColumn($alias . '.ALPHA_3B');
-            $criteria->addSelectColumn($alias . '.ALPHA_3');
-            $criteria->addSelectColumn($alias . '.LOCAL_NAME');
-            $criteria->addSelectColumn($alias . '.EN_NAME');
-            $criteria->addSelectColumn($alias . '.COLLATE');
-            $criteria->addSelectColumn($alias . '.SCOPE_ID');
-            $criteria->addSelectColumn($alias . '.TYPE_ID');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.alpha_2');
+            $criteria->addSelectColumn($alias . '.alpha_3T');
+            $criteria->addSelectColumn($alias . '.alpha_3B');
+            $criteria->addSelectColumn($alias . '.alpha_3');
+            $criteria->addSelectColumn($alias . '.local_name');
+            $criteria->addSelectColumn($alias . '.en_name');
+            $criteria->addSelectColumn($alias . '.collate');
+            $criteria->addSelectColumn($alias . '.scope_id');
+            $criteria->addSelectColumn($alias . '.type_id');
         }
     }
 

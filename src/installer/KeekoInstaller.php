@@ -14,7 +14,7 @@ use Composer\IO\NullIO;
 use Symfony\Component\HttpFoundation\Request;
 use keeko\core\model\User;
 use keeko\core\model\Group;
-use keeko\core\model\GroupUser;
+use keeko\core\model\Preference;
 
 class KeekoInstaller {
 
@@ -29,8 +29,10 @@ class KeekoInstaller {
 // 		if (!defined('KEEKO_PATH')) {
 // 			require_once rtrim(getcwd(), '/\\') . '/src/bootstrap.php';
 // 		}
-		
 		$this->io = $io ?: new NullIO();
+	}
+	
+	private function initialize() {
 		$this->packageManager = new PackageManager();
 		$this->appInstaller = new AppInstaller();
 		$this->moduleInstaller = new ModuleInstaller();
@@ -39,6 +41,7 @@ class KeekoInstaller {
 	
 	public function install() {
 		$this->installStaticData();
+		$this->initialize();
 		$this->installGroupsAndUsers();
 		$this->installKeeko();
 	}
@@ -103,10 +106,12 @@ class KeekoInstaller {
 		$uri = new ApplicationUri();
 		$uri->setApplication($developerApp);
 		$uri->setLocalization($de);
-		$uri->setHttphost('localhost');
+		$uri->setHttphost($request->getHost());
 		$uri->setBasepath($base . '/developer/');
 		$uri->setSecure($request->isSecure());
 		$uri->save();
+		
+		$apiUrl = 'http' . ($request->isSecure() ? 's' : '') . '://' . $request->getHost() . $base . '/developer/';
 		
 		// -- website app
 		$websiteAppPackage = $this->packageManager->getApplicationPackage('keeko/website-app');
@@ -115,10 +120,21 @@ class KeekoInstaller {
 		$uri = new ApplicationUri();
 		$uri->setApplication($websiteApp);
 		$uri->setLocalization($de);
-		$uri->setHttphost('localhost');
+		$uri->setHttphost($request->getHost());
 		$uri->setBasepath($base . '/');
 		$uri->setSecure($request->isSecure());
 		$uri->save();
+		
+		// preferences
+		$pref = new Preference();
+		$pref->setKey('plattform_name');
+		$pref->setValue('Keeko');
+		$pref->save();
+		
+		$pref = new Preference();
+		$pref->setKey('plattform_api');
+		$pref->setValue($apiUrl);
+		$pref->save();
 
 		// modules
 		$this->installModule('keeko/user');

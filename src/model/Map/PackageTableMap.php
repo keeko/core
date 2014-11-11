@@ -34,7 +34,7 @@ class PackageTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.PackageTableMap';
+    const CLASS_NAME = '.Map.PackageTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class PackageTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.Package';
+    const CLASS_DEFAULT = 'Package';
 
     /**
      * The total number of columns
@@ -72,34 +72,34 @@ class PackageTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 6;
 
     /**
-     * the column name for the ID field
+     * the column name for the id field
      */
-    const COL_ID = 'kk_package.ID';
+    const COL_ID = 'kk_package.id';
 
     /**
-     * the column name for the NAME field
+     * the column name for the name field
      */
-    const COL_NAME = 'kk_package.NAME';
+    const COL_NAME = 'kk_package.name';
 
     /**
-     * the column name for the TITLE field
+     * the column name for the title field
      */
-    const COL_TITLE = 'kk_package.TITLE';
+    const COL_TITLE = 'kk_package.title';
 
     /**
-     * the column name for the DESCRIPTION field
+     * the column name for the description field
      */
-    const COL_DESCRIPTION = 'kk_package.DESCRIPTION';
+    const COL_DESCRIPTION = 'kk_package.description';
 
     /**
-     * the column name for the INSTALLED_VERSION field
+     * the column name for the installed_version field
      */
-    const COL_INSTALLED_VERSION = 'kk_package.INSTALLED_VERSION';
+    const COL_INSTALLED_VERSION = 'kk_package.installed_version';
 
     /**
-     * the column name for the DESCENDANT_CLASS field
+     * the column name for the descendant_class field
      */
-    const COL_DESCENDANT_CLASS = 'kk_package.DESCENDANT_CLASS';
+    const COL_DESCENDANT_CLASS = 'kk_package.descendant_class';
 
     /**
      * The default string format for model objects of the related table
@@ -114,9 +114,8 @@ class PackageTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('Id', 'Name', 'Title', 'Description', 'InstalledVersion', 'DescendantClass', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'name', 'title', 'description', 'installedVersion', 'descendantClass', ),
+        self::TYPE_CAMELNAME     => array('id', 'name', 'title', 'description', 'installedVersion', 'descendantClass', ),
         self::TYPE_COLNAME       => array(PackageTableMap::COL_ID, PackageTableMap::COL_NAME, PackageTableMap::COL_TITLE, PackageTableMap::COL_DESCRIPTION, PackageTableMap::COL_INSTALLED_VERSION, PackageTableMap::COL_DESCENDANT_CLASS, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_NAME', 'COL_TITLE', 'COL_DESCRIPTION', 'COL_INSTALLED_VERSION', 'COL_DESCENDANT_CLASS', ),
         self::TYPE_FIELDNAME     => array('id', 'name', 'title', 'description', 'installed_version', 'descendant_class', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
@@ -129,9 +128,8 @@ class PackageTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, 'Title' => 2, 'Description' => 3, 'InstalledVersion' => 4, 'DescendantClass' => 5, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'installedVersion' => 4, 'descendantClass' => 5, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'installedVersion' => 4, 'descendantClass' => 5, ),
         self::TYPE_COLNAME       => array(PackageTableMap::COL_ID => 0, PackageTableMap::COL_NAME => 1, PackageTableMap::COL_TITLE => 2, PackageTableMap::COL_DESCRIPTION => 3, PackageTableMap::COL_INSTALLED_VERSION => 4, PackageTableMap::COL_DESCENDANT_CLASS => 5, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_NAME' => 1, 'COL_TITLE' => 2, 'COL_DESCRIPTION' => 3, 'COL_INSTALLED_VERSION' => 4, 'COL_DESCENDANT_CLASS' => 5, ),
         self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'installed_version' => 4, 'descendant_class' => 5, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
@@ -148,16 +146,17 @@ class PackageTableMap extends TableMap
         // attributes
         $this->setName('kk_package');
         $this->setPhpName('Package');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\Package');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', false, 255, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 255, null);
-        $this->addColumn('DESCRIPTION', 'Description', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('INSTALLED_VERSION', 'InstalledVersion', 'VARCHAR', false, 50, null);
-        $this->addColumn('DESCENDANT_CLASS', 'DescendantClass', 'VARCHAR', false, 100, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', false, 255, null);
+        $this->addColumn('description', 'Description', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('installed_version', 'InstalledVersion', 'VARCHAR', false, 50, null);
+        $this->addColumn('descendant_class', 'DescendantClass', 'VARCHAR', false, 100, null);
     } // initialize()
 
     /**
@@ -200,7 +199,7 @@ class PackageTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -222,7 +221,7 @@ class PackageTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -258,7 +257,7 @@ class PackageTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -340,12 +339,12 @@ class PackageTableMap extends TableMap
             $criteria->addSelectColumn(PackageTableMap::COL_INSTALLED_VERSION);
             $criteria->addSelectColumn(PackageTableMap::COL_DESCENDANT_CLASS);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.TITLE');
-            $criteria->addSelectColumn($alias . '.DESCRIPTION');
-            $criteria->addSelectColumn($alias . '.INSTALLED_VERSION');
-            $criteria->addSelectColumn($alias . '.DESCENDANT_CLASS');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.installed_version');
+            $criteria->addSelectColumn($alias . '.descendant_class');
         }
     }
 

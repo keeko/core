@@ -4,7 +4,6 @@ namespace keeko\core\model;
 
 use keeko\core\model\Base\LocalizationQuery as BaseLocalizationQuery;
 
-
 /**
  * Skeleton subclass for performing query and update operations on the 'kk_localization' table.
  *

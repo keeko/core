@@ -7,6 +7,7 @@ use keeko\core\module\ModuleManager;
 use Symfony\Component\HttpFoundation\Request;
 use keeko\core\package\PackageManager;
 use keeko\core\auth\AuthManager;
+use keeko\core\service\ServiceContainer;
 
 abstract class AbstractApplication {
 
@@ -20,19 +21,6 @@ abstract class AbstractApplication {
 	 */
 	protected $localization;
 
-	/**
-	 * @var ModuleManager
-	 */
-	protected $moduleManager;
-
-	/**
-	 * @var PackageManager
-	 */
-	protected $packageManager;
-	
-	/** @var AuthManager */
-	protected $authManager;
-
 	protected $prefix;
 
 	protected $destination;
@@ -41,33 +29,36 @@ abstract class AbstractApplication {
 	
 	protected $base;
 	
-	protected $config;
+	/** @var ServiceContainer */
+	protected $service;
 
 	/**
 	 * Creates a new Keeko Application
 	 */
 	public function __construct(Application $model) {
 		$this->model = $model;
-		$this->packageManager = new PackageManager();
-		$this->moduleManager = new ModuleManager($this->packageManager, $this);
-		$this->authManager = new AuthManager();
-// 		$this->readConfiguration();
-	}
-
-	public function getPackageManager() {
-		return $this->packageManager;
+		$this->service = new ServiceContainer($this);
 	}
 	
 	/**
-	 * 
-	 * @return AuthManager
+	 * Returns the service container
+	 *
+	 * @return ServiceContainer
 	 */
-	public function getAuthManager() {
-		return $this->authManager;
+	public function getServiceContainer() {
+		return $this->service;
 	}
 
 	public function setModel(Application $model) {
 		$this->model = $model;
+	}
+	
+	/**
+	 *
+	 * @return Application
+	 */
+	public function getModel() {
+		return $this->model;
 	}
 
 	public function setPrefix($prefix) {
@@ -100,13 +91,6 @@ abstract class AbstractApplication {
 		return $this->base;
 	}
 
-	/**
-	 *
-	 * @return Application
-	 */
-	public function getModel() {
-		return $this->model;
-	}
 
 	public function setLocalization(Localization $localization) {
 		$this->localization = $localization;
@@ -118,14 +102,6 @@ abstract class AbstractApplication {
 	 */
 	public function getLocalization() {
 		return $this->localization;
-	}
-
-	/**
-	 *
-	 * @return ModuleManager
-	 */
-	public function getModuleManager() {
-		return $this->moduleManager;
 	}
 
 	abstract public function run(Request $request, $path);

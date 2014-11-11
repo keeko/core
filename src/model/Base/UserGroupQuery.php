@@ -11,76 +11,76 @@ use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
-use keeko\core\model\GroupUser as ChildGroupUser;
-use keeko\core\model\GroupUserQuery as ChildGroupUserQuery;
-use keeko\core\model\Map\GroupUserTableMap;
+use keeko\core\model\UserGroup as ChildUserGroup;
+use keeko\core\model\UserGroupQuery as ChildUserGroupQuery;
+use keeko\core\model\Map\UserGroupTableMap;
 
 /**
- * Base class that represents a query for the 'kk_group_user' table.
+ * Base class that represents a query for the 'kk_user_group' table.
  *
  *
  *
- * @method     ChildGroupUserQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
- * @method     ChildGroupUserQuery orderByGroupId($order = Criteria::ASC) Order by the group_id column
+ * @method     ChildUserGroupQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
+ * @method     ChildUserGroupQuery orderByGroupId($order = Criteria::ASC) Order by the group_id column
  *
- * @method     ChildGroupUserQuery groupByUserId() Group by the user_id column
- * @method     ChildGroupUserQuery groupByGroupId() Group by the group_id column
+ * @method     ChildUserGroupQuery groupByUserId() Group by the user_id column
+ * @method     ChildUserGroupQuery groupByGroupId() Group by the group_id column
  *
- * @method     ChildGroupUserQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method     ChildGroupUserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method     ChildGroupUserQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method     ChildUserGroupQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method     ChildUserGroupQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method     ChildUserGroupQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildGroupUserQuery leftJoinGroup($relationAlias = null) Adds a LEFT JOIN clause to the query using the Group relation
- * @method     ChildGroupUserQuery rightJoinGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Group relation
- * @method     ChildGroupUserQuery innerJoinGroup($relationAlias = null) Adds a INNER JOIN clause to the query using the Group relation
+ * @method     ChildUserGroupQuery leftJoinGroup($relationAlias = null) Adds a LEFT JOIN clause to the query using the Group relation
+ * @method     ChildUserGroupQuery rightJoinGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Group relation
+ * @method     ChildUserGroupQuery innerJoinGroup($relationAlias = null) Adds a INNER JOIN clause to the query using the Group relation
  *
- * @method     ChildGroupUserQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
- * @method     ChildGroupUserQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
- * @method     ChildGroupUserQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
+ * @method     ChildUserGroupQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
+ * @method     ChildUserGroupQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
+ * @method     ChildUserGroupQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
  *
  * @method     \keeko\core\model\GroupQuery|\keeko\core\model\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildGroupUser findOne(ConnectionInterface $con = null) Return the first ChildGroupUser matching the query
- * @method     ChildGroupUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGroupUser matching the query, or a new ChildGroupUser object populated from the query conditions when no match is found
+ * @method     ChildUserGroup findOne(ConnectionInterface $con = null) Return the first ChildUserGroup matching the query
+ * @method     ChildUserGroup findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUserGroup matching the query, or a new ChildUserGroup object populated from the query conditions when no match is found
  *
- * @method     ChildGroupUser findOneByUserId(int $user_id) Return the first ChildGroupUser filtered by the user_id column
- * @method     ChildGroupUser findOneByGroupId(int $group_id) Return the first ChildGroupUser filtered by the group_id column
+ * @method     ChildUserGroup findOneByUserId(int $user_id) Return the first ChildUserGroup filtered by the user_id column
+ * @method     ChildUserGroup findOneByGroupId(int $group_id) Return the first ChildUserGroup filtered by the group_id column
  *
- * @method     ChildGroupUser[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGroupUser objects based on current ModelCriteria
- * @method     ChildGroupUser[]|ObjectCollection findByUserId(int $user_id) Return ChildGroupUser objects filtered by the user_id column
- * @method     ChildGroupUser[]|ObjectCollection findByGroupId(int $group_id) Return ChildGroupUser objects filtered by the group_id column
- * @method     ChildGroupUser[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildUserGroup[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUserGroup objects based on current ModelCriteria
+ * @method     ChildUserGroup[]|ObjectCollection findByUserId(int $user_id) Return ChildUserGroup objects filtered by the user_id column
+ * @method     ChildUserGroup[]|ObjectCollection findByGroupId(int $group_id) Return ChildUserGroup objects filtered by the group_id column
+ * @method     ChildUserGroup[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
-abstract class GroupUserQuery extends ModelCriteria
+abstract class UserGroupQuery extends ModelCriteria
 {
 
     /**
-     * Initializes internal state of \keeko\core\model\Base\GroupUserQuery object.
+     * Initializes internal state of \keeko\core\model\Base\UserGroupQuery object.
      *
      * @param     string $dbName The database name
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'keeko', $modelName = '\\keeko\\core\\model\\GroupUser', $modelAlias = null)
+    public function __construct($dbName = 'keeko', $modelName = '\\keeko\\core\\model\\UserGroup', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
     /**
-     * Returns a new ChildGroupUserQuery object.
+     * Returns a new ChildUserGroupQuery object.
      *
      * @param     string $modelAlias The alias of a model in the query
      * @param     Criteria $criteria Optional Criteria to build the query from
      *
-     * @return ChildGroupUserQuery
+     * @return ChildUserGroupQuery
      */
     public static function create($modelAlias = null, Criteria $criteria = null)
     {
-        if ($criteria instanceof ChildGroupUserQuery) {
+        if ($criteria instanceof ChildUserGroupQuery) {
             return $criteria;
         }
-        $query = new ChildGroupUserQuery();
+        $query = new ChildUserGroupQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -103,19 +103,19 @@ abstract class GroupUserQuery extends ModelCriteria
      * @param array[$user_id, $group_id] $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
-     * @return ChildGroupUser|array|mixed the result, formatted by the current formatter
+     * @return ChildUserGroup|array|mixed the result, formatted by the current formatter
      */
     public function findPk($key, ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = GroupUserTableMap::getInstanceFromPool(serialize(array((string) $key[0], (string) $key[1]))))) && !$this->formatter) {
+        if ((null !== ($obj = UserGroupTableMap::getInstanceFromPool(serialize(array((string) $key[0], (string) $key[1]))))) && !$this->formatter) {
             // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(GroupUserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(UserGroupTableMap::DATABASE_NAME);
         }
         $this->basePreSelect($con);
         if ($this->formatter || $this->modelAlias || $this->with || $this->select
@@ -134,11 +134,13 @@ abstract class GroupUserQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
-     * @return ChildGroupUser A model object, or null if the key is not found
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildUserGroup A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT USER_ID, GROUP_ID FROM kk_group_user WHERE USER_ID = :p0 AND GROUP_ID = :p1';
+        $sql = 'SELECT `user_id`, `group_id` FROM `kk_user_group` WHERE `user_id` = :p0 AND `group_id` = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -150,10 +152,10 @@ abstract class GroupUserQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            /** @var ChildGroupUser $obj */
-            $obj = new ChildGroupUser();
+            /** @var ChildUserGroup $obj */
+            $obj = new ChildUserGroup();
             $obj->hydrate($row);
-            GroupUserTableMap::addInstanceToPool($obj, serialize(array((string) $key[0], (string) $key[1])));
+            UserGroupTableMap::addInstanceToPool($obj, serialize(array((string) $key[0], (string) $key[1])));
         }
         $stmt->closeCursor();
 
@@ -166,7 +168,7 @@ abstract class GroupUserQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
-     * @return ChildGroupUser|array|mixed the result, formatted by the current formatter
+     * @return ChildUserGroup|array|mixed the result, formatted by the current formatter
      */
     protected function findPkComplex($key, ConnectionInterface $con)
     {
@@ -208,12 +210,12 @@ abstract class GroupUserQuery extends ModelCriteria
      *
      * @param     mixed $key Primary key to use for the query
      *
-     * @return $this|ChildGroupUserQuery The current query, for fluid interface
+     * @return $this|ChildUserGroupQuery The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
-        $this->addUsingAlias(GroupUserTableMap::COL_USER_ID, $key[0], Criteria::EQUAL);
-        $this->addUsingAlias(GroupUserTableMap::COL_GROUP_ID, $key[1], Criteria::EQUAL);
+        $this->addUsingAlias(UserGroupTableMap::COL_USER_ID, $key[0], Criteria::EQUAL);
+        $this->addUsingAlias(UserGroupTableMap::COL_GROUP_ID, $key[1], Criteria::EQUAL);
 
         return $this;
     }
@@ -223,7 +225,7 @@ abstract class GroupUserQuery extends ModelCriteria
      *
      * @param     array $keys The list of primary key to use for the query
      *
-     * @return $this|ChildGroupUserQuery The current query, for fluid interface
+     * @return $this|ChildUserGroupQuery The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
@@ -231,8 +233,8 @@ abstract class GroupUserQuery extends ModelCriteria
             return $this->add(null, '1<>1', Criteria::CUSTOM);
         }
         foreach ($keys as $key) {
-            $cton0 = $this->getNewCriterion(GroupUserTableMap::COL_USER_ID, $key[0], Criteria::EQUAL);
-            $cton1 = $this->getNewCriterion(GroupUserTableMap::COL_GROUP_ID, $key[1], Criteria::EQUAL);
+            $cton0 = $this->getNewCriterion(UserGroupTableMap::COL_USER_ID, $key[0], Criteria::EQUAL);
+            $cton1 = $this->getNewCriterion(UserGroupTableMap::COL_GROUP_ID, $key[1], Criteria::EQUAL);
             $cton0->addAnd($cton1);
             $this->addOr($cton0);
         }
@@ -258,18 +260,18 @@ abstract class GroupUserQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildGroupUserQuery The current query, for fluid interface
+     * @return $this|ChildUserGroupQuery The current query, for fluid interface
      */
     public function filterByUserId($userId = null, $comparison = null)
     {
         if (is_array($userId)) {
             $useMinMax = false;
             if (isset($userId['min'])) {
-                $this->addUsingAlias(GroupUserTableMap::COL_USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(UserGroupTableMap::COL_USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($userId['max'])) {
-                $this->addUsingAlias(GroupUserTableMap::COL_USER_ID, $userId['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(UserGroupTableMap::COL_USER_ID, $userId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -280,7 +282,7 @@ abstract class GroupUserQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(GroupUserTableMap::COL_USER_ID, $userId, $comparison);
+        return $this->addUsingAlias(UserGroupTableMap::COL_USER_ID, $userId, $comparison);
     }
 
     /**
@@ -301,18 +303,18 @@ abstract class GroupUserQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildGroupUserQuery The current query, for fluid interface
+     * @return $this|ChildUserGroupQuery The current query, for fluid interface
      */
     public function filterByGroupId($groupId = null, $comparison = null)
     {
         if (is_array($groupId)) {
             $useMinMax = false;
             if (isset($groupId['min'])) {
-                $this->addUsingAlias(GroupUserTableMap::COL_GROUP_ID, $groupId['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(UserGroupTableMap::COL_GROUP_ID, $groupId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($groupId['max'])) {
-                $this->addUsingAlias(GroupUserTableMap::COL_GROUP_ID, $groupId['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(UserGroupTableMap::COL_GROUP_ID, $groupId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -323,7 +325,7 @@ abstract class GroupUserQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(GroupUserTableMap::COL_GROUP_ID, $groupId, $comparison);
+        return $this->addUsingAlias(UserGroupTableMap::COL_GROUP_ID, $groupId, $comparison);
     }
 
     /**
@@ -332,20 +334,22 @@ abstract class GroupUserQuery extends ModelCriteria
      * @param \keeko\core\model\Group|ObjectCollection $group The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildGroupUserQuery The current query, for fluid interface
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildUserGroupQuery The current query, for fluid interface
      */
     public function filterByGroup($group, $comparison = null)
     {
         if ($group instanceof \keeko\core\model\Group) {
             return $this
-                ->addUsingAlias(GroupUserTableMap::COL_GROUP_ID, $group->getId(), $comparison);
+                ->addUsingAlias(UserGroupTableMap::COL_GROUP_ID, $group->getId(), $comparison);
         } elseif ($group instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(GroupUserTableMap::COL_GROUP_ID, $group->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(UserGroupTableMap::COL_GROUP_ID, $group->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
             throw new PropelException('filterByGroup() only accepts arguments of type \keeko\core\model\Group or Collection');
         }
@@ -357,7 +361,7 @@ abstract class GroupUserQuery extends ModelCriteria
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return $this|ChildGroupUserQuery The current query, for fluid interface
+     * @return $this|ChildUserGroupQuery The current query, for fluid interface
      */
     public function joinGroup($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
@@ -407,20 +411,22 @@ abstract class GroupUserQuery extends ModelCriteria
      * @param \keeko\core\model\User|ObjectCollection $user The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildGroupUserQuery The current query, for fluid interface
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildUserGroupQuery The current query, for fluid interface
      */
     public function filterByUser($user, $comparison = null)
     {
         if ($user instanceof \keeko\core\model\User) {
             return $this
-                ->addUsingAlias(GroupUserTableMap::COL_USER_ID, $user->getId(), $comparison);
+                ->addUsingAlias(UserGroupTableMap::COL_USER_ID, $user->getId(), $comparison);
         } elseif ($user instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(GroupUserTableMap::COL_USER_ID, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(UserGroupTableMap::COL_USER_ID, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
             throw new PropelException('filterByUser() only accepts arguments of type \keeko\core\model\User or Collection');
         }
@@ -432,7 +438,7 @@ abstract class GroupUserQuery extends ModelCriteria
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return $this|ChildGroupUserQuery The current query, for fluid interface
+     * @return $this|ChildUserGroupQuery The current query, for fluid interface
      */
     public function joinUser($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
@@ -479,15 +485,15 @@ abstract class GroupUserQuery extends ModelCriteria
     /**
      * Exclude object from result
      *
-     * @param   ChildGroupUser $groupUser Object to remove from the list of results
+     * @param   ChildUserGroup $userGroup Object to remove from the list of results
      *
-     * @return $this|ChildGroupUserQuery The current query, for fluid interface
+     * @return $this|ChildUserGroupQuery The current query, for fluid interface
      */
-    public function prune($groupUser = null)
+    public function prune($userGroup = null)
     {
-        if ($groupUser) {
-            $this->addCond('pruneCond0', $this->getAliasedColName(GroupUserTableMap::COL_USER_ID), $groupUser->getUserId(), Criteria::NOT_EQUAL);
-            $this->addCond('pruneCond1', $this->getAliasedColName(GroupUserTableMap::COL_GROUP_ID), $groupUser->getGroupId(), Criteria::NOT_EQUAL);
+        if ($userGroup) {
+            $this->addCond('pruneCond0', $this->getAliasedColName(UserGroupTableMap::COL_USER_ID), $userGroup->getUserId(), Criteria::NOT_EQUAL);
+            $this->addCond('pruneCond1', $this->getAliasedColName(UserGroupTableMap::COL_GROUP_ID), $userGroup->getGroupId(), Criteria::NOT_EQUAL);
             $this->combine(array('pruneCond0', 'pruneCond1'), Criteria::LOGICAL_OR);
         }
 
@@ -495,7 +501,7 @@ abstract class GroupUserQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the kk_group_user table.
+     * Deletes all rows from the kk_user_group table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
@@ -503,7 +509,7 @@ abstract class GroupUserQuery extends ModelCriteria
     public function doDeleteAll(ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GroupUserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserGroupTableMap::DATABASE_NAME);
         }
 
         // use transaction because $criteria could contain info
@@ -514,8 +520,8 @@ abstract class GroupUserQuery extends ModelCriteria
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            GroupUserTableMap::clearInstancePool();
-            GroupUserTableMap::clearRelatedInstancePool();
+            UserGroupTableMap::clearInstancePool();
+            UserGroupTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
@@ -533,26 +539,26 @@ abstract class GroupUserQuery extends ModelCriteria
     public function delete(ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GroupUserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserGroupTableMap::DATABASE_NAME);
         }
 
         $criteria = $this;
 
         // Set the correct dbName
-        $criteria->setDbName(GroupUserTableMap::DATABASE_NAME);
+        $criteria->setDbName(UserGroupTableMap::DATABASE_NAME);
 
         // use transaction because $criteria could contain info
         // for more than one table or we could emulating ON DELETE CASCADE, etc.
         return $con->transaction(function () use ($con, $criteria) {
             $affectedRows = 0; // initialize var to track total num of affected rows
 
-            GroupUserTableMap::removeInstanceFromPool($criteria);
+            UserGroupTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
-            GroupUserTableMap::clearRelatedInstancePool();
+            UserGroupTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
     }
 
-} // GroupUserQuery
+} // UserGroupQuery

@@ -34,7 +34,7 @@ class AuthTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.AuthTableMap';
+    const CLASS_NAME = '.Map.AuthTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class AuthTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.Auth';
+    const CLASS_DEFAULT = 'Auth';
 
     /**
      * The total number of columns
@@ -72,24 +72,24 @@ class AuthTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 4;
 
     /**
-     * the column name for the TOKEN field
+     * the column name for the token field
      */
-    const COL_TOKEN = 'kk_auth.TOKEN';
+    const COL_TOKEN = 'kk_auth.token';
 
     /**
-     * the column name for the USER_ID field
+     * the column name for the user_id field
      */
-    const COL_USER_ID = 'kk_auth.USER_ID';
+    const COL_USER_ID = 'kk_auth.user_id';
 
     /**
-     * the column name for the CREATED_AT field
+     * the column name for the created_at field
      */
-    const COL_CREATED_AT = 'kk_auth.CREATED_AT';
+    const COL_CREATED_AT = 'kk_auth.created_at';
 
     /**
-     * the column name for the UPDATED_AT field
+     * the column name for the updated_at field
      */
-    const COL_UPDATED_AT = 'kk_auth.UPDATED_AT';
+    const COL_UPDATED_AT = 'kk_auth.updated_at';
 
     /**
      * The default string format for model objects of the related table
@@ -104,9 +104,8 @@ class AuthTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('Token', 'UserId', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_STUDLYPHPNAME => array('token', 'userId', 'createdAt', 'updatedAt', ),
+        self::TYPE_CAMELNAME     => array('token', 'userId', 'createdAt', 'updatedAt', ),
         self::TYPE_COLNAME       => array(AuthTableMap::COL_TOKEN, AuthTableMap::COL_USER_ID, AuthTableMap::COL_CREATED_AT, AuthTableMap::COL_UPDATED_AT, ),
-        self::TYPE_RAW_COLNAME   => array('COL_TOKEN', 'COL_USER_ID', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
         self::TYPE_FIELDNAME     => array('token', 'user_id', 'created_at', 'updated_at', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
@@ -119,9 +118,8 @@ class AuthTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('Token' => 0, 'UserId' => 1, 'CreatedAt' => 2, 'UpdatedAt' => 3, ),
-        self::TYPE_STUDLYPHPNAME => array('token' => 0, 'userId' => 1, 'createdAt' => 2, 'updatedAt' => 3, ),
+        self::TYPE_CAMELNAME     => array('token' => 0, 'userId' => 1, 'createdAt' => 2, 'updatedAt' => 3, ),
         self::TYPE_COLNAME       => array(AuthTableMap::COL_TOKEN => 0, AuthTableMap::COL_USER_ID => 1, AuthTableMap::COL_CREATED_AT => 2, AuthTableMap::COL_UPDATED_AT => 3, ),
-        self::TYPE_RAW_COLNAME   => array('COL_TOKEN' => 0, 'COL_USER_ID' => 1, 'COL_CREATED_AT' => 2, 'COL_UPDATED_AT' => 3, ),
         self::TYPE_FIELDNAME     => array('token' => 0, 'user_id' => 1, 'created_at' => 2, 'updated_at' => 3, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
@@ -138,14 +136,15 @@ class AuthTableMap extends TableMap
         // attributes
         $this->setName('kk_auth');
         $this->setPhpName('Auth');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\Auth');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('TOKEN', 'Token', 'VARCHAR', true, 32, null);
-        $this->addForeignKey('USER_ID', 'UserId', 'INTEGER', 'kk_user', 'ID', true, 10, null);
-        $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addPrimaryKey('token', 'Token', 'VARCHAR', true, 32, null);
+        $this->addForeignKey('user_id', 'UserId', 'INTEGER', 'kk_user', 'id', true, 10, null);
+        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
 
     /**
@@ -177,7 +176,7 @@ class AuthTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -199,7 +198,7 @@ class AuthTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -235,7 +234,7 @@ class AuthTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -315,10 +314,10 @@ class AuthTableMap extends TableMap
             $criteria->addSelectColumn(AuthTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(AuthTableMap::COL_UPDATED_AT);
         } else {
-            $criteria->addSelectColumn($alias . '.TOKEN');
-            $criteria->addSelectColumn($alias . '.USER_ID');
-            $criteria->addSelectColumn($alias . '.CREATED_AT');
-            $criteria->addSelectColumn($alias . '.UPDATED_AT');
+            $criteria->addSelectColumn($alias . '.token');
+            $criteria->addSelectColumn($alias . '.user_id');
+            $criteria->addSelectColumn($alias . '.created_at');
+            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 

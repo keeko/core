@@ -34,7 +34,7 @@ class ApplicationTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.ApplicationTableMap';
+    const CLASS_NAME = '.Map.ApplicationTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class ApplicationTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.Application';
+    const CLASS_DEFAULT = 'Application';
 
     /**
      * The total number of columns
@@ -72,34 +72,34 @@ class ApplicationTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 6;
 
     /**
-     * the column name for the CLASS_NAME field
+     * the column name for the class_name field
      */
-    const COL_CLASS_NAME = 'kk_application.CLASS_NAME';
+    const COL_CLASS_NAME = 'kk_application.class_name';
 
     /**
-     * the column name for the ID field
+     * the column name for the id field
      */
-    const COL_ID = 'kk_application.ID';
+    const COL_ID = 'kk_application.id';
 
     /**
-     * the column name for the NAME field
+     * the column name for the name field
      */
-    const COL_NAME = 'kk_application.NAME';
+    const COL_NAME = 'kk_application.name';
 
     /**
-     * the column name for the TITLE field
+     * the column name for the title field
      */
-    const COL_TITLE = 'kk_application.TITLE';
+    const COL_TITLE = 'kk_application.title';
 
     /**
-     * the column name for the DESCRIPTION field
+     * the column name for the description field
      */
-    const COL_DESCRIPTION = 'kk_application.DESCRIPTION';
+    const COL_DESCRIPTION = 'kk_application.description';
 
     /**
-     * the column name for the INSTALLED_VERSION field
+     * the column name for the installed_version field
      */
-    const COL_INSTALLED_VERSION = 'kk_application.INSTALLED_VERSION';
+    const COL_INSTALLED_VERSION = 'kk_application.installed_version';
 
     /**
      * The default string format for model objects of the related table
@@ -114,9 +114,8 @@ class ApplicationTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('ClassName', 'Id', 'Name', 'Title', 'Description', 'InstalledVersion', ),
-        self::TYPE_STUDLYPHPNAME => array('className', 'id', 'name', 'title', 'description', 'installedVersion', ),
+        self::TYPE_CAMELNAME     => array('className', 'id', 'name', 'title', 'description', 'installedVersion', ),
         self::TYPE_COLNAME       => array(ApplicationTableMap::COL_CLASS_NAME, ApplicationTableMap::COL_ID, ApplicationTableMap::COL_NAME, ApplicationTableMap::COL_TITLE, ApplicationTableMap::COL_DESCRIPTION, ApplicationTableMap::COL_INSTALLED_VERSION, ),
-        self::TYPE_RAW_COLNAME   => array('COL_CLASS_NAME', 'COL_ID', 'COL_NAME', 'COL_TITLE', 'COL_DESCRIPTION', 'COL_INSTALLED_VERSION', ),
         self::TYPE_FIELDNAME     => array('class_name', 'id', 'name', 'title', 'description', 'installed_version', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
@@ -129,9 +128,8 @@ class ApplicationTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('ClassName' => 0, 'Id' => 1, 'Name' => 2, 'Title' => 3, 'Description' => 4, 'InstalledVersion' => 5, ),
-        self::TYPE_STUDLYPHPNAME => array('className' => 0, 'id' => 1, 'name' => 2, 'title' => 3, 'description' => 4, 'installedVersion' => 5, ),
+        self::TYPE_CAMELNAME     => array('className' => 0, 'id' => 1, 'name' => 2, 'title' => 3, 'description' => 4, 'installedVersion' => 5, ),
         self::TYPE_COLNAME       => array(ApplicationTableMap::COL_CLASS_NAME => 0, ApplicationTableMap::COL_ID => 1, ApplicationTableMap::COL_NAME => 2, ApplicationTableMap::COL_TITLE => 3, ApplicationTableMap::COL_DESCRIPTION => 4, ApplicationTableMap::COL_INSTALLED_VERSION => 5, ),
-        self::TYPE_RAW_COLNAME   => array('COL_CLASS_NAME' => 0, 'COL_ID' => 1, 'COL_NAME' => 2, 'COL_TITLE' => 3, 'COL_DESCRIPTION' => 4, 'COL_INSTALLED_VERSION' => 5, ),
         self::TYPE_FIELDNAME     => array('class_name' => 0, 'id' => 1, 'name' => 2, 'title' => 3, 'description' => 4, 'installed_version' => 5, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
@@ -148,16 +146,17 @@ class ApplicationTableMap extends TableMap
         // attributes
         $this->setName('kk_application');
         $this->setPhpName('Application');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\Application');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addColumn('CLASS_NAME', 'ClassName', 'VARCHAR', true, 255, null);
-        $this->addForeignPrimaryKey('ID', 'Id', 'INTEGER' , 'kk_package', 'ID', true, null, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', false, 255, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 255, null);
-        $this->addColumn('DESCRIPTION', 'Description', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('INSTALLED_VERSION', 'InstalledVersion', 'VARCHAR', false, 50, null);
+        $this->addColumn('class_name', 'ClassName', 'VARCHAR', true, 255, null);
+        $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'kk_package', 'id', true, null, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', false, 255, null);
+        $this->addColumn('description', 'Description', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('installed_version', 'InstalledVersion', 'VARCHAR', false, 50, null);
     } // initialize()
 
     /**
@@ -190,7 +189,7 @@ class ApplicationTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -212,7 +211,7 @@ class ApplicationTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -248,7 +247,7 @@ class ApplicationTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -330,12 +329,12 @@ class ApplicationTableMap extends TableMap
             $criteria->addSelectColumn(ApplicationTableMap::COL_DESCRIPTION);
             $criteria->addSelectColumn(ApplicationTableMap::COL_INSTALLED_VERSION);
         } else {
-            $criteria->addSelectColumn($alias . '.CLASS_NAME');
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.TITLE');
-            $criteria->addSelectColumn($alias . '.DESCRIPTION');
-            $criteria->addSelectColumn($alias . '.INSTALLED_VERSION');
+            $criteria->addSelectColumn($alias . '.class_name');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.installed_version');
         }
     }
 

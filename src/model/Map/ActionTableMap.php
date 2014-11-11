@@ -34,7 +34,7 @@ class ActionTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.ActionTableMap';
+    const CLASS_NAME = '.Map.ActionTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class ActionTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.Action';
+    const CLASS_DEFAULT = 'Action';
 
     /**
      * The total number of columns
@@ -72,34 +72,34 @@ class ActionTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 6;
 
     /**
-     * the column name for the ID field
+     * the column name for the id field
      */
-    const COL_ID = 'kk_action.ID';
+    const COL_ID = 'kk_action.id';
 
     /**
-     * the column name for the NAME field
+     * the column name for the name field
      */
-    const COL_NAME = 'kk_action.NAME';
+    const COL_NAME = 'kk_action.name';
 
     /**
-     * the column name for the TITLE field
+     * the column name for the title field
      */
-    const COL_TITLE = 'kk_action.TITLE';
+    const COL_TITLE = 'kk_action.title';
 
     /**
-     * the column name for the DESCRIPTION field
+     * the column name for the description field
      */
-    const COL_DESCRIPTION = 'kk_action.DESCRIPTION';
+    const COL_DESCRIPTION = 'kk_action.description';
 
     /**
-     * the column name for the CLASS_NAME field
+     * the column name for the class_name field
      */
-    const COL_CLASS_NAME = 'kk_action.CLASS_NAME';
+    const COL_CLASS_NAME = 'kk_action.class_name';
 
     /**
-     * the column name for the MODULE_ID field
+     * the column name for the module_id field
      */
-    const COL_MODULE_ID = 'kk_action.MODULE_ID';
+    const COL_MODULE_ID = 'kk_action.module_id';
 
     /**
      * The default string format for model objects of the related table
@@ -114,9 +114,8 @@ class ActionTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('Id', 'Name', 'Title', 'Description', 'ClassName', 'ModuleId', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'name', 'title', 'description', 'className', 'moduleId', ),
+        self::TYPE_CAMELNAME     => array('id', 'name', 'title', 'description', 'className', 'moduleId', ),
         self::TYPE_COLNAME       => array(ActionTableMap::COL_ID, ActionTableMap::COL_NAME, ActionTableMap::COL_TITLE, ActionTableMap::COL_DESCRIPTION, ActionTableMap::COL_CLASS_NAME, ActionTableMap::COL_MODULE_ID, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_NAME', 'COL_TITLE', 'COL_DESCRIPTION', 'COL_CLASS_NAME', 'COL_MODULE_ID', ),
         self::TYPE_FIELDNAME     => array('id', 'name', 'title', 'description', 'class_name', 'module_id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
@@ -129,9 +128,8 @@ class ActionTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, 'Title' => 2, 'Description' => 3, 'ClassName' => 4, 'ModuleId' => 5, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'className' => 4, 'moduleId' => 5, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'className' => 4, 'moduleId' => 5, ),
         self::TYPE_COLNAME       => array(ActionTableMap::COL_ID => 0, ActionTableMap::COL_NAME => 1, ActionTableMap::COL_TITLE => 2, ActionTableMap::COL_DESCRIPTION => 3, ActionTableMap::COL_CLASS_NAME => 4, ActionTableMap::COL_MODULE_ID => 5, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_NAME' => 1, 'COL_TITLE' => 2, 'COL_DESCRIPTION' => 3, 'COL_CLASS_NAME' => 4, 'COL_MODULE_ID' => 5, ),
         self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'class_name' => 4, 'module_id' => 5, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
@@ -148,16 +146,17 @@ class ActionTableMap extends TableMap
         // attributes
         $this->setName('kk_action');
         $this->setPhpName('Action');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\Action');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', true, 255, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 255, null);
-        $this->addColumn('DESCRIPTION', 'Description', 'VARCHAR', false, 255, null);
-        $this->addColumn('CLASS_NAME', 'ClassName', 'VARCHAR', true, 255, null);
-        $this->addForeignKey('MODULE_ID', 'ModuleId', 'INTEGER', 'kk_module', 'ID', true, 10, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', true, 255, null);
+        $this->addColumn('description', 'Description', 'VARCHAR', false, 255, null);
+        $this->addColumn('class_name', 'ClassName', 'VARCHAR', true, 255, null);
+        $this->addForeignKey('module_id', 'ModuleId', 'INTEGER', 'kk_module', 'id', true, 10, null);
     } // initialize()
 
     /**
@@ -188,7 +187,7 @@ class ActionTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -210,7 +209,7 @@ class ActionTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -246,7 +245,7 @@ class ActionTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -328,12 +327,12 @@ class ActionTableMap extends TableMap
             $criteria->addSelectColumn(ActionTableMap::COL_CLASS_NAME);
             $criteria->addSelectColumn(ActionTableMap::COL_MODULE_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.TITLE');
-            $criteria->addSelectColumn($alias . '.DESCRIPTION');
-            $criteria->addSelectColumn($alias . '.CLASS_NAME');
-            $criteria->addSelectColumn($alias . '.MODULE_ID');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.class_name');
+            $criteria->addSelectColumn($alias . '.module_id');
         }
     }
 

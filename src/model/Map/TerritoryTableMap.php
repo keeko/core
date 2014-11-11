@@ -34,7 +34,7 @@ class TerritoryTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'keeko.core.model.Map.TerritoryTableMap';
+    const CLASS_NAME = '.Map.TerritoryTableMap';
 
     /**
      * The default database name for this class
@@ -54,7 +54,7 @@ class TerritoryTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'keeko.core.model.Territory';
+    const CLASS_DEFAULT = 'Territory';
 
     /**
      * The total number of columns
@@ -72,19 +72,19 @@ class TerritoryTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 3;
 
     /**
-     * the column name for the ISO_NR field
+     * the column name for the iso_nr field
      */
-    const COL_ISO_NR = 'kk_territory.ISO_NR';
+    const COL_ISO_NR = 'kk_territory.iso_nr';
 
     /**
-     * the column name for the PARENT_ISO_NR field
+     * the column name for the parent_iso_nr field
      */
-    const COL_PARENT_ISO_NR = 'kk_territory.PARENT_ISO_NR';
+    const COL_PARENT_ISO_NR = 'kk_territory.parent_iso_nr';
 
     /**
-     * the column name for the NAME_EN field
+     * the column name for the name_en field
      */
-    const COL_NAME_EN = 'kk_territory.NAME_EN';
+    const COL_NAME_EN = 'kk_territory.name_en';
 
     /**
      * The default string format for model objects of the related table
@@ -99,9 +99,8 @@ class TerritoryTableMap extends TableMap
      */
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('IsoNr', 'ParentIsoNr', 'NameEn', ),
-        self::TYPE_STUDLYPHPNAME => array('isoNr', 'parentIsoNr', 'nameEn', ),
+        self::TYPE_CAMELNAME     => array('isoNr', 'parentIsoNr', 'nameEn', ),
         self::TYPE_COLNAME       => array(TerritoryTableMap::COL_ISO_NR, TerritoryTableMap::COL_PARENT_ISO_NR, TerritoryTableMap::COL_NAME_EN, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ISO_NR', 'COL_PARENT_ISO_NR', 'COL_NAME_EN', ),
         self::TYPE_FIELDNAME     => array('iso_nr', 'parent_iso_nr', 'name_en', ),
         self::TYPE_NUM           => array(0, 1, 2, )
     );
@@ -114,9 +113,8 @@ class TerritoryTableMap extends TableMap
      */
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('IsoNr' => 0, 'ParentIsoNr' => 1, 'NameEn' => 2, ),
-        self::TYPE_STUDLYPHPNAME => array('isoNr' => 0, 'parentIsoNr' => 1, 'nameEn' => 2, ),
+        self::TYPE_CAMELNAME     => array('isoNr' => 0, 'parentIsoNr' => 1, 'nameEn' => 2, ),
         self::TYPE_COLNAME       => array(TerritoryTableMap::COL_ISO_NR => 0, TerritoryTableMap::COL_PARENT_ISO_NR => 1, TerritoryTableMap::COL_NAME_EN => 2, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ISO_NR' => 0, 'COL_PARENT_ISO_NR' => 1, 'COL_NAME_EN' => 2, ),
         self::TYPE_FIELDNAME     => array('iso_nr' => 0, 'parent_iso_nr' => 1, 'name_en' => 2, ),
         self::TYPE_NUM           => array(0, 1, 2, )
     );
@@ -133,13 +131,14 @@ class TerritoryTableMap extends TableMap
         // attributes
         $this->setName('kk_territory');
         $this->setPhpName('Territory');
+        $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\Territory');
-        $this->setPackage('keeko.core.model');
+        $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('ISO_NR', 'IsoNr', 'INTEGER', true, null, null);
-        $this->addColumn('PARENT_ISO_NR', 'ParentIsoNr', 'INTEGER', false, null, null);
-        $this->addColumn('NAME_EN', 'NameEn', 'VARCHAR', true, 45, null);
+        $this->addPrimaryKey('iso_nr', 'IsoNr', 'INTEGER', true, null, null);
+        $this->addColumn('parent_iso_nr', 'ParentIsoNr', 'INTEGER', false, null, null);
+        $this->addColumn('name_en', 'NameEn', 'VARCHAR', true, 45, null);
     } // initialize()
 
     /**
@@ -158,7 +157,7 @@ class TerritoryTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
@@ -180,7 +179,7 @@ class TerritoryTableMap extends TableMap
      *
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
-     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
@@ -216,7 +215,7 @@ class TerritoryTableMap extends TableMap
      * @param array  $row       row returned by DataFetcher->fetch().
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
@@ -295,9 +294,9 @@ class TerritoryTableMap extends TableMap
             $criteria->addSelectColumn(TerritoryTableMap::COL_PARENT_ISO_NR);
             $criteria->addSelectColumn(TerritoryTableMap::COL_NAME_EN);
         } else {
-            $criteria->addSelectColumn($alias . '.ISO_NR');
-            $criteria->addSelectColumn($alias . '.PARENT_ISO_NR');
-            $criteria->addSelectColumn($alias . '.NAME_EN');
+            $criteria->addSelectColumn($alias . '.iso_nr');
+            $criteria->addSelectColumn($alias . '.parent_iso_nr');
+            $criteria->addSelectColumn($alias . '.name_en');
         }
     }
 

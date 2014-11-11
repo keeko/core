@@ -4,7 +4,6 @@ namespace keeko\core\model;
 
 use keeko\core\model\Base\ApplicationUriQuery as BaseApplicationUriQuery;
 
-
 /**
  * Skeleton subclass for performing query and update operations on the 'kk_application_uri' table.
  *
