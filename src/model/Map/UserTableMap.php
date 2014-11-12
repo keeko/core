@@ -59,7 +59,7 @@ class UserTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 22;
+    const NUM_COLUMNS = 13;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class UserTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 22;
+    const NUM_HYDRATE_COLUMNS = 13;
 
     /**
      * the column name for the id field
@@ -107,26 +107,6 @@ class UserTableMap extends TableMap
     const COL_EMAIL = 'kk_user.email';
 
     /**
-     * the column name for the country_iso_nr field
-     */
-    const COL_COUNTRY_ISO_NR = 'kk_user.country_iso_nr';
-
-    /**
-     * the column name for the subdivision_id field
-     */
-    const COL_SUBDIVISION_ID = 'kk_user.subdivision_id';
-
-    /**
-     * the column name for the address field
-     */
-    const COL_ADDRESS = 'kk_user.address';
-
-    /**
-     * the column name for the address2 field
-     */
-    const COL_ADDRESS2 = 'kk_user.address2';
-
-    /**
      * the column name for the birthday field
      */
     const COL_BIRTHDAY = 'kk_user.birthday';
@@ -137,16 +117,6 @@ class UserTableMap extends TableMap
     const COL_SEX = 'kk_user.sex';
 
     /**
-     * the column name for the city field
-     */
-    const COL_CITY = 'kk_user.city';
-
-    /**
-     * the column name for the postal_code field
-     */
-    const COL_POSTAL_CODE = 'kk_user.postal_code';
-
-    /**
      * the column name for the password_recover_code field
      */
     const COL_PASSWORD_RECOVER_CODE = 'kk_user.password_recover_code';
@@ -155,21 +125,6 @@ class UserTableMap extends TableMap
      * the column name for the password_recover_time field
      */
     const COL_PASSWORD_RECOVER_TIME = 'kk_user.password_recover_time';
-
-    /**
-     * the column name for the location_status field
-     */
-    const COL_LOCATION_STATUS = 'kk_user.location_status';
-
-    /**
-     * the column name for the latitude field
-     */
-    const COL_LATITUDE = 'kk_user.latitude';
-
-    /**
-     * the column name for the longitude field
-     */
-    const COL_LONGITUDE = 'kk_user.longitude';
 
     /**
      * the column name for the created_at field
@@ -193,11 +148,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'LoginName', 'Password', 'GivenName', 'FamilyName', 'DisplayName', 'Email', 'CountryIsoNr', 'SubdivisionId', 'Address', 'Address2', 'Birthday', 'Sex', 'City', 'PostalCode', 'PasswordRecoverCode', 'PasswordRecoverTime', 'LocationStatus', 'Latitude', 'Longitude', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'loginName', 'password', 'givenName', 'familyName', 'displayName', 'email', 'countryIsoNr', 'subdivisionId', 'address', 'address2', 'birthday', 'sex', 'city', 'postalCode', 'passwordRecoverCode', 'passwordRecoverTime', 'locationStatus', 'latitude', 'longitude', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_LOGIN_NAME, UserTableMap::COL_PASSWORD, UserTableMap::COL_GIVEN_NAME, UserTableMap::COL_FAMILY_NAME, UserTableMap::COL_DISPLAY_NAME, UserTableMap::COL_EMAIL, UserTableMap::COL_COUNTRY_ISO_NR, UserTableMap::COL_SUBDIVISION_ID, UserTableMap::COL_ADDRESS, UserTableMap::COL_ADDRESS2, UserTableMap::COL_BIRTHDAY, UserTableMap::COL_SEX, UserTableMap::COL_CITY, UserTableMap::COL_POSTAL_CODE, UserTableMap::COL_PASSWORD_RECOVER_CODE, UserTableMap::COL_PASSWORD_RECOVER_TIME, UserTableMap::COL_LOCATION_STATUS, UserTableMap::COL_LATITUDE, UserTableMap::COL_LONGITUDE, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'login_name', 'password', 'given_name', 'family_name', 'display_name', 'email', 'country_iso_nr', 'subdivision_id', 'address', 'address2', 'birthday', 'sex', 'city', 'postal_code', 'password_recover_code', 'password_recover_time', 'location_status', 'latitude', 'longitude', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, )
+        self::TYPE_PHPNAME       => array('Id', 'LoginName', 'Password', 'GivenName', 'FamilyName', 'DisplayName', 'Email', 'Birthday', 'Sex', 'PasswordRecoverCode', 'PasswordRecoverTime', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('id', 'loginName', 'password', 'givenName', 'familyName', 'displayName', 'email', 'birthday', 'sex', 'passwordRecoverCode', 'passwordRecoverTime', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_LOGIN_NAME, UserTableMap::COL_PASSWORD, UserTableMap::COL_GIVEN_NAME, UserTableMap::COL_FAMILY_NAME, UserTableMap::COL_DISPLAY_NAME, UserTableMap::COL_EMAIL, UserTableMap::COL_BIRTHDAY, UserTableMap::COL_SEX, UserTableMap::COL_PASSWORD_RECOVER_CODE, UserTableMap::COL_PASSWORD_RECOVER_TIME, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('id', 'login_name', 'password', 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex', 'password_recover_code', 'password_recover_time', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -207,11 +162,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'LoginName' => 1, 'Password' => 2, 'GivenName' => 3, 'FamilyName' => 4, 'DisplayName' => 5, 'Email' => 6, 'CountryIsoNr' => 7, 'SubdivisionId' => 8, 'Address' => 9, 'Address2' => 10, 'Birthday' => 11, 'Sex' => 12, 'City' => 13, 'PostalCode' => 14, 'PasswordRecoverCode' => 15, 'PasswordRecoverTime' => 16, 'LocationStatus' => 17, 'Latitude' => 18, 'Longitude' => 19, 'CreatedAt' => 20, 'UpdatedAt' => 21, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'loginName' => 1, 'password' => 2, 'givenName' => 3, 'familyName' => 4, 'displayName' => 5, 'email' => 6, 'countryIsoNr' => 7, 'subdivisionId' => 8, 'address' => 9, 'address2' => 10, 'birthday' => 11, 'sex' => 12, 'city' => 13, 'postalCode' => 14, 'passwordRecoverCode' => 15, 'passwordRecoverTime' => 16, 'locationStatus' => 17, 'latitude' => 18, 'longitude' => 19, 'createdAt' => 20, 'updatedAt' => 21, ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_LOGIN_NAME => 1, UserTableMap::COL_PASSWORD => 2, UserTableMap::COL_GIVEN_NAME => 3, UserTableMap::COL_FAMILY_NAME => 4, UserTableMap::COL_DISPLAY_NAME => 5, UserTableMap::COL_EMAIL => 6, UserTableMap::COL_COUNTRY_ISO_NR => 7, UserTableMap::COL_SUBDIVISION_ID => 8, UserTableMap::COL_ADDRESS => 9, UserTableMap::COL_ADDRESS2 => 10, UserTableMap::COL_BIRTHDAY => 11, UserTableMap::COL_SEX => 12, UserTableMap::COL_CITY => 13, UserTableMap::COL_POSTAL_CODE => 14, UserTableMap::COL_PASSWORD_RECOVER_CODE => 15, UserTableMap::COL_PASSWORD_RECOVER_TIME => 16, UserTableMap::COL_LOCATION_STATUS => 17, UserTableMap::COL_LATITUDE => 18, UserTableMap::COL_LONGITUDE => 19, UserTableMap::COL_CREATED_AT => 20, UserTableMap::COL_UPDATED_AT => 21, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'login_name' => 1, 'password' => 2, 'given_name' => 3, 'family_name' => 4, 'display_name' => 5, 'email' => 6, 'country_iso_nr' => 7, 'subdivision_id' => 8, 'address' => 9, 'address2' => 10, 'birthday' => 11, 'sex' => 12, 'city' => 13, 'postal_code' => 14, 'password_recover_code' => 15, 'password_recover_time' => 16, 'location_status' => 17, 'latitude' => 18, 'longitude' => 19, 'created_at' => 20, 'updated_at' => 21, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'LoginName' => 1, 'Password' => 2, 'GivenName' => 3, 'FamilyName' => 4, 'DisplayName' => 5, 'Email' => 6, 'Birthday' => 7, 'Sex' => 8, 'PasswordRecoverCode' => 9, 'PasswordRecoverTime' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'loginName' => 1, 'password' => 2, 'givenName' => 3, 'familyName' => 4, 'displayName' => 5, 'email' => 6, 'birthday' => 7, 'sex' => 8, 'passwordRecoverCode' => 9, 'passwordRecoverTime' => 10, 'createdAt' => 11, 'updatedAt' => 12, ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_LOGIN_NAME => 1, UserTableMap::COL_PASSWORD => 2, UserTableMap::COL_GIVEN_NAME => 3, UserTableMap::COL_FAMILY_NAME => 4, UserTableMap::COL_DISPLAY_NAME => 5, UserTableMap::COL_EMAIL => 6, UserTableMap::COL_BIRTHDAY => 7, UserTableMap::COL_SEX => 8, UserTableMap::COL_PASSWORD_RECOVER_CODE => 9, UserTableMap::COL_PASSWORD_RECOVER_TIME => 10, UserTableMap::COL_CREATED_AT => 11, UserTableMap::COL_UPDATED_AT => 12, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'login_name' => 1, 'password' => 2, 'given_name' => 3, 'family_name' => 4, 'display_name' => 5, 'email' => 6, 'birthday' => 7, 'sex' => 8, 'password_recover_code' => 9, 'password_recover_time' => 10, 'created_at' => 11, 'updated_at' => 12, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -238,19 +193,10 @@ class UserTableMap extends TableMap
         $this->addColumn('family_name', 'FamilyName', 'VARCHAR', false, 100, null);
         $this->addColumn('display_name', 'DisplayName', 'VARCHAR', false, 100, null);
         $this->addColumn('email', 'Email', 'VARCHAR', false, 255, null);
-        $this->addForeignKey('country_iso_nr', 'CountryIsoNr', 'INTEGER', 'kk_country', 'iso_nr', false, null, null);
-        $this->addForeignKey('subdivision_id', 'SubdivisionId', 'INTEGER', 'kk_subdivision', 'id', false, null, null);
-        $this->addColumn('address', 'Address', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('address2', 'Address2', 'LONGVARCHAR', false, null, null);
         $this->addColumn('birthday', 'Birthday', 'DATE', false, null, null);
         $this->addColumn('sex', 'Sex', 'TINYINT', false, null, null);
-        $this->addColumn('city', 'City', 'VARCHAR', false, 128, null);
-        $this->addColumn('postal_code', 'PostalCode', 'VARCHAR', false, 45, null);
         $this->addColumn('password_recover_code', 'PasswordRecoverCode', 'VARCHAR', false, 32, null);
         $this->addColumn('password_recover_time', 'PasswordRecoverTime', 'TIMESTAMP', false, null, null);
-        $this->addColumn('location_status', 'LocationStatus', 'TINYINT', false, 2, null);
-        $this->addColumn('latitude', 'Latitude', 'FLOAT', false, 10, null);
-        $this->addColumn('longitude', 'Longitude', 'FLOAT', false, 10, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -260,8 +206,6 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Country', '\\keeko\\core\\model\\Country', RelationMap::MANY_TO_ONE, array('country_iso_nr' => 'iso_nr', ), null, null);
-        $this->addRelation('Subdivision', '\\keeko\\core\\model\\Subdivision', RelationMap::MANY_TO_ONE, array('subdivision_id' => 'id', ), null, null);
         $this->addRelation('Auth', '\\keeko\\core\\model\\Auth', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null, 'Auths');
         $this->addRelation('UserGroup', '\\keeko\\core\\model\\UserGroup', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'RESTRICT', null, 'UserGroups');
         $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Groups');
@@ -429,19 +373,10 @@ class UserTableMap extends TableMap
             $criteria->addSelectColumn(UserTableMap::COL_FAMILY_NAME);
             $criteria->addSelectColumn(UserTableMap::COL_DISPLAY_NAME);
             $criteria->addSelectColumn(UserTableMap::COL_EMAIL);
-            $criteria->addSelectColumn(UserTableMap::COL_COUNTRY_ISO_NR);
-            $criteria->addSelectColumn(UserTableMap::COL_SUBDIVISION_ID);
-            $criteria->addSelectColumn(UserTableMap::COL_ADDRESS);
-            $criteria->addSelectColumn(UserTableMap::COL_ADDRESS2);
             $criteria->addSelectColumn(UserTableMap::COL_BIRTHDAY);
             $criteria->addSelectColumn(UserTableMap::COL_SEX);
-            $criteria->addSelectColumn(UserTableMap::COL_CITY);
-            $criteria->addSelectColumn(UserTableMap::COL_POSTAL_CODE);
             $criteria->addSelectColumn(UserTableMap::COL_PASSWORD_RECOVER_CODE);
             $criteria->addSelectColumn(UserTableMap::COL_PASSWORD_RECOVER_TIME);
-            $criteria->addSelectColumn(UserTableMap::COL_LOCATION_STATUS);
-            $criteria->addSelectColumn(UserTableMap::COL_LATITUDE);
-            $criteria->addSelectColumn(UserTableMap::COL_LONGITUDE);
             $criteria->addSelectColumn(UserTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(UserTableMap::COL_UPDATED_AT);
         } else {
@@ -452,19 +387,10 @@ class UserTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.family_name');
             $criteria->addSelectColumn($alias . '.display_name');
             $criteria->addSelectColumn($alias . '.email');
-            $criteria->addSelectColumn($alias . '.country_iso_nr');
-            $criteria->addSelectColumn($alias . '.subdivision_id');
-            $criteria->addSelectColumn($alias . '.address');
-            $criteria->addSelectColumn($alias . '.address2');
             $criteria->addSelectColumn($alias . '.birthday');
             $criteria->addSelectColumn($alias . '.sex');
-            $criteria->addSelectColumn($alias . '.city');
-            $criteria->addSelectColumn($alias . '.postal_code');
             $criteria->addSelectColumn($alias . '.password_recover_code');
             $criteria->addSelectColumn($alias . '.password_recover_time');
-            $criteria->addSelectColumn($alias . '.location_status');
-            $criteria->addSelectColumn($alias . '.latitude');
-            $criteria->addSelectColumn($alias . '.longitude');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
         }

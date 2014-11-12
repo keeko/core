@@ -76,11 +76,7 @@ use keeko\core\model\Map\CountryTableMap;
  * @method     ChildCountryQuery rightJoinSubdivision($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Subdivision relation
  * @method     ChildCountryQuery innerJoinSubdivision($relationAlias = null) Adds a INNER JOIN clause to the query using the Subdivision relation
  *
- * @method     ChildCountryQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
- * @method     ChildCountryQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
- * @method     ChildCountryQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
- *
- * @method     \keeko\core\model\TerritoryQuery|\keeko\core\model\CurrencyQuery|\keeko\core\model\LocalizationQuery|\keeko\core\model\SubdivisionQuery|\keeko\core\model\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \keeko\core\model\TerritoryQuery|\keeko\core\model\CurrencyQuery|\keeko\core\model\LocalizationQuery|\keeko\core\model\SubdivisionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildCountry findOne(ConnectionInterface $con = null) Return the first ChildCountry matching the query
  * @method     ChildCountry findOneOrCreate(ConnectionInterface $con = null) Return the first ChildCountry matching the query, or a new ChildCountry object populated from the query conditions when no match is found
@@ -1181,79 +1177,6 @@ abstract class CountryQuery extends ModelCriteria
         return $this
             ->joinSubdivision($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Subdivision', '\keeko\core\model\SubdivisionQuery');
-    }
-
-    /**
-     * Filter the query by a related \keeko\core\model\User object
-     *
-     * @param \keeko\core\model\User|ObjectCollection $user  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildCountryQuery The current query, for fluid interface
-     */
-    public function filterByUser($user, $comparison = null)
-    {
-        if ($user instanceof \keeko\core\model\User) {
-            return $this
-                ->addUsingAlias(CountryTableMap::COL_ISO_NR, $user->getCountryIsoNr(), $comparison);
-        } elseif ($user instanceof ObjectCollection) {
-            return $this
-                ->useUserQuery()
-                ->filterByPrimaryKeys($user->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByUser() only accepts arguments of type \keeko\core\model\User or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the User relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildCountryQuery The current query, for fluid interface
-     */
-    public function joinUser($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('User');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'User');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the User relation User object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \keeko\core\model\UserQuery A secondary query class using the current class as primary query
-     */
-    public function useUserQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinUser($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'User', '\keeko\core\model\UserQuery');
     }
 
     /**

@@ -19,10 +19,12 @@ class Preferences {
 		return isset($this->preferences[$key]);
 	}
 	
-	public function get($key) {
+	public function get($key, $default = null) {
 		if ($this->has($key)) {
 			return $this->preferences[$key];
 		}
+
+		return $default;
 	}
 	
 	public function set($key, $value) {

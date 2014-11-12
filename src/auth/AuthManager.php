@@ -22,29 +22,21 @@ class AuthManager {
 	private $authenticated = false;
 	
 	public function __construct() {
+		$this->user = $this->getGuest();
+		
 		$request = Request::createFromGlobals();
 		$strategies = ['header', 'basic', 'cookie'];
 
-		$found = false;
 		foreach ($strategies as $strategy) {
 			$method = 'auth' . ucfirst($strategy);
 			if ($this->$method($request)) {
-				$found = true;
 				break;
 			}
-		}
-		
-// 		print_r($this->user);
-		
-		// auth failed - fetch guest
-		if (!$found) {
-			$this->user = $this->getGuest();
-			$this->initUser($this->user);
 		}
 	}
 	
 	private function getGuest() {
-		return UserQuery::create()->findOneById(2);
+		return UserQuery::create()->findOneById(-1);
 	}
 	
 	private function authCookie(Request $request) {
@@ -74,7 +66,6 @@ class AuthManager {
 			$this->user = $auth->getUser();
 			$this->recognized = true;
 			$this->authenticated = true;
-			$this->initUser($this->user);
 			return true;
 		}
 		
@@ -101,7 +92,6 @@ class AuthManager {
 			
 			if (password_verify($password, $user->getPassword())) {
 				$this->authenticated = true;
-				$this->initUser($user);
 				
 				// delete an old auth-token first ...
 				AuthQuery::create()->filterByUserId($user->getId())->delete();
@@ -136,11 +126,7 @@ class AuthManager {
 	public static function generateToken() {
 		return md5(uniqid(mt_rand(), true));
 	}
-	
-	private function initUser(User $user) {
-// 		$user->updatePermissions();
-	}
-	
+
 	public function getUser() {
 		return $this->user;
 	}

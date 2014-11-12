@@ -31,12 +31,8 @@ use Symfony\Component\Validator\Validator\LegacyValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use keeko\core\model\Auth as ChildAuth;
 use keeko\core\model\AuthQuery as ChildAuthQuery;
-use keeko\core\model\Country as ChildCountry;
-use keeko\core\model\CountryQuery as ChildCountryQuery;
 use keeko\core\model\Group as ChildGroup;
 use keeko\core\model\GroupQuery as ChildGroupQuery;
-use keeko\core\model\Subdivision as ChildSubdivision;
-use keeko\core\model\SubdivisionQuery as ChildSubdivisionQuery;
 use keeko\core\model\User as ChildUser;
 use keeko\core\model\UserGroup as ChildUserGroup;
 use keeko\core\model\UserGroupQuery as ChildUserGroupQuery;
@@ -127,30 +123,6 @@ abstract class User implements ActiveRecordInterface
     protected $email;
 
     /**
-     * The value for the country_iso_nr field.
-     * @var        int
-     */
-    protected $country_iso_nr;
-
-    /**
-     * The value for the subdivision_id field.
-     * @var        int
-     */
-    protected $subdivision_id;
-
-    /**
-     * The value for the address field.
-     * @var        string
-     */
-    protected $address;
-
-    /**
-     * The value for the address2 field.
-     * @var        string
-     */
-    protected $address2;
-
-    /**
      * The value for the birthday field.
      * @var        \DateTime
      */
@@ -161,18 +133,6 @@ abstract class User implements ActiveRecordInterface
      * @var        int
      */
     protected $sex;
-
-    /**
-     * The value for the city field.
-     * @var        string
-     */
-    protected $city;
-
-    /**
-     * The value for the postal_code field.
-     * @var        string
-     */
-    protected $postal_code;
 
     /**
      * The value for the password_recover_code field.
@@ -187,24 +147,6 @@ abstract class User implements ActiveRecordInterface
     protected $password_recover_time;
 
     /**
-     * The value for the location_status field.
-     * @var        int
-     */
-    protected $location_status;
-
-    /**
-     * The value for the latitude field.
-     * @var        double
-     */
-    protected $latitude;
-
-    /**
-     * The value for the longitude field.
-     * @var        double
-     */
-    protected $longitude;
-
-    /**
      * The value for the created_at field.
      * @var        \DateTime
      */
@@ -215,16 +157,6 @@ abstract class User implements ActiveRecordInterface
      * @var        \DateTime
      */
     protected $updated_at;
-
-    /**
-     * @var        ChildCountry
-     */
-    protected $aCountry;
-
-    /**
-     * @var        ChildSubdivision
-     */
-    protected $aSubdivision;
 
     /**
      * @var        ObjectCollection|ChildAuth[] Collection to store aggregation of ChildAuth objects.
@@ -579,46 +511,6 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Get the [country_iso_nr] column value.
-     *
-     * @return int
-     */
-    public function getCountryIsoNr()
-    {
-        return $this->country_iso_nr;
-    }
-
-    /**
-     * Get the [subdivision_id] column value.
-     *
-     * @return int
-     */
-    public function getSubdivisionId()
-    {
-        return $this->subdivision_id;
-    }
-
-    /**
-     * Get the [address] column value.
-     *
-     * @return string
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * Get the [address2] column value.
-     *
-     * @return string
-     */
-    public function getAddress2()
-    {
-        return $this->address2;
-    }
-
-    /**
      * Get the [optionally formatted] temporal [birthday] column value.
      *
      *
@@ -649,26 +541,6 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Get the [city] column value.
-     *
-     * @return string
-     */
-    public function getCity()
-    {
-        return $this->city;
-    }
-
-    /**
-     * Get the [postal_code] column value.
-     *
-     * @return string
-     */
-    public function getPostalCode()
-    {
-        return $this->postal_code;
-    }
-
-    /**
      * Get the [password_recover_code] column value.
      *
      * @return string
@@ -696,36 +568,6 @@ abstract class User implements ActiveRecordInterface
         } else {
             return $this->password_recover_time instanceof \DateTime ? $this->password_recover_time->format($format) : null;
         }
-    }
-
-    /**
-     * Get the [location_status] column value.
-     *
-     * @return int
-     */
-    public function getLocationStatus()
-    {
-        return $this->location_status;
-    }
-
-    /**
-     * Get the [latitude] column value.
-     *
-     * @return double
-     */
-    public function getLatitude()
-    {
-        return $this->latitude;
-    }
-
-    /**
-     * Get the [longitude] column value.
-     *
-     * @return double
-     */
-    public function getLongitude()
-    {
-        return $this->longitude;
     }
 
     /**
@@ -909,94 +751,6 @@ abstract class User implements ActiveRecordInterface
     } // setEmail()
 
     /**
-     * Set the value of [country_iso_nr] column.
-     *
-     * @param  int $v new value
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     */
-    public function setCountryIsoNr($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->country_iso_nr !== $v) {
-            $this->country_iso_nr = $v;
-            $this->modifiedColumns[UserTableMap::COL_COUNTRY_ISO_NR] = true;
-        }
-
-        if ($this->aCountry !== null && $this->aCountry->getIsoNr() !== $v) {
-            $this->aCountry = null;
-        }
-
-        return $this;
-    } // setCountryIsoNr()
-
-    /**
-     * Set the value of [subdivision_id] column.
-     *
-     * @param  int $v new value
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     */
-    public function setSubdivisionId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->subdivision_id !== $v) {
-            $this->subdivision_id = $v;
-            $this->modifiedColumns[UserTableMap::COL_SUBDIVISION_ID] = true;
-        }
-
-        if ($this->aSubdivision !== null && $this->aSubdivision->getId() !== $v) {
-            $this->aSubdivision = null;
-        }
-
-        return $this;
-    } // setSubdivisionId()
-
-    /**
-     * Set the value of [address] column.
-     *
-     * @param  string $v new value
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     */
-    public function setAddress($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->address !== $v) {
-            $this->address = $v;
-            $this->modifiedColumns[UserTableMap::COL_ADDRESS] = true;
-        }
-
-        return $this;
-    } // setAddress()
-
-    /**
-     * Set the value of [address2] column.
-     *
-     * @param  string $v new value
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     */
-    public function setAddress2($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->address2 !== $v) {
-            $this->address2 = $v;
-            $this->modifiedColumns[UserTableMap::COL_ADDRESS2] = true;
-        }
-
-        return $this;
-    } // setAddress2()
-
-    /**
      * Sets the value of [birthday] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
@@ -1037,46 +791,6 @@ abstract class User implements ActiveRecordInterface
     } // setSex()
 
     /**
-     * Set the value of [city] column.
-     *
-     * @param  string $v new value
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     */
-    public function setCity($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->city !== $v) {
-            $this->city = $v;
-            $this->modifiedColumns[UserTableMap::COL_CITY] = true;
-        }
-
-        return $this;
-    } // setCity()
-
-    /**
-     * Set the value of [postal_code] column.
-     *
-     * @param  string $v new value
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     */
-    public function setPostalCode($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->postal_code !== $v) {
-            $this->postal_code = $v;
-            $this->modifiedColumns[UserTableMap::COL_POSTAL_CODE] = true;
-        }
-
-        return $this;
-    } // setPostalCode()
-
-    /**
      * Set the value of [password_recover_code] column.
      *
      * @param  string $v new value
@@ -1115,66 +829,6 @@ abstract class User implements ActiveRecordInterface
 
         return $this;
     } // setPasswordRecoverTime()
-
-    /**
-     * Set the value of [location_status] column.
-     *
-     * @param  int $v new value
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     */
-    public function setLocationStatus($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->location_status !== $v) {
-            $this->location_status = $v;
-            $this->modifiedColumns[UserTableMap::COL_LOCATION_STATUS] = true;
-        }
-
-        return $this;
-    } // setLocationStatus()
-
-    /**
-     * Set the value of [latitude] column.
-     *
-     * @param  double $v new value
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     */
-    public function setLatitude($v)
-    {
-        if ($v !== null) {
-            $v = (double) $v;
-        }
-
-        if ($this->latitude !== $v) {
-            $this->latitude = $v;
-            $this->modifiedColumns[UserTableMap::COL_LATITUDE] = true;
-        }
-
-        return $this;
-    } // setLatitude()
-
-    /**
-     * Set the value of [longitude] column.
-     *
-     * @param  double $v new value
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     */
-    public function setLongitude($v)
-    {
-        if ($v !== null) {
-            $v = (double) $v;
-        }
-
-        if ($this->longitude !== $v) {
-            $this->longitude = $v;
-            $this->modifiedColumns[UserTableMap::COL_LONGITUDE] = true;
-        }
-
-        return $this;
-    } // setLongitude()
 
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
@@ -1273,58 +927,31 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
             $this->email = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('CountryIsoNr', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->country_iso_nr = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('SubdivisionId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->subdivision_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('Address', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->address = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('Address2', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->address2 = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('Birthday', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('Birthday', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
             $this->birthday = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('Sex', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('Sex', TableMap::TYPE_PHPNAME, $indexType)];
             $this->sex = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->city = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('PostalCode', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->postal_code = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('PasswordRecoverCode', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('PasswordRecoverCode', TableMap::TYPE_PHPNAME, $indexType)];
             $this->password_recover_code = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : UserTableMap::translateFieldName('PasswordRecoverTime', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('PasswordRecoverTime', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->password_recover_time = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 17 + $startcol : UserTableMap::translateFieldName('LocationStatus', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->location_status = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 18 + $startcol : UserTableMap::translateFieldName('Latitude', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->latitude = (null !== $col) ? (double) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 19 + $startcol : UserTableMap::translateFieldName('Longitude', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->longitude = (null !== $col) ? (double) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 20 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 21 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -1337,7 +964,7 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 22; // 22 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\User'), 0, $e);
@@ -1359,12 +986,6 @@ abstract class User implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aCountry !== null && $this->country_iso_nr !== $this->aCountry->getIsoNr()) {
-            $this->aCountry = null;
-        }
-        if ($this->aSubdivision !== null && $this->subdivision_id !== $this->aSubdivision->getId()) {
-            $this->aSubdivision = null;
-        }
     } // ensureConsistency
 
     /**
@@ -1404,8 +1025,6 @@ abstract class User implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aCountry = null;
-            $this->aSubdivision = null;
             $this->collAuths = null;
 
             $this->collUserGroups = null;
@@ -1521,25 +1140,6 @@ abstract class User implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
-
-            // We call the save method on the following object(s) if they
-            // were passed to this object by their corresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            if ($this->aCountry !== null) {
-                if ($this->aCountry->isModified() || $this->aCountry->isNew()) {
-                    $affectedRows += $this->aCountry->save($con);
-                }
-                $this->setCountry($this->aCountry);
-            }
-
-            if ($this->aSubdivision !== null) {
-                if ($this->aSubdivision->isModified() || $this->aSubdivision->isNew()) {
-                    $affectedRows += $this->aSubdivision->save($con);
-                }
-                $this->setSubdivision($this->aSubdivision);
-            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -1662,44 +1262,17 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_EMAIL)) {
             $modifiedColumns[':p' . $index++]  = '`email`';
         }
-        if ($this->isColumnModified(UserTableMap::COL_COUNTRY_ISO_NR)) {
-            $modifiedColumns[':p' . $index++]  = '`country_iso_nr`';
-        }
-        if ($this->isColumnModified(UserTableMap::COL_SUBDIVISION_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`subdivision_id`';
-        }
-        if ($this->isColumnModified(UserTableMap::COL_ADDRESS)) {
-            $modifiedColumns[':p' . $index++]  = '`address`';
-        }
-        if ($this->isColumnModified(UserTableMap::COL_ADDRESS2)) {
-            $modifiedColumns[':p' . $index++]  = '`address2`';
-        }
         if ($this->isColumnModified(UserTableMap::COL_BIRTHDAY)) {
             $modifiedColumns[':p' . $index++]  = '`birthday`';
         }
         if ($this->isColumnModified(UserTableMap::COL_SEX)) {
             $modifiedColumns[':p' . $index++]  = '`sex`';
         }
-        if ($this->isColumnModified(UserTableMap::COL_CITY)) {
-            $modifiedColumns[':p' . $index++]  = '`city`';
-        }
-        if ($this->isColumnModified(UserTableMap::COL_POSTAL_CODE)) {
-            $modifiedColumns[':p' . $index++]  = '`postal_code`';
-        }
         if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_CODE)) {
             $modifiedColumns[':p' . $index++]  = '`password_recover_code`';
         }
         if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_TIME)) {
             $modifiedColumns[':p' . $index++]  = '`password_recover_time`';
-        }
-        if ($this->isColumnModified(UserTableMap::COL_LOCATION_STATUS)) {
-            $modifiedColumns[':p' . $index++]  = '`location_status`';
-        }
-        if ($this->isColumnModified(UserTableMap::COL_LATITUDE)) {
-            $modifiedColumns[':p' . $index++]  = '`latitude`';
-        }
-        if ($this->isColumnModified(UserTableMap::COL_LONGITUDE)) {
-            $modifiedColumns[':p' . $index++]  = '`longitude`';
         }
         if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = '`created_at`';
@@ -1739,44 +1312,17 @@ abstract class User implements ActiveRecordInterface
                     case '`email`':
                         $stmt->bindValue($identifier, $this->email, PDO::PARAM_STR);
                         break;
-                    case '`country_iso_nr`':
-                        $stmt->bindValue($identifier, $this->country_iso_nr, PDO::PARAM_INT);
-                        break;
-                    case '`subdivision_id`':
-                        $stmt->bindValue($identifier, $this->subdivision_id, PDO::PARAM_INT);
-                        break;
-                    case '`address`':
-                        $stmt->bindValue($identifier, $this->address, PDO::PARAM_STR);
-                        break;
-                    case '`address2`':
-                        $stmt->bindValue($identifier, $this->address2, PDO::PARAM_STR);
-                        break;
                     case '`birthday`':
                         $stmt->bindValue($identifier, $this->birthday ? $this->birthday->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                     case '`sex`':
                         $stmt->bindValue($identifier, $this->sex, PDO::PARAM_INT);
                         break;
-                    case '`city`':
-                        $stmt->bindValue($identifier, $this->city, PDO::PARAM_STR);
-                        break;
-                    case '`postal_code`':
-                        $stmt->bindValue($identifier, $this->postal_code, PDO::PARAM_STR);
-                        break;
                     case '`password_recover_code`':
                         $stmt->bindValue($identifier, $this->password_recover_code, PDO::PARAM_STR);
                         break;
                     case '`password_recover_time`':
                         $stmt->bindValue($identifier, $this->password_recover_time ? $this->password_recover_time->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
-                        break;
-                    case '`location_status`':
-                        $stmt->bindValue($identifier, $this->location_status, PDO::PARAM_INT);
-                        break;
-                    case '`latitude`':
-                        $stmt->bindValue($identifier, $this->latitude, PDO::PARAM_STR);
-                        break;
-                    case '`longitude`':
-                        $stmt->bindValue($identifier, $this->longitude, PDO::PARAM_STR);
                         break;
                     case '`created_at`':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -1868,48 +1414,21 @@ abstract class User implements ActiveRecordInterface
                 return $this->getEmail();
                 break;
             case 7:
-                return $this->getCountryIsoNr();
-                break;
-            case 8:
-                return $this->getSubdivisionId();
-                break;
-            case 9:
-                return $this->getAddress();
-                break;
-            case 10:
-                return $this->getAddress2();
-                break;
-            case 11:
                 return $this->getBirthday();
                 break;
-            case 12:
+            case 8:
                 return $this->getSex();
                 break;
-            case 13:
-                return $this->getCity();
-                break;
-            case 14:
-                return $this->getPostalCode();
-                break;
-            case 15:
+            case 9:
                 return $this->getPasswordRecoverCode();
                 break;
-            case 16:
+            case 10:
                 return $this->getPasswordRecoverTime();
                 break;
-            case 17:
-                return $this->getLocationStatus();
-                break;
-            case 18:
-                return $this->getLatitude();
-                break;
-            case 19:
-                return $this->getLongitude();
-                break;
-            case 20:
+            case 11:
                 return $this->getCreatedAt();
                 break;
-            case 21:
+            case 12:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1949,21 +1468,12 @@ abstract class User implements ActiveRecordInterface
             $keys[4] => $this->getFamilyName(),
             $keys[5] => $this->getDisplayName(),
             $keys[6] => $this->getEmail(),
-            $keys[7] => $this->getCountryIsoNr(),
-            $keys[8] => $this->getSubdivisionId(),
-            $keys[9] => $this->getAddress(),
-            $keys[10] => $this->getAddress2(),
-            $keys[11] => $this->getBirthday(),
-            $keys[12] => $this->getSex(),
-            $keys[13] => $this->getCity(),
-            $keys[14] => $this->getPostalCode(),
-            $keys[15] => $this->getPasswordRecoverCode(),
-            $keys[16] => $this->getPasswordRecoverTime(),
-            $keys[17] => $this->getLocationStatus(),
-            $keys[18] => $this->getLatitude(),
-            $keys[19] => $this->getLongitude(),
-            $keys[20] => $this->getCreatedAt(),
-            $keys[21] => $this->getUpdatedAt(),
+            $keys[7] => $this->getBirthday(),
+            $keys[8] => $this->getSex(),
+            $keys[9] => $this->getPasswordRecoverCode(),
+            $keys[10] => $this->getPasswordRecoverTime(),
+            $keys[11] => $this->getCreatedAt(),
+            $keys[12] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1971,36 +1481,6 @@ abstract class User implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aCountry) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'country';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'kk_country';
-                        break;
-                    default:
-                        $key = 'Country';
-                }
-
-                $result[$key] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->aSubdivision) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'subdivision';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'kk_subdivision';
-                        break;
-                    default:
-                        $key = 'Subdivision';
-                }
-
-                $result[$key] = $this->aSubdivision->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
             if (null !== $this->collAuths) {
 
                 switch ($keyType) {
@@ -2087,48 +1567,21 @@ abstract class User implements ActiveRecordInterface
                 $this->setEmail($value);
                 break;
             case 7:
-                $this->setCountryIsoNr($value);
-                break;
-            case 8:
-                $this->setSubdivisionId($value);
-                break;
-            case 9:
-                $this->setAddress($value);
-                break;
-            case 10:
-                $this->setAddress2($value);
-                break;
-            case 11:
                 $this->setBirthday($value);
                 break;
-            case 12:
+            case 8:
                 $this->setSex($value);
                 break;
-            case 13:
-                $this->setCity($value);
-                break;
-            case 14:
-                $this->setPostalCode($value);
-                break;
-            case 15:
+            case 9:
                 $this->setPasswordRecoverCode($value);
                 break;
-            case 16:
+            case 10:
                 $this->setPasswordRecoverTime($value);
                 break;
-            case 17:
-                $this->setLocationStatus($value);
-                break;
-            case 18:
-                $this->setLatitude($value);
-                break;
-            case 19:
-                $this->setLongitude($value);
-                break;
-            case 20:
+            case 11:
                 $this->setCreatedAt($value);
                 break;
-            case 21:
+            case 12:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -2179,49 +1632,22 @@ abstract class User implements ActiveRecordInterface
             $this->setEmail($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setCountryIsoNr($arr[$keys[7]]);
+            $this->setBirthday($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setSubdivisionId($arr[$keys[8]]);
+            $this->setSex($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setAddress($arr[$keys[9]]);
+            $this->setPasswordRecoverCode($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setAddress2($arr[$keys[10]]);
+            $this->setPasswordRecoverTime($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setBirthday($arr[$keys[11]]);
+            $this->setCreatedAt($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setSex($arr[$keys[12]]);
-        }
-        if (array_key_exists($keys[13], $arr)) {
-            $this->setCity($arr[$keys[13]]);
-        }
-        if (array_key_exists($keys[14], $arr)) {
-            $this->setPostalCode($arr[$keys[14]]);
-        }
-        if (array_key_exists($keys[15], $arr)) {
-            $this->setPasswordRecoverCode($arr[$keys[15]]);
-        }
-        if (array_key_exists($keys[16], $arr)) {
-            $this->setPasswordRecoverTime($arr[$keys[16]]);
-        }
-        if (array_key_exists($keys[17], $arr)) {
-            $this->setLocationStatus($arr[$keys[17]]);
-        }
-        if (array_key_exists($keys[18], $arr)) {
-            $this->setLatitude($arr[$keys[18]]);
-        }
-        if (array_key_exists($keys[19], $arr)) {
-            $this->setLongitude($arr[$keys[19]]);
-        }
-        if (array_key_exists($keys[20], $arr)) {
-            $this->setCreatedAt($arr[$keys[20]]);
-        }
-        if (array_key_exists($keys[21], $arr)) {
-            $this->setUpdatedAt($arr[$keys[21]]);
+            $this->setUpdatedAt($arr[$keys[12]]);
         }
     }
 
@@ -2285,44 +1711,17 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_EMAIL)) {
             $criteria->add(UserTableMap::COL_EMAIL, $this->email);
         }
-        if ($this->isColumnModified(UserTableMap::COL_COUNTRY_ISO_NR)) {
-            $criteria->add(UserTableMap::COL_COUNTRY_ISO_NR, $this->country_iso_nr);
-        }
-        if ($this->isColumnModified(UserTableMap::COL_SUBDIVISION_ID)) {
-            $criteria->add(UserTableMap::COL_SUBDIVISION_ID, $this->subdivision_id);
-        }
-        if ($this->isColumnModified(UserTableMap::COL_ADDRESS)) {
-            $criteria->add(UserTableMap::COL_ADDRESS, $this->address);
-        }
-        if ($this->isColumnModified(UserTableMap::COL_ADDRESS2)) {
-            $criteria->add(UserTableMap::COL_ADDRESS2, $this->address2);
-        }
         if ($this->isColumnModified(UserTableMap::COL_BIRTHDAY)) {
             $criteria->add(UserTableMap::COL_BIRTHDAY, $this->birthday);
         }
         if ($this->isColumnModified(UserTableMap::COL_SEX)) {
             $criteria->add(UserTableMap::COL_SEX, $this->sex);
         }
-        if ($this->isColumnModified(UserTableMap::COL_CITY)) {
-            $criteria->add(UserTableMap::COL_CITY, $this->city);
-        }
-        if ($this->isColumnModified(UserTableMap::COL_POSTAL_CODE)) {
-            $criteria->add(UserTableMap::COL_POSTAL_CODE, $this->postal_code);
-        }
         if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_CODE)) {
             $criteria->add(UserTableMap::COL_PASSWORD_RECOVER_CODE, $this->password_recover_code);
         }
         if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_TIME)) {
             $criteria->add(UserTableMap::COL_PASSWORD_RECOVER_TIME, $this->password_recover_time);
-        }
-        if ($this->isColumnModified(UserTableMap::COL_LOCATION_STATUS)) {
-            $criteria->add(UserTableMap::COL_LOCATION_STATUS, $this->location_status);
-        }
-        if ($this->isColumnModified(UserTableMap::COL_LATITUDE)) {
-            $criteria->add(UserTableMap::COL_LATITUDE, $this->latitude);
-        }
-        if ($this->isColumnModified(UserTableMap::COL_LONGITUDE)) {
-            $criteria->add(UserTableMap::COL_LONGITUDE, $this->longitude);
         }
         if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
             $criteria->add(UserTableMap::COL_CREATED_AT, $this->created_at);
@@ -2422,19 +1821,10 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setFamilyName($this->getFamilyName());
         $copyObj->setDisplayName($this->getDisplayName());
         $copyObj->setEmail($this->getEmail());
-        $copyObj->setCountryIsoNr($this->getCountryIsoNr());
-        $copyObj->setSubdivisionId($this->getSubdivisionId());
-        $copyObj->setAddress($this->getAddress());
-        $copyObj->setAddress2($this->getAddress2());
         $copyObj->setBirthday($this->getBirthday());
         $copyObj->setSex($this->getSex());
-        $copyObj->setCity($this->getCity());
-        $copyObj->setPostalCode($this->getPostalCode());
         $copyObj->setPasswordRecoverCode($this->getPasswordRecoverCode());
         $copyObj->setPasswordRecoverTime($this->getPasswordRecoverTime());
-        $copyObj->setLocationStatus($this->getLocationStatus());
-        $copyObj->setLatitude($this->getLatitude());
-        $copyObj->setLongitude($this->getLongitude());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
 
@@ -2483,108 +1873,6 @@ abstract class User implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
-    }
-
-    /**
-     * Declares an association between this object and a ChildCountry object.
-     *
-     * @param  ChildCountry $v
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setCountry(ChildCountry $v = null)
-    {
-        if ($v === null) {
-            $this->setCountryIsoNr(NULL);
-        } else {
-            $this->setCountryIsoNr($v->getIsoNr());
-        }
-
-        $this->aCountry = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildCountry object, it will not be re-added.
-        if ($v !== null) {
-            $v->addUser($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildCountry object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildCountry The associated ChildCountry object.
-     * @throws PropelException
-     */
-    public function getCountry(ConnectionInterface $con = null)
-    {
-        if ($this->aCountry === null && ($this->country_iso_nr !== null)) {
-            $this->aCountry = ChildCountryQuery::create()->findPk($this->country_iso_nr, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aCountry->addUsers($this);
-             */
-        }
-
-        return $this->aCountry;
-    }
-
-    /**
-     * Declares an association between this object and a ChildSubdivision object.
-     *
-     * @param  ChildSubdivision $v
-     * @return $this|\keeko\core\model\User The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setSubdivision(ChildSubdivision $v = null)
-    {
-        if ($v === null) {
-            $this->setSubdivisionId(NULL);
-        } else {
-            $this->setSubdivisionId($v->getId());
-        }
-
-        $this->aSubdivision = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildSubdivision object, it will not be re-added.
-        if ($v !== null) {
-            $v->addUser($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildSubdivision object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildSubdivision The associated ChildSubdivision object.
-     * @throws PropelException
-     */
-    public function getSubdivision(ConnectionInterface $con = null)
-    {
-        if ($this->aSubdivision === null && ($this->subdivision_id !== null)) {
-            $this->aSubdivision = ChildSubdivisionQuery::create()->findPk($this->subdivision_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aSubdivision->addUsers($this);
-             */
-        }
-
-        return $this->aSubdivision;
     }
 
 
@@ -3319,12 +2607,6 @@ abstract class User implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aCountry) {
-            $this->aCountry->removeUser($this);
-        }
-        if (null !== $this->aSubdivision) {
-            $this->aSubdivision->removeUser($this);
-        }
         $this->id = null;
         $this->login_name = null;
         $this->password = null;
@@ -3332,19 +2614,10 @@ abstract class User implements ActiveRecordInterface
         $this->family_name = null;
         $this->display_name = null;
         $this->email = null;
-        $this->country_iso_nr = null;
-        $this->subdivision_id = null;
-        $this->address = null;
-        $this->address2 = null;
         $this->birthday = null;
         $this->sex = null;
-        $this->city = null;
-        $this->postal_code = null;
         $this->password_recover_code = null;
         $this->password_recover_time = null;
-        $this->location_status = null;
-        $this->latitude = null;
-        $this->longitude = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;
@@ -3385,8 +2658,6 @@ abstract class User implements ActiveRecordInterface
         $this->collAuths = null;
         $this->collUserGroups = null;
         $this->collGroups = null;
-        $this->aCountry = null;
-        $this->aSubdivision = null;
     }
 
     /**
@@ -3460,23 +2731,6 @@ abstract class User implements ActiveRecordInterface
             $this->alreadyInValidation = true;
             $retval = null;
 
-            // We call the validate method on the following object(s) if they
-            // were passed to this object by their corresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            // If validate() method exists, the validate-behavior is configured for related object
-            if (method_exists($this->aCountry, 'validate')) {
-                if (!$this->aCountry->validate($validator)) {
-                    $failureMap->addAll($this->aCountry->getValidationFailures());
-                }
-            }
-            // If validate() method exists, the validate-behavior is configured for related object
-            if (method_exists($this->aSubdivision, 'validate')) {
-                if (!$this->aSubdivision->validate($validator)) {
-                    $failureMap->addAll($this->aSubdivision->getValidationFailures());
-                }
-            }
 
             $retval = $validator->validate($this);
             if (count($retval) > 0) {

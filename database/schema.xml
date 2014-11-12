@@ -232,19 +232,10 @@
 		<column name="family_name" type="VARCHAR" size="100" />
 		<column name="display_name" type="VARCHAR" size="100" />
 		<column name="email" type="VARCHAR" size="255"/>
-		<column name="country_iso_nr" type="INTEGER" />
-		<column name="subdivision_id" type="INTEGER" />
-		<column name="address" type="LONGVARCHAR" />
-		<column name="address2" type="LONGVARCHAR" />
 		<column name="birthday" type="DATE" />
 		<column name="sex" type="TINYINT" />
-		<column name="city" type="VARCHAR" size="128" />
-		<column name="postal_code" type="VARCHAR" size="45" />
 		<column name="password_recover_code" type="VARCHAR" size="32" />
 		<column name="password_recover_time" type="TIMESTAMP" />
-		<column name="location_status" type="TINYINT" size="2" />
-		<column name="latitude" type="FLOAT" size="10" />
-		<column name="longitude" type="FLOAT" size="10" />
 
 		<behavior name="timestampable"></behavior>
 
@@ -254,13 +245,6 @@
 			<parameter name="rule3" value="{column: email, validator: Email}" />
 			<parameter name="rule4" value="{column: password, validator: NotNull}" />
 		</behavior>
-
-		<foreign-key foreignTable="country">
-			<reference local="country_iso_nr" foreign="iso_nr" />
-		</foreign-key>
-		<foreign-key foreignTable="subdivision">
-			<reference local="subdivision_id" foreign="id" />
-		</foreign-key>
 
 		<unique name="login_name_UNIQUE">
 			<unique-column name="login_name" />

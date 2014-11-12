@@ -82,8 +82,7 @@ abstract class AbstractModule {
 	 * Loads the given action
 	 *
 	 * @param Action|string $name
-	 * @param string $response
-	 *        	the response type (e.g. html, json, ...)
+	 * @param string $response the response type (e.g. html, json, ...)
 	 * @return AbstractAction
 	 */
 	public function loadAction($nameOrAction, $response) {
@@ -97,10 +96,14 @@ abstract class AbstractModule {
 			}
 		}
 		
-		$this->checkPermission($action);
-		
 		$name = $action->getName();
 		
+		// check permission
+		if (!$this->service->getFirewall()->canAccessAction($action)) {
+			throw new PermissionDeniedException(sprintf('Can\'t access Action (%s) in Module (%s)', $name, $this->model->getName()));
+		}
+		
+		// check if a response is given
 		if (!(isset($this->actions[$name]) && isset($this->actions[$name]['response']) && isset($this->actions[$name]['response'][$response]))) {
 			throw new ModuleException(sprintf('No Response (%s) given for Action (%s) in Module (%s)', $response, $name, $this->model->getName()));
 		}
@@ -111,6 +114,7 @@ abstract class AbstractModule {
 		}
 		$response = new $responseClass($this, $response);
 		
+		// gets the action class
 		$className = $action->getClassName();
 		
 		if (!class_exists($className)) {
@@ -120,17 +124,6 @@ abstract class AbstractModule {
 		$class = new $className($action, $this, $response);
 		
 		return $class;
-	}
-
-	/**
-	 * Checks whether permission is given to access the given action
-	 *
-	 * @param Action $action
-	 */
-	private function checkPermission(Action $action) {
-// 		if (!$this->user->hasPermission($this->model->getId(), $action->getName())) {
-// 			throw new PermissionDeniedException(sprintf('Action %s in module %s is forbidden', $action->getName(), $this->model->getName()));
-// 		}
 	}
 
 	abstract public function install();

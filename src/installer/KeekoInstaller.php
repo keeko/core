@@ -15,6 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use keeko\core\model\User;
 use keeko\core\model\Group;
 use keeko\core\model\Preference;
+use keeko\core\service\ServiceContainer;
+use keeko\core\preferences\SystemPreferences;
+use keeko\core\model\Map\UserTableMap;
+use keeko\core\model\UserQuery;
 
 class KeekoInstaller {
 
@@ -33,10 +37,11 @@ class KeekoInstaller {
 	}
 	
 	private function initialize() {
-		$this->packageManager = new PackageManager();
+		$service = new ServiceContainer();
+		$this->packageManager = $service->getPackageManager();
 		$this->appInstaller = new AppInstaller();
 		$this->moduleInstaller = new ModuleInstaller();
-		$this->moduleManager = new ModuleManager($this->packageManager);
+		$this->moduleManager = $service->getModuleManager();
 	}
 	
 	public function install() {
@@ -60,19 +65,38 @@ class KeekoInstaller {
 		$adminGroup = new Group();
 		$adminGroup->setName('Administrators');
 		$adminGroup->save();
+
 		
+		$con = Propel::getConnection();
+		$adapter = Propel::getAdapter();
+		
+		// guest
+		$guest = new User();
+		$guest->setDisplayName('Guest');
+		$guest->save();
+		
+		$stmt = $con->prepare(sprintf('UPDATE %s SET id = -1 WHERE ID = 1', $adapter->quoteIdentifierTable(UserTableMap::TABLE_NAME)));
+		$stmt->execute();
+		
+		// root
 		$root = new User();
 		$root->setDisplayName('root');
 		$root->setLoginName('root');
 		$root->setPassword(password_hash('root', PASSWORD_BCRYPT));
 		$root->save();
+
+		$stmt = $con->prepare(sprintf('UPDATE %s SET id = 0 WHERE ID = 2', $adapter->quoteIdentifierTable(UserTableMap::TABLE_NAME)));
+		$stmt->execute();
+		
+		$root = UserQuery::create()->findOneById(0);
 		$root->addGroup($userGroup);
 		$root->addGroup($adminGroup);
+		$root->save();
 		
-		$guest = new User();
-		$guest->setDisplayName('Guest');
-		$guest->save();
-		$guest->addGroup($guestGroup);
+		// @TODO: Cross-SQL-Server routine wanted!!
+		$stmt = $con->prepare(sprintf('ALTER TABLE %s AUTO_INCREMENT = 1', $adapter->quoteIdentifierTable(UserTableMap::TABLE_NAME)));
+		$stmt->execute();
+		
 	}
 
 	public function installKeeko() {
@@ -100,6 +124,8 @@ class KeekoInstaller {
 		$uri->setSecure($request->isSecure());
 		$uri->save();
 		
+		$apiUrl = 'http' . ($request->isSecure() ? 's' : '') . '://' . $request->getHost() . $base . '/api/';
+		
 		$developerAppPackage = $this->packageManager->getApplicationPackage('keeko/developer-app');
 		$developerApp = $this->appInstaller->install($this->io, $developerAppPackage);
 		
@@ -110,8 +136,6 @@ class KeekoInstaller {
 		$uri->setBasepath($base . '/developer/');
 		$uri->setSecure($request->isSecure());
 		$uri->save();
-		
-		$apiUrl = 'http' . ($request->isSecure() ? 's' : '') . '://' . $request->getHost() . $base . '/developer/';
 		
 		// -- website app
 		$websiteAppPackage = $this->packageManager->getApplicationPackage('keeko/website-app');
@@ -127,12 +151,12 @@ class KeekoInstaller {
 		
 		// preferences
 		$pref = new Preference();
-		$pref->setKey('plattform_name');
+		$pref->setKey(SystemPreferences::PLATTFORM_NAME);
 		$pref->setValue('Keeko');
 		$pref->save();
 		
 		$pref = new Preference();
-		$pref->setKey('plattform_api');
+		$pref->setKey(SystemPreferences::API_URL);
 		$pref->setValue($apiUrl);
 		$pref->save();
 

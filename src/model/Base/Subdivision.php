@@ -9,7 +9,6 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -18,12 +17,9 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use keeko\core\model\Country as ChildCountry;
 use keeko\core\model\CountryQuery as ChildCountryQuery;
-use keeko\core\model\Subdivision as ChildSubdivision;
 use keeko\core\model\SubdivisionQuery as ChildSubdivisionQuery;
 use keeko\core\model\SubdivisionType as ChildSubdivisionType;
 use keeko\core\model\SubdivisionTypeQuery as ChildSubdivisionTypeQuery;
-use keeko\core\model\User as ChildUser;
-use keeko\core\model\UserQuery as ChildUserQuery;
 use keeko\core\model\Map\SubdivisionTableMap;
 
 /**
@@ -132,24 +128,12 @@ abstract class Subdivision implements ActiveRecordInterface
     protected $aSubdivisionType;
 
     /**
-     * @var        ObjectCollection|ChildUser[] Collection to store aggregation of ChildUser objects.
-     */
-    protected $collUsers;
-    protected $collUsersPartial;
-
-    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildUser[]
-     */
-    protected $usersScheduledForDeletion = null;
 
     /**
      * Initializes internal state of keeko\core\model\Base\Subdivision object.
@@ -785,8 +769,6 @@ abstract class Subdivision implements ActiveRecordInterface
 
             $this->aCountry = null;
             $this->aSubdivisionType = null;
-            $this->collUsers = null;
-
         } // if (deep)
     }
 
@@ -914,24 +896,6 @@ abstract class Subdivision implements ActiveRecordInterface
                 }
                 $affectedRows += 1;
                 $this->resetModified();
-            }
-
-            if ($this->usersScheduledForDeletion !== null) {
-                if (!$this->usersScheduledForDeletion->isEmpty()) {
-                    foreach ($this->usersScheduledForDeletion as $user) {
-                        // need to save related object because we set the relation to null
-                        $user->save($con);
-                    }
-                    $this->usersScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collUsers !== null) {
-                foreach ($this->collUsers as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -1189,21 +1153,6 @@ abstract class Subdivision implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aSubdivisionType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->collUsers) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'users';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'kk_users';
-                        break;
-                    default:
-                        $key = 'Users';
-                }
-
-                $result[$key] = $this->collUsers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1481,20 +1430,6 @@ abstract class Subdivision implements ActiveRecordInterface
         $copyObj->setParentId($this->getParentId());
         $copyObj->setCountryIsoNr($this->getCountryIsoNr());
         $copyObj->setSubdivisionTypeId($this->getSubdivisionTypeId());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getUsers() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addUser($relObj->copy($deepCopy));
-                }
-            }
-
-        } // if ($deepCopy)
-
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1625,265 +1560,6 @@ abstract class Subdivision implements ActiveRecordInterface
         return $this->aSubdivisionType;
     }
 
-
-    /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
-     *
-     * @param      string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('User' == $relationName) {
-            return $this->initUsers();
-        }
-    }
-
-    /**
-     * Clears out the collUsers collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addUsers()
-     */
-    public function clearUsers()
-    {
-        $this->collUsers = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collUsers collection loaded partially.
-     */
-    public function resetPartialUsers($v = true)
-    {
-        $this->collUsersPartial = $v;
-    }
-
-    /**
-     * Initializes the collUsers collection.
-     *
-     * By default this just sets the collUsers collection to an empty array (like clearcollUsers());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initUsers($overrideExisting = true)
-    {
-        if (null !== $this->collUsers && !$overrideExisting) {
-            return;
-        }
-        $this->collUsers = new ObjectCollection();
-        $this->collUsers->setModel('\keeko\core\model\User');
-    }
-
-    /**
-     * Gets an array of ChildUser objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildSubdivision is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildUser[] List of ChildUser objects
-     * @throws PropelException
-     */
-    public function getUsers(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collUsersPartial && !$this->isNew();
-        if (null === $this->collUsers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collUsers) {
-                // return empty collection
-                $this->initUsers();
-            } else {
-                $collUsers = ChildUserQuery::create(null, $criteria)
-                    ->filterBySubdivision($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collUsersPartial && count($collUsers)) {
-                        $this->initUsers(false);
-
-                        foreach ($collUsers as $obj) {
-                            if (false == $this->collUsers->contains($obj)) {
-                                $this->collUsers->append($obj);
-                            }
-                        }
-
-                        $this->collUsersPartial = true;
-                    }
-
-                    return $collUsers;
-                }
-
-                if ($partial && $this->collUsers) {
-                    foreach ($this->collUsers as $obj) {
-                        if ($obj->isNew()) {
-                            $collUsers[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collUsers = $collUsers;
-                $this->collUsersPartial = false;
-            }
-        }
-
-        return $this->collUsers;
-    }
-
-    /**
-     * Sets a collection of ChildUser objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $users A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildSubdivision The current object (for fluent API support)
-     */
-    public function setUsers(Collection $users, ConnectionInterface $con = null)
-    {
-        /** @var ChildUser[] $usersToDelete */
-        $usersToDelete = $this->getUsers(new Criteria(), $con)->diff($users);
-
-
-        $this->usersScheduledForDeletion = $usersToDelete;
-
-        foreach ($usersToDelete as $userRemoved) {
-            $userRemoved->setSubdivision(null);
-        }
-
-        $this->collUsers = null;
-        foreach ($users as $user) {
-            $this->addUser($user);
-        }
-
-        $this->collUsers = $users;
-        $this->collUsersPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related User objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related User objects.
-     * @throws PropelException
-     */
-    public function countUsers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collUsersPartial && !$this->isNew();
-        if (null === $this->collUsers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collUsers) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getUsers());
-            }
-
-            $query = ChildUserQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterBySubdivision($this)
-                ->count($con);
-        }
-
-        return count($this->collUsers);
-    }
-
-    /**
-     * Method called to associate a ChildUser object to this object
-     * through the ChildUser foreign key attribute.
-     *
-     * @param  ChildUser $l ChildUser
-     * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
-     */
-    public function addUser(ChildUser $l)
-    {
-        if ($this->collUsers === null) {
-            $this->initUsers();
-            $this->collUsersPartial = true;
-        }
-
-        if (!$this->collUsers->contains($l)) {
-            $this->doAddUser($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildUser $user The ChildUser object to add.
-     */
-    protected function doAddUser(ChildUser $user)
-    {
-        $this->collUsers[]= $user;
-        $user->setSubdivision($this);
-    }
-
-    /**
-     * @param  ChildUser $user The ChildUser object to remove.
-     * @return $this|ChildSubdivision The current object (for fluent API support)
-     */
-    public function removeUser(ChildUser $user)
-    {
-        if ($this->getUsers()->contains($user)) {
-            $pos = $this->collUsers->search($user);
-            $this->collUsers->remove($pos);
-            if (null === $this->usersScheduledForDeletion) {
-                $this->usersScheduledForDeletion = clone $this->collUsers;
-                $this->usersScheduledForDeletion->clear();
-            }
-            $this->usersScheduledForDeletion[]= $user;
-            $user->setSubdivision(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Subdivision is new, it will return
-     * an empty collection; or if this Subdivision has previously
-     * been saved, it will retrieve related Users from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Subdivision.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildUser[] List of ChildUser objects
-     */
-    public function getUsersJoinCountry(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildUserQuery::create(null, $criteria);
-        $query->joinWith('Country', $joinBehavior);
-
-        return $this->getUsers($query, $con);
-    }
-
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -1924,14 +1600,8 @@ abstract class Subdivision implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collUsers) {
-                foreach ($this->collUsers as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        $this->collUsers = null;
         $this->aCountry = null;
         $this->aSubdivisionType = null;
     }

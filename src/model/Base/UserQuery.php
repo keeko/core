@@ -27,19 +27,10 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery orderByFamilyName($order = Criteria::ASC) Order by the family_name column
  * @method     ChildUserQuery orderByDisplayName($order = Criteria::ASC) Order by the display_name column
  * @method     ChildUserQuery orderByEmail($order = Criteria::ASC) Order by the email column
- * @method     ChildUserQuery orderByCountryIsoNr($order = Criteria::ASC) Order by the country_iso_nr column
- * @method     ChildUserQuery orderBySubdivisionId($order = Criteria::ASC) Order by the subdivision_id column
- * @method     ChildUserQuery orderByAddress($order = Criteria::ASC) Order by the address column
- * @method     ChildUserQuery orderByAddress2($order = Criteria::ASC) Order by the address2 column
  * @method     ChildUserQuery orderByBirthday($order = Criteria::ASC) Order by the birthday column
  * @method     ChildUserQuery orderBySex($order = Criteria::ASC) Order by the sex column
- * @method     ChildUserQuery orderByCity($order = Criteria::ASC) Order by the city column
- * @method     ChildUserQuery orderByPostalCode($order = Criteria::ASC) Order by the postal_code column
  * @method     ChildUserQuery orderByPasswordRecoverCode($order = Criteria::ASC) Order by the password_recover_code column
  * @method     ChildUserQuery orderByPasswordRecoverTime($order = Criteria::ASC) Order by the password_recover_time column
- * @method     ChildUserQuery orderByLocationStatus($order = Criteria::ASC) Order by the location_status column
- * @method     ChildUserQuery orderByLatitude($order = Criteria::ASC) Order by the latitude column
- * @method     ChildUserQuery orderByLongitude($order = Criteria::ASC) Order by the longitude column
  * @method     ChildUserQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildUserQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
@@ -50,33 +41,16 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery groupByFamilyName() Group by the family_name column
  * @method     ChildUserQuery groupByDisplayName() Group by the display_name column
  * @method     ChildUserQuery groupByEmail() Group by the email column
- * @method     ChildUserQuery groupByCountryIsoNr() Group by the country_iso_nr column
- * @method     ChildUserQuery groupBySubdivisionId() Group by the subdivision_id column
- * @method     ChildUserQuery groupByAddress() Group by the address column
- * @method     ChildUserQuery groupByAddress2() Group by the address2 column
  * @method     ChildUserQuery groupByBirthday() Group by the birthday column
  * @method     ChildUserQuery groupBySex() Group by the sex column
- * @method     ChildUserQuery groupByCity() Group by the city column
- * @method     ChildUserQuery groupByPostalCode() Group by the postal_code column
  * @method     ChildUserQuery groupByPasswordRecoverCode() Group by the password_recover_code column
  * @method     ChildUserQuery groupByPasswordRecoverTime() Group by the password_recover_time column
- * @method     ChildUserQuery groupByLocationStatus() Group by the location_status column
- * @method     ChildUserQuery groupByLatitude() Group by the latitude column
- * @method     ChildUserQuery groupByLongitude() Group by the longitude column
  * @method     ChildUserQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildUserQuery groupByUpdatedAt() Group by the updated_at column
  *
  * @method     ChildUserQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildUserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildUserQuery innerJoin($relation) Adds a INNER JOIN clause to the query
- *
- * @method     ChildUserQuery leftJoinCountry($relationAlias = null) Adds a LEFT JOIN clause to the query using the Country relation
- * @method     ChildUserQuery rightJoinCountry($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Country relation
- * @method     ChildUserQuery innerJoinCountry($relationAlias = null) Adds a INNER JOIN clause to the query using the Country relation
- *
- * @method     ChildUserQuery leftJoinSubdivision($relationAlias = null) Adds a LEFT JOIN clause to the query using the Subdivision relation
- * @method     ChildUserQuery rightJoinSubdivision($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Subdivision relation
- * @method     ChildUserQuery innerJoinSubdivision($relationAlias = null) Adds a INNER JOIN clause to the query using the Subdivision relation
  *
  * @method     ChildUserQuery leftJoinAuth($relationAlias = null) Adds a LEFT JOIN clause to the query using the Auth relation
  * @method     ChildUserQuery rightJoinAuth($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Auth relation
@@ -86,7 +60,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery rightJoinUserGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserGroup relation
  * @method     ChildUserQuery innerJoinUserGroup($relationAlias = null) Adds a INNER JOIN clause to the query using the UserGroup relation
  *
- * @method     \keeko\core\model\CountryQuery|\keeko\core\model\SubdivisionQuery|\keeko\core\model\AuthQuery|\keeko\core\model\UserGroupQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \keeko\core\model\AuthQuery|\keeko\core\model\UserGroupQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -98,19 +72,10 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser findOneByFamilyName(string $family_name) Return the first ChildUser filtered by the family_name column
  * @method     ChildUser findOneByDisplayName(string $display_name) Return the first ChildUser filtered by the display_name column
  * @method     ChildUser findOneByEmail(string $email) Return the first ChildUser filtered by the email column
- * @method     ChildUser findOneByCountryIsoNr(int $country_iso_nr) Return the first ChildUser filtered by the country_iso_nr column
- * @method     ChildUser findOneBySubdivisionId(int $subdivision_id) Return the first ChildUser filtered by the subdivision_id column
- * @method     ChildUser findOneByAddress(string $address) Return the first ChildUser filtered by the address column
- * @method     ChildUser findOneByAddress2(string $address2) Return the first ChildUser filtered by the address2 column
  * @method     ChildUser findOneByBirthday(string $birthday) Return the first ChildUser filtered by the birthday column
  * @method     ChildUser findOneBySex(int $sex) Return the first ChildUser filtered by the sex column
- * @method     ChildUser findOneByCity(string $city) Return the first ChildUser filtered by the city column
- * @method     ChildUser findOneByPostalCode(string $postal_code) Return the first ChildUser filtered by the postal_code column
  * @method     ChildUser findOneByPasswordRecoverCode(string $password_recover_code) Return the first ChildUser filtered by the password_recover_code column
  * @method     ChildUser findOneByPasswordRecoverTime(string $password_recover_time) Return the first ChildUser filtered by the password_recover_time column
- * @method     ChildUser findOneByLocationStatus(int $location_status) Return the first ChildUser filtered by the location_status column
- * @method     ChildUser findOneByLatitude(double $latitude) Return the first ChildUser filtered by the latitude column
- * @method     ChildUser findOneByLongitude(double $longitude) Return the first ChildUser filtered by the longitude column
  * @method     ChildUser findOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column
  * @method     ChildUser findOneByUpdatedAt(string $updated_at) Return the first ChildUser filtered by the updated_at column
  *
@@ -122,19 +87,10 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser[]|ObjectCollection findByFamilyName(string $family_name) Return ChildUser objects filtered by the family_name column
  * @method     ChildUser[]|ObjectCollection findByDisplayName(string $display_name) Return ChildUser objects filtered by the display_name column
  * @method     ChildUser[]|ObjectCollection findByEmail(string $email) Return ChildUser objects filtered by the email column
- * @method     ChildUser[]|ObjectCollection findByCountryIsoNr(int $country_iso_nr) Return ChildUser objects filtered by the country_iso_nr column
- * @method     ChildUser[]|ObjectCollection findBySubdivisionId(int $subdivision_id) Return ChildUser objects filtered by the subdivision_id column
- * @method     ChildUser[]|ObjectCollection findByAddress(string $address) Return ChildUser objects filtered by the address column
- * @method     ChildUser[]|ObjectCollection findByAddress2(string $address2) Return ChildUser objects filtered by the address2 column
  * @method     ChildUser[]|ObjectCollection findByBirthday(string $birthday) Return ChildUser objects filtered by the birthday column
  * @method     ChildUser[]|ObjectCollection findBySex(int $sex) Return ChildUser objects filtered by the sex column
- * @method     ChildUser[]|ObjectCollection findByCity(string $city) Return ChildUser objects filtered by the city column
- * @method     ChildUser[]|ObjectCollection findByPostalCode(string $postal_code) Return ChildUser objects filtered by the postal_code column
  * @method     ChildUser[]|ObjectCollection findByPasswordRecoverCode(string $password_recover_code) Return ChildUser objects filtered by the password_recover_code column
  * @method     ChildUser[]|ObjectCollection findByPasswordRecoverTime(string $password_recover_time) Return ChildUser objects filtered by the password_recover_time column
- * @method     ChildUser[]|ObjectCollection findByLocationStatus(int $location_status) Return ChildUser objects filtered by the location_status column
- * @method     ChildUser[]|ObjectCollection findByLatitude(double $latitude) Return ChildUser objects filtered by the latitude column
- * @method     ChildUser[]|ObjectCollection findByLongitude(double $longitude) Return ChildUser objects filtered by the longitude column
  * @method     ChildUser[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildUser objects filtered by the created_at column
  * @method     ChildUser[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildUser objects filtered by the updated_at column
  * @method     ChildUser[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -228,7 +184,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `id`, `login_name`, `password`, `given_name`, `family_name`, `display_name`, `email`, `country_iso_nr`, `subdivision_id`, `address`, `address2`, `birthday`, `sex`, `city`, `postal_code`, `password_recover_code`, `password_recover_time`, `location_status`, `latitude`, `longitude`, `created_at`, `updated_at` FROM `kk_user` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `login_name`, `password`, `given_name`, `family_name`, `display_name`, `email`, `birthday`, `sex`, `password_recover_code`, `password_recover_time`, `created_at`, `updated_at` FROM `kk_user` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -534,150 +490,6 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the country_iso_nr column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCountryIsoNr(1234); // WHERE country_iso_nr = 1234
-     * $query->filterByCountryIsoNr(array(12, 34)); // WHERE country_iso_nr IN (12, 34)
-     * $query->filterByCountryIsoNr(array('min' => 12)); // WHERE country_iso_nr > 12
-     * </code>
-     *
-     * @see       filterByCountry()
-     *
-     * @param     mixed $countryIsoNr The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByCountryIsoNr($countryIsoNr = null, $comparison = null)
-    {
-        if (is_array($countryIsoNr)) {
-            $useMinMax = false;
-            if (isset($countryIsoNr['min'])) {
-                $this->addUsingAlias(UserTableMap::COL_COUNTRY_ISO_NR, $countryIsoNr['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($countryIsoNr['max'])) {
-                $this->addUsingAlias(UserTableMap::COL_COUNTRY_ISO_NR, $countryIsoNr['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_COUNTRY_ISO_NR, $countryIsoNr, $comparison);
-    }
-
-    /**
-     * Filter the query on the subdivision_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterBySubdivisionId(1234); // WHERE subdivision_id = 1234
-     * $query->filterBySubdivisionId(array(12, 34)); // WHERE subdivision_id IN (12, 34)
-     * $query->filterBySubdivisionId(array('min' => 12)); // WHERE subdivision_id > 12
-     * </code>
-     *
-     * @see       filterBySubdivision()
-     *
-     * @param     mixed $subdivisionId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterBySubdivisionId($subdivisionId = null, $comparison = null)
-    {
-        if (is_array($subdivisionId)) {
-            $useMinMax = false;
-            if (isset($subdivisionId['min'])) {
-                $this->addUsingAlias(UserTableMap::COL_SUBDIVISION_ID, $subdivisionId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($subdivisionId['max'])) {
-                $this->addUsingAlias(UserTableMap::COL_SUBDIVISION_ID, $subdivisionId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_SUBDIVISION_ID, $subdivisionId, $comparison);
-    }
-
-    /**
-     * Filter the query on the address column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByAddress('fooValue');   // WHERE address = 'fooValue'
-     * $query->filterByAddress('%fooValue%'); // WHERE address LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $address The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByAddress($address = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($address)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $address)) {
-                $address = str_replace('*', '%', $address);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_ADDRESS, $address, $comparison);
-    }
-
-    /**
-     * Filter the query on the address2 column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByAddress2('fooValue');   // WHERE address2 = 'fooValue'
-     * $query->filterByAddress2('%fooValue%'); // WHERE address2 LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $address2 The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByAddress2($address2 = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($address2)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $address2)) {
-                $address2 = str_replace('*', '%', $address2);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_ADDRESS2, $address2, $comparison);
-    }
-
-    /**
      * Filter the query on the birthday column
      *
      * Example usage:
@@ -762,64 +574,6 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the city column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCity('fooValue');   // WHERE city = 'fooValue'
-     * $query->filterByCity('%fooValue%'); // WHERE city LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $city The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByCity($city = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($city)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $city)) {
-                $city = str_replace('*', '%', $city);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_CITY, $city, $comparison);
-    }
-
-    /**
-     * Filter the query on the postal_code column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByPostalCode('fooValue');   // WHERE postal_code = 'fooValue'
-     * $query->filterByPostalCode('%fooValue%'); // WHERE postal_code LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $postalCode The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByPostalCode($postalCode = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($postalCode)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $postalCode)) {
-                $postalCode = str_replace('*', '%', $postalCode);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_POSTAL_CODE, $postalCode, $comparison);
-    }
-
-    /**
      * Filter the query on the password_recover_code column
      *
      * Example usage:
@@ -889,129 +643,6 @@ abstract class UserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserTableMap::COL_PASSWORD_RECOVER_TIME, $passwordRecoverTime, $comparison);
-    }
-
-    /**
-     * Filter the query on the location_status column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByLocationStatus(1234); // WHERE location_status = 1234
-     * $query->filterByLocationStatus(array(12, 34)); // WHERE location_status IN (12, 34)
-     * $query->filterByLocationStatus(array('min' => 12)); // WHERE location_status > 12
-     * </code>
-     *
-     * @param     mixed $locationStatus The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByLocationStatus($locationStatus = null, $comparison = null)
-    {
-        if (is_array($locationStatus)) {
-            $useMinMax = false;
-            if (isset($locationStatus['min'])) {
-                $this->addUsingAlias(UserTableMap::COL_LOCATION_STATUS, $locationStatus['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($locationStatus['max'])) {
-                $this->addUsingAlias(UserTableMap::COL_LOCATION_STATUS, $locationStatus['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_LOCATION_STATUS, $locationStatus, $comparison);
-    }
-
-    /**
-     * Filter the query on the latitude column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByLatitude(1234); // WHERE latitude = 1234
-     * $query->filterByLatitude(array(12, 34)); // WHERE latitude IN (12, 34)
-     * $query->filterByLatitude(array('min' => 12)); // WHERE latitude > 12
-     * </code>
-     *
-     * @param     mixed $latitude The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByLatitude($latitude = null, $comparison = null)
-    {
-        if (is_array($latitude)) {
-            $useMinMax = false;
-            if (isset($latitude['min'])) {
-                $this->addUsingAlias(UserTableMap::COL_LATITUDE, $latitude['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($latitude['max'])) {
-                $this->addUsingAlias(UserTableMap::COL_LATITUDE, $latitude['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_LATITUDE, $latitude, $comparison);
-    }
-
-    /**
-     * Filter the query on the longitude column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByLongitude(1234); // WHERE longitude = 1234
-     * $query->filterByLongitude(array(12, 34)); // WHERE longitude IN (12, 34)
-     * $query->filterByLongitude(array('min' => 12)); // WHERE longitude > 12
-     * </code>
-     *
-     * @param     mixed $longitude The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByLongitude($longitude = null, $comparison = null)
-    {
-        if (is_array($longitude)) {
-            $useMinMax = false;
-            if (isset($longitude['min'])) {
-                $this->addUsingAlias(UserTableMap::COL_LONGITUDE, $longitude['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($longitude['max'])) {
-                $this->addUsingAlias(UserTableMap::COL_LONGITUDE, $longitude['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_LONGITUDE, $longitude, $comparison);
     }
 
     /**
@@ -1098,160 +729,6 @@ abstract class UserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
-    }
-
-    /**
-     * Filter the query by a related \keeko\core\model\Country object
-     *
-     * @param \keeko\core\model\Country|ObjectCollection $country The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @throws \Propel\Runtime\Exception\PropelException
-     *
-     * @return ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByCountry($country, $comparison = null)
-    {
-        if ($country instanceof \keeko\core\model\Country) {
-            return $this
-                ->addUsingAlias(UserTableMap::COL_COUNTRY_ISO_NR, $country->getIsoNr(), $comparison);
-        } elseif ($country instanceof ObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(UserTableMap::COL_COUNTRY_ISO_NR, $country->toKeyValue('PrimaryKey', 'IsoNr'), $comparison);
-        } else {
-            throw new PropelException('filterByCountry() only accepts arguments of type \keeko\core\model\Country or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Country relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function joinCountry($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Country');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Country');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Country relation Country object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \keeko\core\model\CountryQuery A secondary query class using the current class as primary query
-     */
-    public function useCountryQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinCountry($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Country', '\keeko\core\model\CountryQuery');
-    }
-
-    /**
-     * Filter the query by a related \keeko\core\model\Subdivision object
-     *
-     * @param \keeko\core\model\Subdivision|ObjectCollection $subdivision The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @throws \Propel\Runtime\Exception\PropelException
-     *
-     * @return ChildUserQuery The current query, for fluid interface
-     */
-    public function filterBySubdivision($subdivision, $comparison = null)
-    {
-        if ($subdivision instanceof \keeko\core\model\Subdivision) {
-            return $this
-                ->addUsingAlias(UserTableMap::COL_SUBDIVISION_ID, $subdivision->getId(), $comparison);
-        } elseif ($subdivision instanceof ObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(UserTableMap::COL_SUBDIVISION_ID, $subdivision->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterBySubdivision() only accepts arguments of type \keeko\core\model\Subdivision or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Subdivision relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function joinSubdivision($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Subdivision');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Subdivision');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Subdivision relation Subdivision object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \keeko\core\model\SubdivisionQuery A secondary query class using the current class as primary query
-     */
-    public function useSubdivisionQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinSubdivision($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Subdivision', '\keeko\core\model\SubdivisionQuery');
     }
 
     /**

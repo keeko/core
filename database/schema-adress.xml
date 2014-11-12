@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database defaultIdMethod="native" name="keeko" namespace="keeko\core\model" identifierQuoting="true"
+	defaultPhpNamingMethod="phpname" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd">
+	
+	<table name="adress">
+		<column name="id" type="INTEGER" primaryKey="true" required="true"
+			autoIncrement="true" size="10"/>
+		<column name="country_iso_nr" type="INTEGER" />
+		<column name="subdivision_id" type="INTEGER" />
+		<column name="address" type="LONGVARCHAR" />
+		<column name="address2" type="LONGVARCHAR" />
+		<column name="city" type="VARCHAR" size="128" />
+		<column name="postal_code" type="VARCHAR" size="45" />
+		<column name="location_status" type="TINYINT" size="2" />
+		<column name="latitude" type="FLOAT" size="10" />
+		<column name="longitude" type="FLOAT" size="10" />
+		
+		<foreign-key foreignTable="country">
+			<reference local="country_iso_nr" foreign="iso_nr" />
+		</foreign-key>
+		<foreign-key foreignTable="subdivision">
+			<reference local="subdivision_id" foreign="id" />
+		</foreign-key>
+	</table>
+</database>

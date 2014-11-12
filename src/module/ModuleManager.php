@@ -10,6 +10,7 @@ use keeko\core\model\Action;
 use keeko\core\installer\ModuleInstaller;
 use keeko\core\model\Api;
 use keeko\core\service\ServiceContainer;
+use keeko\core\model\GroupQuery;
 
 class ModuleManager {
 
@@ -124,11 +125,34 @@ class ModuleManager {
 				$a->setClassName($options['class']);
 			}
 			
+			// add acl
+			if (isset($options['acl'])) {
+				foreach ($options['acl'] as $group) {
+					$a->addGroup($this->getGroup($group));
+				}
+			}
+			
 			$a->save();
 			$actions[$name] = $a->getId();
 		}
 		
 		return $actions;
+	}
+	
+	private function getGroup($name) {
+		switch ($name) {
+			case 'guest':
+				return GroupQuery::create()->filterByIsGuest(true)->findOne();
+				break;
+				
+			case 'user':
+				return GroupQuery::create()->filterByIsDefault(true)->findOne();
+				break;
+				
+			case 'admin':
+				return GroupQuery::create()->findOneById(3);
+				break;
+		}
 	}
 
 	private function installApi(Module $module, $data, $actionMap) {

@@ -184,7 +184,6 @@ class SubdivisionTableMap extends TableMap
     {
         $this->addRelation('Country', '\\keeko\\core\\model\\Country', RelationMap::MANY_TO_ONE, array('country_iso_nr' => 'iso_nr', ), null, null);
         $this->addRelation('SubdivisionType', '\\keeko\\core\\model\\SubdivisionType', RelationMap::MANY_TO_ONE, array('subdivision_type_id' => 'id', ), null, null);
-        $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::ONE_TO_MANY, array('id' => 'subdivision_id', ), null, null, 'Users');
     } // buildRelations()
 
     /**

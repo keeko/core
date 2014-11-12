@@ -6,6 +6,7 @@ use keeko\core\application\AbstractApplication;
 use keeko\core\module\ModuleManager;
 use keeko\core\auth\AuthManager;
 use keeko\core\preferences\PreferenceLoader;
+use keeko\core\security\Firewall;
 
 class ServiceContainer {
 
@@ -21,10 +22,16 @@ class ServiceContainer {
 	/** @var AuthManager */
 	private $authManager;
 	
+	/** @var PreferenceLoader */
 	private $preferenceLoader;
 	
-	public function __construct(AbstractApplication $application) {
-		$this->application = $application;
+	/** @var Firewall */
+	private $firewall;
+	
+	public function __construct(AbstractApplication $application = null) {
+		if ($application !== null) {
+			$this->application = $application;
+		}
 	}
 	
 	/**
@@ -86,5 +93,18 @@ class ServiceContainer {
 		}
 		
 		return $this->preferenceLoader;
+	}
+	
+	/**
+	 * Returns the firewall
+	 *
+	 * @return Firewall
+	 */
+	public function getFirewall() {
+		if ($this->firewall === null) {
+			$this->firewall = new Firewall($this);
+		}
+		
+		return $this->firewall;
 	}
 }

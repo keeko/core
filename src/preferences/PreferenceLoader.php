@@ -5,28 +5,41 @@ use keeko\core\model\PreferenceQuery;
 
 class PreferenceLoader {
 
+	/** @var SystemPreferences */
+	private $system;
+	private $raw = [];
 	private $preferences = [];
 	
 	public function __construct($preferences = null) {
 		$preferences = PreferenceQuery::create()->find();
 		foreach ($preferences as $preference) {
 			$module = $preference->getModuleId() ?: 'system';
-			if (!isset($this->preferences[$module])) {
-				$this->preferences[$module] = [];
+			if (!isset($this->raw[$module])) {
+				$this->raw[$module] = [];
 			}
 			
-			$this->preferences[$module][$preference->getKey()] = $preference->getValue();
+			$this->raw[$module][$preference->getKey()] = $preference->getValue();
 		}
 	}
 	
+	/**
+	 * @return SystemPreferences
+	 */
 	public function getSystemPreferences() {
-		return new Preferences($this->preferences['system']);
+		if ($this->system === null) {
+			$this->system = new SystemPreferences($this->raw['system']);
+		}
+		return $this->system;
 	}
 	
 	public function getModulePreferences($moduleId) {
 		if (isset($this->preferences[$moduleId])) {
-			return new Preferences($this->preferences[$moduleId]);
+			return $this->preferences[$moduleId];
+		}
+		
+		if (!isset($this->raw[$moduleId])) {
+			$this->preferences[$moduleId] = new Preferences($this->raw[$moduleId]);
+			return $this->preferences[$moduleId];
 		}
 	}
-	
 }
