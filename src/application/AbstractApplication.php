@@ -21,13 +21,13 @@ abstract class AbstractApplication {
 	 */
 	protected $localization;
 
-	protected $prefix;
-
-	protected $destination;
-
-	protected $root;
+	protected $rootUrl;
 	
-	protected $base;
+	protected $appPath;
+
+	protected $destinationPath;
+	
+	protected $appUrl;
 	
 	/** @var ServiceContainer */
 	protected $service;
@@ -61,36 +61,47 @@ abstract class AbstractApplication {
 		return $this->model;
 	}
 
-	public function setPrefix($prefix) {
-		$this->prefix = $prefix;
-		$this->updateBase();
+	public function setAppPath($prefix) {
+		$this->appPath = $prefix;
+		$this->updateAppUrl();
 	}
 
-	public function setDestination($destination) {
-		$this->destination = $destination;
+	public function getAppPath() {
+		return $this->appPath;
 	}
 
-	public function setRoot($root) {
-		$this->root = $root;
-		$this->updateBase();
+	public function setRootUrl($root) {
+		$this->rootUrl = $root;
+		$this->updateAppUrl();
 	}
 	
-	private function updateBase() {
-		$this->base = $this->root . $this->prefix;
+	public function getRootUrl() {
+		return $this->rootUrl;
 	}
 	
-	public function getPlattformUrl() {
-		return $this->root;
-	}
-	
-	public function getDestinationUrl() {
-		return $this->destination;
+	private function updateAppUrl() {
+		$this->appUrl = $this->rootUrl . $this->appPath;
 	}
 	
 	public function getAppUrl() {
-		return $this->base;
+		return $this->appUrl;
+	}
+	
+	public function setDestinationPath($destination) {
+		$this->destinationPath = $destination;
 	}
 
+	public function getDestinationPath() {
+		return $this->destinationPath;
+	}
+	
+	public function getTargetPath() {
+		return $this->destinationPath;
+	}
+	
+	public function getTailPath() {
+		return $this->destinationPath;
+	}
 
 	public function setLocalization(Localization $localization) {
 		$this->localization = $localization;

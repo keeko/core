@@ -28,6 +28,8 @@ class KeekoInstaller {
 	private $moduleInstaller;
 	private $moduleManager;
 	
+	private $localization;
+	
 	public function __construct(IOInterface $io = null) {
 // 		// bootstrap
 // 		if (!defined('KEEKO_PATH')) {
@@ -42,6 +44,12 @@ class KeekoInstaller {
 		$this->appInstaller = new AppInstaller();
 		$this->moduleInstaller = new ModuleInstaller();
 		$this->moduleManager = $service->getModuleManager();
+		
+		$this->localization = new Localization();
+		$this->localization->setLanguageId(1546);
+		$this->localization->setCountryIsoNr(276);
+		$this->localization->setIsDefault(true);
+		$this->localization->save();
 	}
 	
 	public function install() {
@@ -49,6 +57,14 @@ class KeekoInstaller {
 		$this->initialize();
 		$this->installGroupsAndUsers();
 		$this->installKeeko();
+	}
+	
+	/**
+	 *
+	 * @return Localization
+	 */
+	public function getLocalization() {
+		return $this->localization;
 	}
 	
 	public function installGroupsAndUsers() {
@@ -100,56 +116,21 @@ class KeekoInstaller {
 	}
 
 	public function installKeeko() {
-		$request = Request::createFromGlobals();
-		$base = $request->getBasePath();
-
-		// localization
-		// de
-		$de = new Localization();
-		$de->setLanguageId(1546);
-		$de->setCountryIsoNr(276);
-		$de->setIsDefault(true);
-		$de->save();
+		// 1) apps
 		
-		// apps
-		// -- api app
-		$apiAppPackage = $this->packageManager->getApplicationPackage('keeko/api-app');
-		$apiApp = $this->appInstaller->install($this->io, $apiAppPackage);
+		// api
+		$apiApp = $this->installApp('keeko/api-app');
+		$apiUrl = $this->setAppUrl($apiApp, '/api/');
 		
-		$uri = new ApplicationUri();
-		$uri->setApplication($apiApp);
-		$uri->setLocalization($de);
-		$uri->setHttphost($request->getHost());
-		$uri->setBasepath($base . '/api/');
-		$uri->setSecure($request->isSecure());
-		$uri->save();
+		// developer
+		$developerApp = $this->installApp('keeko/developer-app');
+		$this->setAppUrl($developerApp, '/developer/');
 		
-		$apiUrl = 'http' . ($request->isSecure() ? 's' : '') . '://' . $request->getHost() . $base . '/api/';
+		// website
+		$websiteApp = $this->installApp('keeko/website-app');
+		$this->setAppUrl($websiteApp, '/');
 		
-		$developerAppPackage = $this->packageManager->getApplicationPackage('keeko/developer-app');
-		$developerApp = $this->appInstaller->install($this->io, $developerAppPackage);
-		
-		$uri = new ApplicationUri();
-		$uri->setApplication($developerApp);
-		$uri->setLocalization($de);
-		$uri->setHttphost($request->getHost());
-		$uri->setBasepath($base . '/developer/');
-		$uri->setSecure($request->isSecure());
-		$uri->save();
-		
-		// -- website app
-		$websiteAppPackage = $this->packageManager->getApplicationPackage('keeko/website-app');
-		$websiteApp = $this->appInstaller->install($this->io, $websiteAppPackage);
-		
-		$uri = new ApplicationUri();
-		$uri->setApplication($websiteApp);
-		$uri->setLocalization($de);
-		$uri->setHttphost($request->getHost());
-		$uri->setBasepath($base . '/');
-		$uri->setSecure($request->isSecure());
-		$uri->save();
-		
-		// preferences
+		// 2) preferences
 		$pref = new Preference();
 		$pref->setKey(SystemPreferences::PLATTFORM_NAME);
 		$pref->setValue('Keeko');
@@ -160,7 +141,7 @@ class KeekoInstaller {
 		$pref->setValue($apiUrl);
 		$pref->save();
 
-		// modules
+		// 3) modules
 		$this->installModule('keeko/user');
 		$this->activateModule('keeko/user');
 		
@@ -169,6 +150,26 @@ class KeekoInstaller {
 		
 		$this->installModule('keeko/auth');
 		$this->activateModule('keeko/auth');
+	}
+	
+	public function installApp($packageName) {
+		$package = $this->packageManager->getApplicationPackage($packageName);
+		return $this->appInstaller->install($this->io, $package);
+	}
+	
+	public function setAppUrl(Application $app, $path) {
+		$request = Request::createFromGlobals();
+		$base = $request->getBasePath();
+		
+		$uri = new ApplicationUri();
+		$uri->setApplication($app);
+		$uri->setLocalization($this->getLocalization());
+		$uri->setHttphost($request->getHost());
+		$uri->setBasepath($base . $path);
+		$uri->setSecure($request->isSecure());
+		$uri->save();
+		
+		return 'http' . ($request->isSecure() ? 's' : '') . '://' . $request->getHost() . $base . $path;
 	}
 	
 	public function installModule($packageName) {

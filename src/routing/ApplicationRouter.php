@@ -45,20 +45,28 @@ class ApplicationRouter implements RouteMatcherInterface {
 		// Or strings with more slashes?
 		// better query on that?
 		$uris = ApplicationUriQuery::create()->joinApplication()->filterByHttphost($request->getHttpHost())->find();
+		$found = null;
 		
 		foreach ($uris as $uri) {
+			$uri->setBasepath(rtrim($uri->getBasepath(), '/'));
 			if (strpos($request->getRequestUri(), $uri->getBasepath()) !== false) {
-				$this->destination = substr($request->getRequestUri(), strlen($uri->getBasepath()));
-				$this->prefix = str_replace($request->getBasePath(), '', $uri->getBasePath());
-				$this->uri = $uri;
-				break;
+				// count slashes
+				if ($found === null) {
+					$found = $uri;
+				} else if (substr_count($uri->getBasepath(), '/') > substr_count($found->getBasepath(), '/')) {
+					$found = $uri;
+				}	
 			}
 		}
 		
-		if (is_null($uri)) {
-			throw new AppException(sprintf('No app found on %s', $request->getUri()), 404);
+		if ($found === null) {
+			throw new AppException(sprintf('No app found on %s', $request->getUri()), 404);	
 		}
 		
-		return $uri;
+		$this->destination = str_replace($found->getBasepath(), '', $request->getRequestUri());
+		$this->prefix = str_replace($request->getBasePath(), '', $found->getBasePath());
+		$this->uri = $found;
+		
+		return $found;
 	}
 }

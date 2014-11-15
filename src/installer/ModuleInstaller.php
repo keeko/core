@@ -7,6 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\model\Module;
 use keeko\core\model\ModuleQuery;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
+use keeko\core\service\ServiceContainer;
 
 class ModuleInstaller extends AbstractPackageInstaller {
 
@@ -32,6 +33,10 @@ class ModuleInstaller extends AbstractPackageInstaller {
 			$module->setSlug($options['slug']);
 			$module->setDefaultAction($options['default-action']);
 			$this->updatePackage($module, $package);
+			
+			// run module -> install
+			$class = new $className($module, new ServiceContainer());
+			$class->install();
 		}
 	}
 
