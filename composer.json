@@ -20,7 +20,9 @@
 		"symfony/filesystem" : "~2",
 		"twig/twig" : "~1",
 		"ircmaxell/password-compat" : "~1",
-		"propel/propel" : "dev-master"
+		"propel/propel" : "dev-master",
+		"symfony/translation" : "~2",
+		"kriswallsmith/assetic" : "~1"
 	},
 	"autoload" : {
 		"psr-4" : {
