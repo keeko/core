@@ -3,10 +3,13 @@ namespace keeko\core\action;
 
 use keeko\core\module\AbstractModule;
 use Symfony\Component\HttpFoundation\Request;
+use keeko\core\utils\TwigRenderTrait;
 
 abstract class AbstractResponse {
+	
+	use TwigRenderTrait;
 
-	protected $data;
+	protected $data = [];
 
 	protected $twig;
 
@@ -33,6 +36,10 @@ abstract class AbstractResponse {
 
 	public function setData($data) {
 		$this->data = $data;
+	}
+	
+	protected function getTwig() {
+		return $this->module->getTwig();
 	}
 
 	abstract public function run(Request $request);

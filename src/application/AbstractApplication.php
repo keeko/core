@@ -8,8 +8,16 @@ use Symfony\Component\HttpFoundation\Request;
 use keeko\core\package\PackageManager;
 use keeko\core\auth\AuthManager;
 use keeko\core\service\ServiceContainer;
+use keeko\core\utils\TwigTrait;
+use keeko\core\package\RunnableInterface;
+use keeko\core\action\AbstractAction;
+use keeko\core\response\TwigResponse;
+use keeko\core\utils\TwigRenderTrait;
 
-abstract class AbstractApplication {
+abstract class AbstractApplication implements RunnableInterface {
+	
+	use TwigTrait;
+	use TwigRenderTrait;
 
 	/**
 	 * @var Application
@@ -38,6 +46,10 @@ abstract class AbstractApplication {
 	public function __construct(Application $model) {
 		$this->model = $model;
 		$this->service = new ServiceContainer($this);
+	}
+	
+	public function getCanonicalName() {
+		return str_replace('/', '.', $this->model->getName());
 	}
 	
 	/**
@@ -114,6 +126,27 @@ abstract class AbstractApplication {
 	public function getLocalization() {
 		return $this->localization;
 	}
+	
+	public function getTwig() {
+		return $this->getRawTwig(sprintf('%s/%s/templates/', KEEKO_PATH_APPS, $this->model->getName()));
+	}
+	
+	protected function runAction(AbstractAction $action, Request $request) {
+		$runner = $this->getServiceContainer()->getRunner();
+		return $runner->run($action, $request);
+	}
 
-	abstract public function run(Request $request, $path);
+	public function beforeRun() {
+		$translator = $this->getServiceContainer()->getTranslator();
+		$this->domainBackup = $translator->getDomain();
+		$translator->setDomain($this->getCanonicalName());
+	}
+	
+	abstract public function run(Request $request);
+	
+	public function afterRun() {
+		$translator = $this->getServiceContainer()->getTranslator();
+		$translator->setDomain($this->domainBackup);
+	}
+	
 }

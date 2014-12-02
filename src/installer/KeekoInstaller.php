@@ -45,9 +45,10 @@ class KeekoInstaller {
 		$this->moduleInstaller = new ModuleInstaller();
 		$this->moduleManager = $service->getModuleManager();
 		
+		// en_US
 		$this->localization = new Localization();
-		$this->localization->setLanguageId(1546);
-		$this->localization->setCountryIsoNr(276);
+		$this->localization->setLanguageId(1824); // de: 1546
+		$this->localization->setCountryIsoNr(840); // ger: 276
 		$this->localization->setIsDefault(true);
 		$this->localization->save();
 	}

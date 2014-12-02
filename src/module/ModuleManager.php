@@ -76,6 +76,25 @@ class ModuleManager {
 		$mod = new $className($model, $this->service);
 		$this->loadedModules[$packageName] = $mod;
 		
+		// load l10n
+		$app = $this->service->getApplication();
+		$translator = $this->service->getTranslator();
+		$lang = $app->getLocalization()->getLanguage()->getAlpha2();
+		$country = $app->getLocalization()->getCountry()->getAlpha2();
+		$l10n = $mod->getPath() . 'l10n/';
+		$locale = $lang . '_' . $country;
+		
+		$langPath = sprintf('%s%s/module.json', $l10n, $lang);
+		$localePath = sprintf('%s%s/module.json', $l10n, $locale);
+		
+		if (file_exists($langPath)) {
+			$translator->addResource('json', $langPath, $lang, $mod->getCanonicalName());
+		}
+		
+		if (file_exists($localePath)) {
+			$translator->addResource('json', $langPath, $locale, $mod->getCanonicalName());
+		}
+		
 		return $mod;
 	}
 

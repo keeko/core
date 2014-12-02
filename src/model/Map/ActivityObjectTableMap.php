@@ -11,12 +11,12 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
-use keeko\core\model\User;
-use keeko\core\model\UserQuery;
+use keeko\core\model\ActivityObject;
+use keeko\core\model\ActivityObjectQuery;
 
 
 /**
- * This class defines the structure of the 'kk_user' table.
+ * This class defines the structure of the 'kk_activity_object' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use keeko\core\model\UserQuery;
  * (i.e. if it's a text column type).
  *
  */
-class UserTableMap extends TableMap
+class ActivityObjectTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class UserTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.UserTableMap';
+    const CLASS_NAME = '.Map.ActivityObjectTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class UserTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'kk_user';
+    const TABLE_NAME = 'kk_activity_object';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\keeko\\core\\model\\User';
+    const OM_CLASS = '\\keeko\\core\\model\\ActivityObject';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'User';
+    const CLASS_DEFAULT = 'ActivityObject';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 13;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -69,72 +69,47 @@ class UserTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 13;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the id field
      */
-    const COL_ID = 'kk_user.id';
+    const COL_ID = 'kk_activity_object.id';
 
     /**
-     * the column name for the login_name field
+     * the column name for the class_name field
      */
-    const COL_LOGIN_NAME = 'kk_user.login_name';
+    const COL_CLASS_NAME = 'kk_activity_object.class_name';
 
     /**
-     * the column name for the password field
+     * the column name for the type field
      */
-    const COL_PASSWORD = 'kk_user.password';
+    const COL_TYPE = 'kk_activity_object.type';
 
     /**
-     * the column name for the given_name field
+     * the column name for the displayName field
      */
-    const COL_GIVEN_NAME = 'kk_user.given_name';
+    const COL_DISPLAYNAME = 'kk_activity_object.displayName';
 
     /**
-     * the column name for the family_name field
+     * the column name for the url field
      */
-    const COL_FAMILY_NAME = 'kk_user.family_name';
+    const COL_URL = 'kk_activity_object.url';
 
     /**
-     * the column name for the display_name field
+     * the column name for the reference_id field
      */
-    const COL_DISPLAY_NAME = 'kk_user.display_name';
+    const COL_REFERENCE_ID = 'kk_activity_object.reference_id';
 
     /**
-     * the column name for the email field
+     * the column name for the version field
      */
-    const COL_EMAIL = 'kk_user.email';
+    const COL_VERSION = 'kk_activity_object.version';
 
     /**
-     * the column name for the birthday field
+     * the column name for the extra field
      */
-    const COL_BIRTHDAY = 'kk_user.birthday';
-
-    /**
-     * the column name for the sex field
-     */
-    const COL_SEX = 'kk_user.sex';
-
-    /**
-     * the column name for the password_recover_code field
-     */
-    const COL_PASSWORD_RECOVER_CODE = 'kk_user.password_recover_code';
-
-    /**
-     * the column name for the password_recover_time field
-     */
-    const COL_PASSWORD_RECOVER_TIME = 'kk_user.password_recover_time';
-
-    /**
-     * the column name for the created_at field
-     */
-    const COL_CREATED_AT = 'kk_user.created_at';
-
-    /**
-     * the column name for the updated_at field
-     */
-    const COL_UPDATED_AT = 'kk_user.updated_at';
+    const COL_EXTRA = 'kk_activity_object.extra';
 
     /**
      * The default string format for model objects of the related table
@@ -148,11 +123,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'LoginName', 'Password', 'GivenName', 'FamilyName', 'DisplayName', 'Email', 'Birthday', 'Sex', 'PasswordRecoverCode', 'PasswordRecoverTime', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'loginName', 'password', 'givenName', 'familyName', 'displayName', 'email', 'birthday', 'sex', 'passwordRecoverCode', 'passwordRecoverTime', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_LOGIN_NAME, UserTableMap::COL_PASSWORD, UserTableMap::COL_GIVEN_NAME, UserTableMap::COL_FAMILY_NAME, UserTableMap::COL_DISPLAY_NAME, UserTableMap::COL_EMAIL, UserTableMap::COL_BIRTHDAY, UserTableMap::COL_SEX, UserTableMap::COL_PASSWORD_RECOVER_CODE, UserTableMap::COL_PASSWORD_RECOVER_TIME, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'login_name', 'password', 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex', 'password_recover_code', 'password_recover_time', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        self::TYPE_PHPNAME       => array('Id', 'ClassName', 'Type', 'DisplayName', 'Url', 'ReferenceId', 'Version', 'Extra', ),
+        self::TYPE_CAMELNAME     => array('id', 'className', 'type', 'displayName', 'url', 'referenceId', 'version', 'extra', ),
+        self::TYPE_COLNAME       => array(ActivityObjectTableMap::COL_ID, ActivityObjectTableMap::COL_CLASS_NAME, ActivityObjectTableMap::COL_TYPE, ActivityObjectTableMap::COL_DISPLAYNAME, ActivityObjectTableMap::COL_URL, ActivityObjectTableMap::COL_REFERENCE_ID, ActivityObjectTableMap::COL_VERSION, ActivityObjectTableMap::COL_EXTRA, ),
+        self::TYPE_FIELDNAME     => array('id', 'class_name', 'type', 'displayName', 'url', 'reference_id', 'version', 'extra', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -162,11 +137,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'LoginName' => 1, 'Password' => 2, 'GivenName' => 3, 'FamilyName' => 4, 'DisplayName' => 5, 'Email' => 6, 'Birthday' => 7, 'Sex' => 8, 'PasswordRecoverCode' => 9, 'PasswordRecoverTime' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'loginName' => 1, 'password' => 2, 'givenName' => 3, 'familyName' => 4, 'displayName' => 5, 'email' => 6, 'birthday' => 7, 'sex' => 8, 'passwordRecoverCode' => 9, 'passwordRecoverTime' => 10, 'createdAt' => 11, 'updatedAt' => 12, ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_LOGIN_NAME => 1, UserTableMap::COL_PASSWORD => 2, UserTableMap::COL_GIVEN_NAME => 3, UserTableMap::COL_FAMILY_NAME => 4, UserTableMap::COL_DISPLAY_NAME => 5, UserTableMap::COL_EMAIL => 6, UserTableMap::COL_BIRTHDAY => 7, UserTableMap::COL_SEX => 8, UserTableMap::COL_PASSWORD_RECOVER_CODE => 9, UserTableMap::COL_PASSWORD_RECOVER_TIME => 10, UserTableMap::COL_CREATED_AT => 11, UserTableMap::COL_UPDATED_AT => 12, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'login_name' => 1, 'password' => 2, 'given_name' => 3, 'family_name' => 4, 'display_name' => 5, 'email' => 6, 'birthday' => 7, 'sex' => 8, 'password_recover_code' => 9, 'password_recover_time' => 10, 'created_at' => 11, 'updated_at' => 12, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'ClassName' => 1, 'Type' => 2, 'DisplayName' => 3, 'Url' => 4, 'ReferenceId' => 5, 'Version' => 6, 'Extra' => 7, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'className' => 1, 'type' => 2, 'displayName' => 3, 'url' => 4, 'referenceId' => 5, 'version' => 6, 'extra' => 7, ),
+        self::TYPE_COLNAME       => array(ActivityObjectTableMap::COL_ID => 0, ActivityObjectTableMap::COL_CLASS_NAME => 1, ActivityObjectTableMap::COL_TYPE => 2, ActivityObjectTableMap::COL_DISPLAYNAME => 3, ActivityObjectTableMap::COL_URL => 4, ActivityObjectTableMap::COL_REFERENCE_ID => 5, ActivityObjectTableMap::COL_VERSION => 6, ActivityObjectTableMap::COL_EXTRA => 7, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'class_name' => 1, 'type' => 2, 'displayName' => 3, 'url' => 4, 'reference_id' => 5, 'version' => 6, 'extra' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -179,26 +154,21 @@ class UserTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('kk_user');
-        $this->setPhpName('User');
+        $this->setName('kk_activity_object');
+        $this->setPhpName('ActivityObject');
         $this->setIdentifierQuoting(true);
-        $this->setClassName('\\keeko\\core\\model\\User');
+        $this->setClassName('\\keeko\\core\\model\\ActivityObject');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
-        $this->addColumn('login_name', 'LoginName', 'VARCHAR', false, 100, null);
-        $this->addColumn('password', 'Password', 'VARCHAR', false, 100, null);
-        $this->addColumn('given_name', 'GivenName', 'VARCHAR', false, 100, null);
-        $this->addColumn('family_name', 'FamilyName', 'VARCHAR', false, 100, null);
-        $this->addColumn('display_name', 'DisplayName', 'VARCHAR', false, 100, null);
-        $this->addColumn('email', 'Email', 'VARCHAR', false, 255, null);
-        $this->addColumn('birthday', 'Birthday', 'DATE', false, null, null);
-        $this->addColumn('sex', 'Sex', 'TINYINT', false, null, null);
-        $this->addColumn('password_recover_code', 'PasswordRecoverCode', 'VARCHAR', false, 32, null);
-        $this->addColumn('password_recover_time', 'PasswordRecoverTime', 'TIMESTAMP', false, null, null);
-        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('class_name', 'ClassName', 'VARCHAR', false, 255, null);
+        $this->addColumn('type', 'Type', 'VARCHAR', false, 255, null);
+        $this->addColumn('displayName', 'DisplayName', 'VARCHAR', false, 255, null);
+        $this->addColumn('url', 'Url', 'VARCHAR', false, 255, null);
+        $this->addColumn('reference_id', 'ReferenceId', 'INTEGER', false, null, null);
+        $this->addColumn('version', 'Version', 'INTEGER', false, null, null);
+        $this->addColumn('extra', 'Extra', 'LONGVARCHAR', false, null, null);
     } // initialize()
 
     /**
@@ -206,25 +176,9 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Auth', '\\keeko\\core\\model\\Auth', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null, 'Auths');
-        $this->addRelation('UserGroup', '\\keeko\\core\\model\\UserGroup', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'RESTRICT', null, 'UserGroups');
-        $this->addRelation('Activity', '\\keeko\\core\\model\\Activity', RelationMap::ONE_TO_MANY, array('id' => 'actor_id', ), null, null, 'Activities');
-        $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Groups');
+        $this->addRelation('ActivityRelatedByObjectId', '\\keeko\\core\\model\\Activity', RelationMap::ONE_TO_MANY, array('id' => 'object_id', ), null, null, 'ActivitiesRelatedByObjectId');
+        $this->addRelation('ActivityRelatedByTargetId', '\\keeko\\core\\model\\Activity', RelationMap::ONE_TO_MANY, array('id' => 'target_id', ), null, null, 'ActivitiesRelatedByTargetId');
     } // buildRelations()
-
-    /**
-     *
-     * Gets the list of behaviors registered for this table
-     *
-     * @return array Associative array (name => parameters) of behaviors
-     */
-    public function getBehaviors()
-    {
-        return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
-            'validate' => array('rule1' => array ('column' => 'login_name','validator' => 'NotNull',), 'rule2' => array ('column' => 'email','validator' => 'NotNull',), 'rule3' => array ('column' => 'email','validator' => 'Email',), 'rule4' => array ('column' => 'password','validator' => 'NotNull',), ),
-        );
-    } // getBehaviors()
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -283,7 +237,7 @@ class UserTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? UserTableMap::CLASS_DEFAULT : UserTableMap::OM_CLASS;
+        return $withPrefix ? ActivityObjectTableMap::CLASS_DEFAULT : ActivityObjectTableMap::OM_CLASS;
     }
 
     /**
@@ -297,22 +251,22 @@ class UserTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (User object, last column rank)
+     * @return array           (ActivityObject object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = UserTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = UserTableMap::getInstanceFromPool($key))) {
+        $key = ActivityObjectTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = ActivityObjectTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + UserTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + ActivityObjectTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = UserTableMap::OM_CLASS;
-            /** @var User $obj */
+            $cls = ActivityObjectTableMap::OM_CLASS;
+            /** @var ActivityObject $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            UserTableMap::addInstanceToPool($obj, $key);
+            ActivityObjectTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -335,18 +289,18 @@ class UserTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = UserTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = UserTableMap::getInstanceFromPool($key))) {
+            $key = ActivityObjectTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = ActivityObjectTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var User $obj */
+                /** @var ActivityObject $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                UserTableMap::addInstanceToPool($obj, $key);
+                ActivityObjectTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -367,33 +321,23 @@ class UserTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(UserTableMap::COL_ID);
-            $criteria->addSelectColumn(UserTableMap::COL_LOGIN_NAME);
-            $criteria->addSelectColumn(UserTableMap::COL_PASSWORD);
-            $criteria->addSelectColumn(UserTableMap::COL_GIVEN_NAME);
-            $criteria->addSelectColumn(UserTableMap::COL_FAMILY_NAME);
-            $criteria->addSelectColumn(UserTableMap::COL_DISPLAY_NAME);
-            $criteria->addSelectColumn(UserTableMap::COL_EMAIL);
-            $criteria->addSelectColumn(UserTableMap::COL_BIRTHDAY);
-            $criteria->addSelectColumn(UserTableMap::COL_SEX);
-            $criteria->addSelectColumn(UserTableMap::COL_PASSWORD_RECOVER_CODE);
-            $criteria->addSelectColumn(UserTableMap::COL_PASSWORD_RECOVER_TIME);
-            $criteria->addSelectColumn(UserTableMap::COL_CREATED_AT);
-            $criteria->addSelectColumn(UserTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(ActivityObjectTableMap::COL_ID);
+            $criteria->addSelectColumn(ActivityObjectTableMap::COL_CLASS_NAME);
+            $criteria->addSelectColumn(ActivityObjectTableMap::COL_TYPE);
+            $criteria->addSelectColumn(ActivityObjectTableMap::COL_DISPLAYNAME);
+            $criteria->addSelectColumn(ActivityObjectTableMap::COL_URL);
+            $criteria->addSelectColumn(ActivityObjectTableMap::COL_REFERENCE_ID);
+            $criteria->addSelectColumn(ActivityObjectTableMap::COL_VERSION);
+            $criteria->addSelectColumn(ActivityObjectTableMap::COL_EXTRA);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.login_name');
-            $criteria->addSelectColumn($alias . '.password');
-            $criteria->addSelectColumn($alias . '.given_name');
-            $criteria->addSelectColumn($alias . '.family_name');
-            $criteria->addSelectColumn($alias . '.display_name');
-            $criteria->addSelectColumn($alias . '.email');
-            $criteria->addSelectColumn($alias . '.birthday');
-            $criteria->addSelectColumn($alias . '.sex');
-            $criteria->addSelectColumn($alias . '.password_recover_code');
-            $criteria->addSelectColumn($alias . '.password_recover_time');
-            $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.updated_at');
+            $criteria->addSelectColumn($alias . '.class_name');
+            $criteria->addSelectColumn($alias . '.type');
+            $criteria->addSelectColumn($alias . '.displayName');
+            $criteria->addSelectColumn($alias . '.url');
+            $criteria->addSelectColumn($alias . '.reference_id');
+            $criteria->addSelectColumn($alias . '.version');
+            $criteria->addSelectColumn($alias . '.extra');
         }
     }
 
@@ -406,7 +350,7 @@ class UserTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(UserTableMap::DATABASE_NAME)->getTable(UserTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(ActivityObjectTableMap::DATABASE_NAME)->getTable(ActivityObjectTableMap::TABLE_NAME);
     }
 
     /**
@@ -414,16 +358,16 @@ class UserTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(UserTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(UserTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new UserTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(ActivityObjectTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(ActivityObjectTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new ActivityObjectTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a User or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a ActivityObject or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or User object or primary key or array of primary keys
+     * @param mixed               $values Criteria or ActivityObject object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -434,27 +378,27 @@ class UserTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ActivityObjectTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \keeko\core\model\User) { // it's a model object
+        } elseif ($values instanceof \keeko\core\model\ActivityObject) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(UserTableMap::DATABASE_NAME);
-            $criteria->add(UserTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(ActivityObjectTableMap::DATABASE_NAME);
+            $criteria->add(ActivityObjectTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = UserQuery::create()->mergeWith($criteria);
+        $query = ActivityObjectQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            UserTableMap::clearInstancePool();
+            ActivityObjectTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                UserTableMap::removeInstanceFromPool($singleval);
+                ActivityObjectTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -462,20 +406,20 @@ class UserTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the kk_user table.
+     * Deletes all rows from the kk_activity_object table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return UserQuery::create()->doDeleteAll($con);
+        return ActivityObjectQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a User or Criteria object.
+     * Performs an INSERT on the database, given a ActivityObject or Criteria object.
      *
-     * @param mixed               $criteria Criteria or User object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or ActivityObject object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -484,22 +428,22 @@ class UserTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ActivityObjectTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from User object
+            $criteria = $criteria->buildCriteria(); // build Criteria from ActivityObject object
         }
 
-        if ($criteria->containsKey(UserTableMap::COL_ID) && $criteria->keyContainsValue(UserTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.UserTableMap::COL_ID.')');
+        if ($criteria->containsKey(ActivityObjectTableMap::COL_ID) && $criteria->keyContainsValue(ActivityObjectTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.ActivityObjectTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = UserQuery::create()->mergeWith($criteria);
+        $query = ActivityObjectQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -508,7 +452,7 @@ class UserTableMap extends TableMap
         });
     }
 
-} // UserTableMap
+} // ActivityObjectTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-UserTableMap::buildTableMap();
+ActivityObjectTableMap::buildTableMap();

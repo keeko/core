@@ -13,8 +13,11 @@ use keeko\core\model\User;
 use keeko\core\exceptions\PermissionDeniedException;
 use keeko\core\service\ServiceContainer;
 use keeko\core\preferences\Preferences;
+use keeko\core\utils\TwigTrait;
 
 abstract class AbstractModule {
+	
+	use TwigTrait;
 	
 	/** @var Module */
 	protected $model;
@@ -55,6 +58,18 @@ abstract class AbstractModule {
 	 */
 	public function getModel() {
 		return $this->model;
+	}
+	
+	public function getName() {
+		return $this->model->getName();
+	}
+	
+	public function getCanonicalName() {
+		return str_replace('/', '.', $this->getName());
+	}
+	
+	public function getPath() {
+		return sprintf('%s/%s/', KEEKO_PATH_MODULES, $this->model->getName());
 	}
 	
 	/**
@@ -123,7 +138,46 @@ abstract class AbstractModule {
 		
 		$class = new $className($action, $this, $response);
 		
+		// l10n
+		$app = $this->getServiceContainer()->getApplication();
+		$lang = $app->getLocalization()->getLanguage()->getAlpha2();
+		$country = $app->getLocalization()->getCountry()->getAlpha2();
+		$l10n = $this->getPath() . 'l10n/';
+		$locale = $lang . '_' . $country;
+		
+		// load module l10n
+		$this->addL10nFile('module', $l10n, $lang, $locale, $class);
+		
+		// load additional l10n files
+		if (isset($this->actions[$name]['l10n'])) {
+			foreach ($this->actions[$name]['l10n'] as $file) {
+				$this->addL10nFile($file, $l10n, $lang, $locale, $class);
+			}
+		}
+		
+		// load action l10n
+		$this->addL10nFile(sprintf('actions/%s', $name), $l10n, $lang, $locale, $class);
+
 		return $class;
+	}
+	
+	private function addL10nFile($file, $dir, $lang, $locale, $class) {
+		$translator = $this->getServiceContainer()->getTranslator();
+		$langPath = sprintf('%s%s/%s.json', $dir, $lang, $file);
+		$localePath = sprintf('%s%s/%s.json', $dir, $locale, $file);
+		
+		if (file_exists($langPath)) {
+			
+			$translator->addResource('json', $langPath, $lang, $class->getCanonicalName());
+		}
+		
+		if (file_exists($localePath)) {
+			$translator->addResource('json', $langPath, $locale, $class->getCanonicalName());
+		}
+	}
+	
+	public function getTwig() {
+		return $this->getRawTwig($this->getPath() . 'templates/');
 	}
 
 	abstract public function install();

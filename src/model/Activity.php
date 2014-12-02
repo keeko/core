@@ -2,10 +2,10 @@
 
 namespace keeko\core\model;
 
-use keeko\core\model\Base\User as BaseUser;
+use keeko\core\model\Base\Activity as BaseActivity;
 
 /**
- * Skeleton subclass for representing a row from the 'kk_user' table.
+ * Skeleton subclass for representing a row from the 'kk_activity' table.
  *
  *
  *
@@ -14,7 +14,7 @@ use keeko\core\model\Base\User as BaseUser;
  * long as it does not already exist in the output directory.
  *
  */
-class User extends BaseUser
+class Activity extends BaseActivity
 {
 
 }

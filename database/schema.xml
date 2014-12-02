@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database defaultIdMethod="native" name="keeko" namespace="keeko\core\model" identifierQuoting="true"
 	defaultPhpNamingMethod="phpname" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd">
+	xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd"
+	tablePrefix="kk_">
 
 	<!-- <behavior name="listener"> <parameter name="table" value="iuf_listener"/> 
 		<parameter name="phpName" value="Listener"/> </behavior> -->
@@ -296,6 +297,35 @@
 		<foreign-key foreignTable="action" onDelete="restrict">
 			<reference local="action_id" foreign="id" />
 		</foreign-key>
+	</table>
+	
+	<table name="activity">
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="actor_id" type="INTEGER" required="true"/>
+		<column name="verb" type="VARCHAR"/>
+		<column name="object_id" type="INTEGER" required="true"/>
+		<column name="target_id" type="INTEGER" required="false"/>
+		
+		<foreign-key foreignTable="user" phpName="Actor">
+			<reference local="actor_id" foreign="id"/>
+		</foreign-key>
+		<foreign-key foreignTable="activity_object" phpName="Object">
+			<reference local="object_id" foreign="id"/>
+		</foreign-key>
+		<foreign-key foreignTable="activity_object" phpName="Target">
+			<reference local="target_id" foreign="id"/>
+		</foreign-key>
+	</table>
+
+	<table name="activity_object">
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="class_name" type="VARCHAR"/>
+		<column name="type" type="VARCHAR"/>
+		<column name="displayName" type="VARCHAR"/>
+		<column name="url" type="VARCHAR"/>
+		<column name="reference_id" type="INTEGER"/>
+		<column name="version" type="INTEGER"/>
+		<column name="extra" type="LONGVARCHAR"/>
 	</table>
 
 </database>

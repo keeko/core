@@ -35,7 +35,7 @@ class ApplicationRouter implements RouteMatcherInterface {
 
 	/**
 	 *
-	 * @param Request $request        	
+	 * @param Request $request
 	 * @throws AppException
 	 * @return ApplicationUri
 	 */
@@ -55,18 +55,18 @@ class ApplicationRouter implements RouteMatcherInterface {
 					$found = $uri;
 				} else if (substr_count($uri->getBasepath(), '/') > substr_count($found->getBasepath(), '/')) {
 					$found = $uri;
-				}	
+				}
 			}
 		}
-		
+
 		if ($found === null) {
-			throw new AppException(sprintf('No app found on %s', $request->getUri()), 404);	
+			throw new AppException(sprintf('No app found on %s', $request->getUri()), 404);
 		}
-		
+
 		$this->destination = str_replace($found->getBasepath(), '', $request->getRequestUri());
 		$this->prefix = str_replace($request->getBasePath(), '', $found->getBasePath());
 		$this->uri = $found;
-		
+
 		return $found;
 	}
 }

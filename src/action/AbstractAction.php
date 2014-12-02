@@ -8,8 +8,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 use keeko\core\service\ServiceContainer;
 use keeko\core\preferences\Preferences;
+use keeko\core\package\RunnableInterface;
 
-abstract class AbstractAction {
+abstract class AbstractAction implements RunnableInterface {
 	
 	/** @var Action */
 	protected $model;
@@ -25,6 +26,8 @@ abstract class AbstractAction {
 
 	/** @var AbstractResponse */
 	protected $response;
+	
+	private $domainBackup;
 
 	public function __construct(Action $model, AbstractModule $module, AbstractResponse $response) {
 		$this->model = $model;
@@ -46,6 +49,10 @@ abstract class AbstractAction {
 	 */
 	protected function getServiceContainer() {
 		return $this->module->getServiceContainer();
+	}
+	
+	public function getCanonicalName() {
+		return $this->module->getCanonicalName() . '.' . $this->model->getName();
 	}
 	
 	/**
@@ -95,5 +102,16 @@ abstract class AbstractAction {
 		return $this->module;
 	}
 	
+	public function beforeRun() {
+		$translator = $this->getServiceContainer()->getTranslator();
+		$this->domainBackup = $translator->getDomain();
+		$translator->setDomain($this->getCanonicalName());
+	}
+	
 	abstract public function run(Request $request);
+	
+	public function afterRun() {
+		$translator = $this->getServiceContainer()->getTranslator();
+		$translator->setDomain($this->domainBackup);
+	}
 }

@@ -7,6 +7,9 @@ use keeko\core\module\ModuleManager;
 use keeko\core\auth\AuthManager;
 use keeko\core\preferences\PreferenceLoader;
 use keeko\core\security\Firewall;
+use Symfony\Component\Translation\MessageSelector;
+use Symfony\Component\Translation\Loader\JsonFileLoader;
+use keeko\core\package\Runner;
 
 class ServiceContainer {
 
@@ -27,6 +30,12 @@ class ServiceContainer {
 	
 	/** @var Firewall */
 	private $firewall;
+	
+	/** @var KeekoTranslator */
+	private $translator;
+	
+	/** @var Runner */
+	private $runner;
 	
 	public function __construct(AbstractApplication $application = null) {
 		if ($application !== null) {
@@ -106,5 +115,35 @@ class ServiceContainer {
 		}
 		
 		return $this->firewall;
+	}
+	
+	/**
+	 * Returns the keeko translation service
+	 *
+	 * @return KeekoTranslator
+	 */
+	public function getTranslator() {
+		if ($this->translator === null) {
+			$app = $this->getApplication();
+			$lang = $app->getLocalization()->getLanguage()->getAlpha2();
+			$this->translator = new KeekoTranslator($lang, new MessageSelector());
+			$this->translator->addLoader('json', new JsonFileLoader());
+			$this->translator->setFallbackLocales(['en']);
+		}
+		
+		return $this->translator;
+	}
+	
+	/**
+	 * Returns a runner to run actions and applications
+	 *
+	 * @return Runner
+	 */
+	public function getRunner() {
+		if ($this->runner === null) {
+			$this->runner = new Runner();
+		}
+		
+		return $this->runner;
 	}
 }

@@ -5,10 +5,10 @@ propel:
   paths:
     projectDir: .
     schemaDir: %projectDir%/database
-    outputDir: %schemaDir%
-    phpDir: %outputDir%/generated-classes
-    phpConfDir: %outputDir%/generated-conf
-    sqlDir: %outputDir%/sql
+    outputDir: %projectDir%
+    phpDir: %outputDir%/src/model
+    phpConfDir: %schemaDir%/generated-conf
+    sqlDir: %schemaDir%/sql
 
   database:
     connections:
@@ -16,7 +16,7 @@ propel:
         adapter: mysql
         dsn: mysql:host=localhost;dbname=keeko
         user: root
-        password: 
+        password:
 
   generator:
     defaultConnection: keeko

@@ -22,7 +22,9 @@
 		"ircmaxell/password-compat" : "~1",
 		"propel/propel" : "dev-master",
 		"symfony/translation" : "~2",
-		"kriswallsmith/assetic" : "~1"
+		"kriswallsmith/assetic" : "~1",
+		"monolog/monolog" : "~1",
+		"gossi/collection" : "~1"
 	},
 	"autoload" : {
 		"psr-4" : {
