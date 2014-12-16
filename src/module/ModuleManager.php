@@ -30,10 +30,9 @@ class ModuleManager {
 		$modules = ModuleQuery::create()->find();
 		
 		foreach ($modules as $module) {
+			$this->installedModules[$module->getName()] = $module;
 			if ($module->getActivatedVersion() !== null) {
 				$this->activatedModules[$module->getName()] = $module;
-			} else {
-				$this->installedModules[$module->getName()] = $module;
 			}
 		}
 	}
@@ -58,6 +57,11 @@ class ModuleManager {
 			return $this->loadedModules[$packageName];
 		}
 		
+		// check existence
+		if (!isset($this->installedModules[$packageName])) {
+			throw new ModuleException(sprintf('Module (%s) does not exist.', $packageName), 500);
+		}
+		
 		// check activation
 		if (!array_key_exists($packageName, $this->activatedModules)) {
 			throw new ModuleException(sprintf('Module (%s) not activated', $packageName), 501);
@@ -66,7 +70,7 @@ class ModuleManager {
 		$model = $this->activatedModules[$packageName];
 		
 		if ($model->getInstalledVersion() > $model->getActivatedVersion()) {
-			throw new ModuleException(sprintf('Module Version Mismatch (%s). Module needs updated by the Administrator', $packageName), 500);
+			throw new ModuleException(sprintf('Module Version Mismatch (%s). Module needs to be updated by the Administrator', $packageName), 500);
 		}
 		
 		// load
@@ -163,7 +167,7 @@ class ModuleManager {
 			case 'guest':
 				return GroupQuery::create()->filterByIsGuest(true)->findOne();
 				break;
-				
+
 			case 'user':
 				return GroupQuery::create()->filterByIsDefault(true)->findOne();
 				break;

@@ -11,7 +11,6 @@ use keeko\core\service\ServiceContainer;
 use keeko\core\utils\TwigTrait;
 use keeko\core\package\RunnableInterface;
 use keeko\core\action\AbstractAction;
-use keeko\core\response\TwigResponse;
 use keeko\core\utils\TwigRenderTrait;
 
 abstract class AbstractApplication implements RunnableInterface {
@@ -39,6 +38,9 @@ abstract class AbstractApplication implements RunnableInterface {
 	
 	/** @var ServiceContainer */
 	protected $service;
+	
+	/** @var Page */
+	protected $page;
 
 	/**
 	 * Creates a new Keeko Application
@@ -46,6 +48,7 @@ abstract class AbstractApplication implements RunnableInterface {
 	public function __construct(Application $model) {
 		$this->model = $model;
 		$this->service = new ServiceContainer($this);
+		$this->page = new Page();
 	}
 	
 	public function getCanonicalName() {
@@ -59,6 +62,13 @@ abstract class AbstractApplication implements RunnableInterface {
 	 */
 	public function getServiceContainer() {
 		return $this->service;
+	}
+	
+	/**
+	 * @return Page
+	 */
+	public function getPage() {
+		return $this->page;
 	}
 
 	public function setModel(Application $model) {

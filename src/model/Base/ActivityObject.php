@@ -82,10 +82,10 @@ abstract class ActivityObject implements ActiveRecordInterface
     protected $type;
 
     /**
-     * The value for the displayname field.
+     * The value for the display_name field.
      * @var        string
      */
-    protected $displayname;
+    protected $display_name;
 
     /**
      * The value for the url field.
@@ -391,13 +391,13 @@ abstract class ActivityObject implements ActiveRecordInterface
     }
 
     /**
-     * Get the [displayname] column value.
+     * Get the [display_name] column value.
      *
      * @return string
      */
     public function getDisplayName()
     {
-        return $this->displayname;
+        return $this->display_name;
     }
 
     /**
@@ -501,7 +501,7 @@ abstract class ActivityObject implements ActiveRecordInterface
     } // setType()
 
     /**
-     * Set the value of [displayname] column.
+     * Set the value of [display_name] column.
      *
      * @param  string $v new value
      * @return $this|\keeko\core\model\ActivityObject The current object (for fluent API support)
@@ -512,9 +512,9 @@ abstract class ActivityObject implements ActiveRecordInterface
             $v = (string) $v;
         }
 
-        if ($this->displayname !== $v) {
-            $this->displayname = $v;
-            $this->modifiedColumns[ActivityObjectTableMap::COL_DISPLAYNAME] = true;
+        if ($this->display_name !== $v) {
+            $this->display_name = $v;
+            $this->modifiedColumns[ActivityObjectTableMap::COL_DISPLAY_NAME] = true;
         }
 
         return $this;
@@ -646,7 +646,7 @@ abstract class ActivityObject implements ActiveRecordInterface
             $this->type = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ActivityObjectTableMap::translateFieldName('DisplayName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->displayname = (null !== $col) ? (string) $col : null;
+            $this->display_name = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ActivityObjectTableMap::translateFieldName('Url', TableMap::TYPE_PHPNAME, $indexType)];
             $this->url = (null !== $col) ? (string) $col : null;
@@ -912,8 +912,8 @@ abstract class ActivityObject implements ActiveRecordInterface
         if ($this->isColumnModified(ActivityObjectTableMap::COL_TYPE)) {
             $modifiedColumns[':p' . $index++]  = '`type`';
         }
-        if ($this->isColumnModified(ActivityObjectTableMap::COL_DISPLAYNAME)) {
-            $modifiedColumns[':p' . $index++]  = '`displayName`';
+        if ($this->isColumnModified(ActivityObjectTableMap::COL_DISPLAY_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`display_name`';
         }
         if ($this->isColumnModified(ActivityObjectTableMap::COL_URL)) {
             $modifiedColumns[':p' . $index++]  = '`url`';
@@ -947,8 +947,8 @@ abstract class ActivityObject implements ActiveRecordInterface
                     case '`type`':
                         $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
                         break;
-                    case '`displayName`':
-                        $stmt->bindValue($identifier, $this->displayname, PDO::PARAM_STR);
+                    case '`display_name`':
+                        $stmt->bindValue($identifier, $this->display_name, PDO::PARAM_STR);
                         break;
                     case '`url`':
                         $stmt->bindValue($identifier, $this->url, PDO::PARAM_STR);
@@ -1281,8 +1281,8 @@ abstract class ActivityObject implements ActiveRecordInterface
         if ($this->isColumnModified(ActivityObjectTableMap::COL_TYPE)) {
             $criteria->add(ActivityObjectTableMap::COL_TYPE, $this->type);
         }
-        if ($this->isColumnModified(ActivityObjectTableMap::COL_DISPLAYNAME)) {
-            $criteria->add(ActivityObjectTableMap::COL_DISPLAYNAME, $this->displayname);
+        if ($this->isColumnModified(ActivityObjectTableMap::COL_DISPLAY_NAME)) {
+            $criteria->add(ActivityObjectTableMap::COL_DISPLAY_NAME, $this->display_name);
         }
         if ($this->isColumnModified(ActivityObjectTableMap::COL_URL)) {
             $criteria->add(ActivityObjectTableMap::COL_URL, $this->url);
@@ -1952,7 +1952,7 @@ abstract class ActivityObject implements ActiveRecordInterface
         $this->id = null;
         $this->class_name = null;
         $this->type = null;
-        $this->displayname = null;
+        $this->display_name = null;
         $this->url = null;
         $this->reference_id = null;
         $this->version = null;

@@ -102,6 +102,15 @@ abstract class AbstractAction implements RunnableInterface {
 		return $this->module;
 	}
 	
+	/**
+	 * Returns the modules twig
+	 *
+	 * @return \Twig_Environment
+	 */
+	protected function getTwig() {
+		return $this->module->getTwig();
+	}
+	
 	public function beforeRun() {
 		$translator = $this->getServiceContainer()->getTranslator();
 		$this->domainBackup = $translator->getDomain();

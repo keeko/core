@@ -321,7 +321,7 @@
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="class_name" type="VARCHAR"/>
 		<column name="type" type="VARCHAR"/>
-		<column name="displayName" type="VARCHAR"/>
+		<column name="display_name" type="VARCHAR"/>
 		<column name="url" type="VARCHAR"/>
 		<column name="reference_id" type="INTEGER"/>
 		<column name="version" type="INTEGER"/>

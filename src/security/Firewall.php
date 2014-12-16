@@ -17,8 +17,14 @@ class Firewall {
 		$this->service = $service;
 		$this->user = $service->getAuthManager()->getUser();
 	}
+	
+	public function hasPermission($module, $action, User $user = null) {
+		$module = $this->service->getModuleManager()->load($module);
+		$action = $module->getActionModel($action);
+		return $this->hasActionPermission($action, $user);
+	}
 
-	public function canAccessAction(Action $action, User $user = null) {
+	public function hasActionPermission(Action $action, User $user = null) {
 		if ($user === null) {
 			$user = $this->user;
 		}
@@ -26,7 +32,7 @@ class Firewall {
 		
 		return in_array($action->getId(), $permissionTable);
 	}
-	
+
 	private function getPermissionTable(User $user) {
 		$userId = $user->getId();
 		if (isset($this->permissionTables[$userId])) {

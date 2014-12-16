@@ -87,9 +87,9 @@ class ActivityObjectTableMap extends TableMap
     const COL_TYPE = 'kk_activity_object.type';
 
     /**
-     * the column name for the displayName field
+     * the column name for the display_name field
      */
-    const COL_DISPLAYNAME = 'kk_activity_object.displayName';
+    const COL_DISPLAY_NAME = 'kk_activity_object.display_name';
 
     /**
      * the column name for the url field
@@ -125,8 +125,8 @@ class ActivityObjectTableMap extends TableMap
     protected static $fieldNames = array (
         self::TYPE_PHPNAME       => array('Id', 'ClassName', 'Type', 'DisplayName', 'Url', 'ReferenceId', 'Version', 'Extra', ),
         self::TYPE_CAMELNAME     => array('id', 'className', 'type', 'displayName', 'url', 'referenceId', 'version', 'extra', ),
-        self::TYPE_COLNAME       => array(ActivityObjectTableMap::COL_ID, ActivityObjectTableMap::COL_CLASS_NAME, ActivityObjectTableMap::COL_TYPE, ActivityObjectTableMap::COL_DISPLAYNAME, ActivityObjectTableMap::COL_URL, ActivityObjectTableMap::COL_REFERENCE_ID, ActivityObjectTableMap::COL_VERSION, ActivityObjectTableMap::COL_EXTRA, ),
-        self::TYPE_FIELDNAME     => array('id', 'class_name', 'type', 'displayName', 'url', 'reference_id', 'version', 'extra', ),
+        self::TYPE_COLNAME       => array(ActivityObjectTableMap::COL_ID, ActivityObjectTableMap::COL_CLASS_NAME, ActivityObjectTableMap::COL_TYPE, ActivityObjectTableMap::COL_DISPLAY_NAME, ActivityObjectTableMap::COL_URL, ActivityObjectTableMap::COL_REFERENCE_ID, ActivityObjectTableMap::COL_VERSION, ActivityObjectTableMap::COL_EXTRA, ),
+        self::TYPE_FIELDNAME     => array('id', 'class_name', 'type', 'display_name', 'url', 'reference_id', 'version', 'extra', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
@@ -139,8 +139,8 @@ class ActivityObjectTableMap extends TableMap
     protected static $fieldKeys = array (
         self::TYPE_PHPNAME       => array('Id' => 0, 'ClassName' => 1, 'Type' => 2, 'DisplayName' => 3, 'Url' => 4, 'ReferenceId' => 5, 'Version' => 6, 'Extra' => 7, ),
         self::TYPE_CAMELNAME     => array('id' => 0, 'className' => 1, 'type' => 2, 'displayName' => 3, 'url' => 4, 'referenceId' => 5, 'version' => 6, 'extra' => 7, ),
-        self::TYPE_COLNAME       => array(ActivityObjectTableMap::COL_ID => 0, ActivityObjectTableMap::COL_CLASS_NAME => 1, ActivityObjectTableMap::COL_TYPE => 2, ActivityObjectTableMap::COL_DISPLAYNAME => 3, ActivityObjectTableMap::COL_URL => 4, ActivityObjectTableMap::COL_REFERENCE_ID => 5, ActivityObjectTableMap::COL_VERSION => 6, ActivityObjectTableMap::COL_EXTRA => 7, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'class_name' => 1, 'type' => 2, 'displayName' => 3, 'url' => 4, 'reference_id' => 5, 'version' => 6, 'extra' => 7, ),
+        self::TYPE_COLNAME       => array(ActivityObjectTableMap::COL_ID => 0, ActivityObjectTableMap::COL_CLASS_NAME => 1, ActivityObjectTableMap::COL_TYPE => 2, ActivityObjectTableMap::COL_DISPLAY_NAME => 3, ActivityObjectTableMap::COL_URL => 4, ActivityObjectTableMap::COL_REFERENCE_ID => 5, ActivityObjectTableMap::COL_VERSION => 6, ActivityObjectTableMap::COL_EXTRA => 7, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'class_name' => 1, 'type' => 2, 'display_name' => 3, 'url' => 4, 'reference_id' => 5, 'version' => 6, 'extra' => 7, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
@@ -164,7 +164,7 @@ class ActivityObjectTableMap extends TableMap
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('class_name', 'ClassName', 'VARCHAR', false, 255, null);
         $this->addColumn('type', 'Type', 'VARCHAR', false, 255, null);
-        $this->addColumn('displayName', 'DisplayName', 'VARCHAR', false, 255, null);
+        $this->addColumn('display_name', 'DisplayName', 'VARCHAR', false, 255, null);
         $this->addColumn('url', 'Url', 'VARCHAR', false, 255, null);
         $this->addColumn('reference_id', 'ReferenceId', 'INTEGER', false, null, null);
         $this->addColumn('version', 'Version', 'INTEGER', false, null, null);
@@ -324,7 +324,7 @@ class ActivityObjectTableMap extends TableMap
             $criteria->addSelectColumn(ActivityObjectTableMap::COL_ID);
             $criteria->addSelectColumn(ActivityObjectTableMap::COL_CLASS_NAME);
             $criteria->addSelectColumn(ActivityObjectTableMap::COL_TYPE);
-            $criteria->addSelectColumn(ActivityObjectTableMap::COL_DISPLAYNAME);
+            $criteria->addSelectColumn(ActivityObjectTableMap::COL_DISPLAY_NAME);
             $criteria->addSelectColumn(ActivityObjectTableMap::COL_URL);
             $criteria->addSelectColumn(ActivityObjectTableMap::COL_REFERENCE_ID);
             $criteria->addSelectColumn(ActivityObjectTableMap::COL_VERSION);
@@ -333,7 +333,7 @@ class ActivityObjectTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.class_name');
             $criteria->addSelectColumn($alias . '.type');
-            $criteria->addSelectColumn($alias . '.displayName');
+            $criteria->addSelectColumn($alias . '.display_name');
             $criteria->addSelectColumn($alias . '.url');
             $criteria->addSelectColumn($alias . '.reference_id');
             $criteria->addSelectColumn($alias . '.version');

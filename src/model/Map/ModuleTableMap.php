@@ -201,7 +201,7 @@ class ModuleTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'concrete_inheritance' => array('extends' => 'package', 'descendant_column' => 'descendant_class', 'copy_data_to_parent' => 'true', 'schema' => '', ),
+            'concrete_inheritance' => array('extends' => 'package', 'descendant_column' => 'descendant_class', 'copy_data_to_parent' => 'true', 'copy_data_to_child' => 'false', 'schema' => '', ),
         );
     } // getBehaviors()
     /**

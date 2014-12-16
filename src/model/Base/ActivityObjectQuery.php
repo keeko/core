@@ -23,7 +23,7 @@ use keeko\core\model\Map\ActivityObjectTableMap;
  * @method     ChildActivityObjectQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildActivityObjectQuery orderByClassName($order = Criteria::ASC) Order by the class_name column
  * @method     ChildActivityObjectQuery orderByType($order = Criteria::ASC) Order by the type column
- * @method     ChildActivityObjectQuery orderByDisplayName($order = Criteria::ASC) Order by the displayName column
+ * @method     ChildActivityObjectQuery orderByDisplayName($order = Criteria::ASC) Order by the display_name column
  * @method     ChildActivityObjectQuery orderByUrl($order = Criteria::ASC) Order by the url column
  * @method     ChildActivityObjectQuery orderByReferenceId($order = Criteria::ASC) Order by the reference_id column
  * @method     ChildActivityObjectQuery orderByVersion($order = Criteria::ASC) Order by the version column
@@ -32,7 +32,7 @@ use keeko\core\model\Map\ActivityObjectTableMap;
  * @method     ChildActivityObjectQuery groupById() Group by the id column
  * @method     ChildActivityObjectQuery groupByClassName() Group by the class_name column
  * @method     ChildActivityObjectQuery groupByType() Group by the type column
- * @method     ChildActivityObjectQuery groupByDisplayName() Group by the displayName column
+ * @method     ChildActivityObjectQuery groupByDisplayName() Group by the display_name column
  * @method     ChildActivityObjectQuery groupByUrl() Group by the url column
  * @method     ChildActivityObjectQuery groupByReferenceId() Group by the reference_id column
  * @method     ChildActivityObjectQuery groupByVersion() Group by the version column
@@ -58,7 +58,7 @@ use keeko\core\model\Map\ActivityObjectTableMap;
  * @method     ChildActivityObject findOneById(int $id) Return the first ChildActivityObject filtered by the id column
  * @method     ChildActivityObject findOneByClassName(string $class_name) Return the first ChildActivityObject filtered by the class_name column
  * @method     ChildActivityObject findOneByType(string $type) Return the first ChildActivityObject filtered by the type column
- * @method     ChildActivityObject findOneByDisplayName(string $displayName) Return the first ChildActivityObject filtered by the displayName column
+ * @method     ChildActivityObject findOneByDisplayName(string $display_name) Return the first ChildActivityObject filtered by the display_name column
  * @method     ChildActivityObject findOneByUrl(string $url) Return the first ChildActivityObject filtered by the url column
  * @method     ChildActivityObject findOneByReferenceId(int $reference_id) Return the first ChildActivityObject filtered by the reference_id column
  * @method     ChildActivityObject findOneByVersion(int $version) Return the first ChildActivityObject filtered by the version column
@@ -68,7 +68,7 @@ use keeko\core\model\Map\ActivityObjectTableMap;
  * @method     ChildActivityObject[]|ObjectCollection findById(int $id) Return ChildActivityObject objects filtered by the id column
  * @method     ChildActivityObject[]|ObjectCollection findByClassName(string $class_name) Return ChildActivityObject objects filtered by the class_name column
  * @method     ChildActivityObject[]|ObjectCollection findByType(string $type) Return ChildActivityObject objects filtered by the type column
- * @method     ChildActivityObject[]|ObjectCollection findByDisplayName(string $displayName) Return ChildActivityObject objects filtered by the displayName column
+ * @method     ChildActivityObject[]|ObjectCollection findByDisplayName(string $display_name) Return ChildActivityObject objects filtered by the display_name column
  * @method     ChildActivityObject[]|ObjectCollection findByUrl(string $url) Return ChildActivityObject objects filtered by the url column
  * @method     ChildActivityObject[]|ObjectCollection findByReferenceId(int $reference_id) Return ChildActivityObject objects filtered by the reference_id column
  * @method     ChildActivityObject[]|ObjectCollection findByVersion(int $version) Return ChildActivityObject objects filtered by the version column
@@ -164,7 +164,7 @@ abstract class ActivityObjectQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `id`, `class_name`, `type`, `displayName`, `url`, `reference_id`, `version`, `extra` FROM `kk_activity_object` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `class_name`, `type`, `display_name`, `url`, `reference_id`, `version`, `extra` FROM `kk_activity_object` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -354,12 +354,12 @@ abstract class ActivityObjectQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the displayName column
+     * Filter the query on the display_name column
      *
      * Example usage:
      * <code>
-     * $query->filterByDisplayName('fooValue');   // WHERE displayName = 'fooValue'
-     * $query->filterByDisplayName('%fooValue%'); // WHERE displayName LIKE '%fooValue%'
+     * $query->filterByDisplayName('fooValue');   // WHERE display_name = 'fooValue'
+     * $query->filterByDisplayName('%fooValue%'); // WHERE display_name LIKE '%fooValue%'
      * </code>
      *
      * @param     string $displayName The value to use as filter.
@@ -379,7 +379,7 @@ abstract class ActivityObjectQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ActivityObjectTableMap::COL_DISPLAYNAME, $displayName, $comparison);
+        return $this->addUsingAlias(ActivityObjectTableMap::COL_DISPLAY_NAME, $displayName, $comparison);
     }
 
     /**
