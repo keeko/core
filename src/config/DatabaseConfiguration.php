@@ -2,43 +2,39 @@
 namespace keeko\core\config;
 
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Config\Definition\Processor;
+use keeko\core\config\definition\DatabaseDefinition;
 
-class DatabaseConfiguration extends FileLoader {
+class DatabaseConfiguration extends AbstractConfigurationLoader {
 
-	private $host;
-
-	private $database;
-
-	private $user;
-
-	private $password;
-
+	private $config;
+	
 	public function load($resource, $type = null) {
-		$config = Yaml::parse($resource);
-		
-		foreach ($config as $k => $v) {
-			$this->$k = $v;
+		if (file_exists($resource)) {
+			$this->loaded = true;
+			$config = Yaml::parse($resource);
+			$processor = new Processor();
+			$this->config = $processor->processConfiguration(new DatabaseDefinition(), $config);
 		}
 	}
 
 	public function supports($resource, $type = null) {
-		return is_string($resource) && 'yml' === pathinfo($resource, PATHINFO_EXTENSION);
+		return pathinfo($resource, PATHINFO_EXTENSION) === 'yaml' && pathinfo($resource, PATHINFO_FILENAME) === 'database';
 	}
 
 	public function getHost() {
-		return $this->host;
+		return $this->config['host'];
 	}
 
 	public function getDatabase() {
-		return $this->database;
+		return $this->config['database'];
 	}
 
 	public function getUser() {
-		return $this->user;
+		return $this->config['user'];
 	}
 
 	public function getPassword() {
-		return $this->password;
+		return $this->config['password'];
 	}
 }

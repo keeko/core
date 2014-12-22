@@ -14,7 +14,7 @@ use Composer\Repository\WritableRepositoryInterface;
 
 class DelegateInstaller {
 
-	public static function installPackage(PackageEvent $event) {
+	protected function installPackage(PackageEvent $event) {
 // 		if (!self::bootstrap()) {
 // 			return;
 // 		}
@@ -28,7 +28,7 @@ class DelegateInstaller {
 // 		}
 	}
 
-	public static function updatePackage(PackageEvent $event) {
+	protected function updatePackage(PackageEvent $event) {
 // 		if (!self::bootstrap()) {
 // 			return;
 // 		}
@@ -43,7 +43,7 @@ class DelegateInstaller {
 // 		}
 	}
 
-	public static function uninstallPackage(PackageEvent $event) {
+	protected function uninstallPackage(PackageEvent $event) {
 // 		if (!self::bootstrap()) {
 // 			return;
 // 		}
@@ -59,11 +59,10 @@ class DelegateInstaller {
 	/**
 	 * Returns the installer for a given type
 	 *
-	 * @param
-	 *        	PackageInterface
+	 * @param PackageInterface
 	 * @return AbstractPackageInstaller
 	 */
-	private static function getInstaller(PackageInterface $package) {
+	private function getInstaller(PackageInterface $package) {
 		switch ($package->getType()) {
 			case 'keeko-app':
 				return new AppInstaller();
@@ -76,15 +75,15 @@ class DelegateInstaller {
 				break;
 		}
 	}
-
-	private static function bootstrap() {
-		$autoload = rtrim(getcwd(), '/\\') . '/vendor/autoload.php';
-		
-		if (file_exists($autoload)) {
-			require_once rtrim(getcwd(), '/\\') . '/src/bootstrap.php';
-			return true;
-		}
-		
-		return false;
+	
+	/**
+	 * Batch processing of install, update and unintall operations
+	 *
+	 * @param array<PackageEvent> $install
+	 * @param array<PackageEvent> $update
+	 * @param array<PackageEvent> $uninstall
+	 */
+	public function process(array $install, array $update, array $uninstall) {
+		// do something
 	}
 }

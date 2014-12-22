@@ -2,15 +2,21 @@
 	"name" : "keeko/core",
 	"description" : "Keeko core",
 	"type" : "keeko-core",
+	"license" : "MIT",
 	"authors" : [{
 			"name" : "gossi",
 			"homepage" : "http://gos.si"
 		}
 	],
-	"license" : "MIT",
+	"autoload" : {
+		"psr-4" : {
+			"keeko\\core\\" : "src"
+		}
+	},
 	"require" : {
 		"keeko/composer-installer" : "*",
 		"composer/composer" : "dev-master",
+		"propel/propel": "2.0.0-alpha4",
 		"symfony/config" : "~2",
 		"symfony/http-foundation" : "~2",
 		"symfony/routing" : "~2",
@@ -18,17 +24,11 @@
 		"symfony/finder" : "~2",
 		"symfony/yaml" : "~2",
 		"symfony/filesystem" : "~2",
+		"symfony/translation" : "~2",
 		"twig/twig" : "~1",
 		"ircmaxell/password-compat" : "~1",
-		"propel/propel" : "dev-master",
-		"symfony/translation" : "~2",
 		"kriswallsmith/assetic" : "~1",
 		"monolog/monolog" : "~1",
 		"gossi/collection" : "~1"
-	},
-	"autoload" : {
-		"psr-4" : {
-			"keeko\\core\\" : "src"
-		}
 	}
 }

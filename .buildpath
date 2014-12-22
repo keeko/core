@@ -27,4 +27,5 @@
 	<buildpathentry excluding="composer/" kind="src" path="vendor/composer"/>
 	<buildpathentry kind="src" path="vendor/symfony/process"/>
 	<buildpathentry kind="src" path="vendor/symfony/validator"/>
+	<buildpathentry kind="src" path="bootstrap"/>
 </buildpath>
