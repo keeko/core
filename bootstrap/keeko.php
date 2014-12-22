@@ -3,7 +3,7 @@ use Symfony\Component\HttpFoundation\Request;
 use keeko\core\routing\ApplicationRouter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-require 'bootstrap.php';
+require_once 'bootstrap.php';
 
 try {
 	$request = Request::createFromGlobals();
