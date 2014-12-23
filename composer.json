@@ -15,8 +15,8 @@
 	},
 	"require" : {
 		"keeko/composer-installer" : "*",
-		"composer/composer" : "dev-master",
-		"propel/propel": "2.0.0-alpha4",
+		"composer/composer" : "dev-master@dev",
+		"propel/propel" : "2.0.0-alpha4@alpha",
 		"symfony/config" : "~2",
 		"symfony/http-foundation" : "~2",
 		"symfony/routing" : "~2",
