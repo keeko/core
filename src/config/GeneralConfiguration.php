@@ -14,9 +14,11 @@ class GeneralConfiguration extends AbstractConfigurationLoader {
 		if (file_exists($resource)) {
 			$this->loaded = true;
 			$config = Yaml::parse($resource);
-			$processor = new Processor();
-			$this->config = $processor->processConfiguration(new GeneralDefinition(), $config);
+		} else {
+			$config = [];
 		}
+		$processor = new Processor();
+		$this->config = $processor->processConfiguration(new GeneralDefinition(), $config);
 	}
 	
 	public function supports($resource, $type = null) {
