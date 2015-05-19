@@ -29,6 +29,6 @@
 		"ircmaxell/password-compat" : "~1",
 		"kriswallsmith/assetic" : "~1",
 		"monolog/monolog" : "~1",
-		"gossi/collection" : "~1"
+		"phootwork/collection" : "~1"
 	}
 }

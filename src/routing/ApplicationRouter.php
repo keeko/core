@@ -49,7 +49,8 @@ class ApplicationRouter implements RouteMatcherInterface {
 		
 		foreach ($uris as $uri) {
 			$uri->setBasepath(rtrim($uri->getBasepath(), '/'));
-			if (strpos($request->getRequestUri(), $uri->getBasepath()) !== false) {
+			$basepath = $uri->getBasepath();
+			if ((empty($basepath) && $request->getRequestUri() == '') || (strpos($request->getRequestUri(), $uri->getBasepath()) !== false)) {
 				// count slashes
 				if ($found === null) {
 					$found = $uri;

@@ -39,6 +39,8 @@ use keeko\core\model\UserGroup as ChildUserGroup;
 use keeko\core\model\UserGroupQuery as ChildUserGroupQuery;
 use keeko\core\model\UserQuery as ChildUserQuery;
 use keeko\core\model\Map\GroupTableMap;
+use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Mapping\Factory\LazyLoadingMetadataFactory;
 
 /**
  * Base class that represents a row from the 'kk_group' table.
@@ -2864,7 +2866,7 @@ abstract class Group implements ActiveRecordInterface
             if(class_exists('Symfony\\Component\\Validator\\Validator\\LegacyValidator')){
                 $validator = new LegacyValidator(
                             new ExecutionContextFactory(new DefaultTranslator()),
-                            new ClassMetaDataFactory(new StaticMethodLoader()),
+                            new ClassMetadataFactory(new StaticMethodLoader()),
                             new ConstraintValidatorFactory()
                 );
             }else{
