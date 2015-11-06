@@ -58,8 +58,7 @@ class PackageSchema extends AbstractSchema implements Arrayable {
 	}
 	
 	private function parse($contents) {
-		/* @var $data Map */
-		$data = CollectionUtils::fromCollection($contents);
+		$data = new Map($contents);
 	
 		$this->setFullName($data->get('name'));
 		
@@ -68,16 +67,16 @@ class PackageSchema extends AbstractSchema implements Arrayable {
 		$this->license = $data->get('license');
 		
 		$this->authors = new ArrayList();
-		if ($data instanceof Map && $data->has('authors')) {
+		if ($data->has('authors')) {
 			foreach ($data->get('authors') as $authorData) {
 				$this->authors->add(new AuthorSchema($authorData));
 			}
 		}
 
 		$this->autoload = new AutoloadSchema($data->get('autoload', []));
-		$this->require = $data->get('require', new Map());
-		$this->requireDev = $data->get('require-dev', new Map());
-		$this->extra = $data->get('extra', new Map());
+		$this->require = new Map($data->get('require', []));
+		$this->requireDev = new Map($data->get('require-dev', []));
+		$this->extra = CollectionUtils::toMap($data->get('extra', []));
 		
 		if ($this->extra->has('keeko')) {
 			$this->keeko = new KeekoSchema($this->extra->get('keeko'));
@@ -137,8 +136,8 @@ class PackageSchema extends AbstractSchema implements Arrayable {
 		$fullName = new Text($name);
 		
 		$this->fullName = $name;
-		$this->name = $fullName->substring($fullName->indexOf('/') + 1);
-		$this->vendor = $fullName->substring(0, $fullName->indexOf('/'));
+		$this->name = $fullName->substring($fullName->indexOf('/') + 1)->toString();
+		$this->vendor = $fullName->substring(0, $fullName->indexOf('/'))->toString();
 		
 		return $this;
 	}
@@ -175,6 +174,10 @@ class PackageSchema extends AbstractSchema implements Arrayable {
 	
 	public function getFullName() {
 		return $this->fullName;
+	}
+	
+	public function getCanonicalName() {
+		return str_replace('/', '.', $this->fullName);
 	}
 
 	/**

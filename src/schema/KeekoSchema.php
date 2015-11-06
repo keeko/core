@@ -2,7 +2,6 @@
 namespace keeko\core\schema;
 
 use phootwork\lang\Arrayable;
-use phootwork\collection\CollectionUtils;
 use phootwork\collection\Map;
 
 class KeekoSchema implements Arrayable {
@@ -18,8 +17,7 @@ class KeekoSchema implements Arrayable {
 	}
 	
 	private function parse($contents) {
-		/* @var $data Map */
-		$data = CollectionUtils::fromCollection($contents);
+		$data = new Map($contents);
 	
 		if ($data->has('app')) {
 			$this->app = new AppSchema($data->get('app'));

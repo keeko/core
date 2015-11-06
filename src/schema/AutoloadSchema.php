@@ -2,7 +2,6 @@
 namespace keeko\core\schema;
 
 use phootwork\lang\Arrayable;
-use phootwork\collection\CollectionUtils;
 use phootwork\collection\Map;
 use phootwork\collection\ArrayList;
 
@@ -25,11 +24,10 @@ class AutoloadSchema implements Arrayable {
 	}
 
 	private function parse($contents) {
-		/* @var $data Map */
-		$data = CollectionUtils::fromCollection($contents);
+		$data = new Map($contents);
 	
-		$this->psr0 = new PsrSchema($data->get('psr-0', new Map()));
-		$this->psr4 = new PsrSchema($data->get('psr-4', new Map()));
+		$this->psr0 = new PsrSchema($data->get('psr-0', []));
+		$this->psr4 = new PsrSchema($data->get('psr-4', []));
 		$this->classmap = $data->get('classmap', new Map());
 		$this->files = $data->get('files', new Map());
 	}

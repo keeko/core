@@ -2,7 +2,6 @@
 namespace keeko\core\schema;
 
 use phootwork\lang\Arrayable;
-use phootwork\collection\CollectionUtils;
 use phootwork\collection\Map;
 use phootwork\collection\Set;
 
@@ -28,8 +27,7 @@ class ModuleSchema implements Arrayable {
 	 * @param array $contents
 	 */
 	private function parse($contents) {
-		/* @var $data Map */
-		$data = CollectionUtils::fromCollection($contents);
+		$data = new Map($contents);
 	
 		$this->title = $data->get('title', '');
 		$this->class = $data->get('class', '');

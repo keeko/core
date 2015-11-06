@@ -13,8 +13,7 @@ class CodegenSchema extends AbstractSchema {
 	}
 	
 	private function parse($contents) {
-		/* @var $data Map */
-		$this->data = CollectionUtils::fromCollection($contents);
+		$this->data = CollectionUtils::toMap($contents);
 	}
 	
 	private function getArray($modelName, $io, $section) {

@@ -2,7 +2,6 @@
 namespace keeko\core\schema;
 
 use phootwork\lang\Arrayable;
-use phootwork\collection\CollectionUtils;
 use phootwork\collection\ArrayList;
 use phootwork\collection\Map;
 
@@ -39,26 +38,14 @@ class ActionSchema implements Arrayable {
 	 * @param array $contents
 	 */
 	private function parse($contents) {
-		/* @var $data Map */
-		$data = CollectionUtils::fromCollection($contents);
+		$data = new Map($contents);
 	
 		$this->title = $data->get('title', '');
 		$this->class = $data->get('class', '');
 		$this->description = $data->get('description', '');
 		
-		$this->acl = new ArrayList();
-		if ($data instanceof Map && $data->has('acl')) {
-			foreach ($data->get('acl') as $group) {
-				$this->acl->add($group);
-			}
-		}
-		
-		$this->response = new Map();
-		if ($data instanceof Map && $data->has('response')) {
-			foreach ($data->get('response') as $type => $class) {
-				$this->response->set($type, $class);
-			}
-		}
+		$this->acl = new ArrayList($data->get('acl', []));
+		$this->response = new Map($data->get('response', []));
 	}
 	
 	public function toArray() {

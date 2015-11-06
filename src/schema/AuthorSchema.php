@@ -2,7 +2,6 @@
 namespace keeko\core\schema;
 
 use phootwork\lang\Arrayable;
-use phootwork\collection\CollectionUtils;
 use phootwork\collection\Map;
 
 class AuthorSchema implements Arrayable {
@@ -24,8 +23,7 @@ class AuthorSchema implements Arrayable {
 	}
 	
 	private function parse($contents) {
-		/* @var $data Map */
-		$data = CollectionUtils::fromCollection($contents);
+		$data = new Map($contents);
 	
 		$this->name = $data->get('name');
 		$this->email = $data->get('email');

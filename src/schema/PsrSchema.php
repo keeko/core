@@ -2,7 +2,6 @@
 namespace keeko\core\schema;
 
 use phootwork\lang\Arrayable;
-use phootwork\collection\CollectionUtils;
 use phootwork\collection\Map;
 
 class PsrSchema implements Arrayable {
@@ -15,7 +14,7 @@ class PsrSchema implements Arrayable {
 	}
 
 	private function parse($contents) {
-		$this->namespaces = CollectionUtils::fromCollection($contents);
+		$this->namespaces = new Map($contents);
 	}
 
 	public function toArray() {
