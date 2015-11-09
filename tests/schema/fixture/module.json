@@ -24,7 +24,6 @@
             "module": {
                 "title": "Dummy Module",
                 "class": "keeko\\module\\DummyModule",
-                "slug": "keeko.module",
                 "actions": {
                     "dashboard": {
                         "title": "Admin overview",

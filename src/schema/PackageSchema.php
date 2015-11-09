@@ -12,7 +12,7 @@ use phootwork\lang\Text;
  * @author thomas
  *
  */
-class PackageSchema extends AbstractSchema implements Arrayable {
+class PackageSchema extends RootSchema implements Arrayable {
 	
 	/** @var Map */
 	private $data;
@@ -79,7 +79,7 @@ class PackageSchema extends AbstractSchema implements Arrayable {
 		$this->extra = CollectionUtils::toMap($data->get('extra', []));
 		
 		if ($this->extra->has('keeko')) {
-			$this->keeko = new KeekoSchema($this->extra->get('keeko'));
+			$this->keeko = new KeekoSchema($this, $this->extra->get('keeko'));
 		}
 		
 		$this->data = $data;

@@ -1,9 +1,9 @@
 <?php
 namespace keeko\core\schema;
 
-use phootwork\lang\Arrayable;
 use phootwork\collection\Map;
 use phootwork\collection\ArrayList;
+use phootwork\lang\Arrayable;
 
 class AutoloadSchema implements Arrayable {
 
@@ -18,11 +18,11 @@ class AutoloadSchema implements Arrayable {
 	
 	/** @var Map<string, string> */
 	private $files;
-	
+
 	public function __construct($contents = []) {
 		$this->parse($contents);
 	}
-
+		
 	private function parse($contents) {
 		$data = new Map($contents);
 	

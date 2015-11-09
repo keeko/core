@@ -1,8 +1,8 @@
 <?php
 namespace keeko\core\schema;
 
-use phootwork\lang\Arrayable;
 use phootwork\collection\Map;
+use phootwork\lang\Arrayable;
 
 class PsrSchema implements Arrayable {
 
@@ -33,6 +33,26 @@ class PsrSchema implements Arrayable {
 	 */
 	public function getPath($namespace) {
 		return $this->namespaces->get($namespace);
+	}
+	
+	/**
+	 * Returns whether the given path exists
+	 *
+	 * @param string $path
+	 * @return boolean
+	 */
+	public function hasPath($path) {
+		return $this->namespaces->contains($path);
+	}
+	
+	/**
+	 * Removes the given path
+	 *
+	 * @param string $path
+	 */
+	public function removePath($path) {
+		$this->namespaces->remove($path);
+		return $this;
 	}
 	
 	/**

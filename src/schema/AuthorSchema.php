@@ -1,8 +1,8 @@
 <?php
 namespace keeko\core\schema;
 
-use phootwork\lang\Arrayable;
 use phootwork\collection\Map;
+use phootwork\lang\Arrayable;
 
 class AuthorSchema implements Arrayable {
 
@@ -18,10 +18,10 @@ class AuthorSchema implements Arrayable {
 	/** @var string */
 	private $role;
 	
-	public function __construct($contents) {
+	public function __construct($contents = []) {
 		$this->parse($contents);
 	}
-	
+		
 	private function parse($contents) {
 		$data = new Map($contents);
 	

@@ -1,25 +1,14 @@
 <?php
 namespace keeko\core\schema;
 
-use phootwork\lang\Arrayable;
 use phootwork\collection\Map;
 
-class AppSchema implements Arrayable {
-
-	/** @var string */
-	private $title;
-	
-	/** @var string */
-	private $class;
-	
-	public function __construct($contents = []) {
-		$this->parse($contents);
-	}
+class AppSchema extends KeekoPackageSchema {
 	
 	/**
 	 * @param array $contents
 	 */
-	private function parse($contents) {
+	protected function parse($contents) {
 		$data = new Map($contents);
 	
 		$this->title = $data->get('title', '');
@@ -33,21 +22,4 @@ class AppSchema implements Arrayable {
 		];
 	}
 	
-	public function getTitle() {
-		return $this->title;
-	}
-	
-	public function setTitle($title) {
-		$this->title = $title;
-		return $this;
-	}
-	
-	public function getClass() {
-		return $this->class;
-	}
-	
-	public function setClass($class) {
-		$this->class = $class;
-		return $this;
-	}
 }

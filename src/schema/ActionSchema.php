@@ -1,11 +1,10 @@
 <?php
 namespace keeko\core\schema;
 
-use phootwork\lang\Arrayable;
 use phootwork\collection\ArrayList;
 use phootwork\collection\Map;
 
-class ActionSchema implements Arrayable {
+class ActionSchema extends SubSchema {
 	
 	const ACL_GUEST = 'guest';
 	const ACL_USER = 'user';
@@ -29,15 +28,15 @@ class ActionSchema implements Arrayable {
 	/** @var Map<string, string> */
 	private $response;
 	
-	public function __construct($name, $contents = []) {
+	public function __construct($name, PackageSchema $package = null, $contents = []) {
 		$this->name = $name;
-		$this->parse($contents);
+		parent::__construct($package, $contents);
 	}
 	
 	/**
 	 * @param array $contents
 	 */
-	private function parse($contents) {
+	protected function parse($contents) {
 		$data = new Map($contents);
 	
 		$this->title = $data->get('title', '');

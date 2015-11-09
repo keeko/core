@@ -1,10 +1,9 @@
 <?php
 namespace keeko\core\schema;
 
-use phootwork\lang\Arrayable;
 use phootwork\collection\Map;
 
-class KeekoSchema implements Arrayable {
+class KeekoSchema extends SubSchema {
 	
 	/** @var AppSchema */
 	private $app;
@@ -12,19 +11,15 @@ class KeekoSchema implements Arrayable {
 	/** @var ModuleSchema */
 	private $module;
 	
-	public function __construct($contents = []) {
-		$this->parse($contents);
-	}
-	
-	private function parse($contents) {
+	protected function parse($contents) {
 		$data = new Map($contents);
 	
 		if ($data->has('app')) {
-			$this->app = new AppSchema($data->get('app'));
+			$this->app = new AppSchema($this->package, $data->get('app'));
 		}
 		
 		if ($data->has('module')) {
-			$this->module = new ModuleSchema($data->get('module'));
+			$this->module = new ModuleSchema($this->package, $data->get('module'));
 		}
 	}
 	
@@ -70,5 +65,15 @@ class KeekoSchema implements Arrayable {
 		return $this->app;
 	}
 	
+	
+	public function getKeekoPackage($type) {
+		switch ($type) {
+			case 'app':
+				return $this->app;
+				
+			case 'module':
+				return $this->module;
+		}
+	}
 }
 

@@ -5,7 +5,7 @@ use phootwork\file\File;
 use phootwork\file\exception\FileNotFoundException;
 use phootwork\json\Json;
 
-abstract class AbstractSchema {
+abstract class RootSchema {
 	
 	/**
 	 *

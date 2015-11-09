@@ -3,7 +3,7 @@ namespace keeko\core\schema;
 
 use phootwork\collection\CollectionUtils;
 
-class CodegenSchema extends AbstractSchema {
+class CodegenSchema extends RootSchema {
 	
 	/** @var Map */
 	private $data;
