@@ -69,9 +69,15 @@ class KeekoSchema extends SubSchema {
 	public function getKeekoPackage($type) {
 		switch ($type) {
 			case 'app':
+				if ($this->app === null) {
+					$this->app = new AppSchema($this->package);
+				}
 				return $this->app;
 				
 			case 'module':
+				if ($this->module === null) {
+					$this->module = new ModuleSchema($this->package);
+				}
 				return $this->module;
 		}
 	}

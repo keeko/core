@@ -78,10 +78,7 @@ class PackageSchema extends RootSchema implements Arrayable {
 		$this->requireDev = new Map($data->get('require-dev', []));
 		$this->extra = CollectionUtils::toMap($data->get('extra', []));
 		
-		if ($this->extra->has('keeko')) {
-			$this->keeko = new KeekoSchema($this, $this->extra->get('keeko'));
-		}
-		
+		$this->keeko = new KeekoSchema($this, $this->extra->get('keeko', []));
 		$this->data = $data;
 	}
 	
@@ -100,27 +97,17 @@ class PackageSchema extends RootSchema implements Arrayable {
 			'autoload' => $this->autoload->toArray(),
 			'require' => $this->require->toArray(),
 			'require-dev' => $this->requireDev->toArray(),
-			'extra' => $this->collectionToArray($this->extra)
+			'extra' => $this->extra->toArray()
 		];
 		
+		$arr = array_merge($sort, $this->data->toArray());
+		
 		if ($this->keeko !== null) {
-			$sort['extra']['keeko'] = $this->keeko->toArray();
+			$arr['extra']['keeko'] = $this->keeko->toArray();
 		}
 		
-		$arr = array_merge($sort, $this->collectionToArray($this->data));
-		
-		return $arr;
-	}
-	
-	private function collectionToArray(Collection $coll) {
-		$arr = [];
-		
-		foreach ($coll as $k => $v) {
-			if ($v instanceof Collection) {
-				$v = $this->collectionToArray($v);
-			}
-			
-			$arr[$k] = $v;
+		if (count($arr['extra']) == 0) {
+			unset($arr['extra']);
 		}
 		
 		return $arr;
@@ -278,3 +265,4 @@ class PackageSchema extends RootSchema implements Arrayable {
 	}
 	
 }
+

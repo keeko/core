@@ -2,6 +2,7 @@
 namespace keeko\core\tests\schema;
 
 use keeko\core\schema\PackageSchema;
+use keeko\core\schema\ActionSchema;
 
 class KeekoSchemaTest extends \PHPUnit_Framework_TestCase {
 	
@@ -44,6 +45,25 @@ class KeekoSchemaTest extends \PHPUnit_Framework_TestCase {
 		
 		$this->assertTrue($dashboard->hasResponse('json'));
 		$this->assertEquals('keeko\\module\\responses\\DashboardJsonResponse', $dashboard->getResponse('json'));
+	}
+	
+	public function testActions() {
+		$package = new PackageSchema();
+		$module = $package->getKeeko()->getKeekoPackage('module');
+		
+		$this->assertEquals(0, $module->getActionNames()->size());
+		
+		$action = new ActionSchema('create-sth');
+		$action->setClass('keeko\\user\\actions\\CreateSthAction');
+		$action->setTitle('Create something');
+		
+		$this->assertEquals('create-sth', $action->getName());
+		$this->assertEquals('keeko\\user\\actions\\CreateSthAction', $action->getClass());
+		$this->assertEquals('Create something', $action->getTitle());
+		
+		$module->addAction($action);
+
+		$this->assertEquals(1, $module->getActionNames()->size());
 	}
 
 }

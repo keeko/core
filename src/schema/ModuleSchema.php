@@ -19,24 +19,28 @@ class ModuleSchema extends KeekoPackageSchema {
 		$this->class = $data->get('class', '');
 		
 		$this->actions = new Map();
-		if ($data->has('actions')) {
-			foreach ($data->get('actions') as $name => $actionData) {
-				$this->actions->set($name, new ActionSchema($name, $this->package, $actionData));
-			}
+		foreach ($data->get('actions', []) as $name => $actionData) {
+			$this->actions->set($name, new ActionSchema($name, $this->package, $actionData));
 		}
 	}
 	
 	public function toArray() {
-		$actions = [];
-		foreach ($this->actions as $action) {
-			$actions[$action->getName()] = $action->toArray();
+		$arr = [
+			'title' => $this->title,
+			'class' => $this->class
+		];
+		
+		if ($this->actions->size() > 0) {
+			$actions = [];
+			foreach ($this->actions as $action) {
+				$actions[$action->getName()] = $action->toArray();
+			}
+			$arr['actions'] = $actions;
 		}
 		
-		return [
-			'title' => $this->title,
-			'class' => $this->class,
-			'actions' => $actions
-		];
+// 		print_r($arr);
+
+		return $arr;
 	}
 	
 	public function getSlug() {
@@ -56,8 +60,8 @@ class ModuleSchema extends KeekoPackageSchema {
 	 * @return $this
 	 */
 	public function addAction(ActionSchema $action) {
-		$this->actions->set($action->getName(), $action);
 		$action->setPackage($this->package);
+		$this->actions->set($action->getName(), $action);
 		return $this;
 	}
 	

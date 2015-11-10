@@ -8,7 +8,7 @@ abstract class SubSchema implements Arrayable {
 	/** @var PackageSchema */
 	protected $package;
 	
-	public function __construct(PackageSchema $root, $contents = []) {
+	public function __construct(RootSchema $root = null, $contents = []) {
 		$this->package = $root;
 		$this->parse($contents);
 	}
