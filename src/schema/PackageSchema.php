@@ -2,7 +2,6 @@
 namespace keeko\core\schema;
 
 use phootwork\collection\ArrayList;
-use phootwork\collection\Collection;
 use phootwork\collection\CollectionUtils;
 use phootwork\collection\Map;
 use phootwork\lang\Arrayable;
@@ -102,7 +101,7 @@ class PackageSchema extends RootSchema implements Arrayable {
 		
 		$arr = array_merge($sort, $this->data->toArray());
 		
-		if ($this->keeko !== null) {
+		if ($this->keeko !== null && count($this->keeko->toArray()) > 0) {
 			$arr['extra']['keeko'] = $this->keeko->toArray();
 		}
 		
