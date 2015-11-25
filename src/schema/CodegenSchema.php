@@ -2,11 +2,15 @@
 namespace keeko\core\schema;
 
 use phootwork\collection\CollectionUtils;
+use phootwork\collection\Map;
 
 class CodegenSchema extends RootSchema {
 	
 	/** @var Map */
 	private $data;
+	
+	/** @var Map */
+	private $models;
 	
 	public function __construct($contents = []) {
 		$this->parse($contents);
@@ -14,13 +18,15 @@ class CodegenSchema extends RootSchema {
 	
 	private function parse($contents) {
 		$this->data = CollectionUtils::toMap($contents);
+		
+		$this->models = $this->data->get('models', new Map());
 	}
 	
 	private function getArray($modelName, $io, $section) {
-		if ($this->data->has($modelName)
-				&& $this->data->get($modelName)->has($io)
-				&& $this->data->get($modelName)->get($io)->has($section)) {
-			return $this->data->get($modelName)->get($io)->has($section)->toArray();
+		if ($this->models->has($modelName)
+				&& $this->models->get($modelName)->has($io)
+				&& $this->models->get($modelName)->get($io)->has($section)) {
+			return $this->models->get($modelName)->get($io)->get($section)->toArray();
 		}
 
 		return [];
