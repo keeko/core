@@ -14,9 +14,10 @@
 		}
 	},
 	"require" : {
+		"php" : ">=5.5",
 		"keeko/composer-installer" : "*",
 		"composer/composer" : "dev-master@dev",
-		"propel/propel" : "2.0.0-alpha4@alpha",
+		"propel/propel" : "2.0.0-alpha5@alpha",
 		"symfony/config" : "~2",
 		"symfony/http-foundation" : "~2",
 		"symfony/routing" : "~2",
