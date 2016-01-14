@@ -1,3 +1,5 @@
+.buildpath
+composer.lock
 .puli/
 vendor/
 coverage/
