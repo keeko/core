@@ -81,7 +81,24 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser findOneByPasswordRecoverCode(string $password_recover_code) Return the first ChildUser filtered by the password_recover_code column
  * @method     ChildUser findOneByPasswordRecoverTime(string $password_recover_time) Return the first ChildUser filtered by the password_recover_time column
  * @method     ChildUser findOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column
- * @method     ChildUser findOneByUpdatedAt(string $updated_at) Return the first ChildUser filtered by the updated_at column
+ * @method     ChildUser findOneByUpdatedAt(string $updated_at) Return the first ChildUser filtered by the updated_at column *
+
+ * @method     ChildUser requirePk($key, ConnectionInterface $con = null) Return the ChildUser by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOne(ConnectionInterface $con = null) Return the first ChildUser matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildUser requireOneById(int $id) Return the first ChildUser filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByLoginName(string $login_name) Return the first ChildUser filtered by the login_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByPassword(string $password) Return the first ChildUser filtered by the password column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByGivenName(string $given_name) Return the first ChildUser filtered by the given_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByFamilyName(string $family_name) Return the first ChildUser filtered by the family_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByDisplayName(string $display_name) Return the first ChildUser filtered by the display_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByEmail(string $email) Return the first ChildUser filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByBirthday(string $birthday) Return the first ChildUser filtered by the birthday column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneBySex(int $sex) Return the first ChildUser filtered by the sex column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByPasswordRecoverCode(string $password_recover_code) Return the first ChildUser filtered by the password_recover_code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByPasswordRecoverTime(string $password_recover_time) Return the first ChildUser filtered by the password_recover_time column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByUpdatedAt(string $updated_at) Return the first ChildUser filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildUser[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUser objects based on current ModelCriteria
  * @method     ChildUser[]|ObjectCollection findById(int $id) Return ChildUser objects filtered by the id column
@@ -102,6 +119,7 @@ use keeko\core\model\Map\UserTableMap;
  */
 abstract class UserQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\UserQuery object.
@@ -738,7 +756,7 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Auth object
      *
-     * @param \keeko\core\model\Auth|ObjectCollection $auth  the related object to use as filter
+     * @param \keeko\core\model\Auth|ObjectCollection $auth the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildUserQuery The current query, for fluid interface
@@ -811,7 +829,7 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\UserGroup object
      *
-     * @param \keeko\core\model\UserGroup|ObjectCollection $userGroup  the related object to use as filter
+     * @param \keeko\core\model\UserGroup|ObjectCollection $userGroup the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildUserQuery The current query, for fluid interface
@@ -884,7 +902,7 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Activity object
      *
-     * @param \keeko\core\model\Activity|ObjectCollection $activity  the related object to use as filter
+     * @param \keeko\core\model\Activity|ObjectCollection $activity the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildUserQuery The current query, for fluid interface

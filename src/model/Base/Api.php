@@ -374,7 +374,7 @@ abstract class Api implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Api The current object (for fluent API support)
      */
     public function setId($v)
@@ -394,7 +394,7 @@ abstract class Api implements ActiveRecordInterface
     /**
      * Set the value of [route] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Api The current object (for fluent API support)
      */
     public function setRoute($v)
@@ -414,7 +414,7 @@ abstract class Api implements ActiveRecordInterface
     /**
      * Set the value of [method] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Api The current object (for fluent API support)
      */
     public function setMethod($v)
@@ -434,7 +434,7 @@ abstract class Api implements ActiveRecordInterface
     /**
      * Set the value of [action_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Api The current object (for fluent API support)
      */
     public function setActionId($v)
@@ -458,7 +458,7 @@ abstract class Api implements ActiveRecordInterface
     /**
      * Set the value of [required_params] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Api The current object (for fluent API support)
      */
     public function setRequiredParams($v)
@@ -713,10 +713,10 @@ abstract class Api implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

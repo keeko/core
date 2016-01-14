@@ -44,7 +44,13 @@ use keeko\core\model\Map\UserGroupTableMap;
  * @method     ChildUserGroup findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUserGroup matching the query, or a new ChildUserGroup object populated from the query conditions when no match is found
  *
  * @method     ChildUserGroup findOneByUserId(int $user_id) Return the first ChildUserGroup filtered by the user_id column
- * @method     ChildUserGroup findOneByGroupId(int $group_id) Return the first ChildUserGroup filtered by the group_id column
+ * @method     ChildUserGroup findOneByGroupId(int $group_id) Return the first ChildUserGroup filtered by the group_id column *
+
+ * @method     ChildUserGroup requirePk($key, ConnectionInterface $con = null) Return the ChildUserGroup by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUserGroup requireOne(ConnectionInterface $con = null) Return the first ChildUserGroup matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildUserGroup requireOneByUserId(int $user_id) Return the first ChildUserGroup filtered by the user_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUserGroup requireOneByGroupId(int $group_id) Return the first ChildUserGroup filtered by the group_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildUserGroup[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUserGroup objects based on current ModelCriteria
  * @method     ChildUserGroup[]|ObjectCollection findByUserId(int $user_id) Return ChildUserGroup objects filtered by the user_id column
@@ -54,6 +60,7 @@ use keeko\core\model\Map\UserGroupTableMap;
  */
 abstract class UserGroupQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\UserGroupQuery object.

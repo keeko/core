@@ -152,7 +152,13 @@ class AuthTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), null, null);
+        $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

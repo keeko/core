@@ -1,24 +1,21 @@
 <?php
 use keeko\core\config\DatabaseConfiguration;
-use Symfony\Component\Config\FileLocator;
+use keeko\core\config\DevelopmentConfiguration;
+use keeko\core\config\GeneralConfiguration;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Propel\Runtime\Connection\ConnectionManagerSingle;
 use Propel\Runtime\Propel;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use keeko\core\config\DevelopmentConfiguration;
-use Symfony\Component\Config\Loader\LoaderResolver;
-use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Exception\FileLoaderLoadException;
-use keeko\core\config\GeneralConfiguration;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
 
 define('KEEKO_PRODUCTION', 'production');
 define('KEEKO_DEVELOPMENT', 'development');
 
 define('KEEKO_PATH_CONFIG', KEEKO_PATH . DIRECTORY_SEPARATOR . 'config');
-define('KEEKO_PATH_MODULES', KEEKO_PATH . DIRECTORY_SEPARATOR . 'modules');
-define('KEEKO_PATH_APPS', KEEKO_PATH . DIRECTORY_SEPARATOR . 'apps');
-define('KEEKO_PATH_DESIGNS', KEEKO_PATH . DIRECTORY_SEPARATOR . 'designs');
-
+define('KEEKO_PATH_PACKAGES', KEEKO_PATH . DIRECTORY_SEPARATOR . 'packages');
 
 // load config
 $locator = new FileLocator(KEEKO_PATH_CONFIG);
@@ -43,35 +40,35 @@ if (KEEKO_ENVIRONMENT == KEEKO_DEVELOPMENT) {
 
 
 // database config
-if (!$dbConfig->isLoaded()) {
-	echo 'No database.yaml found. Please rename database.yaml.dist to database.yaml and set the appropriate values for your environment.';
-	exit;
-}
-$serviceContainer = Propel::getServiceContainer();
-$serviceContainer->setAdapterClass('keeko', 'mysql');
-$manager = new ConnectionManagerSingle();
-$manager->setConfiguration([
-	'dsn'      => 'mysql:host=' . $dbConfig->getHost() . ';dbname=' . $dbConfig->getDatabase(),
-	'user'     => $dbConfig->getUser(),
-	'password' => $dbConfig->getPassword()
-]);
-$manager->setName('keeko');
-$serviceContainer->setConnectionManager('keeko', $manager);
-$serviceContainer->setDefaultDatasource('keeko');
-
-if (KEEKO_ENVIRONMENT == KEEKO_DEVELOPMENT) {
-	$con = Propel::getWriteConnection('keeko');
-	$con->useDebug(true);
-	$logger = new Logger('defaultLogger');
+define('KEEKO_DATABASE_LOADED', $dbConfig->isLoaded());
+if ($dbConfig->isLoaded()) {
+	$serviceContainer = Propel::getServiceContainer();
+	$serviceContainer->setAdapterClass('keeko', 'mysql');
+	$manager = new ConnectionManagerSingle();
+	$manager->setConfiguration([
+		'dsn'      => 'mysql:host=' . $dbConfig->getHost() . ';dbname=' . $dbConfig->getDatabase(),
+		'user'     => $dbConfig->getUser(),
+		'password' => $dbConfig->getPassword()
+	]);
+	$manager->setName('keeko');
+	$serviceContainer->setConnectionManager('keeko', $manager);
+	$serviceContainer->setDefaultDatasource('keeko');
 	
-	if ($devConfig->getPropelLogging() == 'stderr') {
-		$logger->pushHandler(new StreamHandler('php://stderr'));
+	$con = Propel::getWriteConnection('keeko');
+// 	$con->exec('SET NAMES utf-8;');
+// 	$con->exec('SET SQL_SAFE_UPDATES=0;');
+	
+	if (KEEKO_ENVIRONMENT == KEEKO_DEVELOPMENT) {
+		$con->useDebug(true);
+		$logger = new Logger('defaultLogger');
+		
+		if ($devConfig->getPropelLogging() == 'stderr') {
+			$logger->pushHandler(new StreamHandler('php://stderr'));
+		}
+		$serviceContainer->setLogger('defaultLogger', $logger);
 	}
-	Propel::getServiceContainer()->setLogger('defaultLogger', $logger);
 }
-
 unset($dbConfig);
-
 
 // general config
 define('KEEKO_PATH_FILES', KEEKO_PATH . DIRECTORY_SEPARATOR . $generalConfig->getPathsFiles());

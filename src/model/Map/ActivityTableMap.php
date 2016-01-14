@@ -158,9 +158,27 @@ class ActivityTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Actor', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_ONE, array('actor_id' => 'id', ), null, null);
-        $this->addRelation('Object', '\\keeko\\core\\model\\ActivityObject', RelationMap::MANY_TO_ONE, array('object_id' => 'id', ), null, null);
-        $this->addRelation('Target', '\\keeko\\core\\model\\ActivityObject', RelationMap::MANY_TO_ONE, array('target_id' => 'id', ), null, null);
+        $this->addRelation('Actor', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':actor_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Object', '\\keeko\\core\\model\\ActivityObject', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':object_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Target', '\\keeko\\core\\model\\ActivityObject', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':target_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

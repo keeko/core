@@ -381,7 +381,7 @@ abstract class Auth implements ActiveRecordInterface
     /**
      * Set the value of [token] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Auth The current object (for fluent API support)
      */
     public function setToken($v)
@@ -401,7 +401,7 @@ abstract class Auth implements ActiveRecordInterface
     /**
      * Set the value of [user_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Auth The current object (for fluent API support)
      */
     public function setUserId($v)
@@ -433,8 +433,8 @@ abstract class Auth implements ActiveRecordInterface
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
-            if ($dt !== $this->created_at) {
-                $this->created_at = $dt;
+            if ($this->created_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->created_at->format("Y-m-d H:i:s")) {
+                $this->created_at = $dt === null ? null : clone $dt;
                 $this->modifiedColumns[AuthTableMap::COL_CREATED_AT] = true;
             }
         } // if either are not null
@@ -453,8 +453,8 @@ abstract class Auth implements ActiveRecordInterface
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
-            if ($dt !== $this->updated_at) {
-                $this->updated_at = $dt;
+            if ($this->updated_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->updated_at->format("Y-m-d H:i:s")) {
+                $this->updated_at = $dt === null ? null : clone $dt;
                 $this->modifiedColumns[AuthTableMap::COL_UPDATED_AT] = true;
             }
         } // if either are not null
@@ -715,10 +715,10 @@ abstract class Auth implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 
@@ -881,6 +881,20 @@ abstract class Auth implements ActiveRecordInterface
             $keys[2] => $this->getCreatedAt(),
             $keys[3] => $this->getUpdatedAt(),
         );
+
+        $utc = new \DateTimeZone('utc');
+        if ($result[$keys[2]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[2]];
+            $result[$keys[2]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[3]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[3]];
+            $result[$keys[3]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;

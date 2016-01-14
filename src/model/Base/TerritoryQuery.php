@@ -43,7 +43,14 @@ use keeko\core\model\Map\TerritoryTableMap;
  *
  * @method     ChildTerritory findOneByIsoNr(int $iso_nr) Return the first ChildTerritory filtered by the iso_nr column
  * @method     ChildTerritory findOneByParentIsoNr(int $parent_iso_nr) Return the first ChildTerritory filtered by the parent_iso_nr column
- * @method     ChildTerritory findOneByNameEn(string $name_en) Return the first ChildTerritory filtered by the name_en column
+ * @method     ChildTerritory findOneByNameEn(string $name_en) Return the first ChildTerritory filtered by the name_en column *
+
+ * @method     ChildTerritory requirePk($key, ConnectionInterface $con = null) Return the ChildTerritory by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTerritory requireOne(ConnectionInterface $con = null) Return the first ChildTerritory matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildTerritory requireOneByIsoNr(int $iso_nr) Return the first ChildTerritory filtered by the iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTerritory requireOneByParentIsoNr(int $parent_iso_nr) Return the first ChildTerritory filtered by the parent_iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTerritory requireOneByNameEn(string $name_en) Return the first ChildTerritory filtered by the name_en column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildTerritory[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildTerritory objects based on current ModelCriteria
  * @method     ChildTerritory[]|ObjectCollection findByIsoNr(int $iso_nr) Return ChildTerritory objects filtered by the iso_nr column
@@ -54,6 +61,7 @@ use keeko\core\model\Map\TerritoryTableMap;
  */
 abstract class TerritoryQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\TerritoryQuery object.
@@ -344,7 +352,7 @@ abstract class TerritoryQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Country object
      *
-     * @param \keeko\core\model\Country|ObjectCollection $country  the related object to use as filter
+     * @param \keeko\core\model\Country|ObjectCollection $country the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTerritoryQuery The current query, for fluid interface

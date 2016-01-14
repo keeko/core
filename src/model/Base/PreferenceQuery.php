@@ -36,7 +36,14 @@ use keeko\core\model\Map\PreferenceTableMap;
  *
  * @method     ChildPreference findOneByKey(string $key) Return the first ChildPreference filtered by the key column
  * @method     ChildPreference findOneByValue(string $value) Return the first ChildPreference filtered by the value column
- * @method     ChildPreference findOneByModuleId(int $module_id) Return the first ChildPreference filtered by the module_id column
+ * @method     ChildPreference findOneByModuleId(int $module_id) Return the first ChildPreference filtered by the module_id column *
+
+ * @method     ChildPreference requirePk($key, ConnectionInterface $con = null) Return the ChildPreference by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPreference requireOne(ConnectionInterface $con = null) Return the first ChildPreference matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildPreference requireOneByKey(string $key) Return the first ChildPreference filtered by the key column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPreference requireOneByValue(string $value) Return the first ChildPreference filtered by the value column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPreference requireOneByModuleId(int $module_id) Return the first ChildPreference filtered by the module_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPreference[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPreference objects based on current ModelCriteria
  * @method     ChildPreference[]|ObjectCollection findByKey(string $key) Return ChildPreference objects filtered by the key column
@@ -47,6 +54,7 @@ use keeko\core\model\Map\PreferenceTableMap;
  */
 abstract class PreferenceQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\PreferenceQuery object.

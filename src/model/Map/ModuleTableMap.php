@@ -188,8 +188,20 @@ class ModuleTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Package', '\\keeko\\core\\model\\Package', RelationMap::MANY_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('Action', '\\keeko\\core\\model\\Action', RelationMap::ONE_TO_MANY, array('id' => 'module_id', ), 'CASCADE', null, 'Actions');
+        $this->addRelation('Package', '\\keeko\\core\\model\\Package', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':id',
+    1 => ':id',
+  ),
+), 'CASCADE', null, null, false);
+        $this->addRelation('Action', '\\keeko\\core\\model\\Action', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':module_id',
+    1 => ':id',
+  ),
+), 'CASCADE', null, 'Actions', false);
     } // buildRelations()
 
     /**
@@ -201,7 +213,7 @@ class ModuleTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'concrete_inheritance' => array('extends' => 'package', 'descendant_column' => 'descendant_class', 'copy_data_to_parent' => 'true', 'copy_data_to_child' => 'false', 'schema' => '', ),
+            'concrete_inheritance' => array('extends' => 'package', 'descendant_column' => 'descendant_class', 'copy_data_to_parent' => 'true', 'copy_data_to_child' => 'false', 'schema' => '', 'exclude_behaviors' => '', ),
         );
     } // getBehaviors()
     /**

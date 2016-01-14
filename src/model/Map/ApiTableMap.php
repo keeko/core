@@ -158,7 +158,13 @@ class ApiTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Action', '\\keeko\\core\\model\\Action', RelationMap::MANY_TO_ONE, array('action_id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('Action', '\\keeko\\core\\model\\Action', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':action_id',
+    1 => ':id',
+  ),
+), 'CASCADE', null, null, false);
     } // buildRelations()
 
     /**

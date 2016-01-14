@@ -65,7 +65,20 @@ use keeko\core\model\Map\SubdivisionTableMap;
  * @method     ChildSubdivision findOneByAltNames(string $alt_names) Return the first ChildSubdivision filtered by the alt_names column
  * @method     ChildSubdivision findOneByParentId(int $parent_id) Return the first ChildSubdivision filtered by the parent_id column
  * @method     ChildSubdivision findOneByCountryIsoNr(int $country_iso_nr) Return the first ChildSubdivision filtered by the country_iso_nr column
- * @method     ChildSubdivision findOneBySubdivisionTypeId(int $subdivision_type_id) Return the first ChildSubdivision filtered by the subdivision_type_id column
+ * @method     ChildSubdivision findOneBySubdivisionTypeId(int $subdivision_type_id) Return the first ChildSubdivision filtered by the subdivision_type_id column *
+
+ * @method     ChildSubdivision requirePk($key, ConnectionInterface $con = null) Return the ChildSubdivision by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOne(ConnectionInterface $con = null) Return the first ChildSubdivision matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildSubdivision requireOneById(int $id) Return the first ChildSubdivision filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneByIso(string $iso) Return the first ChildSubdivision filtered by the iso column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneByName(string $name) Return the first ChildSubdivision filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneByLocalName(string $local_name) Return the first ChildSubdivision filtered by the local_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneByEnName(string $en_name) Return the first ChildSubdivision filtered by the en_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneByAltNames(string $alt_names) Return the first ChildSubdivision filtered by the alt_names column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneByParentId(int $parent_id) Return the first ChildSubdivision filtered by the parent_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneByCountryIsoNr(int $country_iso_nr) Return the first ChildSubdivision filtered by the country_iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneBySubdivisionTypeId(int $subdivision_type_id) Return the first ChildSubdivision filtered by the subdivision_type_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSubdivision[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSubdivision objects based on current ModelCriteria
  * @method     ChildSubdivision[]|ObjectCollection findById(int $id) Return ChildSubdivision objects filtered by the id column
@@ -82,6 +95,7 @@ use keeko\core\model\Map\SubdivisionTableMap;
  */
 abstract class SubdivisionQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\SubdivisionQuery object.

@@ -627,7 +627,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
     public function setId($v)
@@ -647,7 +647,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Set the value of [login_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
     public function setLoginName($v)
@@ -667,7 +667,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Set the value of [password] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
     public function setPassword($v)
@@ -687,7 +687,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Set the value of [given_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
     public function setGivenName($v)
@@ -707,7 +707,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Set the value of [family_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
     public function setFamilyName($v)
@@ -727,7 +727,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Set the value of [display_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
     public function setDisplayName($v)
@@ -747,7 +747,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Set the value of [email] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
     public function setEmail($v)
@@ -775,8 +775,8 @@ abstract class User implements ActiveRecordInterface
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->birthday !== null || $dt !== null) {
-            if ($dt !== $this->birthday) {
-                $this->birthday = $dt;
+            if ($this->birthday === null || $dt === null || $dt->format("Y-m-d") !== $this->birthday->format("Y-m-d")) {
+                $this->birthday = $dt === null ? null : clone $dt;
                 $this->modifiedColumns[UserTableMap::COL_BIRTHDAY] = true;
             }
         } // if either are not null
@@ -787,7 +787,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Set the value of [sex] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
     public function setSex($v)
@@ -807,7 +807,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Set the value of [password_recover_code] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
     public function setPasswordRecoverCode($v)
@@ -835,8 +835,8 @@ abstract class User implements ActiveRecordInterface
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->password_recover_time !== null || $dt !== null) {
-            if ($dt !== $this->password_recover_time) {
-                $this->password_recover_time = $dt;
+            if ($this->password_recover_time === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->password_recover_time->format("Y-m-d H:i:s")) {
+                $this->password_recover_time = $dt === null ? null : clone $dt;
                 $this->modifiedColumns[UserTableMap::COL_PASSWORD_RECOVER_TIME] = true;
             }
         } // if either are not null
@@ -855,8 +855,8 @@ abstract class User implements ActiveRecordInterface
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
-            if ($dt !== $this->created_at) {
-                $this->created_at = $dt;
+            if ($this->created_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->created_at->format("Y-m-d H:i:s")) {
+                $this->created_at = $dt === null ? null : clone $dt;
                 $this->modifiedColumns[UserTableMap::COL_CREATED_AT] = true;
             }
         } // if either are not null
@@ -875,8 +875,8 @@ abstract class User implements ActiveRecordInterface
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
-            if ($dt !== $this->updated_at) {
-                $this->updated_at = $dt;
+            if ($this->updated_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->updated_at->format("Y-m-d H:i:s")) {
+                $this->updated_at = $dt === null ? null : clone $dt;
                 $this->modifiedColumns[UserTableMap::COL_UPDATED_AT] = true;
             }
         } // if either are not null
@@ -1161,10 +1161,10 @@ abstract class User implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 
@@ -1508,6 +1508,32 @@ abstract class User implements ActiveRecordInterface
             $keys[11] => $this->getCreatedAt(),
             $keys[12] => $this->getUpdatedAt(),
         );
+
+        $utc = new \DateTimeZone('utc');
+        if ($result[$keys[7]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[7]];
+            $result[$keys[7]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[10]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[10]];
+            $result[$keys[10]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[11]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[11]];
+            $result[$keys[11]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[12]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[12]];
+            $result[$keys[12]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;

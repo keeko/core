@@ -57,7 +57,17 @@ use keeko\core\model\Map\ApplicationTableMap;
  * @method     ChildApplication findOneByName(string $name) Return the first ChildApplication filtered by the name column
  * @method     ChildApplication findOneByTitle(string $title) Return the first ChildApplication filtered by the title column
  * @method     ChildApplication findOneByDescription(string $description) Return the first ChildApplication filtered by the description column
- * @method     ChildApplication findOneByInstalledVersion(string $installed_version) Return the first ChildApplication filtered by the installed_version column
+ * @method     ChildApplication findOneByInstalledVersion(string $installed_version) Return the first ChildApplication filtered by the installed_version column *
+
+ * @method     ChildApplication requirePk($key, ConnectionInterface $con = null) Return the ChildApplication by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplication requireOne(ConnectionInterface $con = null) Return the first ChildApplication matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildApplication requireOneByClassName(string $class_name) Return the first ChildApplication filtered by the class_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplication requireOneById(int $id) Return the first ChildApplication filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplication requireOneByName(string $name) Return the first ChildApplication filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplication requireOneByTitle(string $title) Return the first ChildApplication filtered by the title column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplication requireOneByDescription(string $description) Return the first ChildApplication filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplication requireOneByInstalledVersion(string $installed_version) Return the first ChildApplication filtered by the installed_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildApplication[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildApplication objects based on current ModelCriteria
  * @method     ChildApplication[]|ObjectCollection findByClassName(string $class_name) Return ChildApplication objects filtered by the class_name column
@@ -71,6 +81,7 @@ use keeko\core\model\Map\ApplicationTableMap;
  */
 abstract class ApplicationQuery extends ChildPackageQuery
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\ApplicationQuery object.
@@ -515,7 +526,7 @@ abstract class ApplicationQuery extends ChildPackageQuery
     /**
      * Filter the query by a related \keeko\core\model\ApplicationUri object
      *
-     * @param \keeko\core\model\ApplicationUri|ObjectCollection $applicationUri  the related object to use as filter
+     * @param \keeko\core\model\ApplicationUri|ObjectCollection $applicationUri the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildApplicationQuery The current query, for fluid interface

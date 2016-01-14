@@ -1,13 +1,12 @@
 <?php
-namespace keeko\core\package;
+namespace keeko\core\kernel;
 
+use keeko\core\package\PackageEntityInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-interface RunnableInterface {
+interface KernelTargetInterface extends PackageEntityInterface {
 
-	public function beforeRun();
-	
 	/**
 	 * Runs the particular target
 	 *
@@ -15,6 +14,4 @@ interface RunnableInterface {
 	 * @return Response
 	 */
 	public function run(Request $request);
-	
-	public function afterRun();
 }

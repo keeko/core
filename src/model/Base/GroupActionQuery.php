@@ -44,7 +44,13 @@ use keeko\core\model\Map\GroupActionTableMap;
  * @method     ChildGroupAction findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGroupAction matching the query, or a new ChildGroupAction object populated from the query conditions when no match is found
  *
  * @method     ChildGroupAction findOneByGroupId(int $group_id) Return the first ChildGroupAction filtered by the group_id column
- * @method     ChildGroupAction findOneByActionId(int $action_id) Return the first ChildGroupAction filtered by the action_id column
+ * @method     ChildGroupAction findOneByActionId(int $action_id) Return the first ChildGroupAction filtered by the action_id column *
+
+ * @method     ChildGroupAction requirePk($key, ConnectionInterface $con = null) Return the ChildGroupAction by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroupAction requireOne(ConnectionInterface $con = null) Return the first ChildGroupAction matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildGroupAction requireOneByGroupId(int $group_id) Return the first ChildGroupAction filtered by the group_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroupAction requireOneByActionId(int $action_id) Return the first ChildGroupAction filtered by the action_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildGroupAction[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGroupAction objects based on current ModelCriteria
  * @method     ChildGroupAction[]|ObjectCollection findByGroupId(int $group_id) Return ChildGroupAction objects filtered by the group_id column
@@ -54,6 +60,7 @@ use keeko\core\model\Map\GroupActionTableMap;
  */
 abstract class GroupActionQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\GroupActionQuery object.

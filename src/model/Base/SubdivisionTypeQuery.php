@@ -40,7 +40,13 @@ use keeko\core\model\Map\SubdivisionTypeTableMap;
  * @method     ChildSubdivisionType findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSubdivisionType matching the query, or a new ChildSubdivisionType object populated from the query conditions when no match is found
  *
  * @method     ChildSubdivisionType findOneById(int $id) Return the first ChildSubdivisionType filtered by the id column
- * @method     ChildSubdivisionType findOneByName(string $name) Return the first ChildSubdivisionType filtered by the name column
+ * @method     ChildSubdivisionType findOneByName(string $name) Return the first ChildSubdivisionType filtered by the name column *
+
+ * @method     ChildSubdivisionType requirePk($key, ConnectionInterface $con = null) Return the ChildSubdivisionType by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivisionType requireOne(ConnectionInterface $con = null) Return the first ChildSubdivisionType matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildSubdivisionType requireOneById(int $id) Return the first ChildSubdivisionType filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivisionType requireOneByName(string $name) Return the first ChildSubdivisionType filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSubdivisionType[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSubdivisionType objects based on current ModelCriteria
  * @method     ChildSubdivisionType[]|ObjectCollection findById(int $id) Return ChildSubdivisionType objects filtered by the id column
@@ -50,6 +56,7 @@ use keeko\core\model\Map\SubdivisionTypeTableMap;
  */
 abstract class SubdivisionTypeQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\SubdivisionTypeQuery object.
@@ -299,7 +306,7 @@ abstract class SubdivisionTypeQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Subdivision object
      *
-     * @param \keeko\core\model\Subdivision|ObjectCollection $subdivision  the related object to use as filter
+     * @param \keeko\core\model\Subdivision|ObjectCollection $subdivision the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildSubdivisionTypeQuery The current query, for fluid interface

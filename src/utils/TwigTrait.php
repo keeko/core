@@ -17,18 +17,15 @@ trait TwigTrait {
 			$loader = new \Twig_Loader_Filesystem($templatePath);
 			$this->twig = new \Twig_Environment($loader);
 			
-			$translator = $this->getServiceContainer()->getTranslator();
+// 			$translator = $this->getServiceContainer()->getTranslator();
 			
-			$trans = function($key, $params = [], $domain = null) use ($translator) {
-				return $translator->trans($key, $params, $domain);
-			};
-			$this->twig->addFunction(new \Twig_SimpleFunction('trans', $trans));
-			
-			$transchoice = function($key, $number, $params = [], $domain = null) use ($translator) {
-				return $translator->transChoice($key, $number, $params, $domain);
-			};
-			$this->twig->addFunction(new \Twig_SimpleFunction('transchoice', $transchoice));
+// 			// translator function
+// 			$trans = function($key, $params = [], $domain = null) use ($translator) {
+// 				return $translator->trans($key, $params, $domain);
+// 			};
+// 			$this->twig->addFunction(new \Twig_SimpleFunction('t', $trans));
 
+			// firewall
 			$firewall = $this->getServiceContainer()->getFirewall();
 			$this->twig->addFunction(new \Twig_SimpleFunction('hasPermission', function ($module, $action) use ($firewall) {
 				return $firewall->hasPermission($module, $action);

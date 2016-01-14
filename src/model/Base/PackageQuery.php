@@ -56,7 +56,17 @@ use keeko\core\model\Map\PackageTableMap;
  * @method     ChildPackage findOneByTitle(string $title) Return the first ChildPackage filtered by the title column
  * @method     ChildPackage findOneByDescription(string $description) Return the first ChildPackage filtered by the description column
  * @method     ChildPackage findOneByInstalledVersion(string $installed_version) Return the first ChildPackage filtered by the installed_version column
- * @method     ChildPackage findOneByDescendantClass(string $descendant_class) Return the first ChildPackage filtered by the descendant_class column
+ * @method     ChildPackage findOneByDescendantClass(string $descendant_class) Return the first ChildPackage filtered by the descendant_class column *
+
+ * @method     ChildPackage requirePk($key, ConnectionInterface $con = null) Return the ChildPackage by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPackage requireOne(ConnectionInterface $con = null) Return the first ChildPackage matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildPackage requireOneById(int $id) Return the first ChildPackage filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPackage requireOneByName(string $name) Return the first ChildPackage filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPackage requireOneByTitle(string $title) Return the first ChildPackage filtered by the title column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPackage requireOneByDescription(string $description) Return the first ChildPackage filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPackage requireOneByInstalledVersion(string $installed_version) Return the first ChildPackage filtered by the installed_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPackage requireOneByDescendantClass(string $descendant_class) Return the first ChildPackage filtered by the descendant_class column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPackage[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPackage objects based on current ModelCriteria
  * @method     ChildPackage[]|ObjectCollection findById(int $id) Return ChildPackage objects filtered by the id column
@@ -70,6 +80,7 @@ use keeko\core\model\Map\PackageTableMap;
  */
 abstract class PackageQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\PackageQuery object.
@@ -435,7 +446,7 @@ abstract class PackageQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Application object
      *
-     * @param \keeko\core\model\Application|ObjectCollection $application  the related object to use as filter
+     * @param \keeko\core\model\Application|ObjectCollection $application the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildPackageQuery The current query, for fluid interface
@@ -508,7 +519,7 @@ abstract class PackageQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Module object
      *
-     * @param \keeko\core\model\Module|ObjectCollection $module  the related object to use as filter
+     * @param \keeko\core\model\Module|ObjectCollection $module the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildPackageQuery The current query, for fluid interface

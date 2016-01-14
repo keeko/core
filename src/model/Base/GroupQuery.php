@@ -65,7 +65,20 @@ use keeko\core\model\Map\GroupTableMap;
  * @method     ChildGroup findOneByIsActive(boolean $is_active) Return the first ChildGroup filtered by the is_active column
  * @method     ChildGroup findOneByIsSystem(boolean $is_system) Return the first ChildGroup filtered by the is_system column
  * @method     ChildGroup findOneByCreatedAt(string $created_at) Return the first ChildGroup filtered by the created_at column
- * @method     ChildGroup findOneByUpdatedAt(string $updated_at) Return the first ChildGroup filtered by the updated_at column
+ * @method     ChildGroup findOneByUpdatedAt(string $updated_at) Return the first ChildGroup filtered by the updated_at column *
+
+ * @method     ChildGroup requirePk($key, ConnectionInterface $con = null) Return the ChildGroup by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroup requireOne(ConnectionInterface $con = null) Return the first ChildGroup matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildGroup requireOneById(int $id) Return the first ChildGroup filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroup requireOneByOwnerId(int $owner_id) Return the first ChildGroup filtered by the owner_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroup requireOneByName(string $name) Return the first ChildGroup filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroup requireOneByIsGuest(boolean $is_guest) Return the first ChildGroup filtered by the is_guest column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroup requireOneByIsDefault(boolean $is_default) Return the first ChildGroup filtered by the is_default column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroup requireOneByIsActive(boolean $is_active) Return the first ChildGroup filtered by the is_active column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroup requireOneByIsSystem(boolean $is_system) Return the first ChildGroup filtered by the is_system column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroup requireOneByCreatedAt(string $created_at) Return the first ChildGroup filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroup requireOneByUpdatedAt(string $updated_at) Return the first ChildGroup filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildGroup[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGroup objects based on current ModelCriteria
  * @method     ChildGroup[]|ObjectCollection findById(int $id) Return ChildGroup objects filtered by the id column
@@ -82,6 +95,7 @@ use keeko\core\model\Map\GroupTableMap;
  */
 abstract class GroupQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\GroupQuery object.
@@ -566,7 +580,7 @@ abstract class GroupQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\UserGroup object
      *
-     * @param \keeko\core\model\UserGroup|ObjectCollection $userGroup  the related object to use as filter
+     * @param \keeko\core\model\UserGroup|ObjectCollection $userGroup the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildGroupQuery The current query, for fluid interface
@@ -639,7 +653,7 @@ abstract class GroupQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\GroupAction object
      *
-     * @param \keeko\core\model\GroupAction|ObjectCollection $groupAction  the related object to use as filter
+     * @param \keeko\core\model\GroupAction|ObjectCollection $groupAction the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildGroupQuery The current query, for fluid interface

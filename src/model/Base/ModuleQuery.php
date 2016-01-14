@@ -69,7 +69,21 @@ use keeko\core\model\Map\ModuleTableMap;
  * @method     ChildModule findOneByName(string $name) Return the first ChildModule filtered by the name column
  * @method     ChildModule findOneByTitle(string $title) Return the first ChildModule filtered by the title column
  * @method     ChildModule findOneByDescription(string $description) Return the first ChildModule filtered by the description column
- * @method     ChildModule findOneByInstalledVersion(string $installed_version) Return the first ChildModule filtered by the installed_version column
+ * @method     ChildModule findOneByInstalledVersion(string $installed_version) Return the first ChildModule filtered by the installed_version column *
+
+ * @method     ChildModule requirePk($key, ConnectionInterface $con = null) Return the ChildModule by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildModule requireOne(ConnectionInterface $con = null) Return the first ChildModule matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildModule requireOneByClassName(string $class_name) Return the first ChildModule filtered by the class_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildModule requireOneByActivatedVersion(string $activated_version) Return the first ChildModule filtered by the activated_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildModule requireOneByDefaultAction(string $default_action) Return the first ChildModule filtered by the default_action column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildModule requireOneBySlug(string $slug) Return the first ChildModule filtered by the slug column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildModule requireOneByApi(boolean $has_api) Return the first ChildModule filtered by the has_api column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildModule requireOneById(int $id) Return the first ChildModule filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildModule requireOneByName(string $name) Return the first ChildModule filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildModule requireOneByTitle(string $title) Return the first ChildModule filtered by the title column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildModule requireOneByDescription(string $description) Return the first ChildModule filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildModule requireOneByInstalledVersion(string $installed_version) Return the first ChildModule filtered by the installed_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildModule[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildModule objects based on current ModelCriteria
  * @method     ChildModule[]|ObjectCollection findByClassName(string $class_name) Return ChildModule objects filtered by the class_name column
@@ -87,6 +101,7 @@ use keeko\core\model\Map\ModuleTableMap;
  */
 abstract class ModuleQuery extends ChildPackageQuery
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\ModuleQuery object.
@@ -645,7 +660,7 @@ abstract class ModuleQuery extends ChildPackageQuery
     /**
      * Filter the query by a related \keeko\core\model\Action object
      *
-     * @param \keeko\core\model\Action|ObjectCollection $action  the related object to use as filter
+     * @param \keeko\core\model\Action|ObjectCollection $action the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildModuleQuery The current query, for fluid interface

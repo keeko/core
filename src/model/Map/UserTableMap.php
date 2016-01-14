@@ -206,9 +206,27 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Auth', '\\keeko\\core\\model\\Auth', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null, 'Auths');
-        $this->addRelation('UserGroup', '\\keeko\\core\\model\\UserGroup', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'RESTRICT', null, 'UserGroups');
-        $this->addRelation('Activity', '\\keeko\\core\\model\\Activity', RelationMap::ONE_TO_MANY, array('id' => 'actor_id', ), null, null, 'Activities');
+        $this->addRelation('Auth', '\\keeko\\core\\model\\Auth', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), null, null, 'Auths', false);
+        $this->addRelation('UserGroup', '\\keeko\\core\\model\\UserGroup', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), 'RESTRICT', null, 'UserGroups', false);
+        $this->addRelation('Activity', '\\keeko\\core\\model\\Activity', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':actor_id',
+    1 => ':id',
+  ),
+), null, null, 'Activities', false);
         $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Groups');
     } // buildRelations()
 

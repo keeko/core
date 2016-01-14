@@ -34,6 +34,9 @@ class PackageSchema extends RootSchema implements Arrayable {
 	/** @var string */
 	private $license;
 	
+	/** @var ArrayList<string> */
+	private $keywords;
+	
 	/** @var ArrayList<AuthorSchema> */
 	private $authors;
 	
@@ -64,6 +67,7 @@ class PackageSchema extends RootSchema implements Arrayable {
 		$this->description = $data->get('description');
 		$this->type = $data->get('type');
 		$this->license = $data->get('license');
+		$this->keywords = new ArrayList($data->get('keywords', []));
 		
 		$this->authors = new ArrayList();
 		if ($data->has('authors')) {
@@ -87,24 +91,29 @@ class PackageSchema extends RootSchema implements Arrayable {
 			$authors[] = $author->toArray();
 		}
 		
-		$sort = [
-			'name' => $this->fullName,
-			'description' => $this->description,
-			'type' => $this->type,
-			'license' => $this->license,
-			'authors' => $authors,
-			'autoload' => $this->autoload->toArray(),
-			'require' => $this->require->toArray(),
-			'require-dev' => $this->requireDev->toArray(),
-			'extra' => $this->extra->toArray()
-		];
+		$keys = ['name', 'description', 'type', 'license', 'keywords', 'authors', 'autoload', 'require', 'require-dev', 'extra'];
+		$arr = array_merge(array_flip($keys), $this->data->toArray());
+
+		$arr['name'] = $this->fullName;
+		$arr['description'] = $this->description;
+		$arr['type'] = $this->type;
+		$arr['license'] = $this->license;
+		$arr['keywords'] = $this->keywords->toArray();
+		$arr['authors'] = $authors;
+		$arr['autoload'] = $this->autoload->toArray();
+		$arr['require'] = $this->require->toArray();
+		$arr['require-dev'] = $this->requireDev->toArray();
+		$arr['extra'] = $this->extra->toArray();
 		
-		$arr = array_merge($sort, $this->data->toArray());
-		
-		if ($this->keeko !== null && count($this->keeko->toArray()) > 0) {
-			$arr['extra']['keeko'] = $this->keeko->toArray();
+		$keeko = $this->keeko->toArray();
+		if (count($keeko) > 0) {
+			$arr['extra']['keeko'] = $keeko;
 		}
-		
+
+		if (count($arr['keywords']) == 0) {
+			unset($arr['keywords']);
+		}
+
 		if (count($arr['extra']) == 0) {
 			unset($arr['extra']);
 		}
@@ -215,6 +224,14 @@ class PackageSchema extends RootSchema implements Arrayable {
 	public function setLicense($license) {
 		$this->license = $license;
 		return $this;
+	}
+	
+	/**
+	 *
+	 * @return ArrayList<string>
+	 */
+	public function getKeywords() {
+		return $this->keywords;
 	}
 	
 	/**

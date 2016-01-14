@@ -1,14 +1,8 @@
 <?php
 namespace keeko\core\routing;
 
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use keeko\core\handler\ModuleActionHandler;
 
 class ModuleActionRouter extends AbstractRouter implements RouterInterface {
 
@@ -19,7 +13,7 @@ class ModuleActionRouter extends AbstractRouter implements RouterInterface {
 		$routes = new RouteCollection();
 		
 		$moduleRoute = new Route('/{module}', array(
-				'module' => $this->options['module']
+			'module' => $this->options['module']
 		));
 		$actionRoute = new Route('/{module}/{action}');
 		$paramsRoute = new Route(sprintf('/{module}/{action}%s{params}', $this->options['param-separator']));
@@ -36,16 +30,9 @@ class ModuleActionRouter extends AbstractRouter implements RouterInterface {
 	 */
 	protected function getOptionalOptions() {
 		return [
-				'application',
-				'action'
+			'application',
+			'action'
 		];
-	}
-	
-	/*
-	 * (non-PHPdoc) @see \keeko\core\routing\RouteWithHandlerInterface::getHandler()
-	 */
-	public function getHandler() {
-		return new ModuleActionHandler();
 	}
 	
 	/*

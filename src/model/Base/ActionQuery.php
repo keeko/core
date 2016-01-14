@@ -60,7 +60,17 @@ use keeko\core\model\Map\ActionTableMap;
  * @method     ChildAction findOneByTitle(string $title) Return the first ChildAction filtered by the title column
  * @method     ChildAction findOneByDescription(string $description) Return the first ChildAction filtered by the description column
  * @method     ChildAction findOneByClassName(string $class_name) Return the first ChildAction filtered by the class_name column
- * @method     ChildAction findOneByModuleId(int $module_id) Return the first ChildAction filtered by the module_id column
+ * @method     ChildAction findOneByModuleId(int $module_id) Return the first ChildAction filtered by the module_id column *
+
+ * @method     ChildAction requirePk($key, ConnectionInterface $con = null) Return the ChildAction by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAction requireOne(ConnectionInterface $con = null) Return the first ChildAction matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildAction requireOneById(int $id) Return the first ChildAction filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAction requireOneByName(string $name) Return the first ChildAction filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAction requireOneByTitle(string $title) Return the first ChildAction filtered by the title column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAction requireOneByDescription(string $description) Return the first ChildAction filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAction requireOneByClassName(string $class_name) Return the first ChildAction filtered by the class_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAction requireOneByModuleId(int $module_id) Return the first ChildAction filtered by the module_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildAction[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildAction objects based on current ModelCriteria
  * @method     ChildAction[]|ObjectCollection findById(int $id) Return ChildAction objects filtered by the id column
@@ -74,6 +84,7 @@ use keeko\core\model\Map\ActionTableMap;
  */
 abstract class ActionQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\ActionQuery object.
@@ -530,7 +541,7 @@ abstract class ActionQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Api object
      *
-     * @param \keeko\core\model\Api|ObjectCollection $api  the related object to use as filter
+     * @param \keeko\core\model\Api|ObjectCollection $api the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildActionQuery The current query, for fluid interface
@@ -603,7 +614,7 @@ abstract class ActionQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\GroupAction object
      *
-     * @param \keeko\core\model\GroupAction|ObjectCollection $groupAction  the related object to use as filter
+     * @param \keeko\core\model\GroupAction|ObjectCollection $groupAction the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildActionQuery The current query, for fluid interface

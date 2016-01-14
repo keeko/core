@@ -1,9 +1,8 @@
 <?php
 namespace keeko\core\routing;
 
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
-use keeko\core\handler\PageHandler;
+use Symfony\Component\Routing\RouteCollection;
 
 class PageRouter extends AbstractRouter implements RouterInterface {
 	
@@ -22,12 +21,6 @@ class PageRouter extends AbstractRouter implements RouterInterface {
 		$this->init($routes);
 	}
 	
-	/*
-	 * (non-PHPdoc) @see \keeko\core\routing\RouteWithHandlerInterface::getHandler()
-	 */
-	public function getHandler() {
-		return new PageHandler();
-	}
 	
 	/*
 	 * (non-PHPdoc) @see \keeko\core\routing\RouteMatcherInterface::match()
@@ -41,7 +34,13 @@ class PageRouter extends AbstractRouter implements RouterInterface {
 		
 		// find page for matched slug
 		if (array_key_exists('slug', $data)) {
-			$data['page'] = PageQuery::create()->filterByApplication($this->options['application'])->useRouteQuery()->filterBySlug($data['slug'])->endUse()->find();
+// 			$data['page'] = PageQuery::create()
+// 				->filterByApplication($this->options['application'])
+// 				->useRouteQuery()
+// 					->filterBySlug($data['slug'])
+// 				->endUse()
+// 				->find()
+// 			;
 		}
 		
 		// unserialize params

@@ -1,7 +1,7 @@
 <?php
-namespace keeko\core\application;
+namespace keeko\core\kernel;
 
-use gossi\collection\ArrayList;
+use phootwork\collection\ArrayList;
 
 class Page {
 

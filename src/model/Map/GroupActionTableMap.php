@@ -141,8 +141,20 @@ class GroupActionTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::MANY_TO_ONE, array('group_id' => 'id', ), 'RESTRICT', null);
-        $this->addRelation('Action', '\\keeko\\core\\model\\Action', RelationMap::MANY_TO_ONE, array('action_id' => 'id', ), 'RESTRICT', null);
+        $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':group_id',
+    1 => ':id',
+  ),
+), 'RESTRICT', null, null, false);
+        $this->addRelation('Action', '\\keeko\\core\\model\\Action', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':action_id',
+    1 => ':id',
+  ),
+), 'RESTRICT', null, null, false);
     } // buildRelations()
 
     /**

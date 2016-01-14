@@ -1,16 +1,11 @@
 <?php
 namespace keeko\core\installer;
 
-use Composer\Script\Event;
-use Composer\Script\PackageEvent;
 use Composer\DependencyResolver\Operation\InstallOperation;
-use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\DependencyResolver\Operation\UninstallOperation;
-use Composer\Package\CompletePackageInterface;
-use Composer\Package\Package;
-use Composer\Script\CommandEvent;
+use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\Package\PackageInterface;
-use Composer\Repository\WritableRepositoryInterface;
+use Composer\Script\PackageEvent;
 
 class DelegateInstaller {
 
@@ -66,24 +61,28 @@ class DelegateInstaller {
 		switch ($package->getType()) {
 			case 'keeko-app':
 				return new AppInstaller();
-				break;
+				
 			case 'keeko-module':
 				return new ModuleInstaller();
-				break;
+				
 			default:
 				return new DummyInstaller();
-				break;
 		}
 	}
 	
 	/**
-	 * Batch processing of install, update and unintall operations
+	 * Batch processing of install, update and uninstall operations
 	 *
 	 * @param array<PackageEvent> $install
 	 * @param array<PackageEvent> $update
 	 * @param array<PackageEvent> $uninstall
 	 */
 	public function process(array $install, array $update, array $uninstall) {
+		// return if database isn't loaded
+		if (!KEEKO_DATABASE_LOADED) {
+			return;
+		}
+		
 		// do something
 	}
 }

@@ -2,7 +2,6 @@
 namespace keeko\core\routing;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -47,7 +46,7 @@ abstract class AbstractRouter {
 	public function __construct(Request $request, array $options) {
 		// options
 		$resolver = new OptionsResolver();
-		$this->setDefaultOptions($resolver);
+		$this->configureOptions($resolver);
 		$this->options = $resolver->resolve($options);
 		$this->request = $request;
 	}
@@ -61,6 +60,12 @@ abstract class AbstractRouter {
 		$this->generator = new UrlGenerator($routes, $context);
 	}
 
+	private function configureOptions(OptionsResolver $resolver) {
+		$resolver->setDefaults(array_merge($this->defaultOptions, $this->getDefaultOptions()));
+		$resolver->setDefined(array_merge($this->optionalOptions, $this->getOptionalOptions()));
+		$resolver->setRequired(array_merge($this->requiredOptions, $this->getRequiredOptions()));
+	}
+	
 	/**
 	 * Returns the default options
 	 *
@@ -69,7 +74,7 @@ abstract class AbstractRouter {
 	protected function getDefaultOptions() {
 		return [];
 	}
-
+	
 	/**
 	 * Returns the optional options
 	 *
@@ -78,7 +83,7 @@ abstract class AbstractRouter {
 	protected function getOptionalOptions() {
 		return [];
 	}
-
+	
 	/**
 	 * Returns the required options
 	 *
@@ -86,12 +91,6 @@ abstract class AbstractRouter {
 	 */
 	protected function getRequiredOptions() {
 		return [];
-	}
-
-	private function setDefaultOptions(OptionsResolverInterface $resolver) {
-		$resolver->setDefaults(array_merge($this->defaultOptions, $this->getDefaultOptions()));
-		$resolver->setOptional(array_merge($this->optionalOptions, $this->getOptionalOptions()));
-		$resolver->setRequired(array_merge($this->requiredOptions, $this->getRequiredOptions()));
 	}
 
 	/**

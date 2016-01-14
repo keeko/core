@@ -407,7 +407,7 @@ abstract class ApplicationUri implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\ApplicationUri The current object (for fluent API support)
      */
     public function setId($v)
@@ -427,7 +427,7 @@ abstract class ApplicationUri implements ActiveRecordInterface
     /**
      * Set the value of [httphost] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\ApplicationUri The current object (for fluent API support)
      */
     public function setHttphost($v)
@@ -447,7 +447,7 @@ abstract class ApplicationUri implements ActiveRecordInterface
     /**
      * Set the value of [basepath] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\ApplicationUri The current object (for fluent API support)
      */
     public function setBasepath($v)
@@ -495,7 +495,7 @@ abstract class ApplicationUri implements ActiveRecordInterface
     /**
      * Set the value of [application_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\ApplicationUri The current object (for fluent API support)
      */
     public function setApplicationId($v)
@@ -519,7 +519,7 @@ abstract class ApplicationUri implements ActiveRecordInterface
     /**
      * Set the value of [localization_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\ApplicationUri The current object (for fluent API support)
      */
     public function setLocalizationId($v)
@@ -792,10 +792,10 @@ abstract class ApplicationUri implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

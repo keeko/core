@@ -424,7 +424,7 @@ abstract class Localization implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
      */
     public function setId($v)
@@ -444,7 +444,7 @@ abstract class Localization implements ActiveRecordInterface
     /**
      * Set the value of [parent_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
      */
     public function setParentId($v)
@@ -468,7 +468,7 @@ abstract class Localization implements ActiveRecordInterface
     /**
      * Set the value of [language_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
      */
     public function setLanguageId($v)
@@ -492,7 +492,7 @@ abstract class Localization implements ActiveRecordInterface
     /**
      * Set the value of [country_iso_nr] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
      */
     public function setCountryIsoNr($v)
@@ -805,10 +805,10 @@ abstract class Localization implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

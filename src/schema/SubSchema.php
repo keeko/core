@@ -19,7 +19,7 @@ abstract class SubSchema implements Arrayable {
 	/**
 	 * @return PackageSchema
 	 */
-	protected function getPackage() {
+	public function getPackage() {
 		return $this->package;
 	}
 	

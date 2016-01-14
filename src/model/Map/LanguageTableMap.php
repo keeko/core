@@ -188,9 +188,27 @@ class LanguageTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('LanguageScope', '\\keeko\\core\\model\\LanguageScope', RelationMap::MANY_TO_ONE, array('scope_id' => 'id', ), null, null);
-        $this->addRelation('LanguageType', '\\keeko\\core\\model\\LanguageType', RelationMap::MANY_TO_ONE, array('type_id' => 'id', ), null, null);
-        $this->addRelation('Localization', '\\keeko\\core\\model\\Localization', RelationMap::ONE_TO_MANY, array('id' => 'language_id', ), null, null, 'Localizations');
+        $this->addRelation('LanguageScope', '\\keeko\\core\\model\\LanguageScope', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':scope_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('LanguageType', '\\keeko\\core\\model\\LanguageType', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':type_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Localization', '\\keeko\\core\\model\\Localization', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':language_id',
+    1 => ':id',
+  ),
+), null, null, 'Localizations', false);
     } // buildRelations()
 
     /**

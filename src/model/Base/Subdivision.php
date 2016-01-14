@@ -445,7 +445,7 @@ abstract class Subdivision implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
     public function setId($v)
@@ -465,7 +465,7 @@ abstract class Subdivision implements ActiveRecordInterface
     /**
      * Set the value of [iso] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
     public function setIso($v)
@@ -485,7 +485,7 @@ abstract class Subdivision implements ActiveRecordInterface
     /**
      * Set the value of [name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
     public function setName($v)
@@ -505,7 +505,7 @@ abstract class Subdivision implements ActiveRecordInterface
     /**
      * Set the value of [local_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
     public function setLocalName($v)
@@ -525,7 +525,7 @@ abstract class Subdivision implements ActiveRecordInterface
     /**
      * Set the value of [en_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
     public function setEnName($v)
@@ -545,7 +545,7 @@ abstract class Subdivision implements ActiveRecordInterface
     /**
      * Set the value of [alt_names] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
     public function setAltNames($v)
@@ -565,7 +565,7 @@ abstract class Subdivision implements ActiveRecordInterface
     /**
      * Set the value of [parent_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
     public function setParentId($v)
@@ -585,7 +585,7 @@ abstract class Subdivision implements ActiveRecordInterface
     /**
      * Set the value of [country_iso_nr] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
     public function setCountryIsoNr($v)
@@ -609,7 +609,7 @@ abstract class Subdivision implements ActiveRecordInterface
     /**
      * Set the value of [subdivision_type_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
     public function setSubdivisionTypeId($v)
@@ -891,10 +891,10 @@ abstract class Subdivision implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

@@ -158,11 +158,41 @@ class LocalizationTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('LocalizationRelatedByParentId', '\\keeko\\core\\model\\Localization', RelationMap::MANY_TO_ONE, array('parent_id' => 'id', ), null, null);
-        $this->addRelation('Language', '\\keeko\\core\\model\\Language', RelationMap::MANY_TO_ONE, array('language_id' => 'id', ), null, null);
-        $this->addRelation('Country', '\\keeko\\core\\model\\Country', RelationMap::MANY_TO_ONE, array('country_iso_nr' => 'iso_nr', ), null, null);
-        $this->addRelation('LocalizationRelatedById', '\\keeko\\core\\model\\Localization', RelationMap::ONE_TO_MANY, array('id' => 'parent_id', ), null, null, 'LocalizationsRelatedById');
-        $this->addRelation('ApplicationUri', '\\keeko\\core\\model\\ApplicationUri', RelationMap::ONE_TO_MANY, array('id' => 'localization_id', ), 'RESTRICT', null, 'ApplicationUris');
+        $this->addRelation('LocalizationRelatedByParentId', '\\keeko\\core\\model\\Localization', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':parent_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Language', '\\keeko\\core\\model\\Language', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':language_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Country', '\\keeko\\core\\model\\Country', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':country_iso_nr',
+    1 => ':iso_nr',
+  ),
+), null, null, null, false);
+        $this->addRelation('LocalizationRelatedById', '\\keeko\\core\\model\\Localization', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':parent_id',
+    1 => ':id',
+  ),
+), null, null, 'LocalizationsRelatedById', false);
+        $this->addRelation('ApplicationUri', '\\keeko\\core\\model\\ApplicationUri', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':localization_id',
+    1 => ':id',
+  ),
+), 'RESTRICT', null, 'ApplicationUris', false);
     } // buildRelations()
 
     /**

@@ -72,7 +72,21 @@ use keeko\core\model\Map\LanguageTableMap;
  * @method     ChildLanguage findOneByEnName(string $en_name) Return the first ChildLanguage filtered by the en_name column
  * @method     ChildLanguage findOneByCollate(string $collate) Return the first ChildLanguage filtered by the collate column
  * @method     ChildLanguage findOneByScopeId(int $scope_id) Return the first ChildLanguage filtered by the scope_id column
- * @method     ChildLanguage findOneByTypeId(int $type_id) Return the first ChildLanguage filtered by the type_id column
+ * @method     ChildLanguage findOneByTypeId(int $type_id) Return the first ChildLanguage filtered by the type_id column *
+
+ * @method     ChildLanguage requirePk($key, ConnectionInterface $con = null) Return the ChildLanguage by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOne(ConnectionInterface $con = null) Return the first ChildLanguage matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildLanguage requireOneById(int $id) Return the first ChildLanguage filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByAlpha2(string $alpha_2) Return the first ChildLanguage filtered by the alpha_2 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByAlpha3T(string $alpha_3T) Return the first ChildLanguage filtered by the alpha_3T column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByAlpha3B(string $alpha_3B) Return the first ChildLanguage filtered by the alpha_3B column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByAlpha3(string $alpha_3) Return the first ChildLanguage filtered by the alpha_3 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByLocalName(string $local_name) Return the first ChildLanguage filtered by the local_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByEnName(string $en_name) Return the first ChildLanguage filtered by the en_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByCollate(string $collate) Return the first ChildLanguage filtered by the collate column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByScopeId(int $scope_id) Return the first ChildLanguage filtered by the scope_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByTypeId(int $type_id) Return the first ChildLanguage filtered by the type_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildLanguage[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildLanguage objects based on current ModelCriteria
  * @method     ChildLanguage[]|ObjectCollection findById(int $id) Return ChildLanguage objects filtered by the id column
@@ -90,6 +104,7 @@ use keeko\core\model\Map\LanguageTableMap;
  */
 abstract class LanguageQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\LanguageQuery object.
@@ -753,7 +768,7 @@ abstract class LanguageQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Localization object
      *
-     * @param \keeko\core\model\Localization|ObjectCollection $localization  the related object to use as filter
+     * @param \keeko\core\model\Localization|ObjectCollection $localization the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildLanguageQuery The current query, for fluid interface

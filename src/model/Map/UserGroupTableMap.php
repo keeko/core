@@ -141,8 +141,20 @@ class UserGroupTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::MANY_TO_ONE, array('group_id' => 'id', ), 'RESTRICT', null);
-        $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), 'RESTRICT', null);
+        $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':group_id',
+    1 => ':id',
+  ),
+), 'RESTRICT', null, null, false);
+        $this->addRelation('User', '\\keeko\\core\\model\\User', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), 'RESTRICT', null, null, false);
     } // buildRelations()
 
     /**

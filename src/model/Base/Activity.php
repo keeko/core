@@ -386,7 +386,7 @@ abstract class Activity implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Activity The current object (for fluent API support)
      */
     public function setId($v)
@@ -406,7 +406,7 @@ abstract class Activity implements ActiveRecordInterface
     /**
      * Set the value of [actor_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Activity The current object (for fluent API support)
      */
     public function setActorId($v)
@@ -430,7 +430,7 @@ abstract class Activity implements ActiveRecordInterface
     /**
      * Set the value of [verb] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Activity The current object (for fluent API support)
      */
     public function setVerb($v)
@@ -450,7 +450,7 @@ abstract class Activity implements ActiveRecordInterface
     /**
      * Set the value of [object_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Activity The current object (for fluent API support)
      */
     public function setObjectId($v)
@@ -474,7 +474,7 @@ abstract class Activity implements ActiveRecordInterface
     /**
      * Set the value of [target_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Activity The current object (for fluent API support)
      */
     public function setTargetId($v)
@@ -755,10 +755,10 @@ abstract class Activity implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

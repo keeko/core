@@ -46,7 +46,15 @@ use keeko\core\model\Map\AuthTableMap;
  * @method     ChildAuth findOneByToken(string $token) Return the first ChildAuth filtered by the token column
  * @method     ChildAuth findOneByUserId(int $user_id) Return the first ChildAuth filtered by the user_id column
  * @method     ChildAuth findOneByCreatedAt(string $created_at) Return the first ChildAuth filtered by the created_at column
- * @method     ChildAuth findOneByUpdatedAt(string $updated_at) Return the first ChildAuth filtered by the updated_at column
+ * @method     ChildAuth findOneByUpdatedAt(string $updated_at) Return the first ChildAuth filtered by the updated_at column *
+
+ * @method     ChildAuth requirePk($key, ConnectionInterface $con = null) Return the ChildAuth by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAuth requireOne(ConnectionInterface $con = null) Return the first ChildAuth matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildAuth requireOneByToken(string $token) Return the first ChildAuth filtered by the token column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAuth requireOneByUserId(int $user_id) Return the first ChildAuth filtered by the user_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAuth requireOneByCreatedAt(string $created_at) Return the first ChildAuth filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAuth requireOneByUpdatedAt(string $updated_at) Return the first ChildAuth filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildAuth[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildAuth objects based on current ModelCriteria
  * @method     ChildAuth[]|ObjectCollection findByToken(string $token) Return ChildAuth objects filtered by the token column
@@ -58,6 +66,7 @@ use keeko\core\model\Map\AuthTableMap;
  */
 abstract class AuthQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\AuthQuery object.

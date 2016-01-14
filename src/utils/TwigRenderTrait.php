@@ -12,11 +12,6 @@ trait TwigRenderTrait {
 	 */
 	abstract public function getServiceContainer();
 	
-	/**
-	 * @return \Twig_Environment
-	 */
-	abstract protected function getTwig();
-	
 	private function getGlobalTwigVariables() {
 		$request = Request::createFromGlobals();
 		$prefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -40,8 +35,16 @@ trait TwigRenderTrait {
 		];
 	}
 
+	/**
+	 * Renders the given twig template with global and given variables
+	 *
+	 * @param string $name
+	 * @param array $variables
+	 * @return string the rendered content
+	 */
 	protected function render($name, $variables = []) {
-		return new Response($this->getTwig()->render($name,
+		$twig = $this->getServiceContainer()->getTwig();
+		return new Response($twig->render($name,
 			array_merge($this->getGlobalTwigVariables(), $variables)));
 	}
 }

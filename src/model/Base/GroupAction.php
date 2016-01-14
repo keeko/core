@@ -333,7 +333,7 @@ abstract class GroupAction implements ActiveRecordInterface
     /**
      * Set the value of [group_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\GroupAction The current object (for fluent API support)
      */
     public function setGroupId($v)
@@ -357,7 +357,7 @@ abstract class GroupAction implements ActiveRecordInterface
     /**
      * Set the value of [action_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\GroupAction The current object (for fluent API support)
      */
     public function setActionId($v)
@@ -618,10 +618,10 @@ abstract class GroupAction implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

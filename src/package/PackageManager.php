@@ -1,69 +1,90 @@
 <?php
 namespace keeko\core\package;
 
-use Composer\Package\Loader\JsonLoader;
+use Composer\Package\CompletePackage;
 use Composer\Package\Loader\ArrayLoader;
 use keeko\core\exceptions\PackageException;
-use Composer\Package\CompletePackageInterface;
-use Composer\Package\Loader\ValidatingArrayLoader;
-use Composer\Json\JsonFile;
+use keeko\core\schema\PackageSchema;
+use keeko\core\service\ServiceContainer;
+use phootwork\collection\Map;
+use phootwork\json\Json;
+use Puli\Repository\Api\Resource\BodyResource;
+use Puli\Repository\Api\ResourceNotFoundException;
 
 class PackageManager {
 
-	/**
-	 * @var JsonLoader
-	 */
+	/** @var Map */
+	private $packageCache;
+	
+	/** @var Map */
+	private $composerCache;
+	
+	/** @var ServiceContainer */
+	private $service;
+	
+	/** @var ArrayLoader */
 	private $loader;
 
-	private $cache = [];
-
-	public function __construct() {
+	public function __construct(ServiceContainer $service) {
+		$this->service = $service;
+		$this->packageCache = new Map();
+		$this->composerCache = new Map();
 		$this->loader = new ArrayLoader();
 	}
 
-	private function load($file) {
-		$config = JsonFile::parseJson(file_get_contents($file), $file);
-		
+	/**
+	 *
+	 * @param BodyResource $file
+	 * @return array
+	 */
+	private function getJson(BodyResource $file) {
+		$config = Json::decode($file->getBody());
+
 		// fix version
 		if (!isset($config['version'])) {
 			$config['version'] = 'dev-master';
 		}
 		
-		return $this->loader->load($config);
+		return $config;
 	}
-
-	/**
-	 *
-	 * @return CompletePackageInterface
-	 */
-	private function getPackage($directory, $packageName) {
-		if (isset($this->cache[$packageName])) {
-			return $this->cache[$packageName];
-		}
+	
+	private function getFile($packageName) {
+		$repo = $this->service->getResourceRepository();
 		
-		$path = $directory . '/' . $packageName . '/composer.json';
-		
-		if (file_exists($path)) {
-			$this->cache[$packageName] = $this->load($path);
-			return $this->cache[$packageName];
-		} else {
+		try {
+			return $repo->get('/packages/' . $packageName . '/composer.json');
+		} catch (ResourceNotFoundException $e) {
 			throw new PackageException(sprintf('Package (%s) not found', $packageName));
 		}
 	}
 
 	/**
-	 *
-	 * @return CompletePackageInterface
+	 * @param string $packageName
+	 * @return PackageSchema
 	 */
-	public function getModulePackage($packageName) {
-		return $this->getPackage(KEEKO_PATH_MODULES, $packageName);
+	public function getPackage($packageName) {
+		if ($this->packageCache->has($packageName)) {
+			return $this->packageCache->get($packageName);
+		}
+		
+		$package = new PackageSchema($this->getJson($this->getFile($packageName)));
+		$this->packageCache->set($packageName, $package);
+		return $package;
 	}
-
+	
+	
 	/**
 	 *
-	 * @return CompletePackageInterface
+	 * @param string $packageName
+	 * @return CompletePackage
 	 */
-	public function getApplicationPackage($packageName) {
-		return $this->getPackage(KEEKO_PATH_APPS, $packageName);
+	public function getComposerPackage($packageName) {
+		if ($this->composerCache->has($packageName)) {
+			return $this->composerCache->get($packageName);
+		}
+		
+		$package = $this->loader->load($this->getJson($this->getFile($packageName)));
+		$this->composerCache->set($packageName, $package);
+		return $package;
 	}
 }

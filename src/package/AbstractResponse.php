@@ -1,7 +1,6 @@
 <?php
-namespace keeko\core\action;
+namespace keeko\core\package;
 
-use keeko\core\module\AbstractModule;
 use Symfony\Component\HttpFoundation\Request;
 use keeko\core\utils\TwigRenderTrait;
 
@@ -42,5 +41,5 @@ abstract class AbstractResponse {
 		return $this->module->getTwig();
 	}
 
-	abstract public function run(Request $request);
+	abstract public function run(Request $request, $data = null);
 }

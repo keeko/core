@@ -40,7 +40,13 @@ use keeko\core\model\Map\LanguageTypeTableMap;
  * @method     ChildLanguageType findOneOrCreate(ConnectionInterface $con = null) Return the first ChildLanguageType matching the query, or a new ChildLanguageType object populated from the query conditions when no match is found
  *
  * @method     ChildLanguageType findOneById(int $id) Return the first ChildLanguageType filtered by the id column
- * @method     ChildLanguageType findOneByName(string $name) Return the first ChildLanguageType filtered by the name column
+ * @method     ChildLanguageType findOneByName(string $name) Return the first ChildLanguageType filtered by the name column *
+
+ * @method     ChildLanguageType requirePk($key, ConnectionInterface $con = null) Return the ChildLanguageType by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguageType requireOne(ConnectionInterface $con = null) Return the first ChildLanguageType matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildLanguageType requireOneById(int $id) Return the first ChildLanguageType filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguageType requireOneByName(string $name) Return the first ChildLanguageType filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildLanguageType[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildLanguageType objects based on current ModelCriteria
  * @method     ChildLanguageType[]|ObjectCollection findById(int $id) Return ChildLanguageType objects filtered by the id column
@@ -50,6 +56,7 @@ use keeko\core\model\Map\LanguageTypeTableMap;
  */
 abstract class LanguageTypeQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\LanguageTypeQuery object.
@@ -299,7 +306,7 @@ abstract class LanguageTypeQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Language object
      *
-     * @param \keeko\core\model\Language|ObjectCollection $language  the related object to use as filter
+     * @param \keeko\core\model\Language|ObjectCollection $language the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildLanguageTypeQuery The current query, for fluid interface

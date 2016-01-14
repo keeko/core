@@ -164,9 +164,27 @@ class ActionTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Module', '\\keeko\\core\\model\\Module', RelationMap::MANY_TO_ONE, array('module_id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('Api', '\\keeko\\core\\model\\Api', RelationMap::ONE_TO_MANY, array('id' => 'action_id', ), 'CASCADE', null, 'Apis');
-        $this->addRelation('GroupAction', '\\keeko\\core\\model\\GroupAction', RelationMap::ONE_TO_MANY, array('id' => 'action_id', ), 'RESTRICT', null, 'GroupActions');
+        $this->addRelation('Module', '\\keeko\\core\\model\\Module', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':module_id',
+    1 => ':id',
+  ),
+), 'CASCADE', null, null, false);
+        $this->addRelation('Api', '\\keeko\\core\\model\\Api', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':action_id',
+    1 => ':id',
+  ),
+), 'CASCADE', null, 'Apis', false);
+        $this->addRelation('GroupAction', '\\keeko\\core\\model\\GroupAction', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':action_id',
+    1 => ':id',
+  ),
+), 'RESTRICT', null, 'GroupActions', false);
         $this->addRelation('Group', '\\keeko\\core\\model\\Group', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'Groups');
     } // buildRelations()
     /**

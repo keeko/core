@@ -447,7 +447,7 @@ abstract class Currency implements ActiveRecordInterface
     /**
      * Set the value of [iso_nr] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
     public function setIsoNr($v)
@@ -467,7 +467,7 @@ abstract class Currency implements ActiveRecordInterface
     /**
      * Set the value of [iso3] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
     public function setIso3($v)
@@ -487,7 +487,7 @@ abstract class Currency implements ActiveRecordInterface
     /**
      * Set the value of [en_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
     public function setEnName($v)
@@ -507,7 +507,7 @@ abstract class Currency implements ActiveRecordInterface
     /**
      * Set the value of [symbol_left] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
     public function setSymbolLeft($v)
@@ -527,7 +527,7 @@ abstract class Currency implements ActiveRecordInterface
     /**
      * Set the value of [symbol_right] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
     public function setSymbolRight($v)
@@ -547,7 +547,7 @@ abstract class Currency implements ActiveRecordInterface
     /**
      * Set the value of [decimal_digits] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
     public function setDecimalDigits($v)
@@ -567,7 +567,7 @@ abstract class Currency implements ActiveRecordInterface
     /**
      * Set the value of [sub_divisor] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
     public function setSubDivisor($v)
@@ -587,7 +587,7 @@ abstract class Currency implements ActiveRecordInterface
     /**
      * Set the value of [sub_symbol_left] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
     public function setSubSymbolLeft($v)
@@ -607,7 +607,7 @@ abstract class Currency implements ActiveRecordInterface
     /**
      * Set the value of [sub_symbol_right] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
     public function setSubSymbolRight($v)
@@ -860,10 +860,10 @@ abstract class Currency implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

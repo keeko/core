@@ -61,7 +61,20 @@ use keeko\core\model\Map\CurrencyTableMap;
  * @method     ChildCurrency findOneByDecimalDigits(int $decimal_digits) Return the first ChildCurrency filtered by the decimal_digits column
  * @method     ChildCurrency findOneBySubDivisor(int $sub_divisor) Return the first ChildCurrency filtered by the sub_divisor column
  * @method     ChildCurrency findOneBySubSymbolLeft(string $sub_symbol_left) Return the first ChildCurrency filtered by the sub_symbol_left column
- * @method     ChildCurrency findOneBySubSymbolRight(string $sub_symbol_right) Return the first ChildCurrency filtered by the sub_symbol_right column
+ * @method     ChildCurrency findOneBySubSymbolRight(string $sub_symbol_right) Return the first ChildCurrency filtered by the sub_symbol_right column *
+
+ * @method     ChildCurrency requirePk($key, ConnectionInterface $con = null) Return the ChildCurrency by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOne(ConnectionInterface $con = null) Return the first ChildCurrency matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildCurrency requireOneByIsoNr(int $iso_nr) Return the first ChildCurrency filtered by the iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneByIso3(string $iso3) Return the first ChildCurrency filtered by the iso3 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneByEnName(string $en_name) Return the first ChildCurrency filtered by the en_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneBySymbolLeft(string $symbol_left) Return the first ChildCurrency filtered by the symbol_left column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneBySymbolRight(string $symbol_right) Return the first ChildCurrency filtered by the symbol_right column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneByDecimalDigits(int $decimal_digits) Return the first ChildCurrency filtered by the decimal_digits column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneBySubDivisor(int $sub_divisor) Return the first ChildCurrency filtered by the sub_divisor column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneBySubSymbolLeft(string $sub_symbol_left) Return the first ChildCurrency filtered by the sub_symbol_left column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneBySubSymbolRight(string $sub_symbol_right) Return the first ChildCurrency filtered by the sub_symbol_right column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildCurrency[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildCurrency objects based on current ModelCriteria
  * @method     ChildCurrency[]|ObjectCollection findByIsoNr(int $iso_nr) Return ChildCurrency objects filtered by the iso_nr column
@@ -78,6 +91,7 @@ use keeko\core\model\Map\CurrencyTableMap;
  */
 abstract class CurrencyQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\CurrencyQuery object.
@@ -554,7 +568,7 @@ abstract class CurrencyQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Country object
      *
-     * @param \keeko\core\model\Country|ObjectCollection $country  the related object to use as filter
+     * @param \keeko\core\model\Country|ObjectCollection $country the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildCurrencyQuery The current query, for fluid interface

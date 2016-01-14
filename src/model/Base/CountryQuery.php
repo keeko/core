@@ -97,7 +97,28 @@ use keeko\core\model\Map\CountryTableMap;
  * @method     ChildCountry findOneByBboxSwLat(double $bbox_sw_lat) Return the first ChildCountry filtered by the bbox_sw_lat column
  * @method     ChildCountry findOneByBboxSwLng(double $bbox_sw_lng) Return the first ChildCountry filtered by the bbox_sw_lng column
  * @method     ChildCountry findOneByBboxNeLat(double $bbox_ne_lat) Return the first ChildCountry filtered by the bbox_ne_lat column
- * @method     ChildCountry findOneByBboxNeLng(double $bbox_ne_lng) Return the first ChildCountry filtered by the bbox_ne_lng column
+ * @method     ChildCountry findOneByBboxNeLng(double $bbox_ne_lng) Return the first ChildCountry filtered by the bbox_ne_lng column *
+
+ * @method     ChildCountry requirePk($key, ConnectionInterface $con = null) Return the ChildCountry by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOne(ConnectionInterface $con = null) Return the first ChildCountry matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildCountry requireOneByIsoNr(int $iso_nr) Return the first ChildCountry filtered by the iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByAlpha2(string $alpha_2) Return the first ChildCountry filtered by the alpha_2 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByAlpha3(string $alpha_3) Return the first ChildCountry filtered by the alpha_3 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByIoc(string $ioc) Return the first ChildCountry filtered by the ioc column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByCapital(string $capital) Return the first ChildCountry filtered by the capital column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByTld(string $tld) Return the first ChildCountry filtered by the tld column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByPhone(string $phone) Return the first ChildCountry filtered by the phone column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByTerritoryIsoNr(int $territory_iso_nr) Return the first ChildCountry filtered by the territory_iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByCurrencyIsoNr(int $currency_iso_nr) Return the first ChildCountry filtered by the currency_iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByOfficialLocalName(string $official_local_name) Return the first ChildCountry filtered by the official_local_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByOfficialEnName(string $official_en_name) Return the first ChildCountry filtered by the official_en_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByShortLocalName(string $short_local_name) Return the first ChildCountry filtered by the short_local_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByShortEnName(string $short_en_name) Return the first ChildCountry filtered by the short_en_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByBboxSwLat(double $bbox_sw_lat) Return the first ChildCountry filtered by the bbox_sw_lat column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByBboxSwLng(double $bbox_sw_lng) Return the first ChildCountry filtered by the bbox_sw_lng column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByBboxNeLat(double $bbox_ne_lat) Return the first ChildCountry filtered by the bbox_ne_lat column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByBboxNeLng(double $bbox_ne_lng) Return the first ChildCountry filtered by the bbox_ne_lng column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildCountry[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildCountry objects based on current ModelCriteria
  * @method     ChildCountry[]|ObjectCollection findByIsoNr(int $iso_nr) Return ChildCountry objects filtered by the iso_nr column
@@ -122,6 +143,7 @@ use keeko\core\model\Map\CountryTableMap;
  */
 abstract class CountryQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\CountryQuery object.
@@ -1036,7 +1058,7 @@ abstract class CountryQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Localization object
      *
-     * @param \keeko\core\model\Localization|ObjectCollection $localization  the related object to use as filter
+     * @param \keeko\core\model\Localization|ObjectCollection $localization the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildCountryQuery The current query, for fluid interface
@@ -1109,7 +1131,7 @@ abstract class CountryQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Subdivision object
      *
-     * @param \keeko\core\model\Subdivision|ObjectCollection $subdivision  the related object to use as filter
+     * @param \keeko\core\model\Subdivision|ObjectCollection $subdivision the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildCountryQuery The current query, for fluid interface

@@ -182,7 +182,13 @@ class CurrencyTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Country', '\\keeko\\core\\model\\Country', RelationMap::ONE_TO_MANY, array('iso_nr' => 'currency_iso_nr', ), null, null, 'Countries');
+        $this->addRelation('Country', '\\keeko\\core\\model\\Country', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':currency_iso_nr',
+    1 => ':iso_nr',
+  ),
+), null, null, 'Countries', false);
     } // buildRelations()
 
     /**

@@ -335,7 +335,7 @@ abstract class Preference implements ActiveRecordInterface
     /**
      * Set the value of [key] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Preference The current object (for fluent API support)
      */
     public function setKey($v)
@@ -355,7 +355,7 @@ abstract class Preference implements ActiveRecordInterface
     /**
      * Set the value of [value] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Preference The current object (for fluent API support)
      */
     public function setValue($v)
@@ -375,7 +375,7 @@ abstract class Preference implements ActiveRecordInterface
     /**
      * Set the value of [module_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Preference The current object (for fluent API support)
      */
     public function setModuleId($v)
@@ -608,10 +608,10 @@ abstract class Preference implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

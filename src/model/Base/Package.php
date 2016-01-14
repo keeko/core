@@ -398,7 +398,7 @@ abstract class Package implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Package The current object (for fluent API support)
      */
     public function setId($v)
@@ -418,7 +418,7 @@ abstract class Package implements ActiveRecordInterface
     /**
      * Set the value of [name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Package The current object (for fluent API support)
      */
     public function setName($v)
@@ -438,7 +438,7 @@ abstract class Package implements ActiveRecordInterface
     /**
      * Set the value of [title] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Package The current object (for fluent API support)
      */
     public function setTitle($v)
@@ -458,7 +458,7 @@ abstract class Package implements ActiveRecordInterface
     /**
      * Set the value of [description] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Package The current object (for fluent API support)
      */
     public function setDescription($v)
@@ -478,7 +478,7 @@ abstract class Package implements ActiveRecordInterface
     /**
      * Set the value of [installed_version] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Package The current object (for fluent API support)
      */
     public function setInstalledVersion($v)
@@ -498,7 +498,7 @@ abstract class Package implements ActiveRecordInterface
     /**
      * Set the value of [descendant_class] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Package The current object (for fluent API support)
      */
     public function setDescendantClass($v)
@@ -744,10 +744,10 @@ abstract class Package implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

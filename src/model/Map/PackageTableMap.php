@@ -164,8 +164,20 @@ class PackageTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Application', '\\keeko\\core\\model\\Application', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('Module', '\\keeko\\core\\model\\Module', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('Application', '\\keeko\\core\\model\\Application', RelationMap::ONE_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':id',
+    1 => ':id',
+  ),
+), 'CASCADE', null, null, false);
+        $this->addRelation('Module', '\\keeko\\core\\model\\Module', RelationMap::ONE_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':id',
+    1 => ':id',
+  ),
+), 'CASCADE', null, null, false);
     } // buildRelations()
 
     /**

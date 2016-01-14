@@ -65,7 +65,16 @@ use keeko\core\model\Map\LocalizationTableMap;
  * @method     ChildLocalization findOneByParentId(int $parent_id) Return the first ChildLocalization filtered by the parent_id column
  * @method     ChildLocalization findOneByLanguageId(int $language_id) Return the first ChildLocalization filtered by the language_id column
  * @method     ChildLocalization findOneByCountryIsoNr(int $country_iso_nr) Return the first ChildLocalization filtered by the country_iso_nr column
- * @method     ChildLocalization findOneByIsDefault(boolean $is_default) Return the first ChildLocalization filtered by the is_default column
+ * @method     ChildLocalization findOneByIsDefault(boolean $is_default) Return the first ChildLocalization filtered by the is_default column *
+
+ * @method     ChildLocalization requirePk($key, ConnectionInterface $con = null) Return the ChildLocalization by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLocalization requireOne(ConnectionInterface $con = null) Return the first ChildLocalization matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildLocalization requireOneById(int $id) Return the first ChildLocalization filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLocalization requireOneByParentId(int $parent_id) Return the first ChildLocalization filtered by the parent_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLocalization requireOneByLanguageId(int $language_id) Return the first ChildLocalization filtered by the language_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLocalization requireOneByCountryIsoNr(int $country_iso_nr) Return the first ChildLocalization filtered by the country_iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLocalization requireOneByIsDefault(boolean $is_default) Return the first ChildLocalization filtered by the is_default column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildLocalization[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildLocalization objects based on current ModelCriteria
  * @method     ChildLocalization[]|ObjectCollection findById(int $id) Return ChildLocalization objects filtered by the id column
@@ -78,6 +87,7 @@ use keeko\core\model\Map\LocalizationTableMap;
  */
 abstract class LocalizationQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\LocalizationQuery object.
@@ -685,7 +695,7 @@ abstract class LocalizationQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Localization object
      *
-     * @param \keeko\core\model\Localization|ObjectCollection $localization  the related object to use as filter
+     * @param \keeko\core\model\Localization|ObjectCollection $localization the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildLocalizationQuery The current query, for fluid interface
@@ -758,7 +768,7 @@ abstract class LocalizationQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\ApplicationUri object
      *
-     * @param \keeko\core\model\ApplicationUri|ObjectCollection $applicationUri  the related object to use as filter
+     * @param \keeko\core\model\ApplicationUri|ObjectCollection $applicationUri the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildLocalizationQuery The current query, for fluid interface

@@ -335,7 +335,7 @@ abstract class LanguageScope implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\LanguageScope The current object (for fluent API support)
      */
     public function setId($v)
@@ -355,7 +355,7 @@ abstract class LanguageScope implements ActiveRecordInterface
     /**
      * Set the value of [name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\LanguageScope The current object (for fluent API support)
      */
     public function setName($v)
@@ -587,10 +587,10 @@ abstract class LanguageScope implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

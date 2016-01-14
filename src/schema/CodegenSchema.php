@@ -22,6 +22,13 @@ class CodegenSchema extends RootSchema {
 		$this->models = $this->data->get('models', new Map());
 	}
 	
+	/**
+	 *
+	 * @param string $modelName
+	 * @param string $io `read` or `write`
+	 * @param string $section `filter` or `conversion`
+	 * @return array
+	 */
 	private function getArray($modelName, $io, $section) {
 		if ($this->models->has($modelName)
 				&& $this->models->get($modelName)->has($io)
@@ -32,14 +39,32 @@ class CodegenSchema extends RootSchema {
 		return [];
 	}
 	
+	/**
+	 * Returns all write conversions
+	 *
+	 * @param string $modelName
+	 * @return array
+	 */
 	public function getWriteConversion($modelName) {
 		return $this->getArray($modelName, 'write', 'conversion');
 	}
 	
+	/**
+	 * Returns all write filters
+	 *
+	 * @param string $modelName
+	 * @return array
+	 */
 	public function getWriteFilter($modelName) {
 		return $this->getArray($modelName, 'write', 'filter');
 	}
 	
+	/**
+	 * Returns all read filters
+	 *
+	 * @param string $modelName
+	 * @return array
+	 */
 	public function getReadFilter($modelName) {
 		return $this->getArray($modelName, 'read', 'filter');
 	}

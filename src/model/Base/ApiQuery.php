@@ -49,7 +49,16 @@ use keeko\core\model\Map\ApiTableMap;
  * @method     ChildApi findOneByRoute(string $route) Return the first ChildApi filtered by the route column
  * @method     ChildApi findOneByMethod(string $method) Return the first ChildApi filtered by the method column
  * @method     ChildApi findOneByActionId(int $action_id) Return the first ChildApi filtered by the action_id column
- * @method     ChildApi findOneByRequiredParams(string $required_params) Return the first ChildApi filtered by the required_params column
+ * @method     ChildApi findOneByRequiredParams(string $required_params) Return the first ChildApi filtered by the required_params column *
+
+ * @method     ChildApi requirePk($key, ConnectionInterface $con = null) Return the ChildApi by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApi requireOne(ConnectionInterface $con = null) Return the first ChildApi matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildApi requireOneById(int $id) Return the first ChildApi filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApi requireOneByRoute(string $route) Return the first ChildApi filtered by the route column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApi requireOneByMethod(string $method) Return the first ChildApi filtered by the method column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApi requireOneByActionId(int $action_id) Return the first ChildApi filtered by the action_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApi requireOneByRequiredParams(string $required_params) Return the first ChildApi filtered by the required_params column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildApi[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildApi objects based on current ModelCriteria
  * @method     ChildApi[]|ObjectCollection findById(int $id) Return ChildApi objects filtered by the id column
@@ -62,6 +71,7 @@ use keeko\core\model\Map\ApiTableMap;
  */
 abstract class ApiQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\ApiQuery object.

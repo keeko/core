@@ -477,7 +477,7 @@ abstract class Language implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
     public function setId($v)
@@ -497,7 +497,7 @@ abstract class Language implements ActiveRecordInterface
     /**
      * Set the value of [alpha_2] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
     public function setAlpha2($v)
@@ -517,7 +517,7 @@ abstract class Language implements ActiveRecordInterface
     /**
      * Set the value of [alpha_3t] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
     public function setAlpha3T($v)
@@ -537,7 +537,7 @@ abstract class Language implements ActiveRecordInterface
     /**
      * Set the value of [alpha_3b] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
     public function setAlpha3B($v)
@@ -557,7 +557,7 @@ abstract class Language implements ActiveRecordInterface
     /**
      * Set the value of [alpha_3] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
     public function setAlpha3($v)
@@ -577,7 +577,7 @@ abstract class Language implements ActiveRecordInterface
     /**
      * Set the value of [local_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
     public function setLocalName($v)
@@ -597,7 +597,7 @@ abstract class Language implements ActiveRecordInterface
     /**
      * Set the value of [en_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
     public function setEnName($v)
@@ -617,7 +617,7 @@ abstract class Language implements ActiveRecordInterface
     /**
      * Set the value of [collate] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
     public function setCollate($v)
@@ -637,7 +637,7 @@ abstract class Language implements ActiveRecordInterface
     /**
      * Set the value of [scope_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
     public function setScopeId($v)
@@ -661,7 +661,7 @@ abstract class Language implements ActiveRecordInterface
     /**
      * Set the value of [type_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
     public function setTypeId($v)
@@ -948,10 +948,10 @@ abstract class Language implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

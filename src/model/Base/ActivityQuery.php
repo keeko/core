@@ -57,7 +57,16 @@ use keeko\core\model\Map\ActivityTableMap;
  * @method     ChildActivity findOneByActorId(int $actor_id) Return the first ChildActivity filtered by the actor_id column
  * @method     ChildActivity findOneByVerb(string $verb) Return the first ChildActivity filtered by the verb column
  * @method     ChildActivity findOneByObjectId(int $object_id) Return the first ChildActivity filtered by the object_id column
- * @method     ChildActivity findOneByTargetId(int $target_id) Return the first ChildActivity filtered by the target_id column
+ * @method     ChildActivity findOneByTargetId(int $target_id) Return the first ChildActivity filtered by the target_id column *
+
+ * @method     ChildActivity requirePk($key, ConnectionInterface $con = null) Return the ChildActivity by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivity requireOne(ConnectionInterface $con = null) Return the first ChildActivity matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildActivity requireOneById(int $id) Return the first ChildActivity filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivity requireOneByActorId(int $actor_id) Return the first ChildActivity filtered by the actor_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivity requireOneByVerb(string $verb) Return the first ChildActivity filtered by the verb column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivity requireOneByObjectId(int $object_id) Return the first ChildActivity filtered by the object_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivity requireOneByTargetId(int $target_id) Return the first ChildActivity filtered by the target_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildActivity[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildActivity objects based on current ModelCriteria
  * @method     ChildActivity[]|ObjectCollection findById(int $id) Return ChildActivity objects filtered by the id column
@@ -70,6 +79,7 @@ use keeko\core\model\Map\ActivityTableMap;
  */
 abstract class ActivityQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\ActivityQuery object.

@@ -1,10 +1,9 @@
 <?php
 namespace keeko\core\config;
 
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Config\Definition\Processor;
-use keeko\core\config\definition\DevelopmentDefinition;
 use keeko\core\config\definition\GeneralDefinition;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Yaml\Yaml;
 
 class GeneralConfiguration extends AbstractConfigurationLoader {
 

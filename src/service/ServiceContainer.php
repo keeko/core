@@ -1,23 +1,24 @@
 <?php
 namespace keeko\core\service;
 
-use keeko\core\package\PackageManager;
-use keeko\core\application\AbstractApplication;
-use keeko\core\module\ModuleManager;
+use \Twig_Environment;
+use \Twig_SimpleFunction;
 use keeko\core\auth\AuthManager;
+use keeko\core\kernel\AbstractKernel;
+use keeko\core\package\ModuleManager;
+use keeko\core\package\PackageManager;
 use keeko\core\preferences\PreferenceLoader;
 use keeko\core\security\Firewall;
-use Symfony\Component\Translation\MessageSelector;
+use Puli\Repository\Api\ResourceRepository;
+use Puli\TwigExtension\PuliExtension;
+use Puli\TwigExtension\PuliTemplateLoader;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Translation\Loader\JsonFileLoader;
-use keeko\core\package\Runner;
 
 class ServiceContainer {
 
 	/** @var PackageManager */
 	private $packageManager;
-	
-	/** @var AbstractApplication */
-	private $application;
 	
 	/** @var ModuleManager */
 	private $moduleManager;
@@ -34,22 +35,43 @@ class ServiceContainer {
 	/** @var KeekoTranslator */
 	private $translator;
 	
-	/** @var Runner */
-	private $runner;
+	/** @var ResourceRepository */
+	private $puli;
 	
-	public function __construct(AbstractApplication $application = null) {
-		if ($application !== null) {
-			$this->application = $application;
-		}
+	/** @var EventDispatcher */
+	private $dispatcher;
+	
+	/** @var AbstractKernel */
+	private $kernel;
+	
+	/** @var Twig_Environment */
+	private $twig;
+	
+	
+	public function __construct(AbstractKernel $kernel) {
+		$this->kernel = $kernel;
 	}
 	
 	/**
-	 * Returns the active application
+	 * Returns the kernel
 	 *
-	 * @return AbstractApplication
+	 * @return AbstractKernel
 	 */
-	public function getApplication() {
-		return $this->application;
+	public function getKernel() {
+		return $this->kernel;
+	}
+	
+	/**
+	 * Returns the event dispatcher
+	 *
+	 * @return EventDispatcher
+	 */
+	public function getDispatcher() {
+		if ($this->dispatcher === null) {
+			$this->dispatcher = new EventDispatcher();
+		}
+		
+		return $this->dispatcher;
 	}
 	
 	/**
@@ -59,7 +81,7 @@ class ServiceContainer {
 	 */
 	public function getPackageManager() {
 		if ($this->packageManager === null) {
-			$this->packageManager = new PackageManager();
+			$this->packageManager = new PackageManager($this);
 		}
 		
 		return $this->packageManager;
@@ -123,10 +145,11 @@ class ServiceContainer {
 	 * @return KeekoTranslator
 	 */
 	public function getTranslator() {
+		// TODO: how to get the language
 		if ($this->translator === null) {
-			$app = $this->getApplication();
+			$app = $this->getKernel()->getApplication();
 			$lang = $app->getLocalization()->getLanguage()->getAlpha2();
-			$this->translator = new KeekoTranslator($lang, new MessageSelector());
+			$this->translator = new KeekoTranslator($this, $lang);
 			$this->translator->addLoader('json', new JsonFileLoader());
 			$this->translator->setFallbackLocales(['en']);
 		}
@@ -135,15 +158,49 @@ class ServiceContainer {
 	}
 	
 	/**
-	 * Returns a runner to run actions and applications
+	 * Returns an instance to the puli repository
 	 *
-	 * @return Runner
+	 * @return ResourceRepository
 	 */
-	public function getRunner() {
-		if ($this->runner === null) {
-			$this->runner = new Runner();
+	public function getResourceRepository() {
+		if ($this->puli === null) {
+			$factoryClass = PULI_FACTORY_CLASS;
+			$factory = new $factoryClass();
+			
+			$this->puli = $factory->createRepository();
 		}
 		
-		return $this->runner;
+		return $this->puli;
+	}
+
+	/**
+	 * Returns twig
+	 *
+	 * @return Twig_Environment
+	 */
+	public function getTwig() {
+		if ($this->twig === null) {
+			$repo = $this->getResourceRepository();
+			$loader = new PuliTemplateLoader($repo);
+			$this->twig = new Twig_Environment($loader);
+				
+			// puli extension
+			$this->twig->addExtension(new PuliExtension($repo));
+	
+			// translator function
+			$translator = $this->getServiceContainer()->getTranslator();
+			$trans = function($key, $params = [], $domain = null) use ($translator) {
+				return $translator->trans($key, $params, $domain);
+			};
+			$this->twig->addFunction(new Twig_SimpleFunction('t', $trans));
+		
+			// firewall
+			$firewall = $this->getServiceContainer()->getFirewall();
+			$this->twig->addFunction(new Twig_SimpleFunction('hasPermission', function ($module, $action) use ($firewall) {
+				return $firewall->hasPermission($module, $action);
+			}));
+		}
+		
+		return $this->twig;
 	}
 }

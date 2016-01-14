@@ -140,7 +140,13 @@ class SubdivisionTypeTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Subdivision', '\\keeko\\core\\model\\Subdivision', RelationMap::ONE_TO_MANY, array('id' => 'subdivision_type_id', ), null, null, 'Subdivisions');
+        $this->addRelation('Subdivision', '\\keeko\\core\\model\\Subdivision', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':subdivision_type_id',
+    1 => ':id',
+  ),
+), null, null, 'Subdivisions', false);
     } // buildRelations()
 
     /**

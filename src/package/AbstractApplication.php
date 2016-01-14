@@ -1,19 +1,16 @@
 <?php
-namespace keeko\core\application;
+namespace keeko\core\package;
 
+use keeko\core\kernel\KernelTargetInterface;
+use keeko\core\kernel\Page;
 use keeko\core\model\Application;
 use keeko\core\model\Localization;
-use keeko\core\module\ModuleManager;
-use Symfony\Component\HttpFoundation\Request;
-use keeko\core\package\PackageManager;
-use keeko\core\auth\AuthManager;
 use keeko\core\service\ServiceContainer;
-use keeko\core\utils\TwigTrait;
-use keeko\core\package\RunnableInterface;
-use keeko\core\action\AbstractAction;
 use keeko\core\utils\TwigRenderTrait;
+use keeko\core\utils\TwigTrait;
+use Symfony\Component\HttpFoundation\Request;
 
-abstract class AbstractApplication implements RunnableInterface {
+abstract class AbstractApplication implements KernelTargetInterface {
 	
 	use TwigTrait;
 	use TwigRenderTrait;
@@ -45,14 +42,37 @@ abstract class AbstractApplication implements RunnableInterface {
 	/**
 	 * Creates a new Keeko Application
 	 */
-	public function __construct(Application $model) {
+	public function __construct(Application $model, ServiceContainer $service) {
 		$this->model = $model;
-		$this->service = new ServiceContainer($this);
+		$this->service = $service;
 		$this->page = new Page();
 	}
 	
+	/**
+	 * Returns the applications name
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return $this->model->getName();
+	}
+	
+	/**
+	 * Returns the applications canonical name
+	 *
+	 * @return string
+	 */
 	public function getCanonicalName() {
 		return str_replace('/', '.', $this->model->getName());
+	}
+	
+	/**
+	 * Returns the applications title
+	 *
+	 * @return string
+	 */
+	public function getTitle() {
+		return $this->model->getTitle();
 	}
 	
 	/**
@@ -70,12 +90,9 @@ abstract class AbstractApplication implements RunnableInterface {
 	public function getPage() {
 		return $this->page;
 	}
-
-	public function setModel(Application $model) {
-		$this->model = $model;
-	}
 	
 	/**
+	 * Returns the associated application model
 	 *
 	 * @return Application
 	 */
@@ -145,18 +162,7 @@ abstract class AbstractApplication implements RunnableInterface {
 		$runner = $this->getServiceContainer()->getRunner();
 		return $runner->run($action, $request);
 	}
-
-	public function beforeRun() {
-		$translator = $this->getServiceContainer()->getTranslator();
-		$this->domainBackup = $translator->getDomain();
-		$translator->setDomain($this->getCanonicalName());
-	}
 	
 	abstract public function run(Request $request);
-	
-	public function afterRun() {
-		$translator = $this->getServiceContainer()->getTranslator();
-		$translator->setDomain($this->domainBackup);
-	}
 	
 }

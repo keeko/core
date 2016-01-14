@@ -40,7 +40,13 @@ use keeko\core\model\Map\LanguageScopeTableMap;
  * @method     ChildLanguageScope findOneOrCreate(ConnectionInterface $con = null) Return the first ChildLanguageScope matching the query, or a new ChildLanguageScope object populated from the query conditions when no match is found
  *
  * @method     ChildLanguageScope findOneById(int $id) Return the first ChildLanguageScope filtered by the id column
- * @method     ChildLanguageScope findOneByName(string $name) Return the first ChildLanguageScope filtered by the name column
+ * @method     ChildLanguageScope findOneByName(string $name) Return the first ChildLanguageScope filtered by the name column *
+
+ * @method     ChildLanguageScope requirePk($key, ConnectionInterface $con = null) Return the ChildLanguageScope by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguageScope requireOne(ConnectionInterface $con = null) Return the first ChildLanguageScope matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildLanguageScope requireOneById(int $id) Return the first ChildLanguageScope filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguageScope requireOneByName(string $name) Return the first ChildLanguageScope filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildLanguageScope[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildLanguageScope objects based on current ModelCriteria
  * @method     ChildLanguageScope[]|ObjectCollection findById(int $id) Return ChildLanguageScope objects filtered by the id column
@@ -50,6 +56,7 @@ use keeko\core\model\Map\LanguageScopeTableMap;
  */
 abstract class LanguageScopeQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\LanguageScopeQuery object.
@@ -299,7 +306,7 @@ abstract class LanguageScopeQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Language object
      *
-     * @param \keeko\core\model\Language|ObjectCollection $language  the related object to use as filter
+     * @param \keeko\core\model\Language|ObjectCollection $language the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildLanguageScopeQuery The current query, for fluid interface

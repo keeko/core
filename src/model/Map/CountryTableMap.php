@@ -230,10 +230,34 @@ class CountryTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Territory', '\\keeko\\core\\model\\Territory', RelationMap::MANY_TO_ONE, array('territory_iso_nr' => 'iso_nr', ), null, null);
-        $this->addRelation('Currency', '\\keeko\\core\\model\\Currency', RelationMap::MANY_TO_ONE, array('currency_iso_nr' => 'iso_nr', ), null, null);
-        $this->addRelation('Localization', '\\keeko\\core\\model\\Localization', RelationMap::ONE_TO_MANY, array('iso_nr' => 'country_iso_nr', ), null, null, 'Localizations');
-        $this->addRelation('Subdivision', '\\keeko\\core\\model\\Subdivision', RelationMap::ONE_TO_MANY, array('iso_nr' => 'country_iso_nr', ), null, null, 'Subdivisions');
+        $this->addRelation('Territory', '\\keeko\\core\\model\\Territory', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':territory_iso_nr',
+    1 => ':iso_nr',
+  ),
+), null, null, null, false);
+        $this->addRelation('Currency', '\\keeko\\core\\model\\Currency', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':currency_iso_nr',
+    1 => ':iso_nr',
+  ),
+), null, null, null, false);
+        $this->addRelation('Localization', '\\keeko\\core\\model\\Localization', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':country_iso_nr',
+    1 => ':iso_nr',
+  ),
+), null, null, 'Localizations', false);
+        $this->addRelation('Subdivision', '\\keeko\\core\\model\\Subdivision', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':country_iso_nr',
+    1 => ':iso_nr',
+  ),
+), null, null, 'Subdivisions', false);
     } // buildRelations()
 
     /**

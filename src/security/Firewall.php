@@ -5,17 +5,21 @@ use keeko\core\service\ServiceContainer;
 use keeko\core\model\Action;
 use keeko\core\model\User;
 use keeko\core\model\GroupQuery;
+use phootwork\collection\Map;
+use phootwork\collection\Set;
 
 class Firewall {
 	
 	/** @var ServiceContainer */
 	private $service;
 	
-	private $permissionTables = [];
+	/** @var Map */
+	private $permissionTables;
 
 	public function __construct(ServiceContainer $service) {
 		$this->service = $service;
 		$this->user = $service->getAuthManager()->getUser();
+		$this->permissionTables = new Map();
 	}
 	
 	public function hasPermission($module, $action, User $user = null) {
@@ -29,14 +33,20 @@ class Firewall {
 			$user = $this->user;
 		}
 		$permissionTable = $this->getPermissionTable($user);
-		
-		return in_array($action->getId(), $permissionTable);
+
+		return $permissionTable->contains($action->getId());
 	}
 
+	/**
+	 * Returns a set of allowed action ids
+	 *
+	 * @param User $user
+	 * @return Set
+	 */
 	private function getPermissionTable(User $user) {
 		$userId = $user->getId();
-		if (isset($this->permissionTables[$userId])) {
-			return $this->permissionTables[$userId];
+		if ($this->permissionTables->has($userId)) {
+			return $this->permissionTables->get($userId);
 		}
 		
 		// always allow what guests can do
@@ -51,14 +61,16 @@ class Firewall {
 		$groups[] = $guestGroup;
 		
 		// ... structure them
-		$this->permissionsTables[$userId] = [];
+		$permissionTable = new Set();
 		foreach ($groups as $group) {
 			foreach ($group->getActions() as $action) {
-				$this->permissionsTables[$userId][] = $action->getId();
+				$permissionTable->add($action->getId());
 			}
 		}
 		
-		return $this->permissionsTables[$userId];
+		$this->permissionsTables->set($userId, $permissionTable);
+		
+		return $this->permissionsTables->get($userId);
 	}
 	
 	private function isGuest(User $user) {

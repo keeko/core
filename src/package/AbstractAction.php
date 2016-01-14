@@ -1,16 +1,14 @@
 <?php
-namespace keeko\core\action;
+namespace keeko\core\package;
 
+use keeko\core\kernel\KernelTargetInterface;
 use keeko\core\model\Action;
-use keeko\core\module\AbstractModule;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\HttpFoundation\Request;
-use keeko\core\service\ServiceContainer;
 use keeko\core\preferences\Preferences;
-use keeko\core\package\RunnableInterface;
+use keeko\core\service\ServiceContainer;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractAction implements RunnableInterface {
+abstract class AbstractAction implements KernelTargetInterface {
 	
 	/** @var Action */
 	protected $model;
@@ -41,6 +39,33 @@ abstract class AbstractAction implements RunnableInterface {
 			$this->twig = new \Twig_Environment($loader);
 		}
 	}
+	
+	/**
+	 * Returns the actions name
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return $this->model->getName();
+	}
+	
+	/**
+	 * Returns the canonical actions name
+	 *
+	 * @return string
+	 */
+	public function getCanonicalName() {
+		return $this->module->getCanonicalName() . '.' . $this->model->getName();
+	}
+	
+	/**
+	 * Returns the actions title
+	 *
+	 * @return string
+	 */
+	public function getTitle() {
+		return $this->model->getTitle();
+	}
 
 	/**
 	 * Returns the service container
@@ -49,10 +74,6 @@ abstract class AbstractAction implements RunnableInterface {
 	 */
 	protected function getServiceContainer() {
 		return $this->module->getServiceContainer();
-	}
-	
-	public function getCanonicalName() {
-		return $this->module->getCanonicalName() . '.' . $this->model->getName();
 	}
 	
 	/**
@@ -66,11 +87,11 @@ abstract class AbstractAction implements RunnableInterface {
 
 	public function setParams($params) {
 		$resolver = new OptionsResolver();
-		$this->setDefaultParams($resolver);
+		$this->configureParams($resolver);
 		$this->params = $resolver->resolve($params);
 	}
 
-	protected function setDefaultParams(OptionsResolverInterface $resolver) {
+	protected function configureParams(OptionsResolver $resolver) {
 		// does nothing, extend this method and provide functionality for your action
 	}
 
@@ -85,7 +106,7 @@ abstract class AbstractAction implements RunnableInterface {
 	}
 	
 	/**
-	 * Returns the model for this action
+	 * Returns the associated action model
 	 *
 	 * @return Action
 	 */
@@ -111,16 +132,6 @@ abstract class AbstractAction implements RunnableInterface {
 		return $this->module->getTwig();
 	}
 	
-	public function beforeRun() {
-		$translator = $this->getServiceContainer()->getTranslator();
-		$this->domainBackup = $translator->getDomain();
-		$translator->setDomain($this->getCanonicalName());
-	}
-	
 	abstract public function run(Request $request);
-	
-	public function afterRun() {
-		$translator = $this->getServiceContainer()->getTranslator();
-		$translator->setDomain($this->domainBackup);
-	}
+
 }

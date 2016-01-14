@@ -140,7 +140,13 @@ class LanguageTypeTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Language', '\\keeko\\core\\model\\Language', RelationMap::ONE_TO_MANY, array('id' => 'type_id', ), null, null, 'Languages');
+        $this->addRelation('Language', '\\keeko\\core\\model\\Language', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':type_id',
+    1 => ':id',
+  ),
+), null, null, 'Languages', false);
     } // buildRelations()
 
     /**

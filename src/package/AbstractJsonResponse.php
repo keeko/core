@@ -1,7 +1,6 @@
 <?php
-namespace keeko\core\action;
+namespace keeko\core\package;
 
-use keeko\core\action\AbstractResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -13,8 +12,8 @@ abstract class AbstractJsonResponse extends AbstractResponse {
 	 * @param Request $request
 	 * @return JsonResponse
 	 */
-	public function run(Request $request) {
-		return new JsonResponse($this->data);
+	public function run(Request $request, $data = []) {
+		return new JsonResponse($data);
 	}
 
 }

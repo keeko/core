@@ -39,8 +39,6 @@ use keeko\core\model\UserGroup as ChildUserGroup;
 use keeko\core\model\UserGroupQuery as ChildUserGroupQuery;
 use keeko\core\model\UserQuery as ChildUserQuery;
 use keeko\core\model\Map\GroupTableMap;
-use Symfony\Component\Validator\Validator;
-use Symfony\Component\Validator\Mapping\Factory\LazyLoadingMetadataFactory;
 
 /**
  * Base class that represents a row from the 'kk_group' table.
@@ -604,7 +602,7 @@ abstract class Group implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Group The current object (for fluent API support)
      */
     public function setId($v)
@@ -624,7 +622,7 @@ abstract class Group implements ActiveRecordInterface
     /**
      * Set the value of [owner_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Group The current object (for fluent API support)
      */
     public function setOwnerId($v)
@@ -644,7 +642,7 @@ abstract class Group implements ActiveRecordInterface
     /**
      * Set the value of [name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Group The current object (for fluent API support)
      */
     public function setName($v)
@@ -784,8 +782,8 @@ abstract class Group implements ActiveRecordInterface
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
-            if ($dt !== $this->created_at) {
-                $this->created_at = $dt;
+            if ($this->created_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->created_at->format("Y-m-d H:i:s")) {
+                $this->created_at = $dt === null ? null : clone $dt;
                 $this->modifiedColumns[GroupTableMap::COL_CREATED_AT] = true;
             }
         } // if either are not null
@@ -804,8 +802,8 @@ abstract class Group implements ActiveRecordInterface
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
-            if ($dt !== $this->updated_at) {
-                $this->updated_at = $dt;
+            if ($this->updated_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->updated_at->format("Y-m-d H:i:s")) {
+                $this->updated_at = $dt === null ? null : clone $dt;
                 $this->modifiedColumns[GroupTableMap::COL_UPDATED_AT] = true;
             }
         } // if either are not null
@@ -1079,10 +1077,10 @@ abstract class Group implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 
@@ -1398,6 +1396,20 @@ abstract class Group implements ActiveRecordInterface
             $keys[7] => $this->getCreatedAt(),
             $keys[8] => $this->getUpdatedAt(),
         );
+
+        $utc = new \DateTimeZone('utc');
+        if ($result[$keys[7]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[7]];
+            $result[$keys[7]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[8]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[8]];
+            $result[$keys[8]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -2866,7 +2878,7 @@ abstract class Group implements ActiveRecordInterface
             if(class_exists('Symfony\\Component\\Validator\\Validator\\LegacyValidator')){
                 $validator = new LegacyValidator(
                             new ExecutionContextFactory(new DefaultTranslator()),
-                            new ClassMetadataFactory(new StaticMethodLoader()),
+                            new ClassMetaDataFactory(new StaticMethodLoader()),
                             new ConstraintValidatorFactory()
                 );
             }else{

@@ -351,7 +351,7 @@ abstract class Territory implements ActiveRecordInterface
     /**
      * Set the value of [iso_nr] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Territory The current object (for fluent API support)
      */
     public function setIsoNr($v)
@@ -371,7 +371,7 @@ abstract class Territory implements ActiveRecordInterface
     /**
      * Set the value of [parent_iso_nr] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Territory The current object (for fluent API support)
      */
     public function setParentIsoNr($v)
@@ -391,7 +391,7 @@ abstract class Territory implements ActiveRecordInterface
     /**
      * Set the value of [name_en] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Territory The current object (for fluent API support)
      */
     public function setNameEn($v)
@@ -626,10 +626,10 @@ abstract class Territory implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

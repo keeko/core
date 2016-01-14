@@ -56,7 +56,17 @@ use keeko\core\model\Map\ApplicationUriTableMap;
  * @method     ChildApplicationUri findOneByBasepath(string $basepath) Return the first ChildApplicationUri filtered by the basepath column
  * @method     ChildApplicationUri findOneBySecure(boolean $secure) Return the first ChildApplicationUri filtered by the secure column
  * @method     ChildApplicationUri findOneByApplicationId(int $application_id) Return the first ChildApplicationUri filtered by the application_id column
- * @method     ChildApplicationUri findOneByLocalizationId(int $localization_id) Return the first ChildApplicationUri filtered by the localization_id column
+ * @method     ChildApplicationUri findOneByLocalizationId(int $localization_id) Return the first ChildApplicationUri filtered by the localization_id column *
+
+ * @method     ChildApplicationUri requirePk($key, ConnectionInterface $con = null) Return the ChildApplicationUri by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplicationUri requireOne(ConnectionInterface $con = null) Return the first ChildApplicationUri matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildApplicationUri requireOneById(int $id) Return the first ChildApplicationUri filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplicationUri requireOneByHttphost(string $httphost) Return the first ChildApplicationUri filtered by the httphost column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplicationUri requireOneByBasepath(string $basepath) Return the first ChildApplicationUri filtered by the basepath column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplicationUri requireOneBySecure(boolean $secure) Return the first ChildApplicationUri filtered by the secure column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplicationUri requireOneByApplicationId(int $application_id) Return the first ChildApplicationUri filtered by the application_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildApplicationUri requireOneByLocalizationId(int $localization_id) Return the first ChildApplicationUri filtered by the localization_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildApplicationUri[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildApplicationUri objects based on current ModelCriteria
  * @method     ChildApplicationUri[]|ObjectCollection findById(int $id) Return ChildApplicationUri objects filtered by the id column
@@ -70,6 +80,7 @@ use keeko\core\model\Map\ApplicationUriTableMap;
  */
 abstract class ApplicationUriQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\ApplicationUriQuery object.

@@ -603,7 +603,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [iso_nr] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setIsoNr($v)
@@ -623,7 +623,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [alpha_2] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setAlpha2($v)
@@ -643,7 +643,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [alpha_3] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setAlpha3($v)
@@ -663,7 +663,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [ioc] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setIoc($v)
@@ -683,7 +683,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [capital] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setCapital($v)
@@ -703,7 +703,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [tld] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setTld($v)
@@ -723,7 +723,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [phone] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setPhone($v)
@@ -743,7 +743,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [territory_iso_nr] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setTerritoryIsoNr($v)
@@ -767,7 +767,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [currency_iso_nr] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setCurrencyIsoNr($v)
@@ -791,7 +791,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [official_local_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setOfficialLocalName($v)
@@ -811,7 +811,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [official_en_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setOfficialEnName($v)
@@ -831,7 +831,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [short_local_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setShortLocalName($v)
@@ -851,7 +851,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [short_en_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setShortEnName($v)
@@ -871,7 +871,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [bbox_sw_lat] column.
      *
-     * @param  double $v new value
+     * @param double $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setBboxSwLat($v)
@@ -891,7 +891,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [bbox_sw_lng] column.
      *
-     * @param  double $v new value
+     * @param double $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setBboxSwLng($v)
@@ -911,7 +911,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [bbox_ne_lat] column.
      *
-     * @param  double $v new value
+     * @param double $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setBboxNeLat($v)
@@ -931,7 +931,7 @@ abstract class Country implements ActiveRecordInterface
     /**
      * Set the value of [bbox_ne_lng] column.
      *
-     * @param  double $v new value
+     * @param double $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
     public function setBboxNeLng($v)
@@ -1237,10 +1237,10 @@ abstract class Country implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

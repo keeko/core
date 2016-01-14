@@ -443,7 +443,7 @@ abstract class ActivityObject implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\ActivityObject The current object (for fluent API support)
      */
     public function setId($v)
@@ -463,7 +463,7 @@ abstract class ActivityObject implements ActiveRecordInterface
     /**
      * Set the value of [class_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\ActivityObject The current object (for fluent API support)
      */
     public function setClassName($v)
@@ -483,7 +483,7 @@ abstract class ActivityObject implements ActiveRecordInterface
     /**
      * Set the value of [type] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\ActivityObject The current object (for fluent API support)
      */
     public function setType($v)
@@ -503,7 +503,7 @@ abstract class ActivityObject implements ActiveRecordInterface
     /**
      * Set the value of [display_name] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\ActivityObject The current object (for fluent API support)
      */
     public function setDisplayName($v)
@@ -523,7 +523,7 @@ abstract class ActivityObject implements ActiveRecordInterface
     /**
      * Set the value of [url] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\ActivityObject The current object (for fluent API support)
      */
     public function setUrl($v)
@@ -543,7 +543,7 @@ abstract class ActivityObject implements ActiveRecordInterface
     /**
      * Set the value of [reference_id] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\ActivityObject The current object (for fluent API support)
      */
     public function setReferenceId($v)
@@ -563,7 +563,7 @@ abstract class ActivityObject implements ActiveRecordInterface
     /**
      * Set the value of [version] column.
      *
-     * @param  int $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\ActivityObject The current object (for fluent API support)
      */
     public function setVersion($v)
@@ -583,7 +583,7 @@ abstract class ActivityObject implements ActiveRecordInterface
     /**
      * Set the value of [extra] column.
      *
-     * @param  string $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\ActivityObject The current object (for fluent API support)
      */
     public function setExtra($v)
@@ -835,10 +835,10 @@ abstract class ActivityObject implements ActiveRecordInterface
                 // persist changes
                 if ($this->isNew()) {
                     $this->doInsert($con);
+                    $affectedRows += 1;
                 } else {
-                    $this->doUpdate($con);
+                    $affectedRows += $this->doUpdate($con);
                 }
-                $affectedRows += 1;
                 $this->resetModified();
             }
 

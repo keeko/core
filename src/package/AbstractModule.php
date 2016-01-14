@@ -1,19 +1,17 @@
 <?php
-namespace keeko\core\module;
+namespace keeko\core\package;
 
 use keeko\core\exceptions\ModuleException;
-use keeko\core\application\Keeko;
-use keeko\core\model\Action;
-use keeko\core\model\Module;
-use keeko\core\model\ActionQuery;
-use keeko\core\application\AbstractApplication;
-use keeko\core\package\PackageManager;
-use keeko\core\auth\AuthManager;
-use keeko\core\model\User;
 use keeko\core\exceptions\PermissionDeniedException;
-use keeko\core\service\ServiceContainer;
+use keeko\core\model\Action;
+use keeko\core\model\ActionQuery;
+use keeko\core\model\Module;
+use keeko\core\model\User;
 use keeko\core\preferences\Preferences;
+use keeko\core\service\ServiceContainer;
 use keeko\core\utils\TwigTrait;
+use keeko\core\schema\PackageSchema;
+use keeko\core\schema\ActionSchema;
 
 abstract class AbstractModule {
 	
@@ -30,16 +28,47 @@ abstract class AbstractModule {
 	/** @var ServiceContainer */
 	protected $service;
 	
-	protected $preferences;
+	/** @var Preferences */
+	private $preferences;
+	
+	/** @var PackageSchema */
+	protected $package;
 
 	public function __construct(Module $module, ServiceContainer $service) {
 		$this->model = $module;
 		$this->service = $service;
 		
 		$packageManager = $service->getPackageManager();
-		$this->package = $packageManager->getModulePackage($module->getName());
+		$this->package = $packageManager->getPackage($module->getName());
 		
 		$this->loadActions();
+	}
+	
+	/**
+	 * Returns the modules name
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return $this->model->getName();
+	}
+	
+	/**
+	 * Returns the modules canonical name
+	 *
+	 * @return string
+	 */
+	public function getCanonicalName() {
+		return str_replace('/', '.', $this->getName());
+	}
+	
+	/**
+	 * Returns the modules title
+	 *
+	 * @return string
+	 */
+	public function getTitle() {
+		return $this->model->getTitle();
 	}
 	
 	/**
@@ -52,7 +81,7 @@ abstract class AbstractModule {
 	}
 
 	/**
-	 * Returns the modules model
+	 * Returns the associated module model
 	 *
 	 * @return Module
 	 */
@@ -60,13 +89,7 @@ abstract class AbstractModule {
 		return $this->model;
 	}
 	
-	public function getName() {
-		return $this->model->getName();
-	}
 	
-	public function getCanonicalName() {
-		return str_replace('/', '.', $this->getName());
-	}
 	
 	public function getPath() {
 		return sprintf('%s/%s/', KEEKO_PATH_MODULES, $this->model->getName());
@@ -90,7 +113,7 @@ abstract class AbstractModule {
 			$this->preferences = $this->service->getPreferenceLoader()->getModulePreferences($this->model->getId());
 		}
 		
-		return $this->preferences();
+		return $this->preferences;
 	}
 
 	private function loadActions() {
@@ -99,52 +122,59 @@ abstract class AbstractModule {
 		foreach ($actions as $action) {
 			$models[$action->getName()] = $action;
 		}
-		$extra = $this->package->getExtra();
+		$keeko = $this->package->getKeeko();
+		$module = $keeko->getModule();
+	
 		
-		if (isset($extra['keeko']) && isset($extra['keeko']['module']) && isset($extra['keeko']['module']['actions'])) {
-			$this->actions = $extra['keeko']['module']['actions'];
-			foreach (array_keys($this->actions) as $name) {
-				if (isset($models[$name])) {
-					$this->actions[$name]['model'] = $models[$name];
-				}
+		$this->actions = [];
+		foreach ($module->getActionNames() as $actionName) {
+			if (isset($models[$actionName])) {
+				$this->actions[$actionName] = [
+					'model' => $models[$actionName],
+					'action' => $module->getAction($actionName)
+				];
 			}
 		}
-	}
-	
-	public function getActionModel($name) {
-		if (!isset($this->actions[$name])) {
-			throw new ModuleException(sprintf('Action (%s) not found in Module (%s)', $name, $this->model->getName()));
-		}
-		
-		return $this->actions[$name]['model'];
 	}
 
 	/**
 	 * Loads the given action
 	 *
-	 * @param Action|string $name
+	 * @param Action|string $actionName
 	 * @param string $response the response type (e.g. html, json, ...)
 	 * @return AbstractAction
 	 */
 	public function loadAction($nameOrAction, $response) {
+		$model = null;
 		if ($nameOrAction instanceof Action) {
-			$action = $nameOrAction;
+			$model = $nameOrAction;
+			$actionName = $nameOrAction->getName();
 		} else {
-			$action = $this->getActionModel($nameOrAction);
+			$actionName = $nameOrAction;
 		}
 		
-		$name = $action->getName();
+		if (!isset($this->actions[$actionName])) {
+			throw new ModuleException(sprintf('Action (%s) not found in Module (%s)', $actionName, $this->model->getName()));
+		}
+		
+		if ($model === null) {
+			$model = $this->actions[$actionName]['model'];
+		}
+		
+		/* @var $action ActionSchema */
+		$action = $this->actions[$actionName]['action'];
+		
 		
 		// check permission
-		if (!$this->service->getFirewall()->hasActionPermission($action)) {
-			throw new PermissionDeniedException(sprintf('Can\'t access Action (%s) in Module (%s)', $name, $this->model->getName()));
+		if (!$this->service->getFirewall()->hasActionPermission($model)) {
+			throw new PermissionDeniedException(sprintf('Can\'t access Action (%s) in Module (%s)', $actionName, $this->model->getName()));
 		}
 		
 		// check if a response is given
-		if (!(isset($this->actions[$name]) && isset($this->actions[$name]['response']) && isset($this->actions[$name]['response'][$response]))) {
-			throw new ModuleException(sprintf('No Response (%s) given for Action (%s) in Module (%s)', $response, $name, $this->model->getName()));
+		if (!$action->hasResponse($response)) {
+			throw new ModuleException(sprintf('No Response (%s) given for Action (%s) in Module (%s)', $response, $actionName, $this->model->getName()));
 		}
-		$responseClass = $this->actions[$name]['response'][$response];
+		$responseClass = $action->getResponse($response);
 		
 		if (!class_exists($responseClass)) {
 			throw new ModuleException(sprintf('Response (%s) not found in Module (%s)', $responseClass, $this->model->getName()));
@@ -152,48 +182,48 @@ abstract class AbstractModule {
 		$response = new $responseClass($this, $response);
 		
 		// gets the action class
-		$className = $action->getClassName();
+		$className = $model->getClassName();
 		
 		if (!class_exists($className)) {
 			throw new ModuleException(sprintf('Action (%s) not found in Module (%s)', $className, $this->model->getName()));
 		}
 		
-		$class = new $className($action, $this, $response);
+		$class = new $className($model, $this, $response);
 		
-		// l10n
-		$app = $this->getServiceContainer()->getApplication();
-		$lang = $app->getLocalization()->getLanguage()->getAlpha2();
-		$country = $app->getLocalization()->getCountry()->getAlpha2();
-		$l10n = $this->getPath() . 'l10n/';
-		$locale = $lang . '_' . $country;
+// 		// l10n
+// 		$app = $this->getServiceContainer()->getApplication();
+// 		$lang = $app->getLocalization()->getLanguage()->getAlpha2();
+// 		$country = $app->getLocalization()->getCountry()->getAlpha2();
+// 		$l10n = $this->getPath() . 'l10n/';
+// 		$locale = $lang . '_' . $country;
 		
-		// load module l10n
-		$this->addL10nFile('module', $l10n, $lang, $locale, $class);
+// 		// load module l10n
+// 		$this->addL10nFile('module', $l10n, $lang, $locale, $class);
 		
-		// load additional l10n files
-		if (isset($this->actions[$name]['l10n'])) {
-			foreach ($this->actions[$name]['l10n'] as $file) {
-				$this->addL10nFile($file, $l10n, $lang, $locale, $class);
-			}
-		}
+// 		// load additional l10n files
+// 		if (isset($this->actions[$actionName]['l10n'])) {
+// 			foreach ($this->actions[$actionName]['l10n'] as $file) {
+// 				$this->addL10nFile($file, $l10n, $lang, $locale, $class);
+// 			}
+// 		}
+			
+// 		// load action l10n
+// 		$this->addL10nFile(sprintf('actions/%s', $actionName), $l10n, $lang, $locale, $class);
 		
-		// load action l10n
-		$this->addL10nFile(sprintf('actions/%s', $name), $l10n, $lang, $locale, $class);
+// 		// assets
+// 		$page = $app->getPage();
+// 		$moduleUrl = sprintf('%s/_keeko/modules/%s/', $app->getRootUrl(), $this->getName());
+// 		if (isset($this->actions[$actionName]['assets']['styles'])) {
+// 			foreach ($this->actions[$actionName]['assets']['styles'] as $style) {
+// 				$page->addStyle($moduleUrl . $style);
+// 			}
+// 		}
 		
-		// assets
-		$page = $app->getPage();
-		$moduleUrl = sprintf('%s/_keeko/modules/%s/', $app->getRootUrl(), $this->getName());
-		if (isset($this->actions[$name]['assets']['styles'])) {
-			foreach ($this->actions[$name]['assets']['styles'] as $style) {
-				$page->addStyle($moduleUrl . $style);
-			}
-		}
-		
-		if (isset($this->actions[$name]['assets']['scripts'])) {
-			foreach ($this->actions[$name]['assets']['scripts'] as $script) {
-				$page->addScript($moduleUrl . $script);
-			}
-		}
+// 		if (isset($this->actions[$actionName]['assets']['scripts'])) {
+// 			foreach ($this->actions[$actionName]['assets']['scripts'] as $script) {
+// 				$page->addScript($moduleUrl . $script);
+// 			}
+// 		}
 
 		return $class;
 	}

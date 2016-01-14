@@ -62,7 +62,19 @@ use keeko\core\model\Map\ActivityObjectTableMap;
  * @method     ChildActivityObject findOneByUrl(string $url) Return the first ChildActivityObject filtered by the url column
  * @method     ChildActivityObject findOneByReferenceId(int $reference_id) Return the first ChildActivityObject filtered by the reference_id column
  * @method     ChildActivityObject findOneByVersion(int $version) Return the first ChildActivityObject filtered by the version column
- * @method     ChildActivityObject findOneByExtra(string $extra) Return the first ChildActivityObject filtered by the extra column
+ * @method     ChildActivityObject findOneByExtra(string $extra) Return the first ChildActivityObject filtered by the extra column *
+
+ * @method     ChildActivityObject requirePk($key, ConnectionInterface $con = null) Return the ChildActivityObject by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivityObject requireOne(ConnectionInterface $con = null) Return the first ChildActivityObject matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ *
+ * @method     ChildActivityObject requireOneById(int $id) Return the first ChildActivityObject filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivityObject requireOneByClassName(string $class_name) Return the first ChildActivityObject filtered by the class_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivityObject requireOneByType(string $type) Return the first ChildActivityObject filtered by the type column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivityObject requireOneByDisplayName(string $display_name) Return the first ChildActivityObject filtered by the display_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivityObject requireOneByUrl(string $url) Return the first ChildActivityObject filtered by the url column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivityObject requireOneByReferenceId(int $reference_id) Return the first ChildActivityObject filtered by the reference_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivityObject requireOneByVersion(int $version) Return the first ChildActivityObject filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActivityObject requireOneByExtra(string $extra) Return the first ChildActivityObject filtered by the extra column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildActivityObject[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildActivityObject objects based on current ModelCriteria
  * @method     ChildActivityObject[]|ObjectCollection findById(int $id) Return ChildActivityObject objects filtered by the id column
@@ -78,6 +90,7 @@ use keeko\core\model\Map\ActivityObjectTableMap;
  */
 abstract class ActivityObjectQuery extends ModelCriteria
 {
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \keeko\core\model\Base\ActivityObjectQuery object.
@@ -525,7 +538,7 @@ abstract class ActivityObjectQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Activity object
      *
-     * @param \keeko\core\model\Activity|ObjectCollection $activity  the related object to use as filter
+     * @param \keeko\core\model\Activity|ObjectCollection $activity the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildActivityObjectQuery The current query, for fluid interface
@@ -598,7 +611,7 @@ abstract class ActivityObjectQuery extends ModelCriteria
     /**
      * Filter the query by a related \keeko\core\model\Activity object
      *
-     * @param \keeko\core\model\Activity|ObjectCollection $activity  the related object to use as filter
+     * @param \keeko\core\model\Activity|ObjectCollection $activity the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildActivityObjectQuery The current query, for fluid interface

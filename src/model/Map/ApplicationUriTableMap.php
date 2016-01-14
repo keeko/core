@@ -164,8 +164,20 @@ class ApplicationUriTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Application', '\\keeko\\core\\model\\Application', RelationMap::MANY_TO_ONE, array('application_id' => 'id', ), 'RESTRICT', null);
-        $this->addRelation('Localization', '\\keeko\\core\\model\\Localization', RelationMap::MANY_TO_ONE, array('localization_id' => 'id', ), 'RESTRICT', null);
+        $this->addRelation('Application', '\\keeko\\core\\model\\Application', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':application_id',
+    1 => ':id',
+  ),
+), 'RESTRICT', null, null, false);
+        $this->addRelation('Localization', '\\keeko\\core\\model\\Localization', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':localization_id',
+    1 => ':id',
+  ),
+), 'RESTRICT', null, null, false);
     } // buildRelations()
 
     /**
