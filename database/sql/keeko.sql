@@ -16,20 +16,38 @@ CREATE TABLE `kk_language`
     `alpha_3T` VARCHAR(3),
     `alpha_3B` VARCHAR(3),
     `alpha_3` VARCHAR(3),
-    `local_name` VARCHAR(128),
-    `en_name` VARCHAR(128),
+    `parent_id` INTEGER(10),
+    `macrolanguage_status` CHAR(1),
+    `name` VARCHAR(128),
+    `native_name` VARCHAR(128),
     `collate` VARCHAR(10),
-    `scope_id` INTEGER(10),
+    `subtag` VARCHAR(76),
+    `prefix` VARCHAR(76),
+    `scope_id` INTEGER(10) NOT NULL,
     `type_id` INTEGER(10),
+    `family_id` INTEGER(10),
+    `default_script_id` INTEGER(10),
     PRIMARY KEY (`id`),
-    INDEX `kk_language_fi_696d4c` (`scope_id`),
-    INDEX `kk_language_fi_2bc68d` (`type_id`),
-    CONSTRAINT `kk_language_fk_696d4c`
+    INDEX `language_fi_parent` (`parent_id`),
+    INDEX `language_fi_scope` (`scope_id`),
+    INDEX `language_fi_type` (`type_id`),
+    INDEX `language_fi_script` (`default_script_id`),
+    INDEX `language_fi_family` (`family_id`),
+    CONSTRAINT `language_fk_parent`
+        FOREIGN KEY (`parent_id`)
+        REFERENCES `kk_language` (`id`),
+    CONSTRAINT `language_fk_scope`
         FOREIGN KEY (`scope_id`)
         REFERENCES `kk_language_scope` (`id`),
-    CONSTRAINT `kk_language_fk_2bc68d`
+    CONSTRAINT `language_fk_type`
         FOREIGN KEY (`type_id`)
-        REFERENCES `kk_language_type` (`id`)
+        REFERENCES `kk_language_type` (`id`),
+    CONSTRAINT `language_fk_script`
+        FOREIGN KEY (`default_script_id`)
+        REFERENCES `kk_language_script` (`id`),
+    CONSTRAINT `language_fk_family`
+        FOREIGN KEY (`family_id`)
+        REFERENCES `kk_language_family` (`id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -59,81 +77,51 @@ CREATE TABLE `kk_language_type`
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- kk_localization
+-- kk_language_script
 -- ---------------------------------------------------------------------
 
-DROP TABLE IF EXISTS `kk_localization`;
+DROP TABLE IF EXISTS `kk_language_script`;
 
-CREATE TABLE `kk_localization`
+CREATE TABLE `kk_language_script`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `parent_id` INTEGER(10),
-    `language_id` INTEGER(10),
-    `country_iso_nr` INTEGER(10),
-    `is_default` TINYINT(1),
-    PRIMARY KEY (`id`),
-    INDEX `kk_localization_fi_a96561` (`parent_id`),
-    INDEX `kk_localization_fi_d74563` (`language_id`),
-    INDEX `kk_localization_fi_705f0c` (`country_iso_nr`),
-    CONSTRAINT `kk_localization_fk_a96561`
-        FOREIGN KEY (`parent_id`)
-        REFERENCES `kk_localization` (`id`),
-    CONSTRAINT `kk_localization_fk_d74563`
-        FOREIGN KEY (`language_id`)
-        REFERENCES `kk_language` (`id`),
-    CONSTRAINT `kk_localization_fk_705f0c`
-        FOREIGN KEY (`country_iso_nr`)
-        REFERENCES `kk_country` (`iso_nr`)
+    `alpha_4` CHAR(4),
+    `numeric` INTEGER,
+    `name` VARCHAR(255),
+    `alias` VARCHAR(255),
+    `direction` VARCHAR(255),
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- kk_country
+-- kk_language_family
 -- ---------------------------------------------------------------------
 
-DROP TABLE IF EXISTS `kk_country`;
+DROP TABLE IF EXISTS `kk_language_family`;
 
-CREATE TABLE `kk_country`
+CREATE TABLE `kk_language_family`
 (
-    `iso_nr` INTEGER NOT NULL,
-    `alpha_2` CHAR(2),
-    `alpha_3` CHAR(3),
-    `ioc` CHAR(3),
-    `capital` VARCHAR(128),
-    `tld` VARCHAR(3),
-    `phone` VARCHAR(16),
-    `territory_iso_nr` INTEGER NOT NULL,
-    `currency_iso_nr` INTEGER NOT NULL,
-    `official_local_name` VARCHAR(128),
-    `official_en_name` VARCHAR(128),
-    `short_local_name` VARCHAR(128),
-    `short_en_name` VARCHAR(128),
-    `bbox_sw_lat` FLOAT,
-    `bbox_sw_lng` FLOAT,
-    `bbox_ne_lat` FLOAT,
-    `bbox_ne_lng` FLOAT,
-    PRIMARY KEY (`iso_nr`),
-    INDEX `kk_country_fi_5a119b` (`territory_iso_nr`),
-    INDEX `kk_country_fi_816fd6` (`currency_iso_nr`),
-    CONSTRAINT `kk_country_fk_5a119b`
-        FOREIGN KEY (`territory_iso_nr`)
-        REFERENCES `kk_territory` (`iso_nr`),
-    CONSTRAINT `kk_country_fk_816fd6`
-        FOREIGN KEY (`currency_iso_nr`)
-        REFERENCES `kk_currency` (`iso_nr`)
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `parent_id` INTEGER,
+    `alpha_3` VARCHAR(3),
+    `name` VARCHAR(255),
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- kk_territory
+-- kk_language_variant
 -- ---------------------------------------------------------------------
 
-DROP TABLE IF EXISTS `kk_territory`;
+DROP TABLE IF EXISTS `kk_language_variant`;
 
-CREATE TABLE `kk_territory`
+CREATE TABLE `kk_language_variant`
 (
-    `iso_nr` INTEGER NOT NULL,
-    `parent_iso_nr` INTEGER,
-    `name_en` VARCHAR(45) NOT NULL,
-    PRIMARY KEY (`iso_nr`)
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255),
+    `subtag` VARCHAR(76),
+    `prefixes` VARCHAR(255),
+    `comment` TEXT,
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -144,16 +132,86 @@ DROP TABLE IF EXISTS `kk_currency`;
 
 CREATE TABLE `kk_currency`
 (
-    `iso_nr` INTEGER NOT NULL,
-    `iso3` CHAR(3) NOT NULL,
-    `en_name` VARCHAR(45),
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `numeric` INTEGER,
+    `alpha_3` CHAR(3),
+    `name` VARCHAR(45),
     `symbol_left` VARCHAR(45),
     `symbol_right` VARCHAR(45),
     `decimal_digits` INTEGER,
     `sub_divisor` INTEGER,
     `sub_symbol_left` VARCHAR(45),
     `sub_symbol_right` VARCHAR(45),
-    PRIMARY KEY (`iso_nr`)
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- kk_country
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `kk_country`;
+
+CREATE TABLE `kk_country`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `numeric` INTEGER,
+    `alpha_2` CHAR(2),
+    `alpha_3` CHAR(3),
+    `short_name` VARCHAR(128),
+    `ioc` CHAR(3),
+    `tld` VARCHAR(3),
+    `phone` VARCHAR(16),
+    `capital` VARCHAR(128),
+    `postal_code_format` VARCHAR(255),
+    `postal_code_regex` VARCHAR(255),
+    `continent_id` INTEGER NOT NULL,
+    `currency_id` INTEGER NOT NULL,
+    `type_id` INTEGER(10) NOT NULL,
+    `subtype_id` INTEGER(10),
+    `sovereignity_id` INTEGER(10),
+    `formal_name` VARCHAR(128),
+    `formal_native_name` VARCHAR(128),
+    `short_native_name` VARCHAR(128),
+    `bbox_sw_lat` FLOAT,
+    `bbox_sw_lng` FLOAT,
+    `bbox_ne_lat` FLOAT,
+    `bbox_ne_lng` FLOAT,
+    PRIMARY KEY (`id`),
+    INDEX `country_fi_continent` (`continent_id`),
+    INDEX `country_fi_currency` (`currency_id`),
+    INDEX `country_fi_type` (`type_id`),
+    INDEX `country_fi_subtype` (`subtype_id`),
+    INDEX `country_fi_sovereignity` (`sovereignity_id`),
+    CONSTRAINT `country_fk_continent`
+        FOREIGN KEY (`continent_id`)
+        REFERENCES `kk_continent` (`id`),
+    CONSTRAINT `country_fk_currency`
+        FOREIGN KEY (`currency_id`)
+        REFERENCES `kk_currency` (`id`),
+    CONSTRAINT `country_fk_type`
+        FOREIGN KEY (`type_id`)
+        REFERENCES `kk_region_type` (`id`),
+    CONSTRAINT `country_fk_subtype`
+        FOREIGN KEY (`subtype_id`)
+        REFERENCES `kk_region_type` (`id`),
+    CONSTRAINT `country_fk_sovereignity`
+        FOREIGN KEY (`sovereignity_id`)
+        REFERENCES `kk_country` (`id`)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- kk_continent
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `kk_continent`;
+
+CREATE TABLE `kk_continent`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `parent_id` INTEGER,
+    `numeric` INTEGER,
+    `name` VARCHAR(45) NOT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -165,36 +223,111 @@ DROP TABLE IF EXISTS `kk_subdivision`;
 CREATE TABLE `kk_subdivision`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `iso` VARCHAR(45),
+    `code` VARCHAR(45),
     `name` VARCHAR(128),
-    `local_name` VARCHAR(128),
-    `en_name` VARCHAR(128),
+    `native_name` VARCHAR(128),
     `alt_names` VARCHAR(255),
     `parent_id` INTEGER,
-    `country_iso_nr` INTEGER NOT NULL,
-    `subdivision_type_id` INTEGER,
+    `country_id` INTEGER NOT NULL,
+    `type_id` INTEGER NOT NULL,
     PRIMARY KEY (`id`),
-    INDEX `kk_subdivision_fi_705f0c` (`country_iso_nr`),
-    INDEX `kk_subdivision_fi_6bba99` (`subdivision_type_id`),
-    CONSTRAINT `kk_subdivision_fk_705f0c`
-        FOREIGN KEY (`country_iso_nr`)
-        REFERENCES `kk_country` (`iso_nr`),
-    CONSTRAINT `kk_subdivision_fk_6bba99`
-        FOREIGN KEY (`subdivision_type_id`)
-        REFERENCES `kk_subdivision_type` (`id`)
+    INDEX `subdivision_fi_country` (`country_id`),
+    INDEX `subdivision_fi_type` (`type_id`),
+    CONSTRAINT `subdivision_fk_country`
+        FOREIGN KEY (`country_id`)
+        REFERENCES `kk_country` (`id`),
+    CONSTRAINT `subdivision_fk_type`
+        FOREIGN KEY (`type_id`)
+        REFERENCES `kk_region_type` (`id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- kk_subdivision_type
+-- kk_region_type
 -- ---------------------------------------------------------------------
 
-DROP TABLE IF EXISTS `kk_subdivision_type`;
+DROP TABLE IF EXISTS `kk_region_type`;
 
-CREATE TABLE `kk_subdivision_type`
+CREATE TABLE `kk_region_type`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(128),
+    `area_id` INTEGER(10) NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `region_type_fi_area` (`area_id`),
+    CONSTRAINT `region_type_fk_area`
+        FOREIGN KEY (`area_id`)
+        REFERENCES `kk_region_area` (`id`)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- kk_region_area
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `kk_region_area`;
+
+CREATE TABLE `kk_region_area`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(128),
     PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- kk_localization
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `kk_localization`;
+
+CREATE TABLE `kk_localization`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `parent_id` INTEGER(10),
+    `name` VARCHAR(128),
+    `locale` VARCHAR(76),
+    `language_id` INTEGER(10),
+    `ext_language_id` INTEGER(10),
+    `region` VARCHAR(3),
+    `script_id` INTEGER(10),
+    `is_default` TINYINT(1),
+    PRIMARY KEY (`id`),
+    INDEX `localization_fi_parent` (`parent_id`),
+    INDEX `localization_fi_language` (`language_id`),
+    INDEX `localization_fi_extlang` (`ext_language_id`),
+    INDEX `localization_fi_script` (`script_id`),
+    CONSTRAINT `localization_fk_parent`
+        FOREIGN KEY (`parent_id`)
+        REFERENCES `kk_localization` (`id`),
+    CONSTRAINT `localization_fk_language`
+        FOREIGN KEY (`language_id`)
+        REFERENCES `kk_language` (`id`),
+    CONSTRAINT `localization_fk_extlang`
+        FOREIGN KEY (`ext_language_id`)
+        REFERENCES `kk_language` (`id`),
+    CONSTRAINT `localization_fk_script`
+        FOREIGN KEY (`script_id`)
+        REFERENCES `kk_language_script` (`id`)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- kk_localization_variant
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `kk_localization_variant`;
+
+CREATE TABLE `kk_localization_variant`
+(
+    `localization_id` INTEGER(10) NOT NULL,
+    `variant_id` INTEGER(10) NOT NULL,
+    PRIMARY KEY (`localization_id`,`variant_id`),
+    INDEX `localization_variant_fi_variant` (`variant_id`),
+    CONSTRAINT `localization_variant_fk_localization`
+        FOREIGN KEY (`localization_id`)
+        REFERENCES `kk_localization` (`id`)
+        ON DELETE RESTRICT,
+    CONSTRAINT `localization_variant_fk_variant`
+        FOREIGN KEY (`variant_id`)
+        REFERENCES `kk_language_variant` (`id`)
+        ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -250,13 +383,13 @@ CREATE TABLE `kk_application_uri`
     `application_id` INTEGER(10) NOT NULL,
     `localization_id` INTEGER(10) NOT NULL,
     PRIMARY KEY (`id`),
-    INDEX `kk_application_uri_fi_b1bb40` (`application_id`),
-    INDEX `kk_application_uri_fi_4f151e` (`localization_id`),
-    CONSTRAINT `kk_application_uri_fk_b1bb40`
+    INDEX `application_uri_fi_application` (`application_id`),
+    INDEX `application_uri_fi_localization` (`localization_id`),
+    CONSTRAINT `application_uri_fk_application`
         FOREIGN KEY (`application_id`)
         REFERENCES `kk_application` (`id`)
         ON DELETE RESTRICT,
-    CONSTRAINT `kk_application_uri_fk_4f151e`
+    CONSTRAINT `application_uri_fk_localization`
         FOREIGN KEY (`localization_id`)
         REFERENCES `kk_localization` (`id`)
         ON DELETE RESTRICT
@@ -302,8 +435,8 @@ CREATE TABLE `kk_action`
     `class_name` VARCHAR(255) NOT NULL,
     `module_id` INTEGER(10) NOT NULL,
     PRIMARY KEY (`id`),
-    INDEX `kk_action_fi_326eef` (`module_id`),
-    CONSTRAINT `kk_action_fk_326eef`
+    INDEX `action_fi_module` (`module_id`),
+    CONSTRAINT `action_fk_module`
         FOREIGN KEY (`module_id`)
         REFERENCES `kk_module` (`id`)
         ON DELETE CASCADE
@@ -337,8 +470,8 @@ CREATE TABLE `kk_api`
     `action_id` INTEGER(10) NOT NULL,
     `required_params` VARCHAR(255),
     PRIMARY KEY (`id`),
-    INDEX `kk_api_fi_716bac` (`action_id`),
-    CONSTRAINT `kk_api_fk_716bac`
+    INDEX `api_fi_action` (`action_id`),
+    CONSTRAINT `api_fk_action`
         FOREIGN KEY (`action_id`)
         REFERENCES `kk_action` (`id`)
         ON DELETE CASCADE
@@ -357,8 +490,8 @@ CREATE TABLE `kk_auth`
     `created_at` DATETIME,
     `updated_at` DATETIME,
     PRIMARY KEY (`token`),
-    INDEX `kk_auth_fi_1efe60` (`user_id`),
-    CONSTRAINT `kk_auth_fk_1efe60`
+    INDEX `auth_fi_user` (`user_id`),
+    CONSTRAINT `auth_fk_user`
         FOREIGN KEY (`user_id`)
         REFERENCES `kk_user` (`id`)
 ) ENGINE=InnoDB;
@@ -384,8 +517,7 @@ CREATE TABLE `kk_user`
     `password_recover_time` DATETIME,
     `created_at` DATETIME,
     `updated_at` DATETIME,
-    PRIMARY KEY (`id`),
-    UNIQUE INDEX `login_name_UNIQUE` (`login_name`)
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -399,12 +531,12 @@ CREATE TABLE `kk_user_group`
     `user_id` INTEGER(10) NOT NULL,
     `group_id` INTEGER(10) NOT NULL,
     PRIMARY KEY (`user_id`,`group_id`),
-    INDEX `kk_user_group_fi_8134fe` (`group_id`),
-    CONSTRAINT `kk_user_group_fk_8134fe`
+    INDEX `user_group_fi_group` (`group_id`),
+    CONSTRAINT `user_group_fk_group`
         FOREIGN KEY (`group_id`)
         REFERENCES `kk_group` (`id`)
         ON DELETE RESTRICT,
-    CONSTRAINT `kk_user_group_fk_1efe60`
+    CONSTRAINT `user_group_fk_user`
         FOREIGN KEY (`user_id`)
         REFERENCES `kk_user` (`id`)
         ON DELETE RESTRICT
@@ -441,12 +573,12 @@ CREATE TABLE `kk_group_action`
     `group_id` INTEGER(10) NOT NULL,
     `action_id` INTEGER(10) NOT NULL,
     PRIMARY KEY (`group_id`,`action_id`),
-    INDEX `kk_group_action_fi_716bac` (`action_id`),
-    CONSTRAINT `kk_group_action_fk_8134fe`
+    INDEX `group_action_fi_action` (`action_id`),
+    CONSTRAINT `group_action_fk_group`
         FOREIGN KEY (`group_id`)
         REFERENCES `kk_group` (`id`)
         ON DELETE RESTRICT,
-    CONSTRAINT `kk_group_action_fk_716bac`
+    CONSTRAINT `group_action_fk_action`
         FOREIGN KEY (`action_id`)
         REFERENCES `kk_action` (`id`)
         ON DELETE RESTRICT
@@ -466,16 +598,16 @@ CREATE TABLE `kk_activity`
     `object_id` INTEGER NOT NULL,
     `target_id` INTEGER,
     PRIMARY KEY (`id`),
-    INDEX `kk_activity_fi_9bf6dc` (`actor_id`),
-    INDEX `kk_activity_fi_9a3d86` (`object_id`),
-    INDEX `kk_activity_fi_1e33a8` (`target_id`),
-    CONSTRAINT `kk_activity_fk_9bf6dc`
+    INDEX `activity_fi_user` (`actor_id`),
+    INDEX `activity_fi_object` (`object_id`),
+    INDEX `activity_fi_target` (`target_id`),
+    CONSTRAINT `activity_fk_user`
         FOREIGN KEY (`actor_id`)
         REFERENCES `kk_user` (`id`),
-    CONSTRAINT `kk_activity_fk_9a3d86`
+    CONSTRAINT `activity_fk_object`
         FOREIGN KEY (`object_id`)
         REFERENCES `kk_activity_object` (`id`),
-    CONSTRAINT `kk_activity_fk_1e33a8`
+    CONSTRAINT `activity_fk_target`
         FOREIGN KEY (`target_id`)
         REFERENCES `kk_activity_object` (`id`)
 ) ENGINE=InnoDB;

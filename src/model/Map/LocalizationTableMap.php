@@ -59,7 +59,7 @@ class LocalizationTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 9;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class LocalizationTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 9;
 
     /**
      * the column name for the id field
@@ -82,14 +82,34 @@ class LocalizationTableMap extends TableMap
     const COL_PARENT_ID = 'kk_localization.parent_id';
 
     /**
+     * the column name for the name field
+     */
+    const COL_NAME = 'kk_localization.name';
+
+    /**
+     * the column name for the locale field
+     */
+    const COL_LOCALE = 'kk_localization.locale';
+
+    /**
      * the column name for the language_id field
      */
     const COL_LANGUAGE_ID = 'kk_localization.language_id';
 
     /**
-     * the column name for the country_iso_nr field
+     * the column name for the ext_language_id field
      */
-    const COL_COUNTRY_ISO_NR = 'kk_localization.country_iso_nr';
+    const COL_EXT_LANGUAGE_ID = 'kk_localization.ext_language_id';
+
+    /**
+     * the column name for the region field
+     */
+    const COL_REGION = 'kk_localization.region';
+
+    /**
+     * the column name for the script_id field
+     */
+    const COL_SCRIPT_ID = 'kk_localization.script_id';
 
     /**
      * the column name for the is_default field
@@ -108,11 +128,11 @@ class LocalizationTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'ParentId', 'LanguageId', 'CountryIsoNr', 'IsDefault', ),
-        self::TYPE_CAMELNAME     => array('id', 'parentId', 'languageId', 'countryIsoNr', 'isDefault', ),
-        self::TYPE_COLNAME       => array(LocalizationTableMap::COL_ID, LocalizationTableMap::COL_PARENT_ID, LocalizationTableMap::COL_LANGUAGE_ID, LocalizationTableMap::COL_COUNTRY_ISO_NR, LocalizationTableMap::COL_IS_DEFAULT, ),
-        self::TYPE_FIELDNAME     => array('id', 'parent_id', 'language_id', 'country_iso_nr', 'is_default', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id', 'ParentId', 'Name', 'Locale', 'LanguageId', 'ExtLanguageId', 'Region', 'ScriptId', 'IsDefault', ),
+        self::TYPE_CAMELNAME     => array('id', 'parentId', 'name', 'locale', 'languageId', 'extLanguageId', 'region', 'scriptId', 'isDefault', ),
+        self::TYPE_COLNAME       => array(LocalizationTableMap::COL_ID, LocalizationTableMap::COL_PARENT_ID, LocalizationTableMap::COL_NAME, LocalizationTableMap::COL_LOCALE, LocalizationTableMap::COL_LANGUAGE_ID, LocalizationTableMap::COL_EXT_LANGUAGE_ID, LocalizationTableMap::COL_REGION, LocalizationTableMap::COL_SCRIPT_ID, LocalizationTableMap::COL_IS_DEFAULT, ),
+        self::TYPE_FIELDNAME     => array('id', 'parent_id', 'name', 'locale', 'language_id', 'ext_language_id', 'region', 'script_id', 'is_default', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -122,11 +142,11 @@ class LocalizationTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'ParentId' => 1, 'LanguageId' => 2, 'CountryIsoNr' => 3, 'IsDefault' => 4, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'parentId' => 1, 'languageId' => 2, 'countryIsoNr' => 3, 'isDefault' => 4, ),
-        self::TYPE_COLNAME       => array(LocalizationTableMap::COL_ID => 0, LocalizationTableMap::COL_PARENT_ID => 1, LocalizationTableMap::COL_LANGUAGE_ID => 2, LocalizationTableMap::COL_COUNTRY_ISO_NR => 3, LocalizationTableMap::COL_IS_DEFAULT => 4, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'parent_id' => 1, 'language_id' => 2, 'country_iso_nr' => 3, 'is_default' => 4, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'ParentId' => 1, 'Name' => 2, 'Locale' => 3, 'LanguageId' => 4, 'ExtLanguageId' => 5, 'Region' => 6, 'ScriptId' => 7, 'IsDefault' => 8, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'parentId' => 1, 'name' => 2, 'locale' => 3, 'languageId' => 4, 'extLanguageId' => 5, 'region' => 6, 'scriptId' => 7, 'isDefault' => 8, ),
+        self::TYPE_COLNAME       => array(LocalizationTableMap::COL_ID => 0, LocalizationTableMap::COL_PARENT_ID => 1, LocalizationTableMap::COL_NAME => 2, LocalizationTableMap::COL_LOCALE => 3, LocalizationTableMap::COL_LANGUAGE_ID => 4, LocalizationTableMap::COL_EXT_LANGUAGE_ID => 5, LocalizationTableMap::COL_REGION => 6, LocalizationTableMap::COL_SCRIPT_ID => 7, LocalizationTableMap::COL_IS_DEFAULT => 8, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'parent_id' => 1, 'name' => 2, 'locale' => 3, 'language_id' => 4, 'ext_language_id' => 5, 'region' => 6, 'script_id' => 7, 'is_default' => 8, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -148,8 +168,12 @@ class LocalizationTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('parent_id', 'ParentId', 'INTEGER', 'kk_localization', 'id', false, 10, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 128, null);
+        $this->addColumn('locale', 'Locale', 'VARCHAR', false, 76, null);
         $this->addForeignKey('language_id', 'LanguageId', 'INTEGER', 'kk_language', 'id', false, 10, null);
-        $this->addForeignKey('country_iso_nr', 'CountryIsoNr', 'INTEGER', 'kk_country', 'iso_nr', false, 10, null);
+        $this->addForeignKey('ext_language_id', 'ExtLanguageId', 'INTEGER', 'kk_language', 'id', false, 10, null);
+        $this->addColumn('region', 'Region', 'VARCHAR', false, 3, null);
+        $this->addForeignKey('script_id', 'ScriptId', 'INTEGER', 'kk_language_script', 'id', false, 10, null);
         $this->addColumn('is_default', 'IsDefault', 'BOOLEAN', false, 1, null);
     } // initialize()
 
@@ -172,11 +196,18 @@ class LocalizationTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('Country', '\\keeko\\core\\model\\Country', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('ExtLang', '\\keeko\\core\\model\\Language', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
-    0 => ':country_iso_nr',
-    1 => ':iso_nr',
+    0 => ':ext_language_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Script', '\\keeko\\core\\model\\LanguageScript', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':script_id',
+    1 => ':id',
   ),
 ), null, null, null, false);
         $this->addRelation('LocalizationRelatedById', '\\keeko\\core\\model\\Localization', RelationMap::ONE_TO_MANY, array (
@@ -186,6 +217,13 @@ class LocalizationTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'LocalizationsRelatedById', false);
+        $this->addRelation('LocalizationVariant', '\\keeko\\core\\model\\LocalizationVariant', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':localization_id',
+    1 => ':id',
+  ),
+), 'RESTRICT', null, 'LocalizationVariants', false);
         $this->addRelation('ApplicationUri', '\\keeko\\core\\model\\ApplicationUri', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -193,6 +231,7 @@ class LocalizationTableMap extends TableMap
     1 => ':id',
   ),
 ), 'RESTRICT', null, 'ApplicationUris', false);
+        $this->addRelation('LanguageVariant', '\\keeko\\core\\model\\LanguageVariant', RelationMap::MANY_TO_MANY, array(), 'RESTRICT', null, 'LanguageVariants');
     } // buildRelations()
 
     /**
@@ -338,14 +377,22 @@ class LocalizationTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(LocalizationTableMap::COL_ID);
             $criteria->addSelectColumn(LocalizationTableMap::COL_PARENT_ID);
+            $criteria->addSelectColumn(LocalizationTableMap::COL_NAME);
+            $criteria->addSelectColumn(LocalizationTableMap::COL_LOCALE);
             $criteria->addSelectColumn(LocalizationTableMap::COL_LANGUAGE_ID);
-            $criteria->addSelectColumn(LocalizationTableMap::COL_COUNTRY_ISO_NR);
+            $criteria->addSelectColumn(LocalizationTableMap::COL_EXT_LANGUAGE_ID);
+            $criteria->addSelectColumn(LocalizationTableMap::COL_REGION);
+            $criteria->addSelectColumn(LocalizationTableMap::COL_SCRIPT_ID);
             $criteria->addSelectColumn(LocalizationTableMap::COL_IS_DEFAULT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.parent_id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.locale');
             $criteria->addSelectColumn($alias . '.language_id');
-            $criteria->addSelectColumn($alias . '.country_iso_nr');
+            $criteria->addSelectColumn($alias . '.ext_language_id');
+            $criteria->addSelectColumn($alias . '.region');
+            $criteria->addSelectColumn($alias . '.script_id');
             $criteria->addSelectColumn($alias . '.is_default');
         }
     }

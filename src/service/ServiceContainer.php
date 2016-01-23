@@ -188,14 +188,14 @@ class ServiceContainer {
 			$this->twig->addExtension(new PuliExtension($repo));
 	
 			// translator function
-			$translator = $this->getServiceContainer()->getTranslator();
+			$translator = $this->getTranslator();
 			$trans = function($key, $params = [], $domain = null) use ($translator) {
 				return $translator->trans($key, $params, $domain);
 			};
 			$this->twig->addFunction(new Twig_SimpleFunction('t', $trans));
 		
 			// firewall
-			$firewall = $this->getServiceContainer()->getFirewall();
+			$firewall = $this->getFirewall();
 			$this->twig->addFunction(new Twig_SimpleFunction('hasPermission', function ($module, $action) use ($firewall) {
 				return $firewall->hasPermission($module, $action);
 			}));

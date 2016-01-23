@@ -956,14 +956,14 @@ abstract class UserGroup implements ActiveRecordInterface
         $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
 
-        //relation kk_user_group_fk_8134fe to table kk_group
+        //relation user_group_fk_group to table kk_group
         if ($this->aGroup && $hash = spl_object_hash($this->aGroup)) {
             $primaryKeyFKs[] = $hash;
         } else {
             $validPrimaryKeyFKs = false;
         }
 
-        //relation kk_user_group_fk_1efe60 to table kk_user
+        //relation user_group_fk_user to table kk_user
         if ($this->aUser && $hash = spl_object_hash($this->aUser)) {
             $primaryKeyFKs[] = $hash;
         } else {

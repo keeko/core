@@ -7,12 +7,10 @@ use keeko\core\model\Application;
 use keeko\core\model\Localization;
 use keeko\core\service\ServiceContainer;
 use keeko\core\utils\TwigRenderTrait;
-use keeko\core\utils\TwigTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractApplication implements KernelTargetInterface {
 	
-	use TwigTrait;
 	use TwigRenderTrait;
 
 	/**

@@ -17,9 +17,13 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use keeko\core\model\Language as ChildLanguage;
+use keeko\core\model\LanguageFamily as ChildLanguageFamily;
+use keeko\core\model\LanguageFamilyQuery as ChildLanguageFamilyQuery;
 use keeko\core\model\LanguageQuery as ChildLanguageQuery;
 use keeko\core\model\LanguageScope as ChildLanguageScope;
 use keeko\core\model\LanguageScopeQuery as ChildLanguageScopeQuery;
+use keeko\core\model\LanguageScript as ChildLanguageScript;
+use keeko\core\model\LanguageScriptQuery as ChildLanguageScriptQuery;
 use keeko\core\model\LanguageType as ChildLanguageType;
 use keeko\core\model\LanguageTypeQuery as ChildLanguageTypeQuery;
 use keeko\core\model\Localization as ChildLocalization;
@@ -98,22 +102,46 @@ abstract class Language implements ActiveRecordInterface
     protected $alpha_3;
 
     /**
-     * The value for the local_name field.
-     * @var        string
+     * The value for the parent_id field.
+     * @var        int
      */
-    protected $local_name;
+    protected $parent_id;
 
     /**
-     * The value for the en_name field.
+     * The value for the macrolanguage_status field.
      * @var        string
      */
-    protected $en_name;
+    protected $macrolanguage_status;
+
+    /**
+     * The value for the name field.
+     * @var        string
+     */
+    protected $name;
+
+    /**
+     * The value for the native_name field.
+     * @var        string
+     */
+    protected $native_name;
 
     /**
      * The value for the collate field.
      * @var        string
      */
     protected $collate;
+
+    /**
+     * The value for the subtag field.
+     * @var        string
+     */
+    protected $subtag;
+
+    /**
+     * The value for the prefix field.
+     * @var        string
+     */
+    protected $prefix;
 
     /**
      * The value for the scope_id field.
@@ -128,20 +156,59 @@ abstract class Language implements ActiveRecordInterface
     protected $type_id;
 
     /**
+     * The value for the family_id field.
+     * @var        int
+     */
+    protected $family_id;
+
+    /**
+     * The value for the default_script_id field.
+     * @var        int
+     */
+    protected $default_script_id;
+
+    /**
+     * @var        ChildLanguage
+     */
+    protected $aLanguageRelatedByParentId;
+
+    /**
      * @var        ChildLanguageScope
      */
-    protected $aLanguageScope;
+    protected $aScope;
 
     /**
      * @var        ChildLanguageType
      */
-    protected $aLanguageType;
+    protected $aType;
+
+    /**
+     * @var        ChildLanguageScript
+     */
+    protected $aScript;
+
+    /**
+     * @var        ChildLanguageFamily
+     */
+    protected $aFamily;
+
+    /**
+     * @var        ObjectCollection|ChildLanguage[] Collection to store aggregation of ChildLanguage objects.
+     */
+    protected $collSublanguages;
+    protected $collSublanguagesPartial;
 
     /**
      * @var        ObjectCollection|ChildLocalization[] Collection to store aggregation of ChildLocalization objects.
      */
-    protected $collLocalizations;
-    protected $collLocalizationsPartial;
+    protected $collLocalizationsRelatedByLanguageId;
+    protected $collLocalizationsRelatedByLanguageIdPartial;
+
+    /**
+     * @var        ObjectCollection|ChildLocalization[] Collection to store aggregation of ChildLocalization objects.
+     */
+    protected $collLocalizationsRelatedByExtLanguageId;
+    protected $collLocalizationsRelatedByExtLanguageIdPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -153,9 +220,21 @@ abstract class Language implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildLanguage[]
+     */
+    protected $sublanguagesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildLocalization[]
      */
-    protected $localizationsScheduledForDeletion = null;
+    protected $localizationsRelatedByLanguageIdScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildLocalization[]
+     */
+    protected $localizationsRelatedByExtLanguageIdScheduledForDeletion = null;
 
     /**
      * Initializes internal state of keeko\core\model\Base\Language object.
@@ -425,23 +504,43 @@ abstract class Language implements ActiveRecordInterface
     }
 
     /**
-     * Get the [local_name] column value.
+     * Get the [parent_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getLocalName()
+    public function getParentId()
     {
-        return $this->local_name;
+        return $this->parent_id;
     }
 
     /**
-     * Get the [en_name] column value.
+     * Get the [macrolanguage_status] column value.
      *
      * @return string
      */
-    public function getEnName()
+    public function getMacrolanguageStatus()
     {
-        return $this->en_name;
+        return $this->macrolanguage_status;
+    }
+
+    /**
+     * Get the [name] column value.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get the [native_name] column value.
+     *
+     * @return string
+     */
+    public function getNativeName()
+    {
+        return $this->native_name;
     }
 
     /**
@@ -452,6 +551,26 @@ abstract class Language implements ActiveRecordInterface
     public function getCollate()
     {
         return $this->collate;
+    }
+
+    /**
+     * Get the [subtag] column value.
+     *
+     * @return string
+     */
+    public function getSubtag()
+    {
+        return $this->subtag;
+    }
+
+    /**
+     * Get the [prefix] column value.
+     *
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
     }
 
     /**
@@ -472,6 +591,26 @@ abstract class Language implements ActiveRecordInterface
     public function getTypeId()
     {
         return $this->type_id;
+    }
+
+    /**
+     * Get the [family_id] column value.
+     *
+     * @return int
+     */
+    public function getFamilyId()
+    {
+        return $this->family_id;
+    }
+
+    /**
+     * Get the [default_script_id] column value.
+     *
+     * @return int
+     */
+    public function getDefaultScriptId()
+    {
+        return $this->default_script_id;
     }
 
     /**
@@ -575,44 +714,88 @@ abstract class Language implements ActiveRecordInterface
     } // setAlpha3()
 
     /**
-     * Set the value of [local_name] column.
+     * Set the value of [parent_id] column.
      *
-     * @param string $v new value
+     * @param int $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
-    public function setLocalName($v)
+    public function setParentId($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->local_name !== $v) {
-            $this->local_name = $v;
-            $this->modifiedColumns[LanguageTableMap::COL_LOCAL_NAME] = true;
+        if ($this->parent_id !== $v) {
+            $this->parent_id = $v;
+            $this->modifiedColumns[LanguageTableMap::COL_PARENT_ID] = true;
+        }
+
+        if ($this->aLanguageRelatedByParentId !== null && $this->aLanguageRelatedByParentId->getId() !== $v) {
+            $this->aLanguageRelatedByParentId = null;
         }
 
         return $this;
-    } // setLocalName()
+    } // setParentId()
 
     /**
-     * Set the value of [en_name] column.
+     * Set the value of [macrolanguage_status] column.
      *
      * @param string $v new value
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
-    public function setEnName($v)
+    public function setMacrolanguageStatus($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->en_name !== $v) {
-            $this->en_name = $v;
-            $this->modifiedColumns[LanguageTableMap::COL_EN_NAME] = true;
+        if ($this->macrolanguage_status !== $v) {
+            $this->macrolanguage_status = $v;
+            $this->modifiedColumns[LanguageTableMap::COL_MACROLANGUAGE_STATUS] = true;
         }
 
         return $this;
-    } // setEnName()
+    } // setMacrolanguageStatus()
+
+    /**
+     * Set the value of [name] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Language The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[LanguageTableMap::COL_NAME] = true;
+        }
+
+        return $this;
+    } // setName()
+
+    /**
+     * Set the value of [native_name] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Language The current object (for fluent API support)
+     */
+    public function setNativeName($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->native_name !== $v) {
+            $this->native_name = $v;
+            $this->modifiedColumns[LanguageTableMap::COL_NATIVE_NAME] = true;
+        }
+
+        return $this;
+    } // setNativeName()
 
     /**
      * Set the value of [collate] column.
@@ -635,6 +818,46 @@ abstract class Language implements ActiveRecordInterface
     } // setCollate()
 
     /**
+     * Set the value of [subtag] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Language The current object (for fluent API support)
+     */
+    public function setSubtag($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->subtag !== $v) {
+            $this->subtag = $v;
+            $this->modifiedColumns[LanguageTableMap::COL_SUBTAG] = true;
+        }
+
+        return $this;
+    } // setSubtag()
+
+    /**
+     * Set the value of [prefix] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Language The current object (for fluent API support)
+     */
+    public function setPrefix($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->prefix !== $v) {
+            $this->prefix = $v;
+            $this->modifiedColumns[LanguageTableMap::COL_PREFIX] = true;
+        }
+
+        return $this;
+    } // setPrefix()
+
+    /**
      * Set the value of [scope_id] column.
      *
      * @param int $v new value
@@ -651,8 +874,8 @@ abstract class Language implements ActiveRecordInterface
             $this->modifiedColumns[LanguageTableMap::COL_SCOPE_ID] = true;
         }
 
-        if ($this->aLanguageScope !== null && $this->aLanguageScope->getId() !== $v) {
-            $this->aLanguageScope = null;
+        if ($this->aScope !== null && $this->aScope->getId() !== $v) {
+            $this->aScope = null;
         }
 
         return $this;
@@ -675,12 +898,60 @@ abstract class Language implements ActiveRecordInterface
             $this->modifiedColumns[LanguageTableMap::COL_TYPE_ID] = true;
         }
 
-        if ($this->aLanguageType !== null && $this->aLanguageType->getId() !== $v) {
-            $this->aLanguageType = null;
+        if ($this->aType !== null && $this->aType->getId() !== $v) {
+            $this->aType = null;
         }
 
         return $this;
     } // setTypeId()
+
+    /**
+     * Set the value of [family_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\keeko\core\model\Language The current object (for fluent API support)
+     */
+    public function setFamilyId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->family_id !== $v) {
+            $this->family_id = $v;
+            $this->modifiedColumns[LanguageTableMap::COL_FAMILY_ID] = true;
+        }
+
+        if ($this->aFamily !== null && $this->aFamily->getId() !== $v) {
+            $this->aFamily = null;
+        }
+
+        return $this;
+    } // setFamilyId()
+
+    /**
+     * Set the value of [default_script_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\keeko\core\model\Language The current object (for fluent API support)
+     */
+    public function setDefaultScriptId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->default_script_id !== $v) {
+            $this->default_script_id = $v;
+            $this->modifiedColumns[LanguageTableMap::COL_DEFAULT_SCRIPT_ID] = true;
+        }
+
+        if ($this->aScript !== null && $this->aScript->getId() !== $v) {
+            $this->aScript = null;
+        }
+
+        return $this;
+    } // setDefaultScriptId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -733,20 +1004,38 @@ abstract class Language implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : LanguageTableMap::translateFieldName('Alpha3', TableMap::TYPE_PHPNAME, $indexType)];
             $this->alpha_3 = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : LanguageTableMap::translateFieldName('LocalName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->local_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : LanguageTableMap::translateFieldName('ParentId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->parent_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : LanguageTableMap::translateFieldName('EnName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->en_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : LanguageTableMap::translateFieldName('MacrolanguageStatus', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->macrolanguage_status = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : LanguageTableMap::translateFieldName('Collate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : LanguageTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : LanguageTableMap::translateFieldName('NativeName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->native_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : LanguageTableMap::translateFieldName('Collate', TableMap::TYPE_PHPNAME, $indexType)];
             $this->collate = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : LanguageTableMap::translateFieldName('ScopeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : LanguageTableMap::translateFieldName('Subtag', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->subtag = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : LanguageTableMap::translateFieldName('Prefix', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->prefix = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : LanguageTableMap::translateFieldName('ScopeId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->scope_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : LanguageTableMap::translateFieldName('TypeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : LanguageTableMap::translateFieldName('TypeId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->type_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : LanguageTableMap::translateFieldName('FamilyId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->family_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : LanguageTableMap::translateFieldName('DefaultScriptId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->default_script_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -755,7 +1044,7 @@ abstract class Language implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 10; // 10 = LanguageTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 16; // 16 = LanguageTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Language'), 0, $e);
@@ -777,11 +1066,20 @@ abstract class Language implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aLanguageScope !== null && $this->scope_id !== $this->aLanguageScope->getId()) {
-            $this->aLanguageScope = null;
+        if ($this->aLanguageRelatedByParentId !== null && $this->parent_id !== $this->aLanguageRelatedByParentId->getId()) {
+            $this->aLanguageRelatedByParentId = null;
         }
-        if ($this->aLanguageType !== null && $this->type_id !== $this->aLanguageType->getId()) {
-            $this->aLanguageType = null;
+        if ($this->aScope !== null && $this->scope_id !== $this->aScope->getId()) {
+            $this->aScope = null;
+        }
+        if ($this->aType !== null && $this->type_id !== $this->aType->getId()) {
+            $this->aType = null;
+        }
+        if ($this->aFamily !== null && $this->family_id !== $this->aFamily->getId()) {
+            $this->aFamily = null;
+        }
+        if ($this->aScript !== null && $this->default_script_id !== $this->aScript->getId()) {
+            $this->aScript = null;
         }
     } // ensureConsistency
 
@@ -822,9 +1120,16 @@ abstract class Language implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aLanguageScope = null;
-            $this->aLanguageType = null;
-            $this->collLocalizations = null;
+            $this->aLanguageRelatedByParentId = null;
+            $this->aScope = null;
+            $this->aType = null;
+            $this->aScript = null;
+            $this->aFamily = null;
+            $this->collSublanguages = null;
+
+            $this->collLocalizationsRelatedByLanguageId = null;
+
+            $this->collLocalizationsRelatedByExtLanguageId = null;
 
         } // if (deep)
     }
@@ -930,18 +1235,39 @@ abstract class Language implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aLanguageScope !== null) {
-                if ($this->aLanguageScope->isModified() || $this->aLanguageScope->isNew()) {
-                    $affectedRows += $this->aLanguageScope->save($con);
+            if ($this->aLanguageRelatedByParentId !== null) {
+                if ($this->aLanguageRelatedByParentId->isModified() || $this->aLanguageRelatedByParentId->isNew()) {
+                    $affectedRows += $this->aLanguageRelatedByParentId->save($con);
                 }
-                $this->setLanguageScope($this->aLanguageScope);
+                $this->setLanguageRelatedByParentId($this->aLanguageRelatedByParentId);
             }
 
-            if ($this->aLanguageType !== null) {
-                if ($this->aLanguageType->isModified() || $this->aLanguageType->isNew()) {
-                    $affectedRows += $this->aLanguageType->save($con);
+            if ($this->aScope !== null) {
+                if ($this->aScope->isModified() || $this->aScope->isNew()) {
+                    $affectedRows += $this->aScope->save($con);
                 }
-                $this->setLanguageType($this->aLanguageType);
+                $this->setScope($this->aScope);
+            }
+
+            if ($this->aType !== null) {
+                if ($this->aType->isModified() || $this->aType->isNew()) {
+                    $affectedRows += $this->aType->save($con);
+                }
+                $this->setType($this->aType);
+            }
+
+            if ($this->aScript !== null) {
+                if ($this->aScript->isModified() || $this->aScript->isNew()) {
+                    $affectedRows += $this->aScript->save($con);
+                }
+                $this->setScript($this->aScript);
+            }
+
+            if ($this->aFamily !== null) {
+                if ($this->aFamily->isModified() || $this->aFamily->isNew()) {
+                    $affectedRows += $this->aFamily->save($con);
+                }
+                $this->setFamily($this->aFamily);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -955,18 +1281,54 @@ abstract class Language implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->localizationsScheduledForDeletion !== null) {
-                if (!$this->localizationsScheduledForDeletion->isEmpty()) {
-                    foreach ($this->localizationsScheduledForDeletion as $localization) {
+            if ($this->sublanguagesScheduledForDeletion !== null) {
+                if (!$this->sublanguagesScheduledForDeletion->isEmpty()) {
+                    foreach ($this->sublanguagesScheduledForDeletion as $sublanguage) {
                         // need to save related object because we set the relation to null
-                        $localization->save($con);
+                        $sublanguage->save($con);
                     }
-                    $this->localizationsScheduledForDeletion = null;
+                    $this->sublanguagesScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collLocalizations !== null) {
-                foreach ($this->collLocalizations as $referrerFK) {
+            if ($this->collSublanguages !== null) {
+                foreach ($this->collSublanguages as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->localizationsRelatedByLanguageIdScheduledForDeletion !== null) {
+                if (!$this->localizationsRelatedByLanguageIdScheduledForDeletion->isEmpty()) {
+                    foreach ($this->localizationsRelatedByLanguageIdScheduledForDeletion as $localizationRelatedByLanguageId) {
+                        // need to save related object because we set the relation to null
+                        $localizationRelatedByLanguageId->save($con);
+                    }
+                    $this->localizationsRelatedByLanguageIdScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collLocalizationsRelatedByLanguageId !== null) {
+                foreach ($this->collLocalizationsRelatedByLanguageId as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->localizationsRelatedByExtLanguageIdScheduledForDeletion !== null) {
+                if (!$this->localizationsRelatedByExtLanguageIdScheduledForDeletion->isEmpty()) {
+                    foreach ($this->localizationsRelatedByExtLanguageIdScheduledForDeletion as $localizationRelatedByExtLanguageId) {
+                        // need to save related object because we set the relation to null
+                        $localizationRelatedByExtLanguageId->save($con);
+                    }
+                    $this->localizationsRelatedByExtLanguageIdScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collLocalizationsRelatedByExtLanguageId !== null) {
+                foreach ($this->collLocalizationsRelatedByExtLanguageId as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1014,20 +1376,38 @@ abstract class Language implements ActiveRecordInterface
         if ($this->isColumnModified(LanguageTableMap::COL_ALPHA_3)) {
             $modifiedColumns[':p' . $index++]  = '`alpha_3`';
         }
-        if ($this->isColumnModified(LanguageTableMap::COL_LOCAL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`local_name`';
+        if ($this->isColumnModified(LanguageTableMap::COL_PARENT_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`parent_id`';
         }
-        if ($this->isColumnModified(LanguageTableMap::COL_EN_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`en_name`';
+        if ($this->isColumnModified(LanguageTableMap::COL_MACROLANGUAGE_STATUS)) {
+            $modifiedColumns[':p' . $index++]  = '`macrolanguage_status`';
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`name`';
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_NATIVE_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`native_name`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_COLLATE)) {
             $modifiedColumns[':p' . $index++]  = '`collate`';
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_SUBTAG)) {
+            $modifiedColumns[':p' . $index++]  = '`subtag`';
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_PREFIX)) {
+            $modifiedColumns[':p' . $index++]  = '`prefix`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_SCOPE_ID)) {
             $modifiedColumns[':p' . $index++]  = '`scope_id`';
         }
         if ($this->isColumnModified(LanguageTableMap::COL_TYPE_ID)) {
             $modifiedColumns[':p' . $index++]  = '`type_id`';
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_FAMILY_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`family_id`';
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_DEFAULT_SCRIPT_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`default_script_id`';
         }
 
         $sql = sprintf(
@@ -1055,20 +1435,38 @@ abstract class Language implements ActiveRecordInterface
                     case '`alpha_3`':
                         $stmt->bindValue($identifier, $this->alpha_3, PDO::PARAM_STR);
                         break;
-                    case '`local_name`':
-                        $stmt->bindValue($identifier, $this->local_name, PDO::PARAM_STR);
+                    case '`parent_id`':
+                        $stmt->bindValue($identifier, $this->parent_id, PDO::PARAM_INT);
                         break;
-                    case '`en_name`':
-                        $stmt->bindValue($identifier, $this->en_name, PDO::PARAM_STR);
+                    case '`macrolanguage_status`':
+                        $stmt->bindValue($identifier, $this->macrolanguage_status, PDO::PARAM_STR);
+                        break;
+                    case '`name`':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case '`native_name`':
+                        $stmt->bindValue($identifier, $this->native_name, PDO::PARAM_STR);
                         break;
                     case '`collate`':
                         $stmt->bindValue($identifier, $this->collate, PDO::PARAM_STR);
+                        break;
+                    case '`subtag`':
+                        $stmt->bindValue($identifier, $this->subtag, PDO::PARAM_STR);
+                        break;
+                    case '`prefix`':
+                        $stmt->bindValue($identifier, $this->prefix, PDO::PARAM_STR);
                         break;
                     case '`scope_id`':
                         $stmt->bindValue($identifier, $this->scope_id, PDO::PARAM_INT);
                         break;
                     case '`type_id`':
                         $stmt->bindValue($identifier, $this->type_id, PDO::PARAM_INT);
+                        break;
+                    case '`family_id`':
+                        $stmt->bindValue($identifier, $this->family_id, PDO::PARAM_INT);
+                        break;
+                    case '`default_script_id`':
+                        $stmt->bindValue($identifier, $this->default_script_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1148,19 +1546,37 @@ abstract class Language implements ActiveRecordInterface
                 return $this->getAlpha3();
                 break;
             case 5:
-                return $this->getLocalName();
+                return $this->getParentId();
                 break;
             case 6:
-                return $this->getEnName();
+                return $this->getMacrolanguageStatus();
                 break;
             case 7:
-                return $this->getCollate();
+                return $this->getName();
                 break;
             case 8:
-                return $this->getScopeId();
+                return $this->getNativeName();
                 break;
             case 9:
+                return $this->getCollate();
+                break;
+            case 10:
+                return $this->getSubtag();
+                break;
+            case 11:
+                return $this->getPrefix();
+                break;
+            case 12:
+                return $this->getScopeId();
+                break;
+            case 13:
                 return $this->getTypeId();
+                break;
+            case 14:
+                return $this->getFamilyId();
+                break;
+            case 15:
+                return $this->getDefaultScriptId();
                 break;
             default:
                 return null;
@@ -1197,11 +1613,17 @@ abstract class Language implements ActiveRecordInterface
             $keys[2] => $this->getAlpha3T(),
             $keys[3] => $this->getAlpha3B(),
             $keys[4] => $this->getAlpha3(),
-            $keys[5] => $this->getLocalName(),
-            $keys[6] => $this->getEnName(),
-            $keys[7] => $this->getCollate(),
-            $keys[8] => $this->getScopeId(),
-            $keys[9] => $this->getTypeId(),
+            $keys[5] => $this->getParentId(),
+            $keys[6] => $this->getMacrolanguageStatus(),
+            $keys[7] => $this->getName(),
+            $keys[8] => $this->getNativeName(),
+            $keys[9] => $this->getCollate(),
+            $keys[10] => $this->getSubtag(),
+            $keys[11] => $this->getPrefix(),
+            $keys[12] => $this->getScopeId(),
+            $keys[13] => $this->getTypeId(),
+            $keys[14] => $this->getFamilyId(),
+            $keys[15] => $this->getDefaultScriptId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1209,7 +1631,22 @@ abstract class Language implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aLanguageScope) {
+            if (null !== $this->aLanguageRelatedByParentId) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'language';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_language';
+                        break;
+                    default:
+                        $key = 'Language';
+                }
+
+                $result[$key] = $this->aLanguageRelatedByParentId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aScope) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1222,9 +1659,9 @@ abstract class Language implements ActiveRecordInterface
                         $key = 'LanguageScope';
                 }
 
-                $result[$key] = $this->aLanguageScope->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aScope->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aLanguageType) {
+            if (null !== $this->aType) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1237,9 +1674,54 @@ abstract class Language implements ActiveRecordInterface
                         $key = 'LanguageType';
                 }
 
-                $result[$key] = $this->aLanguageType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collLocalizations) {
+            if (null !== $this->aScript) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'languageScript';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_language_script';
+                        break;
+                    default:
+                        $key = 'LanguageScript';
+                }
+
+                $result[$key] = $this->aScript->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aFamily) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'languageFamily';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_language_family';
+                        break;
+                    default:
+                        $key = 'LanguageFamily';
+                }
+
+                $result[$key] = $this->aFamily->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collSublanguages) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'languages';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_languages';
+                        break;
+                    default:
+                        $key = 'Languages';
+                }
+
+                $result[$key] = $this->collSublanguages->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collLocalizationsRelatedByLanguageId) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1252,7 +1734,22 @@ abstract class Language implements ActiveRecordInterface
                         $key = 'Localizations';
                 }
 
-                $result[$key] = $this->collLocalizations->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collLocalizationsRelatedByLanguageId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collLocalizationsRelatedByExtLanguageId) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'localizations';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_localizations';
+                        break;
+                    default:
+                        $key = 'Localizations';
+                }
+
+                $result[$key] = $this->collLocalizationsRelatedByExtLanguageId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1304,19 +1801,37 @@ abstract class Language implements ActiveRecordInterface
                 $this->setAlpha3($value);
                 break;
             case 5:
-                $this->setLocalName($value);
+                $this->setParentId($value);
                 break;
             case 6:
-                $this->setEnName($value);
+                $this->setMacrolanguageStatus($value);
                 break;
             case 7:
-                $this->setCollate($value);
+                $this->setName($value);
                 break;
             case 8:
-                $this->setScopeId($value);
+                $this->setNativeName($value);
                 break;
             case 9:
+                $this->setCollate($value);
+                break;
+            case 10:
+                $this->setSubtag($value);
+                break;
+            case 11:
+                $this->setPrefix($value);
+                break;
+            case 12:
+                $this->setScopeId($value);
+                break;
+            case 13:
                 $this->setTypeId($value);
+                break;
+            case 14:
+                $this->setFamilyId($value);
+                break;
+            case 15:
+                $this->setDefaultScriptId($value);
                 break;
         } // switch()
 
@@ -1360,19 +1875,37 @@ abstract class Language implements ActiveRecordInterface
             $this->setAlpha3($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setLocalName($arr[$keys[5]]);
+            $this->setParentId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setEnName($arr[$keys[6]]);
+            $this->setMacrolanguageStatus($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setCollate($arr[$keys[7]]);
+            $this->setName($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setScopeId($arr[$keys[8]]);
+            $this->setNativeName($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setTypeId($arr[$keys[9]]);
+            $this->setCollate($arr[$keys[9]]);
+        }
+        if (array_key_exists($keys[10], $arr)) {
+            $this->setSubtag($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setPrefix($arr[$keys[11]]);
+        }
+        if (array_key_exists($keys[12], $arr)) {
+            $this->setScopeId($arr[$keys[12]]);
+        }
+        if (array_key_exists($keys[13], $arr)) {
+            $this->setTypeId($arr[$keys[13]]);
+        }
+        if (array_key_exists($keys[14], $arr)) {
+            $this->setFamilyId($arr[$keys[14]]);
+        }
+        if (array_key_exists($keys[15], $arr)) {
+            $this->setDefaultScriptId($arr[$keys[15]]);
         }
     }
 
@@ -1430,20 +1963,38 @@ abstract class Language implements ActiveRecordInterface
         if ($this->isColumnModified(LanguageTableMap::COL_ALPHA_3)) {
             $criteria->add(LanguageTableMap::COL_ALPHA_3, $this->alpha_3);
         }
-        if ($this->isColumnModified(LanguageTableMap::COL_LOCAL_NAME)) {
-            $criteria->add(LanguageTableMap::COL_LOCAL_NAME, $this->local_name);
+        if ($this->isColumnModified(LanguageTableMap::COL_PARENT_ID)) {
+            $criteria->add(LanguageTableMap::COL_PARENT_ID, $this->parent_id);
         }
-        if ($this->isColumnModified(LanguageTableMap::COL_EN_NAME)) {
-            $criteria->add(LanguageTableMap::COL_EN_NAME, $this->en_name);
+        if ($this->isColumnModified(LanguageTableMap::COL_MACROLANGUAGE_STATUS)) {
+            $criteria->add(LanguageTableMap::COL_MACROLANGUAGE_STATUS, $this->macrolanguage_status);
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_NAME)) {
+            $criteria->add(LanguageTableMap::COL_NAME, $this->name);
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_NATIVE_NAME)) {
+            $criteria->add(LanguageTableMap::COL_NATIVE_NAME, $this->native_name);
         }
         if ($this->isColumnModified(LanguageTableMap::COL_COLLATE)) {
             $criteria->add(LanguageTableMap::COL_COLLATE, $this->collate);
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_SUBTAG)) {
+            $criteria->add(LanguageTableMap::COL_SUBTAG, $this->subtag);
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_PREFIX)) {
+            $criteria->add(LanguageTableMap::COL_PREFIX, $this->prefix);
         }
         if ($this->isColumnModified(LanguageTableMap::COL_SCOPE_ID)) {
             $criteria->add(LanguageTableMap::COL_SCOPE_ID, $this->scope_id);
         }
         if ($this->isColumnModified(LanguageTableMap::COL_TYPE_ID)) {
             $criteria->add(LanguageTableMap::COL_TYPE_ID, $this->type_id);
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_FAMILY_ID)) {
+            $criteria->add(LanguageTableMap::COL_FAMILY_ID, $this->family_id);
+        }
+        if ($this->isColumnModified(LanguageTableMap::COL_DEFAULT_SCRIPT_ID)) {
+            $criteria->add(LanguageTableMap::COL_DEFAULT_SCRIPT_ID, $this->default_script_id);
         }
 
         return $criteria;
@@ -1535,20 +2086,38 @@ abstract class Language implements ActiveRecordInterface
         $copyObj->setAlpha3T($this->getAlpha3T());
         $copyObj->setAlpha3B($this->getAlpha3B());
         $copyObj->setAlpha3($this->getAlpha3());
-        $copyObj->setLocalName($this->getLocalName());
-        $copyObj->setEnName($this->getEnName());
+        $copyObj->setParentId($this->getParentId());
+        $copyObj->setMacrolanguageStatus($this->getMacrolanguageStatus());
+        $copyObj->setName($this->getName());
+        $copyObj->setNativeName($this->getNativeName());
         $copyObj->setCollate($this->getCollate());
+        $copyObj->setSubtag($this->getSubtag());
+        $copyObj->setPrefix($this->getPrefix());
         $copyObj->setScopeId($this->getScopeId());
         $copyObj->setTypeId($this->getTypeId());
+        $copyObj->setFamilyId($this->getFamilyId());
+        $copyObj->setDefaultScriptId($this->getDefaultScriptId());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getLocalizations() as $relObj) {
+            foreach ($this->getSublanguages() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addLocalization($relObj->copy($deepCopy));
+                    $copyObj->addSublanguage($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getLocalizationsRelatedByLanguageId() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addLocalizationRelatedByLanguageId($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getLocalizationsRelatedByExtLanguageId() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addLocalizationRelatedByExtLanguageId($relObj->copy($deepCopy));
                 }
             }
 
@@ -1583,13 +2152,64 @@ abstract class Language implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildLanguage object.
+     *
+     * @param  ChildLanguage $v
+     * @return $this|\keeko\core\model\Language The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setLanguageRelatedByParentId(ChildLanguage $v = null)
+    {
+        if ($v === null) {
+            $this->setParentId(NULL);
+        } else {
+            $this->setParentId($v->getId());
+        }
+
+        $this->aLanguageRelatedByParentId = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildLanguage object, it will not be re-added.
+        if ($v !== null) {
+            $v->addSublanguage($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildLanguage object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildLanguage The associated ChildLanguage object.
+     * @throws PropelException
+     */
+    public function getLanguageRelatedByParentId(ConnectionInterface $con = null)
+    {
+        if ($this->aLanguageRelatedByParentId === null && ($this->parent_id !== null)) {
+            $this->aLanguageRelatedByParentId = ChildLanguageQuery::create()->findPk($this->parent_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aLanguageRelatedByParentId->addSublanguages($this);
+             */
+        }
+
+        return $this->aLanguageRelatedByParentId;
+    }
+
+    /**
      * Declares an association between this object and a ChildLanguageScope object.
      *
      * @param  ChildLanguageScope $v
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setLanguageScope(ChildLanguageScope $v = null)
+    public function setScope(ChildLanguageScope $v = null)
     {
         if ($v === null) {
             $this->setScopeId(NULL);
@@ -1597,7 +2217,7 @@ abstract class Language implements ActiveRecordInterface
             $this->setScopeId($v->getId());
         }
 
-        $this->aLanguageScope = $v;
+        $this->aScope = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildLanguageScope object, it will not be re-added.
@@ -1617,20 +2237,20 @@ abstract class Language implements ActiveRecordInterface
      * @return ChildLanguageScope The associated ChildLanguageScope object.
      * @throws PropelException
      */
-    public function getLanguageScope(ConnectionInterface $con = null)
+    public function getScope(ConnectionInterface $con = null)
     {
-        if ($this->aLanguageScope === null && ($this->scope_id !== null)) {
-            $this->aLanguageScope = ChildLanguageScopeQuery::create()->findPk($this->scope_id, $con);
+        if ($this->aScope === null && ($this->scope_id !== null)) {
+            $this->aScope = ChildLanguageScopeQuery::create()->findPk($this->scope_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aLanguageScope->addLanguages($this);
+                $this->aScope->addLanguages($this);
              */
         }
 
-        return $this->aLanguageScope;
+        return $this->aScope;
     }
 
     /**
@@ -1640,7 +2260,7 @@ abstract class Language implements ActiveRecordInterface
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setLanguageType(ChildLanguageType $v = null)
+    public function setType(ChildLanguageType $v = null)
     {
         if ($v === null) {
             $this->setTypeId(NULL);
@@ -1648,7 +2268,7 @@ abstract class Language implements ActiveRecordInterface
             $this->setTypeId($v->getId());
         }
 
-        $this->aLanguageType = $v;
+        $this->aType = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildLanguageType object, it will not be re-added.
@@ -1668,20 +2288,122 @@ abstract class Language implements ActiveRecordInterface
      * @return ChildLanguageType The associated ChildLanguageType object.
      * @throws PropelException
      */
-    public function getLanguageType(ConnectionInterface $con = null)
+    public function getType(ConnectionInterface $con = null)
     {
-        if ($this->aLanguageType === null && ($this->type_id !== null)) {
-            $this->aLanguageType = ChildLanguageTypeQuery::create()->findPk($this->type_id, $con);
+        if ($this->aType === null && ($this->type_id !== null)) {
+            $this->aType = ChildLanguageTypeQuery::create()->findPk($this->type_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aLanguageType->addLanguages($this);
+                $this->aType->addLanguages($this);
              */
         }
 
-        return $this->aLanguageType;
+        return $this->aType;
+    }
+
+    /**
+     * Declares an association between this object and a ChildLanguageScript object.
+     *
+     * @param  ChildLanguageScript $v
+     * @return $this|\keeko\core\model\Language The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setScript(ChildLanguageScript $v = null)
+    {
+        if ($v === null) {
+            $this->setDefaultScriptId(NULL);
+        } else {
+            $this->setDefaultScriptId($v->getId());
+        }
+
+        $this->aScript = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildLanguageScript object, it will not be re-added.
+        if ($v !== null) {
+            $v->addLanguage($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildLanguageScript object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildLanguageScript The associated ChildLanguageScript object.
+     * @throws PropelException
+     */
+    public function getScript(ConnectionInterface $con = null)
+    {
+        if ($this->aScript === null && ($this->default_script_id !== null)) {
+            $this->aScript = ChildLanguageScriptQuery::create()->findPk($this->default_script_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aScript->addLanguages($this);
+             */
+        }
+
+        return $this->aScript;
+    }
+
+    /**
+     * Declares an association between this object and a ChildLanguageFamily object.
+     *
+     * @param  ChildLanguageFamily $v
+     * @return $this|\keeko\core\model\Language The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setFamily(ChildLanguageFamily $v = null)
+    {
+        if ($v === null) {
+            $this->setFamilyId(NULL);
+        } else {
+            $this->setFamilyId($v->getId());
+        }
+
+        $this->aFamily = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildLanguageFamily object, it will not be re-added.
+        if ($v !== null) {
+            $v->addLanguage($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildLanguageFamily object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildLanguageFamily The associated ChildLanguageFamily object.
+     * @throws PropelException
+     */
+    public function getFamily(ConnectionInterface $con = null)
+    {
+        if ($this->aFamily === null && ($this->family_id !== null)) {
+            $this->aFamily = ChildLanguageFamilyQuery::create()->findPk($this->family_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aFamily->addLanguages($this);
+             */
+        }
+
+        return $this->aFamily;
     }
 
 
@@ -1695,37 +2417,43 @@ abstract class Language implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('Localization' == $relationName) {
-            return $this->initLocalizations();
+        if ('Sublanguage' == $relationName) {
+            return $this->initSublanguages();
+        }
+        if ('LocalizationRelatedByLanguageId' == $relationName) {
+            return $this->initLocalizationsRelatedByLanguageId();
+        }
+        if ('LocalizationRelatedByExtLanguageId' == $relationName) {
+            return $this->initLocalizationsRelatedByExtLanguageId();
         }
     }
 
     /**
-     * Clears out the collLocalizations collection
+     * Clears out the collSublanguages collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addLocalizations()
+     * @see        addSublanguages()
      */
-    public function clearLocalizations()
+    public function clearSublanguages()
     {
-        $this->collLocalizations = null; // important to set this to NULL since that means it is uninitialized
+        $this->collSublanguages = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collLocalizations collection loaded partially.
+     * Reset is the collSublanguages collection loaded partially.
      */
-    public function resetPartialLocalizations($v = true)
+    public function resetPartialSublanguages($v = true)
     {
-        $this->collLocalizationsPartial = $v;
+        $this->collSublanguagesPartial = $v;
     }
 
     /**
-     * Initializes the collLocalizations collection.
+     * Initializes the collSublanguages collection.
      *
-     * By default this just sets the collLocalizations collection to an empty array (like clearcollLocalizations());
+     * By default this just sets the collSublanguages collection to an empty array (like clearcollSublanguages());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1734,13 +2462,331 @@ abstract class Language implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initLocalizations($overrideExisting = true)
+    public function initSublanguages($overrideExisting = true)
     {
-        if (null !== $this->collLocalizations && !$overrideExisting) {
+        if (null !== $this->collSublanguages && !$overrideExisting) {
             return;
         }
-        $this->collLocalizations = new ObjectCollection();
-        $this->collLocalizations->setModel('\keeko\core\model\Localization');
+        $this->collSublanguages = new ObjectCollection();
+        $this->collSublanguages->setModel('\keeko\core\model\Language');
+    }
+
+    /**
+     * Gets an array of ChildLanguage objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildLanguage is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
+     * @throws PropelException
+     */
+    public function getSublanguages(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSublanguagesPartial && !$this->isNew();
+        if (null === $this->collSublanguages || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collSublanguages) {
+                // return empty collection
+                $this->initSublanguages();
+            } else {
+                $collSublanguages = ChildLanguageQuery::create(null, $criteria)
+                    ->filterByLanguageRelatedByParentId($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collSublanguagesPartial && count($collSublanguages)) {
+                        $this->initSublanguages(false);
+
+                        foreach ($collSublanguages as $obj) {
+                            if (false == $this->collSublanguages->contains($obj)) {
+                                $this->collSublanguages->append($obj);
+                            }
+                        }
+
+                        $this->collSublanguagesPartial = true;
+                    }
+
+                    return $collSublanguages;
+                }
+
+                if ($partial && $this->collSublanguages) {
+                    foreach ($this->collSublanguages as $obj) {
+                        if ($obj->isNew()) {
+                            $collSublanguages[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collSublanguages = $collSublanguages;
+                $this->collSublanguagesPartial = false;
+            }
+        }
+
+        return $this->collSublanguages;
+    }
+
+    /**
+     * Sets a collection of ChildLanguage objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $sublanguages A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildLanguage The current object (for fluent API support)
+     */
+    public function setSublanguages(Collection $sublanguages, ConnectionInterface $con = null)
+    {
+        /** @var ChildLanguage[] $sublanguagesToDelete */
+        $sublanguagesToDelete = $this->getSublanguages(new Criteria(), $con)->diff($sublanguages);
+
+
+        $this->sublanguagesScheduledForDeletion = $sublanguagesToDelete;
+
+        foreach ($sublanguagesToDelete as $sublanguageRemoved) {
+            $sublanguageRemoved->setLanguageRelatedByParentId(null);
+        }
+
+        $this->collSublanguages = null;
+        foreach ($sublanguages as $sublanguage) {
+            $this->addSublanguage($sublanguage);
+        }
+
+        $this->collSublanguages = $sublanguages;
+        $this->collSublanguagesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Language objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Language objects.
+     * @throws PropelException
+     */
+    public function countSublanguages(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSublanguagesPartial && !$this->isNew();
+        if (null === $this->collSublanguages || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSublanguages) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getSublanguages());
+            }
+
+            $query = ChildLanguageQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByLanguageRelatedByParentId($this)
+                ->count($con);
+        }
+
+        return count($this->collSublanguages);
+    }
+
+    /**
+     * Method called to associate a ChildLanguage object to this object
+     * through the ChildLanguage foreign key attribute.
+     *
+     * @param  ChildLanguage $l ChildLanguage
+     * @return $this|\keeko\core\model\Language The current object (for fluent API support)
+     */
+    public function addSublanguage(ChildLanguage $l)
+    {
+        if ($this->collSublanguages === null) {
+            $this->initSublanguages();
+            $this->collSublanguagesPartial = true;
+        }
+
+        if (!$this->collSublanguages->contains($l)) {
+            $this->doAddSublanguage($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildLanguage $sublanguage The ChildLanguage object to add.
+     */
+    protected function doAddSublanguage(ChildLanguage $sublanguage)
+    {
+        $this->collSublanguages[]= $sublanguage;
+        $sublanguage->setLanguageRelatedByParentId($this);
+    }
+
+    /**
+     * @param  ChildLanguage $sublanguage The ChildLanguage object to remove.
+     * @return $this|ChildLanguage The current object (for fluent API support)
+     */
+    public function removeSublanguage(ChildLanguage $sublanguage)
+    {
+        if ($this->getSublanguages()->contains($sublanguage)) {
+            $pos = $this->collSublanguages->search($sublanguage);
+            $this->collSublanguages->remove($pos);
+            if (null === $this->sublanguagesScheduledForDeletion) {
+                $this->sublanguagesScheduledForDeletion = clone $this->collSublanguages;
+                $this->sublanguagesScheduledForDeletion->clear();
+            }
+            $this->sublanguagesScheduledForDeletion[]= $sublanguage;
+            $sublanguage->setLanguageRelatedByParentId(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Language is new, it will return
+     * an empty collection; or if this Language has previously
+     * been saved, it will retrieve related Sublanguages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Language.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
+     */
+    public function getSublanguagesJoinScope(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLanguageQuery::create(null, $criteria);
+        $query->joinWith('Scope', $joinBehavior);
+
+        return $this->getSublanguages($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Language is new, it will return
+     * an empty collection; or if this Language has previously
+     * been saved, it will retrieve related Sublanguages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Language.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
+     */
+    public function getSublanguagesJoinType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLanguageQuery::create(null, $criteria);
+        $query->joinWith('Type', $joinBehavior);
+
+        return $this->getSublanguages($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Language is new, it will return
+     * an empty collection; or if this Language has previously
+     * been saved, it will retrieve related Sublanguages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Language.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
+     */
+    public function getSublanguagesJoinScript(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLanguageQuery::create(null, $criteria);
+        $query->joinWith('Script', $joinBehavior);
+
+        return $this->getSublanguages($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Language is new, it will return
+     * an empty collection; or if this Language has previously
+     * been saved, it will retrieve related Sublanguages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Language.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
+     */
+    public function getSublanguagesJoinFamily(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLanguageQuery::create(null, $criteria);
+        $query->joinWith('Family', $joinBehavior);
+
+        return $this->getSublanguages($query, $con);
+    }
+
+    /**
+     * Clears out the collLocalizationsRelatedByLanguageId collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addLocalizationsRelatedByLanguageId()
+     */
+    public function clearLocalizationsRelatedByLanguageId()
+    {
+        $this->collLocalizationsRelatedByLanguageId = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collLocalizationsRelatedByLanguageId collection loaded partially.
+     */
+    public function resetPartialLocalizationsRelatedByLanguageId($v = true)
+    {
+        $this->collLocalizationsRelatedByLanguageIdPartial = $v;
+    }
+
+    /**
+     * Initializes the collLocalizationsRelatedByLanguageId collection.
+     *
+     * By default this just sets the collLocalizationsRelatedByLanguageId collection to an empty array (like clearcollLocalizationsRelatedByLanguageId());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initLocalizationsRelatedByLanguageId($overrideExisting = true)
+    {
+        if (null !== $this->collLocalizationsRelatedByLanguageId && !$overrideExisting) {
+            return;
+        }
+        $this->collLocalizationsRelatedByLanguageId = new ObjectCollection();
+        $this->collLocalizationsRelatedByLanguageId->setModel('\keeko\core\model\Localization');
     }
 
     /**
@@ -1757,48 +2803,48 @@ abstract class Language implements ActiveRecordInterface
      * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
      * @throws PropelException
      */
-    public function getLocalizations(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getLocalizationsRelatedByLanguageId(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collLocalizationsPartial && !$this->isNew();
-        if (null === $this->collLocalizations || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collLocalizations) {
+        $partial = $this->collLocalizationsRelatedByLanguageIdPartial && !$this->isNew();
+        if (null === $this->collLocalizationsRelatedByLanguageId || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collLocalizationsRelatedByLanguageId) {
                 // return empty collection
-                $this->initLocalizations();
+                $this->initLocalizationsRelatedByLanguageId();
             } else {
-                $collLocalizations = ChildLocalizationQuery::create(null, $criteria)
+                $collLocalizationsRelatedByLanguageId = ChildLocalizationQuery::create(null, $criteria)
                     ->filterByLanguage($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collLocalizationsPartial && count($collLocalizations)) {
-                        $this->initLocalizations(false);
+                    if (false !== $this->collLocalizationsRelatedByLanguageIdPartial && count($collLocalizationsRelatedByLanguageId)) {
+                        $this->initLocalizationsRelatedByLanguageId(false);
 
-                        foreach ($collLocalizations as $obj) {
-                            if (false == $this->collLocalizations->contains($obj)) {
-                                $this->collLocalizations->append($obj);
+                        foreach ($collLocalizationsRelatedByLanguageId as $obj) {
+                            if (false == $this->collLocalizationsRelatedByLanguageId->contains($obj)) {
+                                $this->collLocalizationsRelatedByLanguageId->append($obj);
                             }
                         }
 
-                        $this->collLocalizationsPartial = true;
+                        $this->collLocalizationsRelatedByLanguageIdPartial = true;
                     }
 
-                    return $collLocalizations;
+                    return $collLocalizationsRelatedByLanguageId;
                 }
 
-                if ($partial && $this->collLocalizations) {
-                    foreach ($this->collLocalizations as $obj) {
+                if ($partial && $this->collLocalizationsRelatedByLanguageId) {
+                    foreach ($this->collLocalizationsRelatedByLanguageId as $obj) {
                         if ($obj->isNew()) {
-                            $collLocalizations[] = $obj;
+                            $collLocalizationsRelatedByLanguageId[] = $obj;
                         }
                     }
                 }
 
-                $this->collLocalizations = $collLocalizations;
-                $this->collLocalizationsPartial = false;
+                $this->collLocalizationsRelatedByLanguageId = $collLocalizationsRelatedByLanguageId;
+                $this->collLocalizationsRelatedByLanguageIdPartial = false;
             }
         }
 
-        return $this->collLocalizations;
+        return $this->collLocalizationsRelatedByLanguageId;
     }
 
     /**
@@ -1807,29 +2853,29 @@ abstract class Language implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $localizations A Propel collection.
+     * @param      Collection $localizationsRelatedByLanguageId A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildLanguage The current object (for fluent API support)
      */
-    public function setLocalizations(Collection $localizations, ConnectionInterface $con = null)
+    public function setLocalizationsRelatedByLanguageId(Collection $localizationsRelatedByLanguageId, ConnectionInterface $con = null)
     {
-        /** @var ChildLocalization[] $localizationsToDelete */
-        $localizationsToDelete = $this->getLocalizations(new Criteria(), $con)->diff($localizations);
+        /** @var ChildLocalization[] $localizationsRelatedByLanguageIdToDelete */
+        $localizationsRelatedByLanguageIdToDelete = $this->getLocalizationsRelatedByLanguageId(new Criteria(), $con)->diff($localizationsRelatedByLanguageId);
 
 
-        $this->localizationsScheduledForDeletion = $localizationsToDelete;
+        $this->localizationsRelatedByLanguageIdScheduledForDeletion = $localizationsRelatedByLanguageIdToDelete;
 
-        foreach ($localizationsToDelete as $localizationRemoved) {
-            $localizationRemoved->setLanguage(null);
+        foreach ($localizationsRelatedByLanguageIdToDelete as $localizationRelatedByLanguageIdRemoved) {
+            $localizationRelatedByLanguageIdRemoved->setLanguage(null);
         }
 
-        $this->collLocalizations = null;
-        foreach ($localizations as $localization) {
-            $this->addLocalization($localization);
+        $this->collLocalizationsRelatedByLanguageId = null;
+        foreach ($localizationsRelatedByLanguageId as $localizationRelatedByLanguageId) {
+            $this->addLocalizationRelatedByLanguageId($localizationRelatedByLanguageId);
         }
 
-        $this->collLocalizations = $localizations;
-        $this->collLocalizationsPartial = false;
+        $this->collLocalizationsRelatedByLanguageId = $localizationsRelatedByLanguageId;
+        $this->collLocalizationsRelatedByLanguageIdPartial = false;
 
         return $this;
     }
@@ -1843,16 +2889,16 @@ abstract class Language implements ActiveRecordInterface
      * @return int             Count of related Localization objects.
      * @throws PropelException
      */
-    public function countLocalizations(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countLocalizationsRelatedByLanguageId(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collLocalizationsPartial && !$this->isNew();
-        if (null === $this->collLocalizations || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collLocalizations) {
+        $partial = $this->collLocalizationsRelatedByLanguageIdPartial && !$this->isNew();
+        if (null === $this->collLocalizationsRelatedByLanguageId || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collLocalizationsRelatedByLanguageId) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getLocalizations());
+                return count($this->getLocalizationsRelatedByLanguageId());
             }
 
             $query = ChildLocalizationQuery::create(null, $criteria);
@@ -1865,7 +2911,7 @@ abstract class Language implements ActiveRecordInterface
                 ->count($con);
         }
 
-        return count($this->collLocalizations);
+        return count($this->collLocalizationsRelatedByLanguageId);
     }
 
     /**
@@ -1875,44 +2921,44 @@ abstract class Language implements ActiveRecordInterface
      * @param  ChildLocalization $l ChildLocalization
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      */
-    public function addLocalization(ChildLocalization $l)
+    public function addLocalizationRelatedByLanguageId(ChildLocalization $l)
     {
-        if ($this->collLocalizations === null) {
-            $this->initLocalizations();
-            $this->collLocalizationsPartial = true;
+        if ($this->collLocalizationsRelatedByLanguageId === null) {
+            $this->initLocalizationsRelatedByLanguageId();
+            $this->collLocalizationsRelatedByLanguageIdPartial = true;
         }
 
-        if (!$this->collLocalizations->contains($l)) {
-            $this->doAddLocalization($l);
+        if (!$this->collLocalizationsRelatedByLanguageId->contains($l)) {
+            $this->doAddLocalizationRelatedByLanguageId($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildLocalization $localization The ChildLocalization object to add.
+     * @param ChildLocalization $localizationRelatedByLanguageId The ChildLocalization object to add.
      */
-    protected function doAddLocalization(ChildLocalization $localization)
+    protected function doAddLocalizationRelatedByLanguageId(ChildLocalization $localizationRelatedByLanguageId)
     {
-        $this->collLocalizations[]= $localization;
-        $localization->setLanguage($this);
+        $this->collLocalizationsRelatedByLanguageId[]= $localizationRelatedByLanguageId;
+        $localizationRelatedByLanguageId->setLanguage($this);
     }
 
     /**
-     * @param  ChildLocalization $localization The ChildLocalization object to remove.
+     * @param  ChildLocalization $localizationRelatedByLanguageId The ChildLocalization object to remove.
      * @return $this|ChildLanguage The current object (for fluent API support)
      */
-    public function removeLocalization(ChildLocalization $localization)
+    public function removeLocalizationRelatedByLanguageId(ChildLocalization $localizationRelatedByLanguageId)
     {
-        if ($this->getLocalizations()->contains($localization)) {
-            $pos = $this->collLocalizations->search($localization);
-            $this->collLocalizations->remove($pos);
-            if (null === $this->localizationsScheduledForDeletion) {
-                $this->localizationsScheduledForDeletion = clone $this->collLocalizations;
-                $this->localizationsScheduledForDeletion->clear();
+        if ($this->getLocalizationsRelatedByLanguageId()->contains($localizationRelatedByLanguageId)) {
+            $pos = $this->collLocalizationsRelatedByLanguageId->search($localizationRelatedByLanguageId);
+            $this->collLocalizationsRelatedByLanguageId->remove($pos);
+            if (null === $this->localizationsRelatedByLanguageIdScheduledForDeletion) {
+                $this->localizationsRelatedByLanguageIdScheduledForDeletion = clone $this->collLocalizationsRelatedByLanguageId;
+                $this->localizationsRelatedByLanguageIdScheduledForDeletion->clear();
             }
-            $this->localizationsScheduledForDeletion[]= $localization;
-            $localization->setLanguage(null);
+            $this->localizationsRelatedByLanguageIdScheduledForDeletion[]= $localizationRelatedByLanguageId;
+            $localizationRelatedByLanguageId->setLanguage(null);
         }
 
         return $this;
@@ -1924,7 +2970,7 @@ abstract class Language implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Language is new, it will return
      * an empty collection; or if this Language has previously
-     * been saved, it will retrieve related Localizations from storage.
+     * been saved, it will retrieve related LocalizationsRelatedByLanguageId from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1935,12 +2981,12 @@ abstract class Language implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
      */
-    public function getLocalizationsJoinLocalizationRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getLocalizationsRelatedByLanguageIdJoinLocalizationRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildLocalizationQuery::create(null, $criteria);
         $query->joinWith('LocalizationRelatedByParentId', $joinBehavior);
 
-        return $this->getLocalizations($query, $con);
+        return $this->getLocalizationsRelatedByLanguageId($query, $con);
     }
 
 
@@ -1949,7 +2995,7 @@ abstract class Language implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Language is new, it will return
      * an empty collection; or if this Language has previously
-     * been saved, it will retrieve related Localizations from storage.
+     * been saved, it will retrieve related LocalizationsRelatedByLanguageId from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1960,12 +3006,280 @@ abstract class Language implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
      */
-    public function getLocalizationsJoinCountry(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getLocalizationsRelatedByLanguageIdJoinScript(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildLocalizationQuery::create(null, $criteria);
-        $query->joinWith('Country', $joinBehavior);
+        $query->joinWith('Script', $joinBehavior);
 
-        return $this->getLocalizations($query, $con);
+        return $this->getLocalizationsRelatedByLanguageId($query, $con);
+    }
+
+    /**
+     * Clears out the collLocalizationsRelatedByExtLanguageId collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addLocalizationsRelatedByExtLanguageId()
+     */
+    public function clearLocalizationsRelatedByExtLanguageId()
+    {
+        $this->collLocalizationsRelatedByExtLanguageId = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collLocalizationsRelatedByExtLanguageId collection loaded partially.
+     */
+    public function resetPartialLocalizationsRelatedByExtLanguageId($v = true)
+    {
+        $this->collLocalizationsRelatedByExtLanguageIdPartial = $v;
+    }
+
+    /**
+     * Initializes the collLocalizationsRelatedByExtLanguageId collection.
+     *
+     * By default this just sets the collLocalizationsRelatedByExtLanguageId collection to an empty array (like clearcollLocalizationsRelatedByExtLanguageId());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initLocalizationsRelatedByExtLanguageId($overrideExisting = true)
+    {
+        if (null !== $this->collLocalizationsRelatedByExtLanguageId && !$overrideExisting) {
+            return;
+        }
+        $this->collLocalizationsRelatedByExtLanguageId = new ObjectCollection();
+        $this->collLocalizationsRelatedByExtLanguageId->setModel('\keeko\core\model\Localization');
+    }
+
+    /**
+     * Gets an array of ChildLocalization objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildLanguage is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
+     * @throws PropelException
+     */
+    public function getLocalizationsRelatedByExtLanguageId(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collLocalizationsRelatedByExtLanguageIdPartial && !$this->isNew();
+        if (null === $this->collLocalizationsRelatedByExtLanguageId || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collLocalizationsRelatedByExtLanguageId) {
+                // return empty collection
+                $this->initLocalizationsRelatedByExtLanguageId();
+            } else {
+                $collLocalizationsRelatedByExtLanguageId = ChildLocalizationQuery::create(null, $criteria)
+                    ->filterByExtLang($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collLocalizationsRelatedByExtLanguageIdPartial && count($collLocalizationsRelatedByExtLanguageId)) {
+                        $this->initLocalizationsRelatedByExtLanguageId(false);
+
+                        foreach ($collLocalizationsRelatedByExtLanguageId as $obj) {
+                            if (false == $this->collLocalizationsRelatedByExtLanguageId->contains($obj)) {
+                                $this->collLocalizationsRelatedByExtLanguageId->append($obj);
+                            }
+                        }
+
+                        $this->collLocalizationsRelatedByExtLanguageIdPartial = true;
+                    }
+
+                    return $collLocalizationsRelatedByExtLanguageId;
+                }
+
+                if ($partial && $this->collLocalizationsRelatedByExtLanguageId) {
+                    foreach ($this->collLocalizationsRelatedByExtLanguageId as $obj) {
+                        if ($obj->isNew()) {
+                            $collLocalizationsRelatedByExtLanguageId[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collLocalizationsRelatedByExtLanguageId = $collLocalizationsRelatedByExtLanguageId;
+                $this->collLocalizationsRelatedByExtLanguageIdPartial = false;
+            }
+        }
+
+        return $this->collLocalizationsRelatedByExtLanguageId;
+    }
+
+    /**
+     * Sets a collection of ChildLocalization objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $localizationsRelatedByExtLanguageId A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildLanguage The current object (for fluent API support)
+     */
+    public function setLocalizationsRelatedByExtLanguageId(Collection $localizationsRelatedByExtLanguageId, ConnectionInterface $con = null)
+    {
+        /** @var ChildLocalization[] $localizationsRelatedByExtLanguageIdToDelete */
+        $localizationsRelatedByExtLanguageIdToDelete = $this->getLocalizationsRelatedByExtLanguageId(new Criteria(), $con)->diff($localizationsRelatedByExtLanguageId);
+
+
+        $this->localizationsRelatedByExtLanguageIdScheduledForDeletion = $localizationsRelatedByExtLanguageIdToDelete;
+
+        foreach ($localizationsRelatedByExtLanguageIdToDelete as $localizationRelatedByExtLanguageIdRemoved) {
+            $localizationRelatedByExtLanguageIdRemoved->setExtLang(null);
+        }
+
+        $this->collLocalizationsRelatedByExtLanguageId = null;
+        foreach ($localizationsRelatedByExtLanguageId as $localizationRelatedByExtLanguageId) {
+            $this->addLocalizationRelatedByExtLanguageId($localizationRelatedByExtLanguageId);
+        }
+
+        $this->collLocalizationsRelatedByExtLanguageId = $localizationsRelatedByExtLanguageId;
+        $this->collLocalizationsRelatedByExtLanguageIdPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Localization objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Localization objects.
+     * @throws PropelException
+     */
+    public function countLocalizationsRelatedByExtLanguageId(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collLocalizationsRelatedByExtLanguageIdPartial && !$this->isNew();
+        if (null === $this->collLocalizationsRelatedByExtLanguageId || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collLocalizationsRelatedByExtLanguageId) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getLocalizationsRelatedByExtLanguageId());
+            }
+
+            $query = ChildLocalizationQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByExtLang($this)
+                ->count($con);
+        }
+
+        return count($this->collLocalizationsRelatedByExtLanguageId);
+    }
+
+    /**
+     * Method called to associate a ChildLocalization object to this object
+     * through the ChildLocalization foreign key attribute.
+     *
+     * @param  ChildLocalization $l ChildLocalization
+     * @return $this|\keeko\core\model\Language The current object (for fluent API support)
+     */
+    public function addLocalizationRelatedByExtLanguageId(ChildLocalization $l)
+    {
+        if ($this->collLocalizationsRelatedByExtLanguageId === null) {
+            $this->initLocalizationsRelatedByExtLanguageId();
+            $this->collLocalizationsRelatedByExtLanguageIdPartial = true;
+        }
+
+        if (!$this->collLocalizationsRelatedByExtLanguageId->contains($l)) {
+            $this->doAddLocalizationRelatedByExtLanguageId($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildLocalization $localizationRelatedByExtLanguageId The ChildLocalization object to add.
+     */
+    protected function doAddLocalizationRelatedByExtLanguageId(ChildLocalization $localizationRelatedByExtLanguageId)
+    {
+        $this->collLocalizationsRelatedByExtLanguageId[]= $localizationRelatedByExtLanguageId;
+        $localizationRelatedByExtLanguageId->setExtLang($this);
+    }
+
+    /**
+     * @param  ChildLocalization $localizationRelatedByExtLanguageId The ChildLocalization object to remove.
+     * @return $this|ChildLanguage The current object (for fluent API support)
+     */
+    public function removeLocalizationRelatedByExtLanguageId(ChildLocalization $localizationRelatedByExtLanguageId)
+    {
+        if ($this->getLocalizationsRelatedByExtLanguageId()->contains($localizationRelatedByExtLanguageId)) {
+            $pos = $this->collLocalizationsRelatedByExtLanguageId->search($localizationRelatedByExtLanguageId);
+            $this->collLocalizationsRelatedByExtLanguageId->remove($pos);
+            if (null === $this->localizationsRelatedByExtLanguageIdScheduledForDeletion) {
+                $this->localizationsRelatedByExtLanguageIdScheduledForDeletion = clone $this->collLocalizationsRelatedByExtLanguageId;
+                $this->localizationsRelatedByExtLanguageIdScheduledForDeletion->clear();
+            }
+            $this->localizationsRelatedByExtLanguageIdScheduledForDeletion[]= $localizationRelatedByExtLanguageId;
+            $localizationRelatedByExtLanguageId->setExtLang(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Language is new, it will return
+     * an empty collection; or if this Language has previously
+     * been saved, it will retrieve related LocalizationsRelatedByExtLanguageId from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Language.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
+     */
+    public function getLocalizationsRelatedByExtLanguageIdJoinLocalizationRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLocalizationQuery::create(null, $criteria);
+        $query->joinWith('LocalizationRelatedByParentId', $joinBehavior);
+
+        return $this->getLocalizationsRelatedByExtLanguageId($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Language is new, it will return
+     * an empty collection; or if this Language has previously
+     * been saved, it will retrieve related LocalizationsRelatedByExtLanguageId from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Language.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
+     */
+    public function getLocalizationsRelatedByExtLanguageIdJoinScript(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLocalizationQuery::create(null, $criteria);
+        $query->joinWith('Script', $joinBehavior);
+
+        return $this->getLocalizationsRelatedByExtLanguageId($query, $con);
     }
 
     /**
@@ -1975,22 +3289,37 @@ abstract class Language implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aLanguageScope) {
-            $this->aLanguageScope->removeLanguage($this);
+        if (null !== $this->aLanguageRelatedByParentId) {
+            $this->aLanguageRelatedByParentId->removeSublanguage($this);
         }
-        if (null !== $this->aLanguageType) {
-            $this->aLanguageType->removeLanguage($this);
+        if (null !== $this->aScope) {
+            $this->aScope->removeLanguage($this);
+        }
+        if (null !== $this->aType) {
+            $this->aType->removeLanguage($this);
+        }
+        if (null !== $this->aScript) {
+            $this->aScript->removeLanguage($this);
+        }
+        if (null !== $this->aFamily) {
+            $this->aFamily->removeLanguage($this);
         }
         $this->id = null;
         $this->alpha_2 = null;
         $this->alpha_3t = null;
         $this->alpha_3b = null;
         $this->alpha_3 = null;
-        $this->local_name = null;
-        $this->en_name = null;
+        $this->parent_id = null;
+        $this->macrolanguage_status = null;
+        $this->name = null;
+        $this->native_name = null;
         $this->collate = null;
+        $this->subtag = null;
+        $this->prefix = null;
         $this->scope_id = null;
         $this->type_id = null;
+        $this->family_id = null;
+        $this->default_script_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -2009,16 +3338,31 @@ abstract class Language implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collLocalizations) {
-                foreach ($this->collLocalizations as $o) {
+            if ($this->collSublanguages) {
+                foreach ($this->collSublanguages as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collLocalizationsRelatedByLanguageId) {
+                foreach ($this->collLocalizationsRelatedByLanguageId as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collLocalizationsRelatedByExtLanguageId) {
+                foreach ($this->collLocalizationsRelatedByExtLanguageId as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collLocalizations = null;
-        $this->aLanguageScope = null;
-        $this->aLanguageType = null;
+        $this->collSublanguages = null;
+        $this->collLocalizationsRelatedByLanguageId = null;
+        $this->collLocalizationsRelatedByExtLanguageId = null;
+        $this->aLanguageRelatedByParentId = null;
+        $this->aScope = null;
+        $this->aType = null;
+        $this->aScript = null;
+        $this->aFamily = null;
     }
 
     /**

@@ -20,37 +20,49 @@ use keeko\core\model\Map\CountryTableMap;
  *
  *
  *
- * @method     ChildCountryQuery orderByIsoNr($order = Criteria::ASC) Order by the iso_nr column
+ * @method     ChildCountryQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildCountryQuery orderByNumeric($order = Criteria::ASC) Order by the numeric column
  * @method     ChildCountryQuery orderByAlpha2($order = Criteria::ASC) Order by the alpha_2 column
  * @method     ChildCountryQuery orderByAlpha3($order = Criteria::ASC) Order by the alpha_3 column
+ * @method     ChildCountryQuery orderByShortName($order = Criteria::ASC) Order by the short_name column
  * @method     ChildCountryQuery orderByIoc($order = Criteria::ASC) Order by the ioc column
- * @method     ChildCountryQuery orderByCapital($order = Criteria::ASC) Order by the capital column
  * @method     ChildCountryQuery orderByTld($order = Criteria::ASC) Order by the tld column
  * @method     ChildCountryQuery orderByPhone($order = Criteria::ASC) Order by the phone column
- * @method     ChildCountryQuery orderByTerritoryIsoNr($order = Criteria::ASC) Order by the territory_iso_nr column
- * @method     ChildCountryQuery orderByCurrencyIsoNr($order = Criteria::ASC) Order by the currency_iso_nr column
- * @method     ChildCountryQuery orderByOfficialLocalName($order = Criteria::ASC) Order by the official_local_name column
- * @method     ChildCountryQuery orderByOfficialEnName($order = Criteria::ASC) Order by the official_en_name column
- * @method     ChildCountryQuery orderByShortLocalName($order = Criteria::ASC) Order by the short_local_name column
- * @method     ChildCountryQuery orderByShortEnName($order = Criteria::ASC) Order by the short_en_name column
+ * @method     ChildCountryQuery orderByCapital($order = Criteria::ASC) Order by the capital column
+ * @method     ChildCountryQuery orderByPostalCodeFormat($order = Criteria::ASC) Order by the postal_code_format column
+ * @method     ChildCountryQuery orderByPostalCodeRegex($order = Criteria::ASC) Order by the postal_code_regex column
+ * @method     ChildCountryQuery orderByContinentId($order = Criteria::ASC) Order by the continent_id column
+ * @method     ChildCountryQuery orderByCurrencyId($order = Criteria::ASC) Order by the currency_id column
+ * @method     ChildCountryQuery orderByTypeId($order = Criteria::ASC) Order by the type_id column
+ * @method     ChildCountryQuery orderBySubtypeId($order = Criteria::ASC) Order by the subtype_id column
+ * @method     ChildCountryQuery orderBySovereignityId($order = Criteria::ASC) Order by the sovereignity_id column
+ * @method     ChildCountryQuery orderByFormalName($order = Criteria::ASC) Order by the formal_name column
+ * @method     ChildCountryQuery orderByFormalNativeName($order = Criteria::ASC) Order by the formal_native_name column
+ * @method     ChildCountryQuery orderByShortNativeName($order = Criteria::ASC) Order by the short_native_name column
  * @method     ChildCountryQuery orderByBboxSwLat($order = Criteria::ASC) Order by the bbox_sw_lat column
  * @method     ChildCountryQuery orderByBboxSwLng($order = Criteria::ASC) Order by the bbox_sw_lng column
  * @method     ChildCountryQuery orderByBboxNeLat($order = Criteria::ASC) Order by the bbox_ne_lat column
  * @method     ChildCountryQuery orderByBboxNeLng($order = Criteria::ASC) Order by the bbox_ne_lng column
  *
- * @method     ChildCountryQuery groupByIsoNr() Group by the iso_nr column
+ * @method     ChildCountryQuery groupById() Group by the id column
+ * @method     ChildCountryQuery groupByNumeric() Group by the numeric column
  * @method     ChildCountryQuery groupByAlpha2() Group by the alpha_2 column
  * @method     ChildCountryQuery groupByAlpha3() Group by the alpha_3 column
+ * @method     ChildCountryQuery groupByShortName() Group by the short_name column
  * @method     ChildCountryQuery groupByIoc() Group by the ioc column
- * @method     ChildCountryQuery groupByCapital() Group by the capital column
  * @method     ChildCountryQuery groupByTld() Group by the tld column
  * @method     ChildCountryQuery groupByPhone() Group by the phone column
- * @method     ChildCountryQuery groupByTerritoryIsoNr() Group by the territory_iso_nr column
- * @method     ChildCountryQuery groupByCurrencyIsoNr() Group by the currency_iso_nr column
- * @method     ChildCountryQuery groupByOfficialLocalName() Group by the official_local_name column
- * @method     ChildCountryQuery groupByOfficialEnName() Group by the official_en_name column
- * @method     ChildCountryQuery groupByShortLocalName() Group by the short_local_name column
- * @method     ChildCountryQuery groupByShortEnName() Group by the short_en_name column
+ * @method     ChildCountryQuery groupByCapital() Group by the capital column
+ * @method     ChildCountryQuery groupByPostalCodeFormat() Group by the postal_code_format column
+ * @method     ChildCountryQuery groupByPostalCodeRegex() Group by the postal_code_regex column
+ * @method     ChildCountryQuery groupByContinentId() Group by the continent_id column
+ * @method     ChildCountryQuery groupByCurrencyId() Group by the currency_id column
+ * @method     ChildCountryQuery groupByTypeId() Group by the type_id column
+ * @method     ChildCountryQuery groupBySubtypeId() Group by the subtype_id column
+ * @method     ChildCountryQuery groupBySovereignityId() Group by the sovereignity_id column
+ * @method     ChildCountryQuery groupByFormalName() Group by the formal_name column
+ * @method     ChildCountryQuery groupByFormalNativeName() Group by the formal_native_name column
+ * @method     ChildCountryQuery groupByShortNativeName() Group by the short_native_name column
  * @method     ChildCountryQuery groupByBboxSwLat() Group by the bbox_sw_lat column
  * @method     ChildCountryQuery groupByBboxSwLng() Group by the bbox_sw_lng column
  * @method     ChildCountryQuery groupByBboxNeLat() Group by the bbox_ne_lat column
@@ -60,40 +72,58 @@ use keeko\core\model\Map\CountryTableMap;
  * @method     ChildCountryQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildCountryQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildCountryQuery leftJoinTerritory($relationAlias = null) Adds a LEFT JOIN clause to the query using the Territory relation
- * @method     ChildCountryQuery rightJoinTerritory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Territory relation
- * @method     ChildCountryQuery innerJoinTerritory($relationAlias = null) Adds a INNER JOIN clause to the query using the Territory relation
+ * @method     ChildCountryQuery leftJoinContinent($relationAlias = null) Adds a LEFT JOIN clause to the query using the Continent relation
+ * @method     ChildCountryQuery rightJoinContinent($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Continent relation
+ * @method     ChildCountryQuery innerJoinContinent($relationAlias = null) Adds a INNER JOIN clause to the query using the Continent relation
  *
  * @method     ChildCountryQuery leftJoinCurrency($relationAlias = null) Adds a LEFT JOIN clause to the query using the Currency relation
  * @method     ChildCountryQuery rightJoinCurrency($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Currency relation
  * @method     ChildCountryQuery innerJoinCurrency($relationAlias = null) Adds a INNER JOIN clause to the query using the Currency relation
  *
- * @method     ChildCountryQuery leftJoinLocalization($relationAlias = null) Adds a LEFT JOIN clause to the query using the Localization relation
- * @method     ChildCountryQuery rightJoinLocalization($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Localization relation
- * @method     ChildCountryQuery innerJoinLocalization($relationAlias = null) Adds a INNER JOIN clause to the query using the Localization relation
+ * @method     ChildCountryQuery leftJoinType($relationAlias = null) Adds a LEFT JOIN clause to the query using the Type relation
+ * @method     ChildCountryQuery rightJoinType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Type relation
+ * @method     ChildCountryQuery innerJoinType($relationAlias = null) Adds a INNER JOIN clause to the query using the Type relation
+ *
+ * @method     ChildCountryQuery leftJoinSubtype($relationAlias = null) Adds a LEFT JOIN clause to the query using the Subtype relation
+ * @method     ChildCountryQuery rightJoinSubtype($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Subtype relation
+ * @method     ChildCountryQuery innerJoinSubtype($relationAlias = null) Adds a INNER JOIN clause to the query using the Subtype relation
+ *
+ * @method     ChildCountryQuery leftJoinCountryRelatedBySovereignityId($relationAlias = null) Adds a LEFT JOIN clause to the query using the CountryRelatedBySovereignityId relation
+ * @method     ChildCountryQuery rightJoinCountryRelatedBySovereignityId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CountryRelatedBySovereignityId relation
+ * @method     ChildCountryQuery innerJoinCountryRelatedBySovereignityId($relationAlias = null) Adds a INNER JOIN clause to the query using the CountryRelatedBySovereignityId relation
+ *
+ * @method     ChildCountryQuery leftJoinSubordinate($relationAlias = null) Adds a LEFT JOIN clause to the query using the Subordinate relation
+ * @method     ChildCountryQuery rightJoinSubordinate($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Subordinate relation
+ * @method     ChildCountryQuery innerJoinSubordinate($relationAlias = null) Adds a INNER JOIN clause to the query using the Subordinate relation
  *
  * @method     ChildCountryQuery leftJoinSubdivision($relationAlias = null) Adds a LEFT JOIN clause to the query using the Subdivision relation
  * @method     ChildCountryQuery rightJoinSubdivision($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Subdivision relation
  * @method     ChildCountryQuery innerJoinSubdivision($relationAlias = null) Adds a INNER JOIN clause to the query using the Subdivision relation
  *
- * @method     \keeko\core\model\TerritoryQuery|\keeko\core\model\CurrencyQuery|\keeko\core\model\LocalizationQuery|\keeko\core\model\SubdivisionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \keeko\core\model\ContinentQuery|\keeko\core\model\CurrencyQuery|\keeko\core\model\RegionTypeQuery|\keeko\core\model\CountryQuery|\keeko\core\model\SubdivisionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildCountry findOne(ConnectionInterface $con = null) Return the first ChildCountry matching the query
  * @method     ChildCountry findOneOrCreate(ConnectionInterface $con = null) Return the first ChildCountry matching the query, or a new ChildCountry object populated from the query conditions when no match is found
  *
- * @method     ChildCountry findOneByIsoNr(int $iso_nr) Return the first ChildCountry filtered by the iso_nr column
+ * @method     ChildCountry findOneById(int $id) Return the first ChildCountry filtered by the id column
+ * @method     ChildCountry findOneByNumeric(int $numeric) Return the first ChildCountry filtered by the numeric column
  * @method     ChildCountry findOneByAlpha2(string $alpha_2) Return the first ChildCountry filtered by the alpha_2 column
  * @method     ChildCountry findOneByAlpha3(string $alpha_3) Return the first ChildCountry filtered by the alpha_3 column
+ * @method     ChildCountry findOneByShortName(string $short_name) Return the first ChildCountry filtered by the short_name column
  * @method     ChildCountry findOneByIoc(string $ioc) Return the first ChildCountry filtered by the ioc column
- * @method     ChildCountry findOneByCapital(string $capital) Return the first ChildCountry filtered by the capital column
  * @method     ChildCountry findOneByTld(string $tld) Return the first ChildCountry filtered by the tld column
  * @method     ChildCountry findOneByPhone(string $phone) Return the first ChildCountry filtered by the phone column
- * @method     ChildCountry findOneByTerritoryIsoNr(int $territory_iso_nr) Return the first ChildCountry filtered by the territory_iso_nr column
- * @method     ChildCountry findOneByCurrencyIsoNr(int $currency_iso_nr) Return the first ChildCountry filtered by the currency_iso_nr column
- * @method     ChildCountry findOneByOfficialLocalName(string $official_local_name) Return the first ChildCountry filtered by the official_local_name column
- * @method     ChildCountry findOneByOfficialEnName(string $official_en_name) Return the first ChildCountry filtered by the official_en_name column
- * @method     ChildCountry findOneByShortLocalName(string $short_local_name) Return the first ChildCountry filtered by the short_local_name column
- * @method     ChildCountry findOneByShortEnName(string $short_en_name) Return the first ChildCountry filtered by the short_en_name column
+ * @method     ChildCountry findOneByCapital(string $capital) Return the first ChildCountry filtered by the capital column
+ * @method     ChildCountry findOneByPostalCodeFormat(string $postal_code_format) Return the first ChildCountry filtered by the postal_code_format column
+ * @method     ChildCountry findOneByPostalCodeRegex(string $postal_code_regex) Return the first ChildCountry filtered by the postal_code_regex column
+ * @method     ChildCountry findOneByContinentId(int $continent_id) Return the first ChildCountry filtered by the continent_id column
+ * @method     ChildCountry findOneByCurrencyId(int $currency_id) Return the first ChildCountry filtered by the currency_id column
+ * @method     ChildCountry findOneByTypeId(int $type_id) Return the first ChildCountry filtered by the type_id column
+ * @method     ChildCountry findOneBySubtypeId(int $subtype_id) Return the first ChildCountry filtered by the subtype_id column
+ * @method     ChildCountry findOneBySovereignityId(int $sovereignity_id) Return the first ChildCountry filtered by the sovereignity_id column
+ * @method     ChildCountry findOneByFormalName(string $formal_name) Return the first ChildCountry filtered by the formal_name column
+ * @method     ChildCountry findOneByFormalNativeName(string $formal_native_name) Return the first ChildCountry filtered by the formal_native_name column
+ * @method     ChildCountry findOneByShortNativeName(string $short_native_name) Return the first ChildCountry filtered by the short_native_name column
  * @method     ChildCountry findOneByBboxSwLat(double $bbox_sw_lat) Return the first ChildCountry filtered by the bbox_sw_lat column
  * @method     ChildCountry findOneByBboxSwLng(double $bbox_sw_lng) Return the first ChildCountry filtered by the bbox_sw_lng column
  * @method     ChildCountry findOneByBboxNeLat(double $bbox_ne_lat) Return the first ChildCountry filtered by the bbox_ne_lat column
@@ -102,38 +132,50 @@ use keeko\core\model\Map\CountryTableMap;
  * @method     ChildCountry requirePk($key, ConnectionInterface $con = null) Return the ChildCountry by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCountry requireOne(ConnectionInterface $con = null) Return the first ChildCountry matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildCountry requireOneByIsoNr(int $iso_nr) Return the first ChildCountry filtered by the iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneById(int $id) Return the first ChildCountry filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByNumeric(int $numeric) Return the first ChildCountry filtered by the numeric column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCountry requireOneByAlpha2(string $alpha_2) Return the first ChildCountry filtered by the alpha_2 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCountry requireOneByAlpha3(string $alpha_3) Return the first ChildCountry filtered by the alpha_3 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByShortName(string $short_name) Return the first ChildCountry filtered by the short_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCountry requireOneByIoc(string $ioc) Return the first ChildCountry filtered by the ioc column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildCountry requireOneByCapital(string $capital) Return the first ChildCountry filtered by the capital column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCountry requireOneByTld(string $tld) Return the first ChildCountry filtered by the tld column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCountry requireOneByPhone(string $phone) Return the first ChildCountry filtered by the phone column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildCountry requireOneByTerritoryIsoNr(int $territory_iso_nr) Return the first ChildCountry filtered by the territory_iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildCountry requireOneByCurrencyIsoNr(int $currency_iso_nr) Return the first ChildCountry filtered by the currency_iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildCountry requireOneByOfficialLocalName(string $official_local_name) Return the first ChildCountry filtered by the official_local_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildCountry requireOneByOfficialEnName(string $official_en_name) Return the first ChildCountry filtered by the official_en_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildCountry requireOneByShortLocalName(string $short_local_name) Return the first ChildCountry filtered by the short_local_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildCountry requireOneByShortEnName(string $short_en_name) Return the first ChildCountry filtered by the short_en_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByCapital(string $capital) Return the first ChildCountry filtered by the capital column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByPostalCodeFormat(string $postal_code_format) Return the first ChildCountry filtered by the postal_code_format column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByPostalCodeRegex(string $postal_code_regex) Return the first ChildCountry filtered by the postal_code_regex column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByContinentId(int $continent_id) Return the first ChildCountry filtered by the continent_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByCurrencyId(int $currency_id) Return the first ChildCountry filtered by the currency_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByTypeId(int $type_id) Return the first ChildCountry filtered by the type_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneBySubtypeId(int $subtype_id) Return the first ChildCountry filtered by the subtype_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneBySovereignityId(int $sovereignity_id) Return the first ChildCountry filtered by the sovereignity_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByFormalName(string $formal_name) Return the first ChildCountry filtered by the formal_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByFormalNativeName(string $formal_native_name) Return the first ChildCountry filtered by the formal_native_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCountry requireOneByShortNativeName(string $short_native_name) Return the first ChildCountry filtered by the short_native_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCountry requireOneByBboxSwLat(double $bbox_sw_lat) Return the first ChildCountry filtered by the bbox_sw_lat column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCountry requireOneByBboxSwLng(double $bbox_sw_lng) Return the first ChildCountry filtered by the bbox_sw_lng column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCountry requireOneByBboxNeLat(double $bbox_ne_lat) Return the first ChildCountry filtered by the bbox_ne_lat column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCountry requireOneByBboxNeLng(double $bbox_ne_lng) Return the first ChildCountry filtered by the bbox_ne_lng column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildCountry[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildCountry objects based on current ModelCriteria
- * @method     ChildCountry[]|ObjectCollection findByIsoNr(int $iso_nr) Return ChildCountry objects filtered by the iso_nr column
+ * @method     ChildCountry[]|ObjectCollection findById(int $id) Return ChildCountry objects filtered by the id column
+ * @method     ChildCountry[]|ObjectCollection findByNumeric(int $numeric) Return ChildCountry objects filtered by the numeric column
  * @method     ChildCountry[]|ObjectCollection findByAlpha2(string $alpha_2) Return ChildCountry objects filtered by the alpha_2 column
  * @method     ChildCountry[]|ObjectCollection findByAlpha3(string $alpha_3) Return ChildCountry objects filtered by the alpha_3 column
+ * @method     ChildCountry[]|ObjectCollection findByShortName(string $short_name) Return ChildCountry objects filtered by the short_name column
  * @method     ChildCountry[]|ObjectCollection findByIoc(string $ioc) Return ChildCountry objects filtered by the ioc column
- * @method     ChildCountry[]|ObjectCollection findByCapital(string $capital) Return ChildCountry objects filtered by the capital column
  * @method     ChildCountry[]|ObjectCollection findByTld(string $tld) Return ChildCountry objects filtered by the tld column
  * @method     ChildCountry[]|ObjectCollection findByPhone(string $phone) Return ChildCountry objects filtered by the phone column
- * @method     ChildCountry[]|ObjectCollection findByTerritoryIsoNr(int $territory_iso_nr) Return ChildCountry objects filtered by the territory_iso_nr column
- * @method     ChildCountry[]|ObjectCollection findByCurrencyIsoNr(int $currency_iso_nr) Return ChildCountry objects filtered by the currency_iso_nr column
- * @method     ChildCountry[]|ObjectCollection findByOfficialLocalName(string $official_local_name) Return ChildCountry objects filtered by the official_local_name column
- * @method     ChildCountry[]|ObjectCollection findByOfficialEnName(string $official_en_name) Return ChildCountry objects filtered by the official_en_name column
- * @method     ChildCountry[]|ObjectCollection findByShortLocalName(string $short_local_name) Return ChildCountry objects filtered by the short_local_name column
- * @method     ChildCountry[]|ObjectCollection findByShortEnName(string $short_en_name) Return ChildCountry objects filtered by the short_en_name column
+ * @method     ChildCountry[]|ObjectCollection findByCapital(string $capital) Return ChildCountry objects filtered by the capital column
+ * @method     ChildCountry[]|ObjectCollection findByPostalCodeFormat(string $postal_code_format) Return ChildCountry objects filtered by the postal_code_format column
+ * @method     ChildCountry[]|ObjectCollection findByPostalCodeRegex(string $postal_code_regex) Return ChildCountry objects filtered by the postal_code_regex column
+ * @method     ChildCountry[]|ObjectCollection findByContinentId(int $continent_id) Return ChildCountry objects filtered by the continent_id column
+ * @method     ChildCountry[]|ObjectCollection findByCurrencyId(int $currency_id) Return ChildCountry objects filtered by the currency_id column
+ * @method     ChildCountry[]|ObjectCollection findByTypeId(int $type_id) Return ChildCountry objects filtered by the type_id column
+ * @method     ChildCountry[]|ObjectCollection findBySubtypeId(int $subtype_id) Return ChildCountry objects filtered by the subtype_id column
+ * @method     ChildCountry[]|ObjectCollection findBySovereignityId(int $sovereignity_id) Return ChildCountry objects filtered by the sovereignity_id column
+ * @method     ChildCountry[]|ObjectCollection findByFormalName(string $formal_name) Return ChildCountry objects filtered by the formal_name column
+ * @method     ChildCountry[]|ObjectCollection findByFormalNativeName(string $formal_native_name) Return ChildCountry objects filtered by the formal_native_name column
+ * @method     ChildCountry[]|ObjectCollection findByShortNativeName(string $short_native_name) Return ChildCountry objects filtered by the short_native_name column
  * @method     ChildCountry[]|ObjectCollection findByBboxSwLat(double $bbox_sw_lat) Return ChildCountry objects filtered by the bbox_sw_lat column
  * @method     ChildCountry[]|ObjectCollection findByBboxSwLng(double $bbox_sw_lng) Return ChildCountry objects filtered by the bbox_sw_lng column
  * @method     ChildCountry[]|ObjectCollection findByBboxNeLat(double $bbox_ne_lat) Return ChildCountry objects filtered by the bbox_ne_lat column
@@ -230,7 +272,7 @@ abstract class CountryQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `iso_nr`, `alpha_2`, `alpha_3`, `ioc`, `capital`, `tld`, `phone`, `territory_iso_nr`, `currency_iso_nr`, `official_local_name`, `official_en_name`, `short_local_name`, `short_en_name`, `bbox_sw_lat`, `bbox_sw_lng`, `bbox_ne_lat`, `bbox_ne_lng` FROM `kk_country` WHERE `iso_nr` = :p0';
+        $sql = 'SELECT `id`, `numeric`, `alpha_2`, `alpha_3`, `short_name`, `ioc`, `tld`, `phone`, `capital`, `postal_code_format`, `postal_code_regex`, `continent_id`, `currency_id`, `type_id`, `subtype_id`, `sovereignity_id`, `formal_name`, `formal_native_name`, `short_native_name`, `bbox_sw_lat`, `bbox_sw_lng`, `bbox_ne_lat`, `bbox_ne_lng` FROM `kk_country` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -304,7 +346,7 @@ abstract class CountryQuery extends ModelCriteria
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(CountryTableMap::COL_ISO_NR, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(CountryTableMap::COL_ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -317,20 +359,20 @@ abstract class CountryQuery extends ModelCriteria
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(CountryTableMap::COL_ISO_NR, $keys, Criteria::IN);
+        return $this->addUsingAlias(CountryTableMap::COL_ID, $keys, Criteria::IN);
     }
 
     /**
-     * Filter the query on the iso_nr column
+     * Filter the query on the id column
      *
      * Example usage:
      * <code>
-     * $query->filterByIsoNr(1234); // WHERE iso_nr = 1234
-     * $query->filterByIsoNr(array(12, 34)); // WHERE iso_nr IN (12, 34)
-     * $query->filterByIsoNr(array('min' => 12)); // WHERE iso_nr > 12
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
      * </code>
      *
-     * @param     mixed $isoNr The value to use as filter.
+     * @param     mixed $id The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -338,16 +380,16 @@ abstract class CountryQuery extends ModelCriteria
      *
      * @return $this|ChildCountryQuery The current query, for fluid interface
      */
-    public function filterByIsoNr($isoNr = null, $comparison = null)
+    public function filterById($id = null, $comparison = null)
     {
-        if (is_array($isoNr)) {
+        if (is_array($id)) {
             $useMinMax = false;
-            if (isset($isoNr['min'])) {
-                $this->addUsingAlias(CountryTableMap::COL_ISO_NR, $isoNr['min'], Criteria::GREATER_EQUAL);
+            if (isset($id['min'])) {
+                $this->addUsingAlias(CountryTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($isoNr['max'])) {
-                $this->addUsingAlias(CountryTableMap::COL_ISO_NR, $isoNr['max'], Criteria::LESS_EQUAL);
+            if (isset($id['max'])) {
+                $this->addUsingAlias(CountryTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -358,7 +400,48 @@ abstract class CountryQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(CountryTableMap::COL_ISO_NR, $isoNr, $comparison);
+        return $this->addUsingAlias(CountryTableMap::COL_ID, $id, $comparison);
+    }
+
+    /**
+     * Filter the query on the numeric column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByNumeric(1234); // WHERE numeric = 1234
+     * $query->filterByNumeric(array(12, 34)); // WHERE numeric IN (12, 34)
+     * $query->filterByNumeric(array('min' => 12)); // WHERE numeric > 12
+     * </code>
+     *
+     * @param     mixed $numeric The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCountryQuery The current query, for fluid interface
+     */
+    public function filterByNumeric($numeric = null, $comparison = null)
+    {
+        if (is_array($numeric)) {
+            $useMinMax = false;
+            if (isset($numeric['min'])) {
+                $this->addUsingAlias(CountryTableMap::COL_NUMERIC, $numeric['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($numeric['max'])) {
+                $this->addUsingAlias(CountryTableMap::COL_NUMERIC, $numeric['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CountryTableMap::COL_NUMERIC, $numeric, $comparison);
     }
 
     /**
@@ -420,6 +503,35 @@ abstract class CountryQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the short_name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByShortName('fooValue');   // WHERE short_name = 'fooValue'
+     * $query->filterByShortName('%fooValue%'); // WHERE short_name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $shortName The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCountryQuery The current query, for fluid interface
+     */
+    public function filterByShortName($shortName = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($shortName)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $shortName)) {
+                $shortName = str_replace('*', '%', $shortName);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CountryTableMap::COL_SHORT_NAME, $shortName, $comparison);
+    }
+
+    /**
      * Filter the query on the ioc column
      *
      * Example usage:
@@ -446,35 +558,6 @@ abstract class CountryQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CountryTableMap::COL_IOC, $ioc, $comparison);
-    }
-
-    /**
-     * Filter the query on the capital column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCapital('fooValue');   // WHERE capital = 'fooValue'
-     * $query->filterByCapital('%fooValue%'); // WHERE capital LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $capital The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildCountryQuery The current query, for fluid interface
-     */
-    public function filterByCapital($capital = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($capital)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $capital)) {
-                $capital = str_replace('*', '%', $capital);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(CountryTableMap::COL_CAPITAL, $capital, $comparison);
     }
 
     /**
@@ -536,18 +619,105 @@ abstract class CountryQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the territory_iso_nr column
+     * Filter the query on the capital column
      *
      * Example usage:
      * <code>
-     * $query->filterByTerritoryIsoNr(1234); // WHERE territory_iso_nr = 1234
-     * $query->filterByTerritoryIsoNr(array(12, 34)); // WHERE territory_iso_nr IN (12, 34)
-     * $query->filterByTerritoryIsoNr(array('min' => 12)); // WHERE territory_iso_nr > 12
+     * $query->filterByCapital('fooValue');   // WHERE capital = 'fooValue'
+     * $query->filterByCapital('%fooValue%'); // WHERE capital LIKE '%fooValue%'
      * </code>
      *
-     * @see       filterByTerritory()
+     * @param     string $capital The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @param     mixed $territoryIsoNr The value to use as filter.
+     * @return $this|ChildCountryQuery The current query, for fluid interface
+     */
+    public function filterByCapital($capital = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($capital)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $capital)) {
+                $capital = str_replace('*', '%', $capital);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CountryTableMap::COL_CAPITAL, $capital, $comparison);
+    }
+
+    /**
+     * Filter the query on the postal_code_format column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPostalCodeFormat('fooValue');   // WHERE postal_code_format = 'fooValue'
+     * $query->filterByPostalCodeFormat('%fooValue%'); // WHERE postal_code_format LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $postalCodeFormat The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCountryQuery The current query, for fluid interface
+     */
+    public function filterByPostalCodeFormat($postalCodeFormat = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($postalCodeFormat)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $postalCodeFormat)) {
+                $postalCodeFormat = str_replace('*', '%', $postalCodeFormat);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CountryTableMap::COL_POSTAL_CODE_FORMAT, $postalCodeFormat, $comparison);
+    }
+
+    /**
+     * Filter the query on the postal_code_regex column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPostalCodeRegex('fooValue');   // WHERE postal_code_regex = 'fooValue'
+     * $query->filterByPostalCodeRegex('%fooValue%'); // WHERE postal_code_regex LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $postalCodeRegex The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCountryQuery The current query, for fluid interface
+     */
+    public function filterByPostalCodeRegex($postalCodeRegex = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($postalCodeRegex)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $postalCodeRegex)) {
+                $postalCodeRegex = str_replace('*', '%', $postalCodeRegex);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CountryTableMap::COL_POSTAL_CODE_REGEX, $postalCodeRegex, $comparison);
+    }
+
+    /**
+     * Filter the query on the continent_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByContinentId(1234); // WHERE continent_id = 1234
+     * $query->filterByContinentId(array(12, 34)); // WHERE continent_id IN (12, 34)
+     * $query->filterByContinentId(array('min' => 12)); // WHERE continent_id > 12
+     * </code>
+     *
+     * @see       filterByContinent()
+     *
+     * @param     mixed $continentId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -555,16 +725,16 @@ abstract class CountryQuery extends ModelCriteria
      *
      * @return $this|ChildCountryQuery The current query, for fluid interface
      */
-    public function filterByTerritoryIsoNr($territoryIsoNr = null, $comparison = null)
+    public function filterByContinentId($continentId = null, $comparison = null)
     {
-        if (is_array($territoryIsoNr)) {
+        if (is_array($continentId)) {
             $useMinMax = false;
-            if (isset($territoryIsoNr['min'])) {
-                $this->addUsingAlias(CountryTableMap::COL_TERRITORY_ISO_NR, $territoryIsoNr['min'], Criteria::GREATER_EQUAL);
+            if (isset($continentId['min'])) {
+                $this->addUsingAlias(CountryTableMap::COL_CONTINENT_ID, $continentId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($territoryIsoNr['max'])) {
-                $this->addUsingAlias(CountryTableMap::COL_TERRITORY_ISO_NR, $territoryIsoNr['max'], Criteria::LESS_EQUAL);
+            if (isset($continentId['max'])) {
+                $this->addUsingAlias(CountryTableMap::COL_CONTINENT_ID, $continentId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -575,22 +745,22 @@ abstract class CountryQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(CountryTableMap::COL_TERRITORY_ISO_NR, $territoryIsoNr, $comparison);
+        return $this->addUsingAlias(CountryTableMap::COL_CONTINENT_ID, $continentId, $comparison);
     }
 
     /**
-     * Filter the query on the currency_iso_nr column
+     * Filter the query on the currency_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByCurrencyIsoNr(1234); // WHERE currency_iso_nr = 1234
-     * $query->filterByCurrencyIsoNr(array(12, 34)); // WHERE currency_iso_nr IN (12, 34)
-     * $query->filterByCurrencyIsoNr(array('min' => 12)); // WHERE currency_iso_nr > 12
+     * $query->filterByCurrencyId(1234); // WHERE currency_id = 1234
+     * $query->filterByCurrencyId(array(12, 34)); // WHERE currency_id IN (12, 34)
+     * $query->filterByCurrencyId(array('min' => 12)); // WHERE currency_id > 12
      * </code>
      *
      * @see       filterByCurrency()
      *
-     * @param     mixed $currencyIsoNr The value to use as filter.
+     * @param     mixed $currencyId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -598,16 +768,16 @@ abstract class CountryQuery extends ModelCriteria
      *
      * @return $this|ChildCountryQuery The current query, for fluid interface
      */
-    public function filterByCurrencyIsoNr($currencyIsoNr = null, $comparison = null)
+    public function filterByCurrencyId($currencyId = null, $comparison = null)
     {
-        if (is_array($currencyIsoNr)) {
+        if (is_array($currencyId)) {
             $useMinMax = false;
-            if (isset($currencyIsoNr['min'])) {
-                $this->addUsingAlias(CountryTableMap::COL_CURRENCY_ISO_NR, $currencyIsoNr['min'], Criteria::GREATER_EQUAL);
+            if (isset($currencyId['min'])) {
+                $this->addUsingAlias(CountryTableMap::COL_CURRENCY_ID, $currencyId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($currencyIsoNr['max'])) {
-                $this->addUsingAlias(CountryTableMap::COL_CURRENCY_ISO_NR, $currencyIsoNr['max'], Criteria::LESS_EQUAL);
+            if (isset($currencyId['max'])) {
+                $this->addUsingAlias(CountryTableMap::COL_CURRENCY_ID, $currencyId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -618,123 +788,223 @@ abstract class CountryQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(CountryTableMap::COL_CURRENCY_ISO_NR, $currencyIsoNr, $comparison);
+        return $this->addUsingAlias(CountryTableMap::COL_CURRENCY_ID, $currencyId, $comparison);
     }
 
     /**
-     * Filter the query on the official_local_name column
+     * Filter the query on the type_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByOfficialLocalName('fooValue');   // WHERE official_local_name = 'fooValue'
-     * $query->filterByOfficialLocalName('%fooValue%'); // WHERE official_local_name LIKE '%fooValue%'
+     * $query->filterByTypeId(1234); // WHERE type_id = 1234
+     * $query->filterByTypeId(array(12, 34)); // WHERE type_id IN (12, 34)
+     * $query->filterByTypeId(array('min' => 12)); // WHERE type_id > 12
      * </code>
      *
-     * @param     string $officialLocalName The value to use as filter.
+     * @see       filterByType()
+     *
+     * @param     mixed $typeId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCountryQuery The current query, for fluid interface
+     */
+    public function filterByTypeId($typeId = null, $comparison = null)
+    {
+        if (is_array($typeId)) {
+            $useMinMax = false;
+            if (isset($typeId['min'])) {
+                $this->addUsingAlias(CountryTableMap::COL_TYPE_ID, $typeId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($typeId['max'])) {
+                $this->addUsingAlias(CountryTableMap::COL_TYPE_ID, $typeId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CountryTableMap::COL_TYPE_ID, $typeId, $comparison);
+    }
+
+    /**
+     * Filter the query on the subtype_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySubtypeId(1234); // WHERE subtype_id = 1234
+     * $query->filterBySubtypeId(array(12, 34)); // WHERE subtype_id IN (12, 34)
+     * $query->filterBySubtypeId(array('min' => 12)); // WHERE subtype_id > 12
+     * </code>
+     *
+     * @see       filterBySubtype()
+     *
+     * @param     mixed $subtypeId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCountryQuery The current query, for fluid interface
+     */
+    public function filterBySubtypeId($subtypeId = null, $comparison = null)
+    {
+        if (is_array($subtypeId)) {
+            $useMinMax = false;
+            if (isset($subtypeId['min'])) {
+                $this->addUsingAlias(CountryTableMap::COL_SUBTYPE_ID, $subtypeId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($subtypeId['max'])) {
+                $this->addUsingAlias(CountryTableMap::COL_SUBTYPE_ID, $subtypeId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CountryTableMap::COL_SUBTYPE_ID, $subtypeId, $comparison);
+    }
+
+    /**
+     * Filter the query on the sovereignity_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySovereignityId(1234); // WHERE sovereignity_id = 1234
+     * $query->filterBySovereignityId(array(12, 34)); // WHERE sovereignity_id IN (12, 34)
+     * $query->filterBySovereignityId(array('min' => 12)); // WHERE sovereignity_id > 12
+     * </code>
+     *
+     * @see       filterByCountryRelatedBySovereignityId()
+     *
+     * @param     mixed $sovereignityId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCountryQuery The current query, for fluid interface
+     */
+    public function filterBySovereignityId($sovereignityId = null, $comparison = null)
+    {
+        if (is_array($sovereignityId)) {
+            $useMinMax = false;
+            if (isset($sovereignityId['min'])) {
+                $this->addUsingAlias(CountryTableMap::COL_SOVEREIGNITY_ID, $sovereignityId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($sovereignityId['max'])) {
+                $this->addUsingAlias(CountryTableMap::COL_SOVEREIGNITY_ID, $sovereignityId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CountryTableMap::COL_SOVEREIGNITY_ID, $sovereignityId, $comparison);
+    }
+
+    /**
+     * Filter the query on the formal_name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByFormalName('fooValue');   // WHERE formal_name = 'fooValue'
+     * $query->filterByFormalName('%fooValue%'); // WHERE formal_name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $formalName The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCountryQuery The current query, for fluid interface
      */
-    public function filterByOfficialLocalName($officialLocalName = null, $comparison = null)
+    public function filterByFormalName($formalName = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($officialLocalName)) {
+            if (is_array($formalName)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $officialLocalName)) {
-                $officialLocalName = str_replace('*', '%', $officialLocalName);
+            } elseif (preg_match('/[\%\*]/', $formalName)) {
+                $formalName = str_replace('*', '%', $formalName);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(CountryTableMap::COL_OFFICIAL_LOCAL_NAME, $officialLocalName, $comparison);
+        return $this->addUsingAlias(CountryTableMap::COL_FORMAL_NAME, $formalName, $comparison);
     }
 
     /**
-     * Filter the query on the official_en_name column
+     * Filter the query on the formal_native_name column
      *
      * Example usage:
      * <code>
-     * $query->filterByOfficialEnName('fooValue');   // WHERE official_en_name = 'fooValue'
-     * $query->filterByOfficialEnName('%fooValue%'); // WHERE official_en_name LIKE '%fooValue%'
+     * $query->filterByFormalNativeName('fooValue');   // WHERE formal_native_name = 'fooValue'
+     * $query->filterByFormalNativeName('%fooValue%'); // WHERE formal_native_name LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $officialEnName The value to use as filter.
+     * @param     string $formalNativeName The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCountryQuery The current query, for fluid interface
      */
-    public function filterByOfficialEnName($officialEnName = null, $comparison = null)
+    public function filterByFormalNativeName($formalNativeName = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($officialEnName)) {
+            if (is_array($formalNativeName)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $officialEnName)) {
-                $officialEnName = str_replace('*', '%', $officialEnName);
+            } elseif (preg_match('/[\%\*]/', $formalNativeName)) {
+                $formalNativeName = str_replace('*', '%', $formalNativeName);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(CountryTableMap::COL_OFFICIAL_EN_NAME, $officialEnName, $comparison);
+        return $this->addUsingAlias(CountryTableMap::COL_FORMAL_NATIVE_NAME, $formalNativeName, $comparison);
     }
 
     /**
-     * Filter the query on the short_local_name column
+     * Filter the query on the short_native_name column
      *
      * Example usage:
      * <code>
-     * $query->filterByShortLocalName('fooValue');   // WHERE short_local_name = 'fooValue'
-     * $query->filterByShortLocalName('%fooValue%'); // WHERE short_local_name LIKE '%fooValue%'
+     * $query->filterByShortNativeName('fooValue');   // WHERE short_native_name = 'fooValue'
+     * $query->filterByShortNativeName('%fooValue%'); // WHERE short_native_name LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $shortLocalName The value to use as filter.
+     * @param     string $shortNativeName The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCountryQuery The current query, for fluid interface
      */
-    public function filterByShortLocalName($shortLocalName = null, $comparison = null)
+    public function filterByShortNativeName($shortNativeName = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($shortLocalName)) {
+            if (is_array($shortNativeName)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $shortLocalName)) {
-                $shortLocalName = str_replace('*', '%', $shortLocalName);
+            } elseif (preg_match('/[\%\*]/', $shortNativeName)) {
+                $shortNativeName = str_replace('*', '%', $shortNativeName);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(CountryTableMap::COL_SHORT_LOCAL_NAME, $shortLocalName, $comparison);
-    }
-
-    /**
-     * Filter the query on the short_en_name column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByShortEnName('fooValue');   // WHERE short_en_name = 'fooValue'
-     * $query->filterByShortEnName('%fooValue%'); // WHERE short_en_name LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $shortEnName The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildCountryQuery The current query, for fluid interface
-     */
-    public function filterByShortEnName($shortEnName = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($shortEnName)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $shortEnName)) {
-                $shortEnName = str_replace('*', '%', $shortEnName);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(CountryTableMap::COL_SHORT_EN_NAME, $shortEnName, $comparison);
+        return $this->addUsingAlias(CountryTableMap::COL_SHORT_NATIVE_NAME, $shortNativeName, $comparison);
     }
 
     /**
@@ -902,44 +1172,44 @@ abstract class CountryQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \keeko\core\model\Territory object
+     * Filter the query by a related \keeko\core\model\Continent object
      *
-     * @param \keeko\core\model\Territory|ObjectCollection $territory The related object(s) to use as filter
+     * @param \keeko\core\model\Continent|ObjectCollection $continent The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildCountryQuery The current query, for fluid interface
      */
-    public function filterByTerritory($territory, $comparison = null)
+    public function filterByContinent($continent, $comparison = null)
     {
-        if ($territory instanceof \keeko\core\model\Territory) {
+        if ($continent instanceof \keeko\core\model\Continent) {
             return $this
-                ->addUsingAlias(CountryTableMap::COL_TERRITORY_ISO_NR, $territory->getIsoNr(), $comparison);
-        } elseif ($territory instanceof ObjectCollection) {
+                ->addUsingAlias(CountryTableMap::COL_CONTINENT_ID, $continent->getId(), $comparison);
+        } elseif ($continent instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(CountryTableMap::COL_TERRITORY_ISO_NR, $territory->toKeyValue('PrimaryKey', 'IsoNr'), $comparison);
+                ->addUsingAlias(CountryTableMap::COL_CONTINENT_ID, $continent->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByTerritory() only accepts arguments of type \keeko\core\model\Territory or Collection');
+            throw new PropelException('filterByContinent() only accepts arguments of type \keeko\core\model\Continent or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Territory relation
+     * Adds a JOIN clause to the query using the Continent relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildCountryQuery The current query, for fluid interface
      */
-    public function joinTerritory($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinContinent($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Territory');
+        $relationMap = $tableMap->getRelation('Continent');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -954,14 +1224,14 @@ abstract class CountryQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Territory');
+            $this->addJoinObject($join, 'Continent');
         }
 
         return $this;
     }
 
     /**
-     * Use the Territory relation Territory object
+     * Use the Continent relation Continent object
      *
      * @see useQuery()
      *
@@ -969,13 +1239,13 @@ abstract class CountryQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \keeko\core\model\TerritoryQuery A secondary query class using the current class as primary query
+     * @return \keeko\core\model\ContinentQuery A secondary query class using the current class as primary query
      */
-    public function useTerritoryQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useContinentQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinTerritory($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Territory', '\keeko\core\model\TerritoryQuery');
+            ->joinContinent($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Continent', '\keeko\core\model\ContinentQuery');
     }
 
     /**
@@ -992,14 +1262,14 @@ abstract class CountryQuery extends ModelCriteria
     {
         if ($currency instanceof \keeko\core\model\Currency) {
             return $this
-                ->addUsingAlias(CountryTableMap::COL_CURRENCY_ISO_NR, $currency->getIsoNr(), $comparison);
+                ->addUsingAlias(CountryTableMap::COL_CURRENCY_ID, $currency->getId(), $comparison);
         } elseif ($currency instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(CountryTableMap::COL_CURRENCY_ISO_NR, $currency->toKeyValue('PrimaryKey', 'IsoNr'), $comparison);
+                ->addUsingAlias(CountryTableMap::COL_CURRENCY_ID, $currency->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
             throw new PropelException('filterByCurrency() only accepts arguments of type \keeko\core\model\Currency or Collection');
         }
@@ -1056,40 +1326,44 @@ abstract class CountryQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \keeko\core\model\Localization object
+     * Filter the query by a related \keeko\core\model\RegionType object
      *
-     * @param \keeko\core\model\Localization|ObjectCollection $localization the related object to use as filter
+     * @param \keeko\core\model\RegionType|ObjectCollection $regionType The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildCountryQuery The current query, for fluid interface
      */
-    public function filterByLocalization($localization, $comparison = null)
+    public function filterByType($regionType, $comparison = null)
     {
-        if ($localization instanceof \keeko\core\model\Localization) {
+        if ($regionType instanceof \keeko\core\model\RegionType) {
             return $this
-                ->addUsingAlias(CountryTableMap::COL_ISO_NR, $localization->getCountryIsoNr(), $comparison);
-        } elseif ($localization instanceof ObjectCollection) {
+                ->addUsingAlias(CountryTableMap::COL_TYPE_ID, $regionType->getId(), $comparison);
+        } elseif ($regionType instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
             return $this
-                ->useLocalizationQuery()
-                ->filterByPrimaryKeys($localization->getPrimaryKeys())
-                ->endUse();
+                ->addUsingAlias(CountryTableMap::COL_TYPE_ID, $regionType->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByLocalization() only accepts arguments of type \keeko\core\model\Localization or Collection');
+            throw new PropelException('filterByType() only accepts arguments of type \keeko\core\model\RegionType or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Localization relation
+     * Adds a JOIN clause to the query using the Type relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildCountryQuery The current query, for fluid interface
      */
-    public function joinLocalization($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Localization');
+        $relationMap = $tableMap->getRelation('Type');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -1104,14 +1378,14 @@ abstract class CountryQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Localization');
+            $this->addJoinObject($join, 'Type');
         }
 
         return $this;
     }
 
     /**
-     * Use the Localization relation Localization object
+     * Use the Type relation RegionType object
      *
      * @see useQuery()
      *
@@ -1119,13 +1393,240 @@ abstract class CountryQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \keeko\core\model\LocalizationQuery A secondary query class using the current class as primary query
+     * @return \keeko\core\model\RegionTypeQuery A secondary query class using the current class as primary query
      */
-    public function useLocalizationQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinLocalization($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Localization', '\keeko\core\model\LocalizationQuery');
+            ->joinType($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Type', '\keeko\core\model\RegionTypeQuery');
+    }
+
+    /**
+     * Filter the query by a related \keeko\core\model\RegionType object
+     *
+     * @param \keeko\core\model\RegionType|ObjectCollection $regionType The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildCountryQuery The current query, for fluid interface
+     */
+    public function filterBySubtype($regionType, $comparison = null)
+    {
+        if ($regionType instanceof \keeko\core\model\RegionType) {
+            return $this
+                ->addUsingAlias(CountryTableMap::COL_SUBTYPE_ID, $regionType->getId(), $comparison);
+        } elseif ($regionType instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(CountryTableMap::COL_SUBTYPE_ID, $regionType->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterBySubtype() only accepts arguments of type \keeko\core\model\RegionType or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Subtype relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCountryQuery The current query, for fluid interface
+     */
+    public function joinSubtype($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Subtype');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Subtype');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Subtype relation RegionType object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \keeko\core\model\RegionTypeQuery A secondary query class using the current class as primary query
+     */
+    public function useSubtypeQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinSubtype($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Subtype', '\keeko\core\model\RegionTypeQuery');
+    }
+
+    /**
+     * Filter the query by a related \keeko\core\model\Country object
+     *
+     * @param \keeko\core\model\Country|ObjectCollection $country The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildCountryQuery The current query, for fluid interface
+     */
+    public function filterByCountryRelatedBySovereignityId($country, $comparison = null)
+    {
+        if ($country instanceof \keeko\core\model\Country) {
+            return $this
+                ->addUsingAlias(CountryTableMap::COL_SOVEREIGNITY_ID, $country->getId(), $comparison);
+        } elseif ($country instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(CountryTableMap::COL_SOVEREIGNITY_ID, $country->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByCountryRelatedBySovereignityId() only accepts arguments of type \keeko\core\model\Country or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CountryRelatedBySovereignityId relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCountryQuery The current query, for fluid interface
+     */
+    public function joinCountryRelatedBySovereignityId($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CountryRelatedBySovereignityId');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CountryRelatedBySovereignityId');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CountryRelatedBySovereignityId relation Country object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \keeko\core\model\CountryQuery A secondary query class using the current class as primary query
+     */
+    public function useCountryRelatedBySovereignityIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCountryRelatedBySovereignityId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CountryRelatedBySovereignityId', '\keeko\core\model\CountryQuery');
+    }
+
+    /**
+     * Filter the query by a related \keeko\core\model\Country object
+     *
+     * @param \keeko\core\model\Country|ObjectCollection $country the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildCountryQuery The current query, for fluid interface
+     */
+    public function filterBySubordinate($country, $comparison = null)
+    {
+        if ($country instanceof \keeko\core\model\Country) {
+            return $this
+                ->addUsingAlias(CountryTableMap::COL_ID, $country->getSovereignityId(), $comparison);
+        } elseif ($country instanceof ObjectCollection) {
+            return $this
+                ->useSubordinateQuery()
+                ->filterByPrimaryKeys($country->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySubordinate() only accepts arguments of type \keeko\core\model\Country or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Subordinate relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCountryQuery The current query, for fluid interface
+     */
+    public function joinSubordinate($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Subordinate');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Subordinate');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Subordinate relation Country object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \keeko\core\model\CountryQuery A secondary query class using the current class as primary query
+     */
+    public function useSubordinateQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinSubordinate($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Subordinate', '\keeko\core\model\CountryQuery');
     }
 
     /**
@@ -1140,7 +1641,7 @@ abstract class CountryQuery extends ModelCriteria
     {
         if ($subdivision instanceof \keeko\core\model\Subdivision) {
             return $this
-                ->addUsingAlias(CountryTableMap::COL_ISO_NR, $subdivision->getCountryIsoNr(), $comparison);
+                ->addUsingAlias(CountryTableMap::COL_ID, $subdivision->getCountryId(), $comparison);
         } elseif ($subdivision instanceof ObjectCollection) {
             return $this
                 ->useSubdivisionQuery()
@@ -1211,7 +1712,7 @@ abstract class CountryQuery extends ModelCriteria
     public function prune($country = null)
     {
         if ($country) {
-            $this->addUsingAlias(CountryTableMap::COL_ISO_NR, $country->getIsoNr(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(CountryTableMap::COL_ID, $country->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;

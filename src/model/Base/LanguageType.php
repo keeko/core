@@ -1113,7 +1113,7 @@ abstract class LanguageType implements ActiveRecordInterface
                 $this->initLanguages();
             } else {
                 $collLanguages = ChildLanguageQuery::create(null, $criteria)
-                    ->filterByLanguageType($this)
+                    ->filterByType($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -1167,7 +1167,7 @@ abstract class LanguageType implements ActiveRecordInterface
         $this->languagesScheduledForDeletion = $languagesToDelete;
 
         foreach ($languagesToDelete as $languageRemoved) {
-            $languageRemoved->setLanguageType(null);
+            $languageRemoved->setType(null);
         }
 
         $this->collLanguages = null;
@@ -1208,7 +1208,7 @@ abstract class LanguageType implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByLanguageType($this)
+                ->filterByType($this)
                 ->count($con);
         }
 
@@ -1242,7 +1242,7 @@ abstract class LanguageType implements ActiveRecordInterface
     protected function doAddLanguage(ChildLanguage $language)
     {
         $this->collLanguages[]= $language;
-        $language->setLanguageType($this);
+        $language->setType($this);
     }
 
     /**
@@ -1259,7 +1259,7 @@ abstract class LanguageType implements ActiveRecordInterface
                 $this->languagesScheduledForDeletion->clear();
             }
             $this->languagesScheduledForDeletion[]= $language;
-            $language->setLanguageType(null);
+            $language->setType(null);
         }
 
         return $this;
@@ -1282,10 +1282,85 @@ abstract class LanguageType implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
      */
-    public function getLanguagesJoinLanguageScope(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getLanguagesJoinLanguageRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildLanguageQuery::create(null, $criteria);
-        $query->joinWith('LanguageScope', $joinBehavior);
+        $query->joinWith('LanguageRelatedByParentId', $joinBehavior);
+
+        return $this->getLanguages($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this LanguageType is new, it will return
+     * an empty collection; or if this LanguageType has previously
+     * been saved, it will retrieve related Languages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in LanguageType.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
+     */
+    public function getLanguagesJoinScope(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLanguageQuery::create(null, $criteria);
+        $query->joinWith('Scope', $joinBehavior);
+
+        return $this->getLanguages($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this LanguageType is new, it will return
+     * an empty collection; or if this LanguageType has previously
+     * been saved, it will retrieve related Languages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in LanguageType.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
+     */
+    public function getLanguagesJoinScript(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLanguageQuery::create(null, $criteria);
+        $query->joinWith('Script', $joinBehavior);
+
+        return $this->getLanguages($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this LanguageType is new, it will return
+     * an empty collection; or if this LanguageType has previously
+     * been saved, it will retrieve related Languages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in LanguageType.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
+     */
+    public function getLanguagesJoinFamily(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLanguageQuery::create(null, $criteria);
+        $query->joinWith('Family', $joinBehavior);
 
         return $this->getLanguages($query, $con);
     }

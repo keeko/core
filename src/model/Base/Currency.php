@@ -64,22 +64,28 @@ abstract class Currency implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
-     * The value for the iso_nr field.
+     * The value for the id field.
      * @var        int
      */
-    protected $iso_nr;
+    protected $id;
 
     /**
-     * The value for the iso3 field.
-     * @var        string
+     * The value for the numeric field.
+     * @var        int
      */
-    protected $iso3;
+    protected $numeric;
 
     /**
-     * The value for the en_name field.
+     * The value for the alpha_3 field.
      * @var        string
      */
-    protected $en_name;
+    protected $alpha_3;
+
+    /**
+     * The value for the name field.
+     * @var        string
+     */
+    protected $name;
 
     /**
      * The value for the symbol_left field.
@@ -355,33 +361,43 @@ abstract class Currency implements ActiveRecordInterface
     }
 
     /**
-     * Get the [iso_nr] column value.
+     * Get the [id] column value.
      *
      * @return int
      */
-    public function getIsoNr()
+    public function getId()
     {
-        return $this->iso_nr;
+        return $this->id;
     }
 
     /**
-     * Get the [iso3] column value.
+     * Get the [numeric] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getIso3()
+    public function getNumeric()
     {
-        return $this->iso3;
+        return $this->numeric;
     }
 
     /**
-     * Get the [en_name] column value.
+     * Get the [alpha_3] column value.
      *
      * @return string
      */
-    public function getEnName()
+    public function getAlpha3()
     {
-        return $this->en_name;
+        return $this->alpha_3;
+    }
+
+    /**
+     * Get the [name] column value.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -445,64 +461,84 @@ abstract class Currency implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [iso_nr] column.
+     * Set the value of [id] column.
      *
      * @param int $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
-    public function setIsoNr($v)
+    public function setId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->iso_nr !== $v) {
-            $this->iso_nr = $v;
-            $this->modifiedColumns[CurrencyTableMap::COL_ISO_NR] = true;
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[CurrencyTableMap::COL_ID] = true;
         }
 
         return $this;
-    } // setIsoNr()
+    } // setId()
 
     /**
-     * Set the value of [iso3] column.
+     * Set the value of [numeric] column.
+     *
+     * @param int $v new value
+     * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
+     */
+    public function setNumeric($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->numeric !== $v) {
+            $this->numeric = $v;
+            $this->modifiedColumns[CurrencyTableMap::COL_NUMERIC] = true;
+        }
+
+        return $this;
+    } // setNumeric()
+
+    /**
+     * Set the value of [alpha_3] column.
      *
      * @param string $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
-    public function setIso3($v)
+    public function setAlpha3($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->iso3 !== $v) {
-            $this->iso3 = $v;
-            $this->modifiedColumns[CurrencyTableMap::COL_ISO3] = true;
+        if ($this->alpha_3 !== $v) {
+            $this->alpha_3 = $v;
+            $this->modifiedColumns[CurrencyTableMap::COL_ALPHA_3] = true;
         }
 
         return $this;
-    } // setIso3()
+    } // setAlpha3()
 
     /**
-     * Set the value of [en_name] column.
+     * Set the value of [name] column.
      *
      * @param string $v new value
      * @return $this|\keeko\core\model\Currency The current object (for fluent API support)
      */
-    public function setEnName($v)
+    public function setName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->en_name !== $v) {
-            $this->en_name = $v;
-            $this->modifiedColumns[CurrencyTableMap::COL_EN_NAME] = true;
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[CurrencyTableMap::COL_NAME] = true;
         }
 
         return $this;
-    } // setEnName()
+    } // setName()
 
     /**
      * Set the value of [symbol_left] column.
@@ -660,31 +696,34 @@ abstract class Currency implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CurrencyTableMap::translateFieldName('IsoNr', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->iso_nr = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CurrencyTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CurrencyTableMap::translateFieldName('Iso3', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->iso3 = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CurrencyTableMap::translateFieldName('Numeric', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->numeric = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CurrencyTableMap::translateFieldName('EnName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->en_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CurrencyTableMap::translateFieldName('Alpha3', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->alpha_3 = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CurrencyTableMap::translateFieldName('SymbolLeft', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CurrencyTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CurrencyTableMap::translateFieldName('SymbolLeft', TableMap::TYPE_PHPNAME, $indexType)];
             $this->symbol_left = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CurrencyTableMap::translateFieldName('SymbolRight', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CurrencyTableMap::translateFieldName('SymbolRight', TableMap::TYPE_PHPNAME, $indexType)];
             $this->symbol_right = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CurrencyTableMap::translateFieldName('DecimalDigits', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CurrencyTableMap::translateFieldName('DecimalDigits', TableMap::TYPE_PHPNAME, $indexType)];
             $this->decimal_digits = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CurrencyTableMap::translateFieldName('SubDivisor', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CurrencyTableMap::translateFieldName('SubDivisor', TableMap::TYPE_PHPNAME, $indexType)];
             $this->sub_divisor = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CurrencyTableMap::translateFieldName('SubSymbolLeft', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : CurrencyTableMap::translateFieldName('SubSymbolLeft', TableMap::TYPE_PHPNAME, $indexType)];
             $this->sub_symbol_left = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : CurrencyTableMap::translateFieldName('SubSymbolRight', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : CurrencyTableMap::translateFieldName('SubSymbolRight', TableMap::TYPE_PHPNAME, $indexType)];
             $this->sub_symbol_right = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -694,7 +733,7 @@ abstract class Currency implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 9; // 9 = CurrencyTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = CurrencyTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Currency'), 0, $e);
@@ -904,16 +943,23 @@ abstract class Currency implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
+        $this->modifiedColumns[CurrencyTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CurrencyTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(CurrencyTableMap::COL_ISO_NR)) {
-            $modifiedColumns[':p' . $index++]  = '`iso_nr`';
+        if ($this->isColumnModified(CurrencyTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(CurrencyTableMap::COL_ISO3)) {
-            $modifiedColumns[':p' . $index++]  = '`iso3`';
+        if ($this->isColumnModified(CurrencyTableMap::COL_NUMERIC)) {
+            $modifiedColumns[':p' . $index++]  = '`numeric`';
         }
-        if ($this->isColumnModified(CurrencyTableMap::COL_EN_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`en_name`';
+        if ($this->isColumnModified(CurrencyTableMap::COL_ALPHA_3)) {
+            $modifiedColumns[':p' . $index++]  = '`alpha_3`';
+        }
+        if ($this->isColumnModified(CurrencyTableMap::COL_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`name`';
         }
         if ($this->isColumnModified(CurrencyTableMap::COL_SYMBOL_LEFT)) {
             $modifiedColumns[':p' . $index++]  = '`symbol_left`';
@@ -944,14 +990,17 @@ abstract class Currency implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`iso_nr`':
-                        $stmt->bindValue($identifier, $this->iso_nr, PDO::PARAM_INT);
+                    case '`id`':
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`iso3`':
-                        $stmt->bindValue($identifier, $this->iso3, PDO::PARAM_STR);
+                    case '`numeric`':
+                        $stmt->bindValue($identifier, $this->numeric, PDO::PARAM_INT);
                         break;
-                    case '`en_name`':
-                        $stmt->bindValue($identifier, $this->en_name, PDO::PARAM_STR);
+                    case '`alpha_3`':
+                        $stmt->bindValue($identifier, $this->alpha_3, PDO::PARAM_STR);
+                        break;
+                    case '`name`':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
                     case '`symbol_left`':
                         $stmt->bindValue($identifier, $this->symbol_left, PDO::PARAM_STR);
@@ -978,6 +1027,13 @@ abstract class Currency implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -1027,30 +1083,33 @@ abstract class Currency implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getIsoNr();
+                return $this->getId();
                 break;
             case 1:
-                return $this->getIso3();
+                return $this->getNumeric();
                 break;
             case 2:
-                return $this->getEnName();
+                return $this->getAlpha3();
                 break;
             case 3:
-                return $this->getSymbolLeft();
+                return $this->getName();
                 break;
             case 4:
-                return $this->getSymbolRight();
+                return $this->getSymbolLeft();
                 break;
             case 5:
-                return $this->getDecimalDigits();
+                return $this->getSymbolRight();
                 break;
             case 6:
-                return $this->getSubDivisor();
+                return $this->getDecimalDigits();
                 break;
             case 7:
-                return $this->getSubSymbolLeft();
+                return $this->getSubDivisor();
                 break;
             case 8:
+                return $this->getSubSymbolLeft();
+                break;
+            case 9:
                 return $this->getSubSymbolRight();
                 break;
             default:
@@ -1083,15 +1142,16 @@ abstract class Currency implements ActiveRecordInterface
         $alreadyDumpedObjects['Currency'][$this->hashCode()] = true;
         $keys = CurrencyTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getIsoNr(),
-            $keys[1] => $this->getIso3(),
-            $keys[2] => $this->getEnName(),
-            $keys[3] => $this->getSymbolLeft(),
-            $keys[4] => $this->getSymbolRight(),
-            $keys[5] => $this->getDecimalDigits(),
-            $keys[6] => $this->getSubDivisor(),
-            $keys[7] => $this->getSubSymbolLeft(),
-            $keys[8] => $this->getSubSymbolRight(),
+            $keys[0] => $this->getId(),
+            $keys[1] => $this->getNumeric(),
+            $keys[2] => $this->getAlpha3(),
+            $keys[3] => $this->getName(),
+            $keys[4] => $this->getSymbolLeft(),
+            $keys[5] => $this->getSymbolRight(),
+            $keys[6] => $this->getDecimalDigits(),
+            $keys[7] => $this->getSubDivisor(),
+            $keys[8] => $this->getSubSymbolLeft(),
+            $keys[9] => $this->getSubSymbolRight(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1149,30 +1209,33 @@ abstract class Currency implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setIsoNr($value);
+                $this->setId($value);
                 break;
             case 1:
-                $this->setIso3($value);
+                $this->setNumeric($value);
                 break;
             case 2:
-                $this->setEnName($value);
+                $this->setAlpha3($value);
                 break;
             case 3:
-                $this->setSymbolLeft($value);
+                $this->setName($value);
                 break;
             case 4:
-                $this->setSymbolRight($value);
+                $this->setSymbolLeft($value);
                 break;
             case 5:
-                $this->setDecimalDigits($value);
+                $this->setSymbolRight($value);
                 break;
             case 6:
-                $this->setSubDivisor($value);
+                $this->setDecimalDigits($value);
                 break;
             case 7:
-                $this->setSubSymbolLeft($value);
+                $this->setSubDivisor($value);
                 break;
             case 8:
+                $this->setSubSymbolLeft($value);
+                break;
+            case 9:
                 $this->setSubSymbolRight($value);
                 break;
         } // switch()
@@ -1202,31 +1265,34 @@ abstract class Currency implements ActiveRecordInterface
         $keys = CurrencyTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setIsoNr($arr[$keys[0]]);
+            $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setIso3($arr[$keys[1]]);
+            $this->setNumeric($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setEnName($arr[$keys[2]]);
+            $this->setAlpha3($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setSymbolLeft($arr[$keys[3]]);
+            $this->setName($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setSymbolRight($arr[$keys[4]]);
+            $this->setSymbolLeft($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setDecimalDigits($arr[$keys[5]]);
+            $this->setSymbolRight($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setSubDivisor($arr[$keys[6]]);
+            $this->setDecimalDigits($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setSubSymbolLeft($arr[$keys[7]]);
+            $this->setSubDivisor($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setSubSymbolRight($arr[$keys[8]]);
+            $this->setSubSymbolLeft($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setSubSymbolRight($arr[$keys[9]]);
         }
     }
 
@@ -1269,14 +1335,17 @@ abstract class Currency implements ActiveRecordInterface
     {
         $criteria = new Criteria(CurrencyTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(CurrencyTableMap::COL_ISO_NR)) {
-            $criteria->add(CurrencyTableMap::COL_ISO_NR, $this->iso_nr);
+        if ($this->isColumnModified(CurrencyTableMap::COL_ID)) {
+            $criteria->add(CurrencyTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(CurrencyTableMap::COL_ISO3)) {
-            $criteria->add(CurrencyTableMap::COL_ISO3, $this->iso3);
+        if ($this->isColumnModified(CurrencyTableMap::COL_NUMERIC)) {
+            $criteria->add(CurrencyTableMap::COL_NUMERIC, $this->numeric);
         }
-        if ($this->isColumnModified(CurrencyTableMap::COL_EN_NAME)) {
-            $criteria->add(CurrencyTableMap::COL_EN_NAME, $this->en_name);
+        if ($this->isColumnModified(CurrencyTableMap::COL_ALPHA_3)) {
+            $criteria->add(CurrencyTableMap::COL_ALPHA_3, $this->alpha_3);
+        }
+        if ($this->isColumnModified(CurrencyTableMap::COL_NAME)) {
+            $criteria->add(CurrencyTableMap::COL_NAME, $this->name);
         }
         if ($this->isColumnModified(CurrencyTableMap::COL_SYMBOL_LEFT)) {
             $criteria->add(CurrencyTableMap::COL_SYMBOL_LEFT, $this->symbol_left);
@@ -1313,7 +1382,7 @@ abstract class Currency implements ActiveRecordInterface
     public function buildPkeyCriteria()
     {
         $criteria = ChildCurrencyQuery::create();
-        $criteria->add(CurrencyTableMap::COL_ISO_NR, $this->iso_nr);
+        $criteria->add(CurrencyTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1326,7 +1395,7 @@ abstract class Currency implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getIsoNr();
+        $validPk = null !== $this->getId();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1346,18 +1415,18 @@ abstract class Currency implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getIsoNr();
+        return $this->getId();
     }
 
     /**
-     * Generic method to set the primary key (iso_nr column).
+     * Generic method to set the primary key (id column).
      *
      * @param       int $key Primary key.
      * @return void
      */
     public function setPrimaryKey($key)
     {
-        $this->setIsoNr($key);
+        $this->setId($key);
     }
 
     /**
@@ -1366,7 +1435,7 @@ abstract class Currency implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getIsoNr();
+        return null === $this->getId();
     }
 
     /**
@@ -1382,9 +1451,9 @@ abstract class Currency implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setIsoNr($this->getIsoNr());
-        $copyObj->setIso3($this->getIso3());
-        $copyObj->setEnName($this->getEnName());
+        $copyObj->setNumeric($this->getNumeric());
+        $copyObj->setAlpha3($this->getAlpha3());
+        $copyObj->setName($this->getName());
         $copyObj->setSymbolLeft($this->getSymbolLeft());
         $copyObj->setSymbolRight($this->getSymbolRight());
         $copyObj->setDecimalDigits($this->getDecimalDigits());
@@ -1407,6 +1476,7 @@ abstract class Currency implements ActiveRecordInterface
 
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1683,10 +1753,85 @@ abstract class Currency implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildCountry[] List of ChildCountry objects
      */
-    public function getCountriesJoinTerritory(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getCountriesJoinContinent(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildCountryQuery::create(null, $criteria);
-        $query->joinWith('Territory', $joinBehavior);
+        $query->joinWith('Continent', $joinBehavior);
+
+        return $this->getCountries($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Currency is new, it will return
+     * an empty collection; or if this Currency has previously
+     * been saved, it will retrieve related Countries from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Currency.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildCountry[] List of ChildCountry objects
+     */
+    public function getCountriesJoinType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCountryQuery::create(null, $criteria);
+        $query->joinWith('Type', $joinBehavior);
+
+        return $this->getCountries($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Currency is new, it will return
+     * an empty collection; or if this Currency has previously
+     * been saved, it will retrieve related Countries from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Currency.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildCountry[] List of ChildCountry objects
+     */
+    public function getCountriesJoinSubtype(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCountryQuery::create(null, $criteria);
+        $query->joinWith('Subtype', $joinBehavior);
+
+        return $this->getCountries($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Currency is new, it will return
+     * an empty collection; or if this Currency has previously
+     * been saved, it will retrieve related Countries from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Currency.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildCountry[] List of ChildCountry objects
+     */
+    public function getCountriesJoinCountryRelatedBySovereignityId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCountryQuery::create(null, $criteria);
+        $query->joinWith('CountryRelatedBySovereignityId', $joinBehavior);
 
         return $this->getCountries($query, $con);
     }
@@ -1698,9 +1843,10 @@ abstract class Currency implements ActiveRecordInterface
      */
     public function clear()
     {
-        $this->iso_nr = null;
-        $this->iso3 = null;
-        $this->en_name = null;
+        $this->id = null;
+        $this->numeric = null;
+        $this->alpha_3 = null;
+        $this->name = null;
         $this->symbol_left = null;
         $this->symbol_right = null;
         $this->decimal_digits = null;

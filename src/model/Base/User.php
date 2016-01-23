@@ -3051,7 +3051,6 @@ abstract class User implements ActiveRecordInterface
      */
     static public function loadValidatorMetadata(ClassMetadata $metadata)
     {
-        $metadata->addPropertyConstraint('login_name', new NotNull());
         $metadata->addPropertyConstraint('email', new NotNull());
         $metadata->addPropertyConstraint('email', new Email());
         $metadata->addPropertyConstraint('password', new NotNull());

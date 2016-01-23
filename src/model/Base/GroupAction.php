@@ -956,14 +956,14 @@ abstract class GroupAction implements ActiveRecordInterface
         $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
 
-        //relation kk_group_action_fk_8134fe to table kk_group
+        //relation group_action_fk_group to table kk_group
         if ($this->aGroup && $hash = spl_object_hash($this->aGroup)) {
             $primaryKeyFKs[] = $hash;
         } else {
             $validPrimaryKeyFKs = false;
         }
 
-        //relation kk_group_action_fk_716bac to table kk_action
+        //relation group_action_fk_action to table kk_action
         if ($this->aAction && $hash = spl_object_hash($this->aAction)) {
             $primaryKeyFKs[] = $hash;
         } else {

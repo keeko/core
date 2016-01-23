@@ -11,6 +11,7 @@ class PreferenceLoader {
 	private $preferences = [];
 	
 	public function __construct($preferences = null) {
+		$this->raw['system'] = [];
 		$preferences = PreferenceQuery::create()->find();
 		foreach ($preferences as $preference) {
 			$module = $preference->getModuleId() ?: 'system';

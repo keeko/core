@@ -9,13 +9,10 @@ use keeko\core\model\Module;
 use keeko\core\model\User;
 use keeko\core\preferences\Preferences;
 use keeko\core\service\ServiceContainer;
-use keeko\core\utils\TwigTrait;
 use keeko\core\schema\PackageSchema;
 use keeko\core\schema\ActionSchema;
 
 abstract class AbstractModule {
-	
-	use TwigTrait;
 	
 	/** @var Module */
 	protected $model;
@@ -250,10 +247,6 @@ abstract class AbstractModule {
 	 */
 	public function hasPermission($action, User $user = null) {
 		return $this->getServiceContainer()->getFirewall()->hasPermission($this->getName(), $action, $user);
-	}
-	
-	public function getTwig() {
-		return $this->getRawTwig($this->getPath() . 'templates/');
 	}
 
 	abstract public function install();

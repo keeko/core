@@ -1,105 +1,93 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <database defaultIdMethod="native" name="keeko" namespace="keeko\core\model" identifierQuoting="true"
 	defaultPhpNamingMethod="phpname" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd"
+	xsi:noNamespaceSchemaLocation="https://github.com/propelorm/Propel2/blob/master/resources/xsd/database.xsd"
 	tablePrefix="kk_">
 
-	<!-- <behavior name="listener"> <parameter name="table" value="iuf_listener"/> 
-		<parameter name="phpName" value="Listener"/> </behavior> -->
-
-
+	<!-- Language -->
 	<table name="language" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" primaryKey="true" required="true"
-			autoIncrement="true" />
-		<column name="alpha_2" type="VARCHAR" size="2" />
-		<column name="alpha_3T" type="VARCHAR" size="3" />
-		<column name="alpha_3B" type="VARCHAR" size="3" />
-		<column name="alpha_3" type="VARCHAR" size="3" />
-		<column name="local_name" type="VARCHAR" size="128" />
-		<column name="en_name" type="VARCHAR" size="128" />
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="alpha_2" type="VARCHAR" size="2" desc="ISO 639-1 two-letter code" />
+		<column name="alpha_3T" type="VARCHAR" size="3" desc="ISO 639-2/T three-letter code" />
+		<column name="alpha_3B" type="VARCHAR" size="3" desc="ISO 639-2/B three-letter code" />
+		<column name="alpha_3" type="VARCHAR" size="3" desc="ISO 639-3 three-letter code" />
+		<column name="parent_id" type="INTEGER" size="10" />
+		<column name="macrolanguage_status" type="CHAR" size="1" />
+		<column name="name" type="VARCHAR" size="128" />
+		<column name="native_name" type="VARCHAR" size="128" />
 		<column name="collate" type="VARCHAR" size="10" />
-		<column name="scope_id" type="INTEGER" size="10" />
+		<column name="subtag" type="VARCHAR" size="76" desc="Subtag used for locales" />
+		<column name="prefix" type="VARCHAR" size="76" desc="Possibly (required) subtag (means this is an extlang)" />
+		<column name="scope_id" type="INTEGER" size="10" required="true" />
 		<column name="type_id" type="INTEGER" size="10" />
+		<column name="family_id" type="INTEGER" size="10" />
+		<column name="default_script_id" type="INTEGER" size="10" />
 
-		<foreign-key foreignTable="language_scope">
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="language" name="language_fk_parent" refPhpName="Sublanguage">
+			<reference local="parent_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="language_scope" name="language_fk_scope" phpName="Scope">
 			<reference local="scope_id" foreign="id" />
 		</foreign-key>
-		<foreign-key foreignTable="language_type">
+		<foreign-key foreignTable="language_type" name="language_fk_type" phpName="Type">
 			<reference local="type_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="language_script" name="language_fk_script" phpName="Script">
+			<reference local="default_script_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="language_family" name="language_fk_family" phpName="Family">
+			<reference local="family_id" foreign="id" />
 		</foreign-key>
 	</table>
 
 	<table name="language_scope" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" primaryKey="true" required="true"
-			autoIncrement="true" />
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
 	</table>
 
 	<table name="language_type" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" primaryKey="true" required="true"
-			autoIncrement="true" />
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
 	</table>
-
-	<table name="localization" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" primaryKey="true" required="true"
-			autoIncrement="true" />
-		<column name="parent_id" type="INTEGER" size="10" />
-		<column name="language_id" type="INTEGER" size="10" />
-		<column name="country_iso_nr" type="INTEGER" size="10" />
-		<column name="is_default" type="BOOLEAN" />
-
-		<foreign-key foreignTable="localization">
-			<reference local="parent_id" foreign="id" />
-		</foreign-key>
-		<foreign-key foreignTable="language">
-			<reference local="language_id" foreign="id" />
-		</foreign-key>
-		<foreign-key foreignTable="country">
-			<reference local="country_iso_nr" foreign="iso_nr" />
-		</foreign-key>
+	
+	<table name="language_script" namespace="\keeko\core\model">
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="alpha_4" type="CHAR" size="4" desc="ISO 15924 alpha-4 code"/>
+		<column name="numeric" type="INTEGER" desc="ISO 15924 numeric representation"/>
+		<column name="name" type="VARCHAR" />
+		<column name="alias" type="VARCHAR"/>
+		<column name="direction" type="VARCHAR"/>
 	</table>
-
-	<table name="country" namespace="\keeko\core\model">
-		<column name="iso_nr" type="INTEGER" primaryKey="true"
-			required="true" />
-		<column name="alpha_2" type="CHAR" size="2" />
-		<column name="alpha_3" type="CHAR" size="3" />
-		<column name="ioc" type="CHAR" size="3" />
-		<column name="capital" type="VARCHAR" size="128" />
-		<column name="tld" type="VARCHAR" size="3" />
-		<column name="phone" type="VARCHAR" size="16" />
-		<column name="territory_iso_nr" type="INTEGER" required="true" />
-		<column name="currency_iso_nr" type="INTEGER" required="true" />
-		<column name="official_local_name" type="VARCHAR" size="128" />
-		<column name="official_en_name" type="VARCHAR" size="128" />
-		<column name="short_local_name" type="VARCHAR" size="128" />
-		<column name="short_en_name" type="VARCHAR" size="128" />
-		<column name="bbox_sw_lat" type="FLOAT" />
-		<column name="bbox_sw_lng" type="FLOAT" />
-		<column name="bbox_ne_lat" type="FLOAT" />
-		<column name="bbox_ne_lng" type="FLOAT" />
-
-		<foreign-key foreignTable="territory">
-			<reference local="territory_iso_nr" foreign="iso_nr" />
-		</foreign-key>
-		<foreign-key foreignTable="currency">
-			<reference local="currency_iso_nr" foreign="iso_nr" />
-		</foreign-key>
+	
+	<table name="language_family" namespace="\keeko\core\model">
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="parent_id" type="INTEGER"/>
+		<column name="alpha_3" type="VARCHAR" size="3" desc="ISO 639-5 Alpha-3 code"/>
+		<column name="name" type="VARCHAR"/>
 	</table>
-
-	<table name="territory" namespace="\keeko\core\model">
-		<column name="iso_nr" type="INTEGER" primaryKey="true"
-			required="true" />
-		<column name="parent_iso_nr" type="INTEGER" />
-		<column name="name_en" type="VARCHAR" size="45" required="true" />
+	
+	<table name="language_variant" namespace="\keeko\core\model">
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="name" type="VARCHAR" />
+		<column name="subtag" type="VARCHAR" size="76" desc="Subtag used for locales"/>
+		<column name="prefixes" type="VARCHAR" desc="A comma separated list of possibly multiple prefixes" />
+		<column name="comment" type="LONGVARCHAR" desc="A comment for the variant" />
 	</table>
-
+	
+	<!-- Currency -->
 	<table name="currency" namespace="\keeko\core\model">
-		<column name="iso_nr" type="INTEGER" primaryKey="true"
-			required="true" />
-		<column name="iso3" type="CHAR" size="3" required="true" />
-		<column name="en_name" type="VARCHAR" size="45" />
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="numeric" type="INTEGER" />
+		<column name="alpha_3" type="CHAR" size="3" />
+		<column name="name" type="VARCHAR" size="45" />
 		<column name="symbol_left" type="VARCHAR" size="45" />
 		<column name="symbol_right" type="VARCHAR" size="45" />
 		<column name="decimal_digits" type="INTEGER" />
@@ -108,35 +96,142 @@
 		<column name="sub_symbol_right" type="VARCHAR" size="45" />
 	</table>
 
-	<table name="subdivision" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" primaryKey="true" required="true"
-			autoIncrement="true" />
-		<column name="iso" type="VARCHAR" size="45" />
-		<column name="name" type="VARCHAR" size="128" />
-		<column name="local_name" type="VARCHAR" size="128" />
-		<column name="en_name" type="VARCHAR" size="128" />
-		<column name="alt_names" type="VARCHAR" size="255" />
-		<column name="parent_id" type="INTEGER" />
-		<column name="country_iso_nr" type="INTEGER" required="true" />
-		<column name="subdivision_type_id" type="INTEGER" />
+	<!-- Regions (Countries and Continents) -->
+	<table name="country" namespace="\keeko\core\model">
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="numeric" type="INTEGER" desc="ISO 3166-1 numeric three-digit country code" />
+		<column name="alpha_2" type="CHAR" size="2" desc="ISO 3166-1 alpha-2 two-letter country code" />
+		<column name="alpha_3" type="CHAR" size="3" desc="ISO 3166-1 alpha-3 three-letter country code" />
+		<column name="short_name" type="VARCHAR" size="128" />
+		<column name="ioc" type="CHAR" size="3" desc="IOC Country code" />
+		<column name="tld" type="VARCHAR" size="3" desc="IANA Top-Level-Domain" />
+		<column name="phone" type="VARCHAR" size="16" desc="ITU-T country calling code" />
+		<column name="capital" type="VARCHAR" size="128" />
+		<column name="postal_code_format" type="VARCHAR" />
+		<column name="postal_code_regex" type="VARCHAR" />
+		<column name="continent_id" type="INTEGER" required="true" />
+		<column name="currency_id" type="INTEGER" required="true" />
+		<column name="type_id" type="INTEGER" size="10" required="true" />
+		<column name="subtype_id" type="INTEGER" size="10" />
+		<column name="sovereignity_id" type="INTEGER" size="10" />
+		<column name="formal_name" type="VARCHAR" size="128" />
+		<column name="formal_native_name" type="VARCHAR" size="128" />
+		<column name="short_native_name" type="VARCHAR" size="128" />
+		<column name="bbox_sw_lat" type="FLOAT" />
+		<column name="bbox_sw_lng" type="FLOAT" />
+		<column name="bbox_ne_lat" type="FLOAT" />
+		<column name="bbox_ne_lng" type="FLOAT" />
 
-		<foreign-key foreignTable="country">
-			<reference local="country_iso_nr" foreign="iso_nr" />
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="continent" name="country_fk_continent">
+			<reference local="continent_id" foreign="id" />
 		</foreign-key>
-		<foreign-key foreignTable="subdivision_type">
-			<reference local="subdivision_type_id" foreign="id" />
+		<foreign-key foreignTable="currency" name="country_fk_currency">
+			<reference local="currency_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="region_type" name="country_fk_type" phpName="Type">
+			<reference local="type_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="region_type" name="country_fk_subtype" phpName="Subtype">
+			<reference local="subtype_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="country" name="country_fk_sovereignity" refPhpName="Subordinate">
+			<reference local="sovereignity_id" foreign="id" />
 		</foreign-key>
 	</table>
 
-	<table name="subdivision_type" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" primaryKey="true" required="true"
-			autoIncrement="true" />
+	<table name="continent" namespace="\keeko\core\model">
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="parent_id" type="INTEGER" />
+		<column name="numeric" type="INTEGER" desc="M.49 numeric code"/>
+		<column name="name" type="VARCHAR" size="45" required="true" />
+	</table>
+
+	<table name="subdivision" namespace="\keeko\core\model">
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="code" type="VARCHAR" size="45" desc="The ISO 3166-2 subdivision code"/>
 		<column name="name" type="VARCHAR" size="128" />
+		<column name="native_name" type="VARCHAR" size="128" />
+		<column name="alt_names" type="VARCHAR" size="255" />
+		<column name="parent_id" type="INTEGER" />
+		<column name="country_id" type="INTEGER" required="true" />
+		<column name="type_id" type="INTEGER" required="true" />
+
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="country" name="subdivision_fk_country">
+			<reference local="country_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="region_type" name="subdivision_fk_type">
+			<reference local="type_id" foreign="id" />
+		</foreign-key>
+	</table>
+
+	<table name="region_type" namespace="\keeko\core\model">
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="name" type="VARCHAR" size="128" />
+		<column name="area_id" type="INTEGER" size="10" required="true" />
+
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="region_area" name="region_type_fk_area">
+			<reference local="area_id" foreign="id" />
+		</foreign-key>
+	</table>
+	
+	<table name="region_area" namespace="\keeko\core\model">
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="name" type="VARCHAR" size="128" />
+	</table>
+	
+	<!-- Localization -->
+	<table name="localization" namespace="\keeko\core\model">
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="parent_id" type="INTEGER" size="10" />
+		<column name="name" type="VARCHAR" size="128" />
+		<column name="locale" type="VARCHAR" size="76" />
+		<column name="language_id" type="INTEGER" size="10" />
+		<column name="ext_language_id" type="INTEGER" size="10" />
+		<column name="region" type="VARCHAR" size="3" />
+		<column name="script_id" type="INTEGER" size="10" />
+		<column name="is_default" type="BOOLEAN" />
+
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="localization" name="localization_fk_parent">
+			<reference local="parent_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="language" name="localization_fk_language" phpName="Language">
+			<reference local="language_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="language" name="localization_fk_extlang" phpName="ExtLang">
+			<reference local="ext_language_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="language_script" name="localization_fk_script" phpName="Script">
+			<reference local="script_id" foreign="id" />
+		</foreign-key>
+	</table>
+	
+	<table name="localization_variant" namespace="\keeko\core\model" isCrossRef="true">
+		<!-- Fields -->
+		<column name="localization_id" type="INTEGER" size="10" primaryKey="true" required="true" />
+		<column name="variant_id" type="INTEGER" size="10" primaryKey="true" required="true" />
+		
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="localization" onDelete="restrict" name="localization_variant_fk_localization">
+			<reference local="localization_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="language_variant" onDelete="restrict" name="localization_variant_fk_variant">
+			<reference local="variant_id" foreign="id" />
+		</foreign-key>
 	</table>
 
 	<table name="package" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" primaryKey="true" required="true"
-			autoIncrement="true" />
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
 		<column name="title" type="VARCHAR" />
 		<column name="description" type="LONGVARCHAR" />
@@ -144,35 +239,40 @@
 	</table>
 
 	<table name="application" namespace="\keeko\core\model">
+		<!-- Inheritance -->
 		<behavior name="concrete_inheritance">
 			<parameter name="extends" value="package" />
 		</behavior>
+		
+		<!-- Fields -->
 		<column name="class_name" type="VARCHAR" size="255" required="true" />
 	</table>
 
 	<table name="application_uri" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" size="10" primaryKey="true"
-			required="true" autoIncrement="true" />
+		<!-- Fields -->
+		<column name="id" type="INTEGER" size="10" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="httphost" type="VARCHAR" size="255" required="true" />
 		<column name="basepath" type="VARCHAR" size="255" required="true" />
 		<column name="secure" type="BOOLEAN" />
-		<column name="application_id" type="INTEGER" size="10"
-			required="true" />
-		<column name="localization_id" type="INTEGER" size="10"
-			required="true" />
+		<column name="application_id" type="INTEGER" size="10" required="true" />
+		<column name="localization_id" type="INTEGER" size="10" required="true" />
 
-		<foreign-key foreignTable="application" onDelete="restrict">
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="application" onDelete="restrict" name="application_uri_fk_application">
 			<reference local="application_id" foreign="id" />
 		</foreign-key>
-		<foreign-key foreignTable="localization" onDelete="restrict">
+		<foreign-key foreignTable="localization" onDelete="restrict" name="application_uri_fk_localization">
 			<reference local="localization_id" foreign="id" />
 		</foreign-key>
 	</table>
 
 	<table name="module" namespace="\keeko\core\model">
+		<!-- Inheritance -->
 		<behavior name="concrete_inheritance">
 			<parameter name="extends" value="package" />
 		</behavior>
+		
+		<!-- Fields -->
 		<column name="class_name" type="VARCHAR" size="255" required="true" />
 		<column name="activated_version" type="VARCHAR" size="50" />
 		<column name="default_action" type="VARCHAR" />
@@ -181,52 +281,58 @@
 	</table>
 
 	<table name="action" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" size="10" primaryKey="true"
-			required="true" autoIncrement="true" />
+		<!-- Fields -->
+		<column name="id" type="INTEGER" size="10" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" required="true" />
 		<column name="title" type="VARCHAR" required="true" />
 		<column name="description" type="VARCHAR" size="255" />
 		<column name="class_name" type="VARCHAR" size="255" required="true" />
 		<column name="module_id" type="INTEGER" size="10" required="true" />
 
-		<foreign-key foreignTable="module" onDelete="cascade">
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="module" onDelete="cascade" name="action_fk_module">
 			<reference local="module_id" foreign="id" />
 		</foreign-key>
 	</table>
 
 	<table name="preference" namespace="\keeko\core\model">
+		<!-- Fields -->
 		<column name="key" type="VARCHAR" size="255" primaryKey="true" required="true"/>
 		<column name="value" type="LONGVARCHAR"/>
 		<column name="module_id" type="INTEGER" size="10"/>
 	</table>
 
 	<table name="api" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" size="10" primaryKey="true"
-			required="true" autoIncrement="true" />
+		<!-- Fields -->
+		<column name="id" type="INTEGER" size="10" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="route" type="VARCHAR" required="true" />
 		<column name="method" type="VARCHAR" required="true" />
 		<column name="action_id" type="INTEGER" size="10" required="true" />
 		<column name="required_params" type="VARCHAR" size="255" />
 
-		<foreign-key foreignTable="action" onDelete="cascade">
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="action" onDelete="cascade" name="api_fk_action">
 			<reference local="action_id" foreign="id" />
 		</foreign-key>
 	</table>
 
 	<table name="auth" namespace="\keeko\core\model">
+		<!-- Fields -->
 		<column name="token" type="VARCHAR" primaryKey="true" required="true" size="32"/>
 		<column name="user_id" type="INTEGER" size="10" required="true" />
 
+		<!-- Behaviors -->
 		<behavior name="timestampable"></behavior>
 
-		<foreign-key foreignTable="user" onDelete="none">
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="user" onDelete="none" name="auth_fk_user">
 			<reference local="user_id" foreign="id" />
 		</foreign-key>
 	</table>
 
 	<table name="user" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" primaryKey="true" required="true"
-			autoIncrement="true" size="10"/>
+		<!-- Fields -->
+		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" size="10"/>
 		<column name="login_name" type="VARCHAR" size="100" />
 		<column name="password" type="VARCHAR" size="100" />
 		<column name="given_name" type="VARCHAR" size="100" />
@@ -238,36 +344,39 @@
 		<column name="password_recover_code" type="VARCHAR" size="32" />
 		<column name="password_recover_time" type="TIMESTAMP" />
 
+		<!-- Behaviors -->
 		<behavior name="timestampable"></behavior>
 
+		<!-- Validation -->
 		<behavior name="validate">
-			<parameter name="rule1" value="{column: login_name, validator: NotNull}" />
-			<parameter name="rule2" value="{column: email, validator: NotNull}" />
-			<parameter name="rule3" value="{column: email, validator: Email}" />
-			<parameter name="rule4" value="{column: password, validator: NotNull}" />
+			<parameter name="rule1" value="{column: email, validator: NotNull}" />
+			<parameter name="rule2" value="{column: email, validator: Email}" />
+			<parameter name="rule3" value="{column: password, validator: NotNull}" />
+			<!-- <parameter name="rule4" value="{column: login_name, validator: NotNull}" /> -->
 		</behavior>
 
-		<unique name="login_name_UNIQUE">
+		<!-- <unique name="login_name_UNIQUE">
 			<unique-column name="login_name" />
-		</unique>
+		</unique>-->
 	</table>
 	
 	<table name="user_group" isCrossRef="true" namespace="\keeko\core\model">
-		<column name="user_id" type="INTEGER" size="10" primaryKey="true"
-			required="true" />
-		<column name="group_id" type="INTEGER" size="10" primaryKey="true"
-			required="true" />
-		<foreign-key foreignTable="group" onDelete="restrict">
+		<!-- Fields -->
+		<column name="user_id" type="INTEGER" size="10" primaryKey="true" required="true" />
+		<column name="group_id" type="INTEGER" size="10" primaryKey="true" required="true" />
+		
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="group" onDelete="restrict" name="user_group_fk_group">
 			<reference local="group_id" foreign="id" />
 		</foreign-key>
-		<foreign-key foreignTable="user" onDelete="restrict">
+		<foreign-key foreignTable="user" onDelete="restrict" name="user_group_fk_user">
 			<reference local="user_id" foreign="id" />
 		</foreign-key>
 	</table>
 
 	<table name="group" namespace="\keeko\core\model">
-		<column name="id" type="INTEGER" size="10" primaryKey="true"
-			required="true" autoIncrement="true" />
+		<!-- Fields -->
+		<column name="id" type="INTEGER" size="10" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="owner_id" type="INTEGER" size="10" />
 		<column name="name" type="VARCHAR" size="64" />
 		<column name="is_guest" type="BOOLEAN" />
@@ -275,49 +384,56 @@
 		<column name="is_active" type="BOOLEAN" default="1" />
 		<column name="is_system" type="BOOLEAN" default="0" />
 		
+		<!-- Behaviors -->
 		<behavior name="timestampable"></behavior>
 		
+		<!-- Validation -->
 		<behavior name="validate">
 			<parameter name="rule1" value="{column: name, validator: NotNull}" />
 		</behavior>
 		
-		<!-- <foreign-key foreignTable="user" phpName="Owner" onDelete="restrict">
+		<!-- Foreign Keys
+		<foreign-key foreignTable="user" phpName="Owner" refPhpName="UserGroup" onDelete="restrict">
 			<reference local="owner_id" foreign="id" />
 		</foreign-key>-->
 	</table>
 
 	<table name="group_action" isCrossRef="true" namespace="\keeko\core\model">
-		<column name="group_id" type="INTEGER" size="10" primaryKey="true"
-			required="true" />
-		<column name="action_id" type="INTEGER" size="10" primaryKey="true"
-			required="true" />
-		<foreign-key foreignTable="group" onDelete="restrict">
+		<!-- Fields -->
+		<column name="group_id" type="INTEGER" size="10" primaryKey="true" required="true" />
+		<column name="action_id" type="INTEGER" size="10" primaryKey="true" required="true" />
+		
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="group" onDelete="restrict" name="group_action_fk_group">
 			<reference local="group_id" foreign="id" />
 		</foreign-key>
-		<foreign-key foreignTable="action" onDelete="restrict">
+		<foreign-key foreignTable="action" onDelete="restrict" name="group_action_fk_action">
 			<reference local="action_id" foreign="id" />
 		</foreign-key>
 	</table>
 	
 	<table name="activity">
+		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="actor_id" type="INTEGER" required="true"/>
 		<column name="verb" type="VARCHAR"/>
 		<column name="object_id" type="INTEGER" required="true"/>
 		<column name="target_id" type="INTEGER" required="false"/>
-		
-		<foreign-key foreignTable="user" phpName="Actor">
+
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="user" phpName="Actor" name="activity_fk_user">
 			<reference local="actor_id" foreign="id"/>
 		</foreign-key>
-		<foreign-key foreignTable="activity_object" phpName="Object">
+		<foreign-key foreignTable="activity_object" phpName="Object" name="activity_fk_object">
 			<reference local="object_id" foreign="id"/>
 		</foreign-key>
-		<foreign-key foreignTable="activity_object" phpName="Target">
+		<foreign-key foreignTable="activity_object" phpName="Target" name="activity_fk_target">
 			<reference local="target_id" foreign="id"/>
 		</foreign-key>
 	</table>
 
 	<table name="activity_object">
+		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="class_name" type="VARCHAR"/>
 		<column name="type" type="VARCHAR"/>

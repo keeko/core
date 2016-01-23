@@ -16,8 +16,8 @@ abstract class AbstractPackageInstaller {
 	/** @var EventDispatcher */
 	protected $dispatcher;
 	
-	public function __construct(ServiceContainer $service = null) {
-		$this->service = $service ?: new ServiceContainer();
+	public function __construct(ServiceContainer $service) {
+		$this->service = $service;
 		$this->dispatcher = $this->service->getDispatcher();
 	}
 

@@ -59,7 +59,7 @@ class CurrencyTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 9;
+    const NUM_COLUMNS = 10;
 
     /**
      * The number of lazy-loaded columns
@@ -69,22 +69,27 @@ class CurrencyTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 9;
+    const NUM_HYDRATE_COLUMNS = 10;
 
     /**
-     * the column name for the iso_nr field
+     * the column name for the id field
      */
-    const COL_ISO_NR = 'kk_currency.iso_nr';
+    const COL_ID = 'kk_currency.id';
 
     /**
-     * the column name for the iso3 field
+     * the column name for the numeric field
      */
-    const COL_ISO3 = 'kk_currency.iso3';
+    const COL_NUMERIC = 'kk_currency.numeric';
 
     /**
-     * the column name for the en_name field
+     * the column name for the alpha_3 field
      */
-    const COL_EN_NAME = 'kk_currency.en_name';
+    const COL_ALPHA_3 = 'kk_currency.alpha_3';
+
+    /**
+     * the column name for the name field
+     */
+    const COL_NAME = 'kk_currency.name';
 
     /**
      * the column name for the symbol_left field
@@ -128,11 +133,11 @@ class CurrencyTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('IsoNr', 'Iso3', 'EnName', 'SymbolLeft', 'SymbolRight', 'DecimalDigits', 'SubDivisor', 'SubSymbolLeft', 'SubSymbolRight', ),
-        self::TYPE_CAMELNAME     => array('isoNr', 'iso3', 'enName', 'symbolLeft', 'symbolRight', 'decimalDigits', 'subDivisor', 'subSymbolLeft', 'subSymbolRight', ),
-        self::TYPE_COLNAME       => array(CurrencyTableMap::COL_ISO_NR, CurrencyTableMap::COL_ISO3, CurrencyTableMap::COL_EN_NAME, CurrencyTableMap::COL_SYMBOL_LEFT, CurrencyTableMap::COL_SYMBOL_RIGHT, CurrencyTableMap::COL_DECIMAL_DIGITS, CurrencyTableMap::COL_SUB_DIVISOR, CurrencyTableMap::COL_SUB_SYMBOL_LEFT, CurrencyTableMap::COL_SUB_SYMBOL_RIGHT, ),
-        self::TYPE_FIELDNAME     => array('iso_nr', 'iso3', 'en_name', 'symbol_left', 'symbol_right', 'decimal_digits', 'sub_divisor', 'sub_symbol_left', 'sub_symbol_right', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('Id', 'Numeric', 'Alpha3', 'Name', 'SymbolLeft', 'SymbolRight', 'DecimalDigits', 'SubDivisor', 'SubSymbolLeft', 'SubSymbolRight', ),
+        self::TYPE_CAMELNAME     => array('id', 'numeric', 'alpha3', 'name', 'symbolLeft', 'symbolRight', 'decimalDigits', 'subDivisor', 'subSymbolLeft', 'subSymbolRight', ),
+        self::TYPE_COLNAME       => array(CurrencyTableMap::COL_ID, CurrencyTableMap::COL_NUMERIC, CurrencyTableMap::COL_ALPHA_3, CurrencyTableMap::COL_NAME, CurrencyTableMap::COL_SYMBOL_LEFT, CurrencyTableMap::COL_SYMBOL_RIGHT, CurrencyTableMap::COL_DECIMAL_DIGITS, CurrencyTableMap::COL_SUB_DIVISOR, CurrencyTableMap::COL_SUB_SYMBOL_LEFT, CurrencyTableMap::COL_SUB_SYMBOL_RIGHT, ),
+        self::TYPE_FIELDNAME     => array('id', 'numeric', 'alpha_3', 'name', 'symbol_left', 'symbol_right', 'decimal_digits', 'sub_divisor', 'sub_symbol_left', 'sub_symbol_right', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -142,11 +147,11 @@ class CurrencyTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('IsoNr' => 0, 'Iso3' => 1, 'EnName' => 2, 'SymbolLeft' => 3, 'SymbolRight' => 4, 'DecimalDigits' => 5, 'SubDivisor' => 6, 'SubSymbolLeft' => 7, 'SubSymbolRight' => 8, ),
-        self::TYPE_CAMELNAME     => array('isoNr' => 0, 'iso3' => 1, 'enName' => 2, 'symbolLeft' => 3, 'symbolRight' => 4, 'decimalDigits' => 5, 'subDivisor' => 6, 'subSymbolLeft' => 7, 'subSymbolRight' => 8, ),
-        self::TYPE_COLNAME       => array(CurrencyTableMap::COL_ISO_NR => 0, CurrencyTableMap::COL_ISO3 => 1, CurrencyTableMap::COL_EN_NAME => 2, CurrencyTableMap::COL_SYMBOL_LEFT => 3, CurrencyTableMap::COL_SYMBOL_RIGHT => 4, CurrencyTableMap::COL_DECIMAL_DIGITS => 5, CurrencyTableMap::COL_SUB_DIVISOR => 6, CurrencyTableMap::COL_SUB_SYMBOL_LEFT => 7, CurrencyTableMap::COL_SUB_SYMBOL_RIGHT => 8, ),
-        self::TYPE_FIELDNAME     => array('iso_nr' => 0, 'iso3' => 1, 'en_name' => 2, 'symbol_left' => 3, 'symbol_right' => 4, 'decimal_digits' => 5, 'sub_divisor' => 6, 'sub_symbol_left' => 7, 'sub_symbol_right' => 8, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Numeric' => 1, 'Alpha3' => 2, 'Name' => 3, 'SymbolLeft' => 4, 'SymbolRight' => 5, 'DecimalDigits' => 6, 'SubDivisor' => 7, 'SubSymbolLeft' => 8, 'SubSymbolRight' => 9, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'numeric' => 1, 'alpha3' => 2, 'name' => 3, 'symbolLeft' => 4, 'symbolRight' => 5, 'decimalDigits' => 6, 'subDivisor' => 7, 'subSymbolLeft' => 8, 'subSymbolRight' => 9, ),
+        self::TYPE_COLNAME       => array(CurrencyTableMap::COL_ID => 0, CurrencyTableMap::COL_NUMERIC => 1, CurrencyTableMap::COL_ALPHA_3 => 2, CurrencyTableMap::COL_NAME => 3, CurrencyTableMap::COL_SYMBOL_LEFT => 4, CurrencyTableMap::COL_SYMBOL_RIGHT => 5, CurrencyTableMap::COL_DECIMAL_DIGITS => 6, CurrencyTableMap::COL_SUB_DIVISOR => 7, CurrencyTableMap::COL_SUB_SYMBOL_LEFT => 8, CurrencyTableMap::COL_SUB_SYMBOL_RIGHT => 9, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'numeric' => 1, 'alpha_3' => 2, 'name' => 3, 'symbol_left' => 4, 'symbol_right' => 5, 'decimal_digits' => 6, 'sub_divisor' => 7, 'sub_symbol_left' => 8, 'sub_symbol_right' => 9, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -164,11 +169,12 @@ class CurrencyTableMap extends TableMap
         $this->setIdentifierQuoting(true);
         $this->setClassName('\\keeko\\core\\model\\Currency');
         $this->setPackage('');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('iso_nr', 'IsoNr', 'INTEGER', true, null, null);
-        $this->addColumn('iso3', 'Iso3', 'CHAR', true, 3, null);
-        $this->addColumn('en_name', 'EnName', 'VARCHAR', false, 45, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('numeric', 'Numeric', 'INTEGER', false, null, null);
+        $this->addColumn('alpha_3', 'Alpha3', 'CHAR', false, 3, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 45, null);
         $this->addColumn('symbol_left', 'SymbolLeft', 'VARCHAR', false, 45, null);
         $this->addColumn('symbol_right', 'SymbolRight', 'VARCHAR', false, 45, null);
         $this->addColumn('decimal_digits', 'DecimalDigits', 'INTEGER', false, null, null);
@@ -185,8 +191,8 @@ class CurrencyTableMap extends TableMap
         $this->addRelation('Country', '\\keeko\\core\\model\\Country', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
-    0 => ':currency_iso_nr',
-    1 => ':iso_nr',
+    0 => ':currency_id',
+    1 => ':id',
   ),
 ), null, null, 'Countries', false);
     } // buildRelations()
@@ -207,11 +213,11 @@ class CurrencyTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('IsoNr', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('IsoNr', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -231,7 +237,7 @@ class CurrencyTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('IsoNr', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 
@@ -332,9 +338,10 @@ class CurrencyTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(CurrencyTableMap::COL_ISO_NR);
-            $criteria->addSelectColumn(CurrencyTableMap::COL_ISO3);
-            $criteria->addSelectColumn(CurrencyTableMap::COL_EN_NAME);
+            $criteria->addSelectColumn(CurrencyTableMap::COL_ID);
+            $criteria->addSelectColumn(CurrencyTableMap::COL_NUMERIC);
+            $criteria->addSelectColumn(CurrencyTableMap::COL_ALPHA_3);
+            $criteria->addSelectColumn(CurrencyTableMap::COL_NAME);
             $criteria->addSelectColumn(CurrencyTableMap::COL_SYMBOL_LEFT);
             $criteria->addSelectColumn(CurrencyTableMap::COL_SYMBOL_RIGHT);
             $criteria->addSelectColumn(CurrencyTableMap::COL_DECIMAL_DIGITS);
@@ -342,9 +349,10 @@ class CurrencyTableMap extends TableMap
             $criteria->addSelectColumn(CurrencyTableMap::COL_SUB_SYMBOL_LEFT);
             $criteria->addSelectColumn(CurrencyTableMap::COL_SUB_SYMBOL_RIGHT);
         } else {
-            $criteria->addSelectColumn($alias . '.iso_nr');
-            $criteria->addSelectColumn($alias . '.iso3');
-            $criteria->addSelectColumn($alias . '.en_name');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.numeric');
+            $criteria->addSelectColumn($alias . '.alpha_3');
+            $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.symbol_left');
             $criteria->addSelectColumn($alias . '.symbol_right');
             $criteria->addSelectColumn($alias . '.decimal_digits');
@@ -402,7 +410,7 @@ class CurrencyTableMap extends TableMap
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
             $criteria = new Criteria(CurrencyTableMap::DATABASE_NAME);
-            $criteria->add(CurrencyTableMap::COL_ISO_NR, (array) $values, Criteria::IN);
+            $criteria->add(CurrencyTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
         $query = CurrencyQuery::create()->mergeWith($criteria);
@@ -448,6 +456,10 @@ class CurrencyTableMap extends TableMap
             $criteria = clone $criteria; // rename for clarity
         } else {
             $criteria = $criteria->buildCriteria(); // build Criteria from Currency object
+        }
+
+        if ($criteria->containsKey(CurrencyTableMap::COL_ID) && $criteria->keyContainsValue(CurrencyTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.CurrencyTableMap::COL_ID.')');
         }
 
 

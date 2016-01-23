@@ -13,7 +13,7 @@ class InstallerKernel extends AbstractKernel {
 			
 			$uri = '';
 			$locale = InstallerApplication::DEFAULT_LOCALE;
-			if (isset($steps['setup'])) {
+			if (in_array('setup', $steps)) {
 				$uri = $options['uri'];
 				$locale = isset($options['locale']) ? $options['locale'] : $locale;
 			} else if (KEEKO_DATABASE_LOADED) {
@@ -22,7 +22,7 @@ class InstallerKernel extends AbstractKernel {
 			}
 			
 			$request = Request::create($uri);
-			$request->setDefaultLocale('en');
+			$request->setDefaultLocale(InstallerApplication::DEFAULT_LOCALE);
 			$request->setLocale($locale);
 
 			$model = new Application();

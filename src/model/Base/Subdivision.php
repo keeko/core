@@ -17,9 +17,9 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use keeko\core\model\Country as ChildCountry;
 use keeko\core\model\CountryQuery as ChildCountryQuery;
+use keeko\core\model\RegionType as ChildRegionType;
+use keeko\core\model\RegionTypeQuery as ChildRegionTypeQuery;
 use keeko\core\model\SubdivisionQuery as ChildSubdivisionQuery;
-use keeko\core\model\SubdivisionType as ChildSubdivisionType;
-use keeko\core\model\SubdivisionTypeQuery as ChildSubdivisionTypeQuery;
 use keeko\core\model\Map\SubdivisionTableMap;
 
 /**
@@ -70,10 +70,10 @@ abstract class Subdivision implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the iso field.
+     * The value for the code field.
      * @var        string
      */
-    protected $iso;
+    protected $code;
 
     /**
      * The value for the name field.
@@ -82,16 +82,10 @@ abstract class Subdivision implements ActiveRecordInterface
     protected $name;
 
     /**
-     * The value for the local_name field.
+     * The value for the native_name field.
      * @var        string
      */
-    protected $local_name;
-
-    /**
-     * The value for the en_name field.
-     * @var        string
-     */
-    protected $en_name;
+    protected $native_name;
 
     /**
      * The value for the alt_names field.
@@ -106,16 +100,16 @@ abstract class Subdivision implements ActiveRecordInterface
     protected $parent_id;
 
     /**
-     * The value for the country_iso_nr field.
+     * The value for the country_id field.
      * @var        int
      */
-    protected $country_iso_nr;
+    protected $country_id;
 
     /**
-     * The value for the subdivision_type_id field.
+     * The value for the type_id field.
      * @var        int
      */
-    protected $subdivision_type_id;
+    protected $type_id;
 
     /**
      * @var        ChildCountry
@@ -123,9 +117,9 @@ abstract class Subdivision implements ActiveRecordInterface
     protected $aCountry;
 
     /**
-     * @var        ChildSubdivisionType
+     * @var        ChildRegionType
      */
-    protected $aSubdivisionType;
+    protected $aRegionType;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -363,13 +357,13 @@ abstract class Subdivision implements ActiveRecordInterface
     }
 
     /**
-     * Get the [iso] column value.
+     * Get the [code] column value.
      *
      * @return string
      */
-    public function getIso()
+    public function getCode()
     {
-        return $this->iso;
+        return $this->code;
     }
 
     /**
@@ -383,23 +377,13 @@ abstract class Subdivision implements ActiveRecordInterface
     }
 
     /**
-     * Get the [local_name] column value.
+     * Get the [native_name] column value.
      *
      * @return string
      */
-    public function getLocalName()
+    public function getNativeName()
     {
-        return $this->local_name;
-    }
-
-    /**
-     * Get the [en_name] column value.
-     *
-     * @return string
-     */
-    public function getEnName()
-    {
-        return $this->en_name;
+        return $this->native_name;
     }
 
     /**
@@ -423,23 +407,23 @@ abstract class Subdivision implements ActiveRecordInterface
     }
 
     /**
-     * Get the [country_iso_nr] column value.
+     * Get the [country_id] column value.
      *
      * @return int
      */
-    public function getCountryIsoNr()
+    public function getCountryId()
     {
-        return $this->country_iso_nr;
+        return $this->country_id;
     }
 
     /**
-     * Get the [subdivision_type_id] column value.
+     * Get the [type_id] column value.
      *
      * @return int
      */
-    public function getSubdivisionTypeId()
+    public function getTypeId()
     {
-        return $this->subdivision_type_id;
+        return $this->type_id;
     }
 
     /**
@@ -463,24 +447,24 @@ abstract class Subdivision implements ActiveRecordInterface
     } // setId()
 
     /**
-     * Set the value of [iso] column.
+     * Set the value of [code] column.
      *
      * @param string $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
-    public function setIso($v)
+    public function setCode($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->iso !== $v) {
-            $this->iso = $v;
-            $this->modifiedColumns[SubdivisionTableMap::COL_ISO] = true;
+        if ($this->code !== $v) {
+            $this->code = $v;
+            $this->modifiedColumns[SubdivisionTableMap::COL_CODE] = true;
         }
 
         return $this;
-    } // setIso()
+    } // setCode()
 
     /**
      * Set the value of [name] column.
@@ -503,44 +487,24 @@ abstract class Subdivision implements ActiveRecordInterface
     } // setName()
 
     /**
-     * Set the value of [local_name] column.
+     * Set the value of [native_name] column.
      *
      * @param string $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
-    public function setLocalName($v)
+    public function setNativeName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->local_name !== $v) {
-            $this->local_name = $v;
-            $this->modifiedColumns[SubdivisionTableMap::COL_LOCAL_NAME] = true;
+        if ($this->native_name !== $v) {
+            $this->native_name = $v;
+            $this->modifiedColumns[SubdivisionTableMap::COL_NATIVE_NAME] = true;
         }
 
         return $this;
-    } // setLocalName()
-
-    /**
-     * Set the value of [en_name] column.
-     *
-     * @param string $v new value
-     * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
-     */
-    public function setEnName($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->en_name !== $v) {
-            $this->en_name = $v;
-            $this->modifiedColumns[SubdivisionTableMap::COL_EN_NAME] = true;
-        }
-
-        return $this;
-    } // setEnName()
+    } // setNativeName()
 
     /**
      * Set the value of [alt_names] column.
@@ -583,52 +547,52 @@ abstract class Subdivision implements ActiveRecordInterface
     } // setParentId()
 
     /**
-     * Set the value of [country_iso_nr] column.
+     * Set the value of [country_id] column.
      *
      * @param int $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
-    public function setCountryIsoNr($v)
+    public function setCountryId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->country_iso_nr !== $v) {
-            $this->country_iso_nr = $v;
-            $this->modifiedColumns[SubdivisionTableMap::COL_COUNTRY_ISO_NR] = true;
+        if ($this->country_id !== $v) {
+            $this->country_id = $v;
+            $this->modifiedColumns[SubdivisionTableMap::COL_COUNTRY_ID] = true;
         }
 
-        if ($this->aCountry !== null && $this->aCountry->getIsoNr() !== $v) {
+        if ($this->aCountry !== null && $this->aCountry->getId() !== $v) {
             $this->aCountry = null;
         }
 
         return $this;
-    } // setCountryIsoNr()
+    } // setCountryId()
 
     /**
-     * Set the value of [subdivision_type_id] column.
+     * Set the value of [type_id] column.
      *
      * @param int $v new value
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      */
-    public function setSubdivisionTypeId($v)
+    public function setTypeId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->subdivision_type_id !== $v) {
-            $this->subdivision_type_id = $v;
-            $this->modifiedColumns[SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID] = true;
+        if ($this->type_id !== $v) {
+            $this->type_id = $v;
+            $this->modifiedColumns[SubdivisionTableMap::COL_TYPE_ID] = true;
         }
 
-        if ($this->aSubdivisionType !== null && $this->aSubdivisionType->getId() !== $v) {
-            $this->aSubdivisionType = null;
+        if ($this->aRegionType !== null && $this->aRegionType->getId() !== $v) {
+            $this->aRegionType = null;
         }
 
         return $this;
-    } // setSubdivisionTypeId()
+    } // setTypeId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -669,29 +633,26 @@ abstract class Subdivision implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : SubdivisionTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SubdivisionTableMap::translateFieldName('Iso', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->iso = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SubdivisionTableMap::translateFieldName('Code', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->code = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SubdivisionTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SubdivisionTableMap::translateFieldName('LocalName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->local_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SubdivisionTableMap::translateFieldName('NativeName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->native_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SubdivisionTableMap::translateFieldName('EnName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->en_name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SubdivisionTableMap::translateFieldName('AltNames', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SubdivisionTableMap::translateFieldName('AltNames', TableMap::TYPE_PHPNAME, $indexType)];
             $this->alt_names = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SubdivisionTableMap::translateFieldName('ParentId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SubdivisionTableMap::translateFieldName('ParentId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->parent_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SubdivisionTableMap::translateFieldName('CountryIsoNr', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->country_iso_nr = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SubdivisionTableMap::translateFieldName('CountryId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->country_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SubdivisionTableMap::translateFieldName('SubdivisionTypeId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->subdivision_type_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SubdivisionTableMap::translateFieldName('TypeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->type_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -700,7 +661,7 @@ abstract class Subdivision implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 9; // 9 = SubdivisionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = SubdivisionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Subdivision'), 0, $e);
@@ -722,11 +683,11 @@ abstract class Subdivision implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aCountry !== null && $this->country_iso_nr !== $this->aCountry->getIsoNr()) {
+        if ($this->aCountry !== null && $this->country_id !== $this->aCountry->getId()) {
             $this->aCountry = null;
         }
-        if ($this->aSubdivisionType !== null && $this->subdivision_type_id !== $this->aSubdivisionType->getId()) {
-            $this->aSubdivisionType = null;
+        if ($this->aRegionType !== null && $this->type_id !== $this->aRegionType->getId()) {
+            $this->aRegionType = null;
         }
     } // ensureConsistency
 
@@ -768,7 +729,7 @@ abstract class Subdivision implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aCountry = null;
-            $this->aSubdivisionType = null;
+            $this->aRegionType = null;
         } // if (deep)
     }
 
@@ -880,11 +841,11 @@ abstract class Subdivision implements ActiveRecordInterface
                 $this->setCountry($this->aCountry);
             }
 
-            if ($this->aSubdivisionType !== null) {
-                if ($this->aSubdivisionType->isModified() || $this->aSubdivisionType->isNew()) {
-                    $affectedRows += $this->aSubdivisionType->save($con);
+            if ($this->aRegionType !== null) {
+                if ($this->aRegionType->isModified() || $this->aRegionType->isNew()) {
+                    $affectedRows += $this->aRegionType->save($con);
                 }
-                $this->setSubdivisionType($this->aSubdivisionType);
+                $this->setRegionType($this->aRegionType);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -927,17 +888,14 @@ abstract class Subdivision implements ActiveRecordInterface
         if ($this->isColumnModified(SubdivisionTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(SubdivisionTableMap::COL_ISO)) {
-            $modifiedColumns[':p' . $index++]  = '`iso`';
+        if ($this->isColumnModified(SubdivisionTableMap::COL_CODE)) {
+            $modifiedColumns[':p' . $index++]  = '`code`';
         }
         if ($this->isColumnModified(SubdivisionTableMap::COL_NAME)) {
             $modifiedColumns[':p' . $index++]  = '`name`';
         }
-        if ($this->isColumnModified(SubdivisionTableMap::COL_LOCAL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`local_name`';
-        }
-        if ($this->isColumnModified(SubdivisionTableMap::COL_EN_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`en_name`';
+        if ($this->isColumnModified(SubdivisionTableMap::COL_NATIVE_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`native_name`';
         }
         if ($this->isColumnModified(SubdivisionTableMap::COL_ALT_NAMES)) {
             $modifiedColumns[':p' . $index++]  = '`alt_names`';
@@ -945,11 +903,11 @@ abstract class Subdivision implements ActiveRecordInterface
         if ($this->isColumnModified(SubdivisionTableMap::COL_PARENT_ID)) {
             $modifiedColumns[':p' . $index++]  = '`parent_id`';
         }
-        if ($this->isColumnModified(SubdivisionTableMap::COL_COUNTRY_ISO_NR)) {
-            $modifiedColumns[':p' . $index++]  = '`country_iso_nr`';
+        if ($this->isColumnModified(SubdivisionTableMap::COL_COUNTRY_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`country_id`';
         }
-        if ($this->isColumnModified(SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`subdivision_type_id`';
+        if ($this->isColumnModified(SubdivisionTableMap::COL_TYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`type_id`';
         }
 
         $sql = sprintf(
@@ -965,17 +923,14 @@ abstract class Subdivision implements ActiveRecordInterface
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`iso`':
-                        $stmt->bindValue($identifier, $this->iso, PDO::PARAM_STR);
+                    case '`code`':
+                        $stmt->bindValue($identifier, $this->code, PDO::PARAM_STR);
                         break;
                     case '`name`':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case '`local_name`':
-                        $stmt->bindValue($identifier, $this->local_name, PDO::PARAM_STR);
-                        break;
-                    case '`en_name`':
-                        $stmt->bindValue($identifier, $this->en_name, PDO::PARAM_STR);
+                    case '`native_name`':
+                        $stmt->bindValue($identifier, $this->native_name, PDO::PARAM_STR);
                         break;
                     case '`alt_names`':
                         $stmt->bindValue($identifier, $this->alt_names, PDO::PARAM_STR);
@@ -983,11 +938,11 @@ abstract class Subdivision implements ActiveRecordInterface
                     case '`parent_id`':
                         $stmt->bindValue($identifier, $this->parent_id, PDO::PARAM_INT);
                         break;
-                    case '`country_iso_nr`':
-                        $stmt->bindValue($identifier, $this->country_iso_nr, PDO::PARAM_INT);
+                    case '`country_id`':
+                        $stmt->bindValue($identifier, $this->country_id, PDO::PARAM_INT);
                         break;
-                    case '`subdivision_type_id`':
-                        $stmt->bindValue($identifier, $this->subdivision_type_id, PDO::PARAM_INT);
+                    case '`type_id`':
+                        $stmt->bindValue($identifier, $this->type_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1055,28 +1010,25 @@ abstract class Subdivision implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getIso();
+                return $this->getCode();
                 break;
             case 2:
                 return $this->getName();
                 break;
             case 3:
-                return $this->getLocalName();
+                return $this->getNativeName();
                 break;
             case 4:
-                return $this->getEnName();
-                break;
-            case 5:
                 return $this->getAltNames();
                 break;
-            case 6:
+            case 5:
                 return $this->getParentId();
                 break;
-            case 7:
-                return $this->getCountryIsoNr();
+            case 6:
+                return $this->getCountryId();
                 break;
-            case 8:
-                return $this->getSubdivisionTypeId();
+            case 7:
+                return $this->getTypeId();
                 break;
             default:
                 return null;
@@ -1109,14 +1061,13 @@ abstract class Subdivision implements ActiveRecordInterface
         $keys = SubdivisionTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getIso(),
+            $keys[1] => $this->getCode(),
             $keys[2] => $this->getName(),
-            $keys[3] => $this->getLocalName(),
-            $keys[4] => $this->getEnName(),
-            $keys[5] => $this->getAltNames(),
-            $keys[6] => $this->getParentId(),
-            $keys[7] => $this->getCountryIsoNr(),
-            $keys[8] => $this->getSubdivisionTypeId(),
+            $keys[3] => $this->getNativeName(),
+            $keys[4] => $this->getAltNames(),
+            $keys[5] => $this->getParentId(),
+            $keys[6] => $this->getCountryId(),
+            $keys[7] => $this->getTypeId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1139,20 +1090,20 @@ abstract class Subdivision implements ActiveRecordInterface
 
                 $result[$key] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aSubdivisionType) {
+            if (null !== $this->aRegionType) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'subdivisionType';
+                        $key = 'regionType';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'kk_subdivision_type';
+                        $key = 'kk_region_type';
                         break;
                     default:
-                        $key = 'SubdivisionType';
+                        $key = 'RegionType';
                 }
 
-                $result[$key] = $this->aSubdivisionType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aRegionType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1192,28 +1143,25 @@ abstract class Subdivision implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setIso($value);
+                $this->setCode($value);
                 break;
             case 2:
                 $this->setName($value);
                 break;
             case 3:
-                $this->setLocalName($value);
+                $this->setNativeName($value);
                 break;
             case 4:
-                $this->setEnName($value);
-                break;
-            case 5:
                 $this->setAltNames($value);
                 break;
-            case 6:
+            case 5:
                 $this->setParentId($value);
                 break;
-            case 7:
-                $this->setCountryIsoNr($value);
+            case 6:
+                $this->setCountryId($value);
                 break;
-            case 8:
-                $this->setSubdivisionTypeId($value);
+            case 7:
+                $this->setTypeId($value);
                 break;
         } // switch()
 
@@ -1245,28 +1193,25 @@ abstract class Subdivision implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setIso($arr[$keys[1]]);
+            $this->setCode($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setName($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setLocalName($arr[$keys[3]]);
+            $this->setNativeName($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setEnName($arr[$keys[4]]);
+            $this->setAltNames($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setAltNames($arr[$keys[5]]);
+            $this->setParentId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setParentId($arr[$keys[6]]);
+            $this->setCountryId($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setCountryIsoNr($arr[$keys[7]]);
-        }
-        if (array_key_exists($keys[8], $arr)) {
-            $this->setSubdivisionTypeId($arr[$keys[8]]);
+            $this->setTypeId($arr[$keys[7]]);
         }
     }
 
@@ -1312,17 +1257,14 @@ abstract class Subdivision implements ActiveRecordInterface
         if ($this->isColumnModified(SubdivisionTableMap::COL_ID)) {
             $criteria->add(SubdivisionTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(SubdivisionTableMap::COL_ISO)) {
-            $criteria->add(SubdivisionTableMap::COL_ISO, $this->iso);
+        if ($this->isColumnModified(SubdivisionTableMap::COL_CODE)) {
+            $criteria->add(SubdivisionTableMap::COL_CODE, $this->code);
         }
         if ($this->isColumnModified(SubdivisionTableMap::COL_NAME)) {
             $criteria->add(SubdivisionTableMap::COL_NAME, $this->name);
         }
-        if ($this->isColumnModified(SubdivisionTableMap::COL_LOCAL_NAME)) {
-            $criteria->add(SubdivisionTableMap::COL_LOCAL_NAME, $this->local_name);
-        }
-        if ($this->isColumnModified(SubdivisionTableMap::COL_EN_NAME)) {
-            $criteria->add(SubdivisionTableMap::COL_EN_NAME, $this->en_name);
+        if ($this->isColumnModified(SubdivisionTableMap::COL_NATIVE_NAME)) {
+            $criteria->add(SubdivisionTableMap::COL_NATIVE_NAME, $this->native_name);
         }
         if ($this->isColumnModified(SubdivisionTableMap::COL_ALT_NAMES)) {
             $criteria->add(SubdivisionTableMap::COL_ALT_NAMES, $this->alt_names);
@@ -1330,11 +1272,11 @@ abstract class Subdivision implements ActiveRecordInterface
         if ($this->isColumnModified(SubdivisionTableMap::COL_PARENT_ID)) {
             $criteria->add(SubdivisionTableMap::COL_PARENT_ID, $this->parent_id);
         }
-        if ($this->isColumnModified(SubdivisionTableMap::COL_COUNTRY_ISO_NR)) {
-            $criteria->add(SubdivisionTableMap::COL_COUNTRY_ISO_NR, $this->country_iso_nr);
+        if ($this->isColumnModified(SubdivisionTableMap::COL_COUNTRY_ID)) {
+            $criteria->add(SubdivisionTableMap::COL_COUNTRY_ID, $this->country_id);
         }
-        if ($this->isColumnModified(SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID)) {
-            $criteria->add(SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID, $this->subdivision_type_id);
+        if ($this->isColumnModified(SubdivisionTableMap::COL_TYPE_ID)) {
+            $criteria->add(SubdivisionTableMap::COL_TYPE_ID, $this->type_id);
         }
 
         return $criteria;
@@ -1422,14 +1364,13 @@ abstract class Subdivision implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setIso($this->getIso());
+        $copyObj->setCode($this->getCode());
         $copyObj->setName($this->getName());
-        $copyObj->setLocalName($this->getLocalName());
-        $copyObj->setEnName($this->getEnName());
+        $copyObj->setNativeName($this->getNativeName());
         $copyObj->setAltNames($this->getAltNames());
         $copyObj->setParentId($this->getParentId());
-        $copyObj->setCountryIsoNr($this->getCountryIsoNr());
-        $copyObj->setSubdivisionTypeId($this->getSubdivisionTypeId());
+        $copyObj->setCountryId($this->getCountryId());
+        $copyObj->setTypeId($this->getTypeId());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1468,9 +1409,9 @@ abstract class Subdivision implements ActiveRecordInterface
     public function setCountry(ChildCountry $v = null)
     {
         if ($v === null) {
-            $this->setCountryIsoNr(NULL);
+            $this->setCountryId(NULL);
         } else {
-            $this->setCountryIsoNr($v->getIsoNr());
+            $this->setCountryId($v->getId());
         }
 
         $this->aCountry = $v;
@@ -1495,8 +1436,8 @@ abstract class Subdivision implements ActiveRecordInterface
      */
     public function getCountry(ConnectionInterface $con = null)
     {
-        if ($this->aCountry === null && ($this->country_iso_nr !== null)) {
-            $this->aCountry = ChildCountryQuery::create()->findPk($this->country_iso_nr, $con);
+        if ($this->aCountry === null && ($this->country_id !== null)) {
+            $this->aCountry = ChildCountryQuery::create()->findPk($this->country_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
@@ -1510,24 +1451,24 @@ abstract class Subdivision implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildSubdivisionType object.
+     * Declares an association between this object and a ChildRegionType object.
      *
-     * @param  ChildSubdivisionType $v
+     * @param  ChildRegionType $v
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setSubdivisionType(ChildSubdivisionType $v = null)
+    public function setRegionType(ChildRegionType $v = null)
     {
         if ($v === null) {
-            $this->setSubdivisionTypeId(NULL);
+            $this->setTypeId(NULL);
         } else {
-            $this->setSubdivisionTypeId($v->getId());
+            $this->setTypeId($v->getId());
         }
 
-        $this->aSubdivisionType = $v;
+        $this->aRegionType = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildSubdivisionType object, it will not be re-added.
+        // If this object has already been added to the ChildRegionType object, it will not be re-added.
         if ($v !== null) {
             $v->addSubdivision($this);
         }
@@ -1538,26 +1479,26 @@ abstract class Subdivision implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildSubdivisionType object
+     * Get the associated ChildRegionType object
      *
      * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildSubdivisionType The associated ChildSubdivisionType object.
+     * @return ChildRegionType The associated ChildRegionType object.
      * @throws PropelException
      */
-    public function getSubdivisionType(ConnectionInterface $con = null)
+    public function getRegionType(ConnectionInterface $con = null)
     {
-        if ($this->aSubdivisionType === null && ($this->subdivision_type_id !== null)) {
-            $this->aSubdivisionType = ChildSubdivisionTypeQuery::create()->findPk($this->subdivision_type_id, $con);
+        if ($this->aRegionType === null && ($this->type_id !== null)) {
+            $this->aRegionType = ChildRegionTypeQuery::create()->findPk($this->type_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aSubdivisionType->addSubdivisions($this);
+                $this->aRegionType->addSubdivisions($this);
              */
         }
 
-        return $this->aSubdivisionType;
+        return $this->aRegionType;
     }
 
     /**
@@ -1570,18 +1511,17 @@ abstract class Subdivision implements ActiveRecordInterface
         if (null !== $this->aCountry) {
             $this->aCountry->removeSubdivision($this);
         }
-        if (null !== $this->aSubdivisionType) {
-            $this->aSubdivisionType->removeSubdivision($this);
+        if (null !== $this->aRegionType) {
+            $this->aRegionType->removeSubdivision($this);
         }
         $this->id = null;
-        $this->iso = null;
+        $this->code = null;
         $this->name = null;
-        $this->local_name = null;
-        $this->en_name = null;
+        $this->native_name = null;
         $this->alt_names = null;
         $this->parent_id = null;
-        $this->country_iso_nr = null;
-        $this->subdivision_type_id = null;
+        $this->country_id = null;
+        $this->type_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -1603,7 +1543,7 @@ abstract class Subdivision implements ActiveRecordInterface
         } // if ($deep)
 
         $this->aCountry = null;
-        $this->aSubdivisionType = null;
+        $this->aRegionType = null;
     }
 
     /**

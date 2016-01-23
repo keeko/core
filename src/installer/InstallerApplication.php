@@ -6,7 +6,6 @@ use Composer\IO\NullIO;
 use keeko\core\model\Application;
 use keeko\core\model\ApplicationQuery;
 use keeko\core\model\ApplicationUri;
-use keeko\core\model\CountryQuery;
 use keeko\core\model\Group;
 use keeko\core\model\LanguageQuery;
 use keeko\core\model\Localization;
@@ -20,12 +19,13 @@ use keeko\core\package\ModuleManager;
 use keeko\core\package\PackageManager;
 use keeko\core\preferences\SystemPreferences;
 use keeko\core\service\ServiceContainer;
+use phootwork\lang\Text;
 use Propel\Runtime\Propel;
 use Symfony\Component\HttpFoundation\Request;
 
 class InstallerApplication extends AbstractApplication {
 	
-	const DEFAULT_LOCALE = 'en-GB';
+	const DEFAULT_LOCALE = 'en';
 
 	/** @var IOInterface */
 	private $io;
@@ -58,6 +58,11 @@ class InstallerApplication extends AbstractApplication {
 		if (!KEEKO_DATABASE_LOADED) {
 			throw new \Exception('Cannot install keeko - no database defined');
 		}
+		
+		$root = new Text($rootUrl);
+		if ($root->endsWith('/')) {
+			$rootUrl = $root->substring(0, -1);
+		}
 
 		$this->io->write('Install Log:');
 
@@ -73,6 +78,7 @@ class InstallerApplication extends AbstractApplication {
 	public function run(Request $request) {
 		$uri = $request->getUri();
 		
+		$this->install($uri, $request->getLocale());
 	}
 	
 	/**
@@ -92,22 +98,26 @@ class InstallerApplication extends AbstractApplication {
 	 * @param string $locale
 	 * @return Localization
 	 */
-	private function getLocalization($locale) {
-		list($langCode, $countryCode) = sscanf($locale, '%2s-%s');
+	private function getLocale($locale) {
+		$langTag = \Locale::getPrimaryLanguage($locale);
+		$regionTag = \Locale::getRegion($locale);
 		
-		$lang = LanguageQuery::create()->findOneByAlpha2($langCode);
-		$country = CountryQuery::create()->findOneByAlpha2($countryCode);
+		$lang = LanguageQuery::create()->findOneBySubtag($langTag);
+		$query = LocalizationQuery::create()->filterByLanguage($lang);
 		
-		$local = LocalizationQuery::create()
-			->filterByLanguage($lang)
-			->filterByCountry($country)
-			->findOne();
+		if (!empty($regionTag)) {
+			$query->filterByRegion($regionTag);
+		}
+		
+		$local = $query->findOne();
 		
 		// if no locale found -> create one
 		if ($local === null) {
 			$local = new Localization();
-			$local->setLanguage($lang); // de: 1546
-			$local->setCountry($country); // ger: 276
+			$local->setLanguage($lang);
+			if (!empty($regionTag)) {
+				$local->setRegion($regionTag);
+			}
 			$local->setIsDefault(true);
 			$local->save();
 		}
@@ -224,7 +234,7 @@ class InstallerApplication extends AbstractApplication {
 		
 		$uri = new ApplicationUri();
 		$uri->setApplication($app);
-		$uri->setLocalization($this->getLocalization($locale));
+		$uri->setLocalization($this->getLocale($locale));
 		$uri->setHttphost($comps['host']);
 		$uri->setBasepath($comps['path']);
 		$uri->setSecure($comps['scheme'] == 'https');

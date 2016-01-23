@@ -14,6 +14,7 @@ use keeko\core\model\Module;
 use keeko\core\model\ModuleQuery;
 use keeko\core\package\ModuleManager;
 use keeko\core\schema\ModuleSchema;
+use keeko\core\service\ServiceContainer;
 
 class ModuleInstaller extends AbstractPackageInstaller {
 	
@@ -29,8 +30,8 @@ class ModuleInstaller extends AbstractPackageInstaller {
 	/** @var Group */
 	private $adminGroup;
 	
-	public function __construct() {
-		parent::__construct();
+	public function __construct(ServiceContainer $service) {
+		parent::__construct($service);
 		$this->manager = $this->service->getModuleManager();
 	}
 

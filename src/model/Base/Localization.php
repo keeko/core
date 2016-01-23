@@ -18,12 +18,16 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use keeko\core\model\ApplicationUri as ChildApplicationUri;
 use keeko\core\model\ApplicationUriQuery as ChildApplicationUriQuery;
-use keeko\core\model\Country as ChildCountry;
-use keeko\core\model\CountryQuery as ChildCountryQuery;
 use keeko\core\model\Language as ChildLanguage;
 use keeko\core\model\LanguageQuery as ChildLanguageQuery;
+use keeko\core\model\LanguageScript as ChildLanguageScript;
+use keeko\core\model\LanguageScriptQuery as ChildLanguageScriptQuery;
+use keeko\core\model\LanguageVariant as ChildLanguageVariant;
+use keeko\core\model\LanguageVariantQuery as ChildLanguageVariantQuery;
 use keeko\core\model\Localization as ChildLocalization;
 use keeko\core\model\LocalizationQuery as ChildLocalizationQuery;
+use keeko\core\model\LocalizationVariant as ChildLocalizationVariant;
+use keeko\core\model\LocalizationVariantQuery as ChildLocalizationVariantQuery;
 use keeko\core\model\Map\LocalizationTableMap;
 
 /**
@@ -80,16 +84,40 @@ abstract class Localization implements ActiveRecordInterface
     protected $parent_id;
 
     /**
+     * The value for the name field.
+     * @var        string
+     */
+    protected $name;
+
+    /**
+     * The value for the locale field.
+     * @var        string
+     */
+    protected $locale;
+
+    /**
      * The value for the language_id field.
      * @var        int
      */
     protected $language_id;
 
     /**
-     * The value for the country_iso_nr field.
+     * The value for the ext_language_id field.
      * @var        int
      */
-    protected $country_iso_nr;
+    protected $ext_language_id;
+
+    /**
+     * The value for the region field.
+     * @var        string
+     */
+    protected $region;
+
+    /**
+     * The value for the script_id field.
+     * @var        int
+     */
+    protected $script_id;
 
     /**
      * The value for the is_default field.
@@ -108,9 +136,14 @@ abstract class Localization implements ActiveRecordInterface
     protected $aLanguage;
 
     /**
-     * @var        ChildCountry
+     * @var        ChildLanguage
      */
-    protected $aCountry;
+    protected $aExtLang;
+
+    /**
+     * @var        ChildLanguageScript
+     */
+    protected $aScript;
 
     /**
      * @var        ObjectCollection|ChildLocalization[] Collection to store aggregation of ChildLocalization objects.
@@ -119,10 +152,26 @@ abstract class Localization implements ActiveRecordInterface
     protected $collLocalizationsRelatedByIdPartial;
 
     /**
+     * @var        ObjectCollection|ChildLocalizationVariant[] Collection to store aggregation of ChildLocalizationVariant objects.
+     */
+    protected $collLocalizationVariants;
+    protected $collLocalizationVariantsPartial;
+
+    /**
      * @var        ObjectCollection|ChildApplicationUri[] Collection to store aggregation of ChildApplicationUri objects.
      */
     protected $collApplicationUris;
     protected $collApplicationUrisPartial;
+
+    /**
+     * @var        ObjectCollection|ChildLanguageVariant[] Cross Collection to store aggregation of ChildLanguageVariant objects.
+     */
+    protected $collLanguageVariants;
+
+    /**
+     * @var bool
+     */
+    protected $collLanguageVariantsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -134,9 +183,21 @@ abstract class Localization implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildLanguageVariant[]
+     */
+    protected $languageVariantsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildLocalization[]
      */
     protected $localizationsRelatedByIdScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildLocalizationVariant[]
+     */
+    protected $localizationVariantsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -382,6 +443,26 @@ abstract class Localization implements ActiveRecordInterface
     }
 
     /**
+     * Get the [name] column value.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get the [locale] column value.
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
      * Get the [language_id] column value.
      *
      * @return int
@@ -392,13 +473,33 @@ abstract class Localization implements ActiveRecordInterface
     }
 
     /**
-     * Get the [country_iso_nr] column value.
+     * Get the [ext_language_id] column value.
      *
      * @return int
      */
-    public function getCountryIsoNr()
+    public function getExtLanguageId()
     {
-        return $this->country_iso_nr;
+        return $this->ext_language_id;
+    }
+
+    /**
+     * Get the [region] column value.
+     *
+     * @return string
+     */
+    public function getRegion()
+    {
+        return $this->region;
+    }
+
+    /**
+     * Get the [script_id] column value.
+     *
+     * @return int
+     */
+    public function getScriptId()
+    {
+        return $this->script_id;
     }
 
     /**
@@ -466,6 +567,46 @@ abstract class Localization implements ActiveRecordInterface
     } // setParentId()
 
     /**
+     * Set the value of [name] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[LocalizationTableMap::COL_NAME] = true;
+        }
+
+        return $this;
+    } // setName()
+
+    /**
+     * Set the value of [locale] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
+     */
+    public function setLocale($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->locale !== $v) {
+            $this->locale = $v;
+            $this->modifiedColumns[LocalizationTableMap::COL_LOCALE] = true;
+        }
+
+        return $this;
+    } // setLocale()
+
+    /**
      * Set the value of [language_id] column.
      *
      * @param int $v new value
@@ -490,28 +631,72 @@ abstract class Localization implements ActiveRecordInterface
     } // setLanguageId()
 
     /**
-     * Set the value of [country_iso_nr] column.
+     * Set the value of [ext_language_id] column.
      *
      * @param int $v new value
      * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
      */
-    public function setCountryIsoNr($v)
+    public function setExtLanguageId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->country_iso_nr !== $v) {
-            $this->country_iso_nr = $v;
-            $this->modifiedColumns[LocalizationTableMap::COL_COUNTRY_ISO_NR] = true;
+        if ($this->ext_language_id !== $v) {
+            $this->ext_language_id = $v;
+            $this->modifiedColumns[LocalizationTableMap::COL_EXT_LANGUAGE_ID] = true;
         }
 
-        if ($this->aCountry !== null && $this->aCountry->getIsoNr() !== $v) {
-            $this->aCountry = null;
+        if ($this->aExtLang !== null && $this->aExtLang->getId() !== $v) {
+            $this->aExtLang = null;
         }
 
         return $this;
-    } // setCountryIsoNr()
+    } // setExtLanguageId()
+
+    /**
+     * Set the value of [region] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
+     */
+    public function setRegion($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->region !== $v) {
+            $this->region = $v;
+            $this->modifiedColumns[LocalizationTableMap::COL_REGION] = true;
+        }
+
+        return $this;
+    } // setRegion()
+
+    /**
+     * Set the value of [script_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
+     */
+    public function setScriptId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->script_id !== $v) {
+            $this->script_id = $v;
+            $this->modifiedColumns[LocalizationTableMap::COL_SCRIPT_ID] = true;
+        }
+
+        if ($this->aScript !== null && $this->aScript->getId() !== $v) {
+            $this->aScript = null;
+        }
+
+        return $this;
+    } // setScriptId()
 
     /**
      * Sets the value of the [is_default] column.
@@ -583,13 +768,25 @@ abstract class Localization implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : LocalizationTableMap::translateFieldName('ParentId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->parent_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : LocalizationTableMap::translateFieldName('LanguageId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : LocalizationTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : LocalizationTableMap::translateFieldName('Locale', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->locale = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : LocalizationTableMap::translateFieldName('LanguageId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->language_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : LocalizationTableMap::translateFieldName('CountryIsoNr', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->country_iso_nr = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : LocalizationTableMap::translateFieldName('ExtLanguageId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->ext_language_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : LocalizationTableMap::translateFieldName('IsDefault', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : LocalizationTableMap::translateFieldName('Region', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->region = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : LocalizationTableMap::translateFieldName('ScriptId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->script_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : LocalizationTableMap::translateFieldName('IsDefault', TableMap::TYPE_PHPNAME, $indexType)];
             $this->is_default = (null !== $col) ? (boolean) $col : null;
             $this->resetModified();
 
@@ -599,7 +796,7 @@ abstract class Localization implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = LocalizationTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = LocalizationTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Localization'), 0, $e);
@@ -627,8 +824,11 @@ abstract class Localization implements ActiveRecordInterface
         if ($this->aLanguage !== null && $this->language_id !== $this->aLanguage->getId()) {
             $this->aLanguage = null;
         }
-        if ($this->aCountry !== null && $this->country_iso_nr !== $this->aCountry->getIsoNr()) {
-            $this->aCountry = null;
+        if ($this->aExtLang !== null && $this->ext_language_id !== $this->aExtLang->getId()) {
+            $this->aExtLang = null;
+        }
+        if ($this->aScript !== null && $this->script_id !== $this->aScript->getId()) {
+            $this->aScript = null;
         }
     } // ensureConsistency
 
@@ -671,11 +871,15 @@ abstract class Localization implements ActiveRecordInterface
 
             $this->aLocalizationRelatedByParentId = null;
             $this->aLanguage = null;
-            $this->aCountry = null;
+            $this->aExtLang = null;
+            $this->aScript = null;
             $this->collLocalizationsRelatedById = null;
+
+            $this->collLocalizationVariants = null;
 
             $this->collApplicationUris = null;
 
+            $this->collLanguageVariants = null;
         } // if (deep)
     }
 
@@ -794,11 +998,18 @@ abstract class Localization implements ActiveRecordInterface
                 $this->setLanguage($this->aLanguage);
             }
 
-            if ($this->aCountry !== null) {
-                if ($this->aCountry->isModified() || $this->aCountry->isNew()) {
-                    $affectedRows += $this->aCountry->save($con);
+            if ($this->aExtLang !== null) {
+                if ($this->aExtLang->isModified() || $this->aExtLang->isNew()) {
+                    $affectedRows += $this->aExtLang->save($con);
                 }
-                $this->setCountry($this->aCountry);
+                $this->setExtLang($this->aExtLang);
+            }
+
+            if ($this->aScript !== null) {
+                if ($this->aScript->isModified() || $this->aScript->isNew()) {
+                    $affectedRows += $this->aScript->save($con);
+                }
+                $this->setScript($this->aScript);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -812,6 +1023,35 @@ abstract class Localization implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->languageVariantsScheduledForDeletion !== null) {
+                if (!$this->languageVariantsScheduledForDeletion->isEmpty()) {
+                    $pks = array();
+                    foreach ($this->languageVariantsScheduledForDeletion as $entry) {
+                        $entryPk = [];
+
+                        $entryPk[0] = $this->getId();
+                        $entryPk[1] = $entry->getId();
+                        $pks[] = $entryPk;
+                    }
+
+                    \keeko\core\model\LocalizationVariantQuery::create()
+                        ->filterByPrimaryKeys($pks)
+                        ->delete($con);
+
+                    $this->languageVariantsScheduledForDeletion = null;
+                }
+
+            }
+
+            if ($this->collLanguageVariants) {
+                foreach ($this->collLanguageVariants as $languageVariant) {
+                    if (!$languageVariant->isDeleted() && ($languageVariant->isNew() || $languageVariant->isModified())) {
+                        $languageVariant->save($con);
+                    }
+                }
+            }
+
+
             if ($this->localizationsRelatedByIdScheduledForDeletion !== null) {
                 if (!$this->localizationsRelatedByIdScheduledForDeletion->isEmpty()) {
                     foreach ($this->localizationsRelatedByIdScheduledForDeletion as $localizationRelatedById) {
@@ -824,6 +1064,23 @@ abstract class Localization implements ActiveRecordInterface
 
             if ($this->collLocalizationsRelatedById !== null) {
                 foreach ($this->collLocalizationsRelatedById as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->localizationVariantsScheduledForDeletion !== null) {
+                if (!$this->localizationVariantsScheduledForDeletion->isEmpty()) {
+                    \keeko\core\model\LocalizationVariantQuery::create()
+                        ->filterByPrimaryKeys($this->localizationVariantsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->localizationVariantsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collLocalizationVariants !== null) {
+                foreach ($this->collLocalizationVariants as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -879,11 +1136,23 @@ abstract class Localization implements ActiveRecordInterface
         if ($this->isColumnModified(LocalizationTableMap::COL_PARENT_ID)) {
             $modifiedColumns[':p' . $index++]  = '`parent_id`';
         }
+        if ($this->isColumnModified(LocalizationTableMap::COL_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`name`';
+        }
+        if ($this->isColumnModified(LocalizationTableMap::COL_LOCALE)) {
+            $modifiedColumns[':p' . $index++]  = '`locale`';
+        }
         if ($this->isColumnModified(LocalizationTableMap::COL_LANGUAGE_ID)) {
             $modifiedColumns[':p' . $index++]  = '`language_id`';
         }
-        if ($this->isColumnModified(LocalizationTableMap::COL_COUNTRY_ISO_NR)) {
-            $modifiedColumns[':p' . $index++]  = '`country_iso_nr`';
+        if ($this->isColumnModified(LocalizationTableMap::COL_EXT_LANGUAGE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`ext_language_id`';
+        }
+        if ($this->isColumnModified(LocalizationTableMap::COL_REGION)) {
+            $modifiedColumns[':p' . $index++]  = '`region`';
+        }
+        if ($this->isColumnModified(LocalizationTableMap::COL_SCRIPT_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`script_id`';
         }
         if ($this->isColumnModified(LocalizationTableMap::COL_IS_DEFAULT)) {
             $modifiedColumns[':p' . $index++]  = '`is_default`';
@@ -905,11 +1174,23 @@ abstract class Localization implements ActiveRecordInterface
                     case '`parent_id`':
                         $stmt->bindValue($identifier, $this->parent_id, PDO::PARAM_INT);
                         break;
+                    case '`name`':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case '`locale`':
+                        $stmt->bindValue($identifier, $this->locale, PDO::PARAM_STR);
+                        break;
                     case '`language_id`':
                         $stmt->bindValue($identifier, $this->language_id, PDO::PARAM_INT);
                         break;
-                    case '`country_iso_nr`':
-                        $stmt->bindValue($identifier, $this->country_iso_nr, PDO::PARAM_INT);
+                    case '`ext_language_id`':
+                        $stmt->bindValue($identifier, $this->ext_language_id, PDO::PARAM_INT);
+                        break;
+                    case '`region`':
+                        $stmt->bindValue($identifier, $this->region, PDO::PARAM_STR);
+                        break;
+                    case '`script_id`':
+                        $stmt->bindValue($identifier, $this->script_id, PDO::PARAM_INT);
                         break;
                     case '`is_default`':
                         $stmt->bindValue($identifier, (int) $this->is_default, PDO::PARAM_INT);
@@ -983,12 +1264,24 @@ abstract class Localization implements ActiveRecordInterface
                 return $this->getParentId();
                 break;
             case 2:
-                return $this->getLanguageId();
+                return $this->getName();
                 break;
             case 3:
-                return $this->getCountryIsoNr();
+                return $this->getLocale();
                 break;
             case 4:
+                return $this->getLanguageId();
+                break;
+            case 5:
+                return $this->getExtLanguageId();
+                break;
+            case 6:
+                return $this->getRegion();
+                break;
+            case 7:
+                return $this->getScriptId();
+                break;
+            case 8:
                 return $this->getIsDefault();
                 break;
             default:
@@ -1023,9 +1316,13 @@ abstract class Localization implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getParentId(),
-            $keys[2] => $this->getLanguageId(),
-            $keys[3] => $this->getCountryIsoNr(),
-            $keys[4] => $this->getIsDefault(),
+            $keys[2] => $this->getName(),
+            $keys[3] => $this->getLocale(),
+            $keys[4] => $this->getLanguageId(),
+            $keys[5] => $this->getExtLanguageId(),
+            $keys[6] => $this->getRegion(),
+            $keys[7] => $this->getScriptId(),
+            $keys[8] => $this->getIsDefault(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1063,20 +1360,35 @@ abstract class Localization implements ActiveRecordInterface
 
                 $result[$key] = $this->aLanguage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aCountry) {
+            if (null !== $this->aExtLang) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'country';
+                        $key = 'language';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'kk_country';
+                        $key = 'kk_language';
                         break;
                     default:
-                        $key = 'Country';
+                        $key = 'Language';
                 }
 
-                $result[$key] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aExtLang->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aScript) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'languageScript';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_language_script';
+                        break;
+                    default:
+                        $key = 'LanguageScript';
+                }
+
+                $result[$key] = $this->aScript->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collLocalizationsRelatedById) {
 
@@ -1092,6 +1404,21 @@ abstract class Localization implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collLocalizationsRelatedById->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collLocalizationVariants) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'localizationVariants';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_localization_variants';
+                        break;
+                    default:
+                        $key = 'LocalizationVariants';
+                }
+
+                $result[$key] = $this->collLocalizationVariants->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collApplicationUris) {
 
@@ -1149,12 +1476,24 @@ abstract class Localization implements ActiveRecordInterface
                 $this->setParentId($value);
                 break;
             case 2:
-                $this->setLanguageId($value);
+                $this->setName($value);
                 break;
             case 3:
-                $this->setCountryIsoNr($value);
+                $this->setLocale($value);
                 break;
             case 4:
+                $this->setLanguageId($value);
+                break;
+            case 5:
+                $this->setExtLanguageId($value);
+                break;
+            case 6:
+                $this->setRegion($value);
+                break;
+            case 7:
+                $this->setScriptId($value);
+                break;
+            case 8:
                 $this->setIsDefault($value);
                 break;
         } // switch()
@@ -1190,13 +1529,25 @@ abstract class Localization implements ActiveRecordInterface
             $this->setParentId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setLanguageId($arr[$keys[2]]);
+            $this->setName($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setCountryIsoNr($arr[$keys[3]]);
+            $this->setLocale($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setIsDefault($arr[$keys[4]]);
+            $this->setLanguageId($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setExtLanguageId($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setRegion($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setScriptId($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setIsDefault($arr[$keys[8]]);
         }
     }
 
@@ -1245,11 +1596,23 @@ abstract class Localization implements ActiveRecordInterface
         if ($this->isColumnModified(LocalizationTableMap::COL_PARENT_ID)) {
             $criteria->add(LocalizationTableMap::COL_PARENT_ID, $this->parent_id);
         }
+        if ($this->isColumnModified(LocalizationTableMap::COL_NAME)) {
+            $criteria->add(LocalizationTableMap::COL_NAME, $this->name);
+        }
+        if ($this->isColumnModified(LocalizationTableMap::COL_LOCALE)) {
+            $criteria->add(LocalizationTableMap::COL_LOCALE, $this->locale);
+        }
         if ($this->isColumnModified(LocalizationTableMap::COL_LANGUAGE_ID)) {
             $criteria->add(LocalizationTableMap::COL_LANGUAGE_ID, $this->language_id);
         }
-        if ($this->isColumnModified(LocalizationTableMap::COL_COUNTRY_ISO_NR)) {
-            $criteria->add(LocalizationTableMap::COL_COUNTRY_ISO_NR, $this->country_iso_nr);
+        if ($this->isColumnModified(LocalizationTableMap::COL_EXT_LANGUAGE_ID)) {
+            $criteria->add(LocalizationTableMap::COL_EXT_LANGUAGE_ID, $this->ext_language_id);
+        }
+        if ($this->isColumnModified(LocalizationTableMap::COL_REGION)) {
+            $criteria->add(LocalizationTableMap::COL_REGION, $this->region);
+        }
+        if ($this->isColumnModified(LocalizationTableMap::COL_SCRIPT_ID)) {
+            $criteria->add(LocalizationTableMap::COL_SCRIPT_ID, $this->script_id);
         }
         if ($this->isColumnModified(LocalizationTableMap::COL_IS_DEFAULT)) {
             $criteria->add(LocalizationTableMap::COL_IS_DEFAULT, $this->is_default);
@@ -1341,8 +1704,12 @@ abstract class Localization implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setParentId($this->getParentId());
+        $copyObj->setName($this->getName());
+        $copyObj->setLocale($this->getLocale());
         $copyObj->setLanguageId($this->getLanguageId());
-        $copyObj->setCountryIsoNr($this->getCountryIsoNr());
+        $copyObj->setExtLanguageId($this->getExtLanguageId());
+        $copyObj->setRegion($this->getRegion());
+        $copyObj->setScriptId($this->getScriptId());
         $copyObj->setIsDefault($this->getIsDefault());
 
         if ($deepCopy) {
@@ -1353,6 +1720,12 @@ abstract class Localization implements ActiveRecordInterface
             foreach ($this->getLocalizationsRelatedById() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addLocalizationRelatedById($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getLocalizationVariants() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addLocalizationVariant($relObj->copy($deepCopy));
                 }
             }
 
@@ -1463,7 +1836,7 @@ abstract class Localization implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildLanguage object, it will not be re-added.
         if ($v !== null) {
-            $v->addLocalization($this);
+            $v->addLocalizationRelatedByLanguageId($this);
         }
 
 
@@ -1487,7 +1860,7 @@ abstract class Localization implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aLanguage->addLocalizations($this);
+                $this->aLanguage->addLocalizationsRelatedByLanguageId($this);
              */
         }
 
@@ -1495,24 +1868,75 @@ abstract class Localization implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildCountry object.
+     * Declares an association between this object and a ChildLanguage object.
      *
-     * @param  ChildCountry $v
+     * @param  ChildLanguage $v
      * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCountry(ChildCountry $v = null)
+    public function setExtLang(ChildLanguage $v = null)
     {
         if ($v === null) {
-            $this->setCountryIsoNr(NULL);
+            $this->setExtLanguageId(NULL);
         } else {
-            $this->setCountryIsoNr($v->getIsoNr());
+            $this->setExtLanguageId($v->getId());
         }
 
-        $this->aCountry = $v;
+        $this->aExtLang = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildCountry object, it will not be re-added.
+        // If this object has already been added to the ChildLanguage object, it will not be re-added.
+        if ($v !== null) {
+            $v->addLocalizationRelatedByExtLanguageId($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildLanguage object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildLanguage The associated ChildLanguage object.
+     * @throws PropelException
+     */
+    public function getExtLang(ConnectionInterface $con = null)
+    {
+        if ($this->aExtLang === null && ($this->ext_language_id !== null)) {
+            $this->aExtLang = ChildLanguageQuery::create()->findPk($this->ext_language_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aExtLang->addLocalizationsRelatedByExtLanguageId($this);
+             */
+        }
+
+        return $this->aExtLang;
+    }
+
+    /**
+     * Declares an association between this object and a ChildLanguageScript object.
+     *
+     * @param  ChildLanguageScript $v
+     * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setScript(ChildLanguageScript $v = null)
+    {
+        if ($v === null) {
+            $this->setScriptId(NULL);
+        } else {
+            $this->setScriptId($v->getId());
+        }
+
+        $this->aScript = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildLanguageScript object, it will not be re-added.
         if ($v !== null) {
             $v->addLocalization($this);
         }
@@ -1523,26 +1947,26 @@ abstract class Localization implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildCountry object
+     * Get the associated ChildLanguageScript object
      *
      * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildCountry The associated ChildCountry object.
+     * @return ChildLanguageScript The associated ChildLanguageScript object.
      * @throws PropelException
      */
-    public function getCountry(ConnectionInterface $con = null)
+    public function getScript(ConnectionInterface $con = null)
     {
-        if ($this->aCountry === null && ($this->country_iso_nr !== null)) {
-            $this->aCountry = ChildCountryQuery::create()->findPk($this->country_iso_nr, $con);
+        if ($this->aScript === null && ($this->script_id !== null)) {
+            $this->aScript = ChildLanguageScriptQuery::create()->findPk($this->script_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aCountry->addLocalizations($this);
+                $this->aScript->addLocalizations($this);
              */
         }
 
-        return $this->aCountry;
+        return $this->aScript;
     }
 
 
@@ -1558,6 +1982,9 @@ abstract class Localization implements ActiveRecordInterface
     {
         if ('LocalizationRelatedById' == $relationName) {
             return $this->initLocalizationsRelatedById();
+        }
+        if ('LocalizationVariant' == $relationName) {
+            return $this->initLocalizationVariants();
         }
         if ('ApplicationUri' == $relationName) {
             return $this->initApplicationUris();
@@ -1824,12 +2251,283 @@ abstract class Localization implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
      */
-    public function getLocalizationsRelatedByIdJoinCountry(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getLocalizationsRelatedByIdJoinExtLang(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildLocalizationQuery::create(null, $criteria);
-        $query->joinWith('Country', $joinBehavior);
+        $query->joinWith('ExtLang', $joinBehavior);
 
         return $this->getLocalizationsRelatedById($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Localization is new, it will return
+     * an empty collection; or if this Localization has previously
+     * been saved, it will retrieve related LocalizationsRelatedById from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Localization.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
+     */
+    public function getLocalizationsRelatedByIdJoinScript(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLocalizationQuery::create(null, $criteria);
+        $query->joinWith('Script', $joinBehavior);
+
+        return $this->getLocalizationsRelatedById($query, $con);
+    }
+
+    /**
+     * Clears out the collLocalizationVariants collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addLocalizationVariants()
+     */
+    public function clearLocalizationVariants()
+    {
+        $this->collLocalizationVariants = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collLocalizationVariants collection loaded partially.
+     */
+    public function resetPartialLocalizationVariants($v = true)
+    {
+        $this->collLocalizationVariantsPartial = $v;
+    }
+
+    /**
+     * Initializes the collLocalizationVariants collection.
+     *
+     * By default this just sets the collLocalizationVariants collection to an empty array (like clearcollLocalizationVariants());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initLocalizationVariants($overrideExisting = true)
+    {
+        if (null !== $this->collLocalizationVariants && !$overrideExisting) {
+            return;
+        }
+        $this->collLocalizationVariants = new ObjectCollection();
+        $this->collLocalizationVariants->setModel('\keeko\core\model\LocalizationVariant');
+    }
+
+    /**
+     * Gets an array of ChildLocalizationVariant objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildLocalization is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildLocalizationVariant[] List of ChildLocalizationVariant objects
+     * @throws PropelException
+     */
+    public function getLocalizationVariants(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collLocalizationVariantsPartial && !$this->isNew();
+        if (null === $this->collLocalizationVariants || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collLocalizationVariants) {
+                // return empty collection
+                $this->initLocalizationVariants();
+            } else {
+                $collLocalizationVariants = ChildLocalizationVariantQuery::create(null, $criteria)
+                    ->filterByLocalization($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collLocalizationVariantsPartial && count($collLocalizationVariants)) {
+                        $this->initLocalizationVariants(false);
+
+                        foreach ($collLocalizationVariants as $obj) {
+                            if (false == $this->collLocalizationVariants->contains($obj)) {
+                                $this->collLocalizationVariants->append($obj);
+                            }
+                        }
+
+                        $this->collLocalizationVariantsPartial = true;
+                    }
+
+                    return $collLocalizationVariants;
+                }
+
+                if ($partial && $this->collLocalizationVariants) {
+                    foreach ($this->collLocalizationVariants as $obj) {
+                        if ($obj->isNew()) {
+                            $collLocalizationVariants[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collLocalizationVariants = $collLocalizationVariants;
+                $this->collLocalizationVariantsPartial = false;
+            }
+        }
+
+        return $this->collLocalizationVariants;
+    }
+
+    /**
+     * Sets a collection of ChildLocalizationVariant objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $localizationVariants A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildLocalization The current object (for fluent API support)
+     */
+    public function setLocalizationVariants(Collection $localizationVariants, ConnectionInterface $con = null)
+    {
+        /** @var ChildLocalizationVariant[] $localizationVariantsToDelete */
+        $localizationVariantsToDelete = $this->getLocalizationVariants(new Criteria(), $con)->diff($localizationVariants);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->localizationVariantsScheduledForDeletion = clone $localizationVariantsToDelete;
+
+        foreach ($localizationVariantsToDelete as $localizationVariantRemoved) {
+            $localizationVariantRemoved->setLocalization(null);
+        }
+
+        $this->collLocalizationVariants = null;
+        foreach ($localizationVariants as $localizationVariant) {
+            $this->addLocalizationVariant($localizationVariant);
+        }
+
+        $this->collLocalizationVariants = $localizationVariants;
+        $this->collLocalizationVariantsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related LocalizationVariant objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related LocalizationVariant objects.
+     * @throws PropelException
+     */
+    public function countLocalizationVariants(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collLocalizationVariantsPartial && !$this->isNew();
+        if (null === $this->collLocalizationVariants || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collLocalizationVariants) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getLocalizationVariants());
+            }
+
+            $query = ChildLocalizationVariantQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByLocalization($this)
+                ->count($con);
+        }
+
+        return count($this->collLocalizationVariants);
+    }
+
+    /**
+     * Method called to associate a ChildLocalizationVariant object to this object
+     * through the ChildLocalizationVariant foreign key attribute.
+     *
+     * @param  ChildLocalizationVariant $l ChildLocalizationVariant
+     * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
+     */
+    public function addLocalizationVariant(ChildLocalizationVariant $l)
+    {
+        if ($this->collLocalizationVariants === null) {
+            $this->initLocalizationVariants();
+            $this->collLocalizationVariantsPartial = true;
+        }
+
+        if (!$this->collLocalizationVariants->contains($l)) {
+            $this->doAddLocalizationVariant($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildLocalizationVariant $localizationVariant The ChildLocalizationVariant object to add.
+     */
+    protected function doAddLocalizationVariant(ChildLocalizationVariant $localizationVariant)
+    {
+        $this->collLocalizationVariants[]= $localizationVariant;
+        $localizationVariant->setLocalization($this);
+    }
+
+    /**
+     * @param  ChildLocalizationVariant $localizationVariant The ChildLocalizationVariant object to remove.
+     * @return $this|ChildLocalization The current object (for fluent API support)
+     */
+    public function removeLocalizationVariant(ChildLocalizationVariant $localizationVariant)
+    {
+        if ($this->getLocalizationVariants()->contains($localizationVariant)) {
+            $pos = $this->collLocalizationVariants->search($localizationVariant);
+            $this->collLocalizationVariants->remove($pos);
+            if (null === $this->localizationVariantsScheduledForDeletion) {
+                $this->localizationVariantsScheduledForDeletion = clone $this->collLocalizationVariants;
+                $this->localizationVariantsScheduledForDeletion->clear();
+            }
+            $this->localizationVariantsScheduledForDeletion[]= clone $localizationVariant;
+            $localizationVariant->setLocalization(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Localization is new, it will return
+     * an empty collection; or if this Localization has previously
+     * been saved, it will retrieve related LocalizationVariants from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Localization.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLocalizationVariant[] List of ChildLocalizationVariant objects
+     */
+    public function getLocalizationVariantsJoinLanguageVariant(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLocalizationVariantQuery::create(null, $criteria);
+        $query->joinWith('LanguageVariant', $joinBehavior);
+
+        return $this->getLocalizationVariants($query, $con);
     }
 
     /**
@@ -2076,6 +2774,248 @@ abstract class Localization implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collLanguageVariants collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addLanguageVariants()
+     */
+    public function clearLanguageVariants()
+    {
+        $this->collLanguageVariants = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Initializes the collLanguageVariants crossRef collection.
+     *
+     * By default this just sets the collLanguageVariants collection to an empty collection (like clearLanguageVariants());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @return void
+     */
+    public function initLanguageVariants()
+    {
+        $this->collLanguageVariants = new ObjectCollection();
+        $this->collLanguageVariantsPartial = true;
+
+        $this->collLanguageVariants->setModel('\keeko\core\model\LanguageVariant');
+    }
+
+    /**
+     * Checks if the collLanguageVariants collection is loaded.
+     *
+     * @return bool
+     */
+    public function isLanguageVariantsLoaded()
+    {
+        return null !== $this->collLanguageVariants;
+    }
+
+    /**
+     * Gets a collection of ChildLanguageVariant objects related by a many-to-many relationship
+     * to the current object by way of the kk_localization_variant cross-reference table.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildLocalization is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return ObjectCollection|ChildLanguageVariant[] List of ChildLanguageVariant objects
+     */
+    public function getLanguageVariants(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collLanguageVariantsPartial && !$this->isNew();
+        if (null === $this->collLanguageVariants || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collLanguageVariants) {
+                    $this->initLanguageVariants();
+                }
+            } else {
+
+                $query = ChildLanguageVariantQuery::create(null, $criteria)
+                    ->filterByLocalization($this);
+                $collLanguageVariants = $query->find($con);
+                if (null !== $criteria) {
+                    return $collLanguageVariants;
+                }
+
+                if ($partial && $this->collLanguageVariants) {
+                    //make sure that already added objects gets added to the list of the database.
+                    foreach ($this->collLanguageVariants as $obj) {
+                        if (!$collLanguageVariants->contains($obj)) {
+                            $collLanguageVariants[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collLanguageVariants = $collLanguageVariants;
+                $this->collLanguageVariantsPartial = false;
+            }
+        }
+
+        return $this->collLanguageVariants;
+    }
+
+    /**
+     * Sets a collection of LanguageVariant objects related by a many-to-many relationship
+     * to the current object by way of the kk_localization_variant cross-reference table.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param  Collection $languageVariants A Propel collection.
+     * @param  ConnectionInterface $con Optional connection object
+     * @return $this|ChildLocalization The current object (for fluent API support)
+     */
+    public function setLanguageVariants(Collection $languageVariants, ConnectionInterface $con = null)
+    {
+        $this->clearLanguageVariants();
+        $currentLanguageVariants = $this->getLanguageVariants();
+
+        $languageVariantsScheduledForDeletion = $currentLanguageVariants->diff($languageVariants);
+
+        foreach ($languageVariantsScheduledForDeletion as $toDelete) {
+            $this->removeLanguageVariant($toDelete);
+        }
+
+        foreach ($languageVariants as $languageVariant) {
+            if (!$currentLanguageVariants->contains($languageVariant)) {
+                $this->doAddLanguageVariant($languageVariant);
+            }
+        }
+
+        $this->collLanguageVariantsPartial = false;
+        $this->collLanguageVariants = $languageVariants;
+
+        return $this;
+    }
+
+    /**
+     * Gets the number of LanguageVariant objects related by a many-to-many relationship
+     * to the current object by way of the kk_localization_variant cross-reference table.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      boolean $distinct Set to true to force count distinct
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return int the number of related LanguageVariant objects
+     */
+    public function countLanguageVariants(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collLanguageVariantsPartial && !$this->isNew();
+        if (null === $this->collLanguageVariants || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collLanguageVariants) {
+                return 0;
+            } else {
+
+                if ($partial && !$criteria) {
+                    return count($this->getLanguageVariants());
+                }
+
+                $query = ChildLanguageVariantQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByLocalization($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collLanguageVariants);
+        }
+    }
+
+    /**
+     * Associate a ChildLanguageVariant to this object
+     * through the kk_localization_variant cross reference table.
+     *
+     * @param ChildLanguageVariant $languageVariant
+     * @return ChildLocalization The current object (for fluent API support)
+     */
+    public function addLanguageVariant(ChildLanguageVariant $languageVariant)
+    {
+        if ($this->collLanguageVariants === null) {
+            $this->initLanguageVariants();
+        }
+
+        if (!$this->getLanguageVariants()->contains($languageVariant)) {
+            // only add it if the **same** object is not already associated
+            $this->collLanguageVariants->push($languageVariant);
+            $this->doAddLanguageVariant($languageVariant);
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param ChildLanguageVariant $languageVariant
+     */
+    protected function doAddLanguageVariant(ChildLanguageVariant $languageVariant)
+    {
+        $localizationVariant = new ChildLocalizationVariant();
+
+        $localizationVariant->setLanguageVariant($languageVariant);
+
+        $localizationVariant->setLocalization($this);
+
+        $this->addLocalizationVariant($localizationVariant);
+
+        // set the back reference to this object directly as using provided method either results
+        // in endless loop or in multiple relations
+        if (!$languageVariant->isLocalizationsLoaded()) {
+            $languageVariant->initLocalizations();
+            $languageVariant->getLocalizations()->push($this);
+        } elseif (!$languageVariant->getLocalizations()->contains($this)) {
+            $languageVariant->getLocalizations()->push($this);
+        }
+
+    }
+
+    /**
+     * Remove languageVariant of this object
+     * through the kk_localization_variant cross reference table.
+     *
+     * @param ChildLanguageVariant $languageVariant
+     * @return ChildLocalization The current object (for fluent API support)
+     */
+    public function removeLanguageVariant(ChildLanguageVariant $languageVariant)
+    {
+        if ($this->getLanguageVariants()->contains($languageVariant)) { $localizationVariant = new ChildLocalizationVariant();
+
+            $localizationVariant->setLanguageVariant($languageVariant);
+            if ($languageVariant->isLocalizationsLoaded()) {
+                //remove the back reference if available
+                $languageVariant->getLocalizations()->removeObject($this);
+            }
+
+            $localizationVariant->setLocalization($this);
+            $this->removeLocalizationVariant(clone $localizationVariant);
+            $localizationVariant->clear();
+
+            $this->collLanguageVariants->remove($this->collLanguageVariants->search($languageVariant));
+
+            if (null === $this->languageVariantsScheduledForDeletion) {
+                $this->languageVariantsScheduledForDeletion = clone $this->collLanguageVariants;
+                $this->languageVariantsScheduledForDeletion->clear();
+            }
+
+            $this->languageVariantsScheduledForDeletion->push($languageVariant);
+        }
+
+
+        return $this;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -2086,15 +3026,22 @@ abstract class Localization implements ActiveRecordInterface
             $this->aLocalizationRelatedByParentId->removeLocalizationRelatedById($this);
         }
         if (null !== $this->aLanguage) {
-            $this->aLanguage->removeLocalization($this);
+            $this->aLanguage->removeLocalizationRelatedByLanguageId($this);
         }
-        if (null !== $this->aCountry) {
-            $this->aCountry->removeLocalization($this);
+        if (null !== $this->aExtLang) {
+            $this->aExtLang->removeLocalizationRelatedByExtLanguageId($this);
+        }
+        if (null !== $this->aScript) {
+            $this->aScript->removeLocalization($this);
         }
         $this->id = null;
         $this->parent_id = null;
+        $this->name = null;
+        $this->locale = null;
         $this->language_id = null;
-        $this->country_iso_nr = null;
+        $this->ext_language_id = null;
+        $this->region = null;
+        $this->script_id = null;
         $this->is_default = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -2119,18 +3066,31 @@ abstract class Localization implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collLocalizationVariants) {
+                foreach ($this->collLocalizationVariants as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collApplicationUris) {
                 foreach ($this->collApplicationUris as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collLanguageVariants) {
+                foreach ($this->collLanguageVariants as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
         $this->collLocalizationsRelatedById = null;
+        $this->collLocalizationVariants = null;
         $this->collApplicationUris = null;
+        $this->collLanguageVariants = null;
         $this->aLocalizationRelatedByParentId = null;
         $this->aLanguage = null;
-        $this->aCountry = null;
+        $this->aExtLang = null;
+        $this->aScript = null;
     }
 
     /**

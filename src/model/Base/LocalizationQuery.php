@@ -22,14 +22,22 @@ use keeko\core\model\Map\LocalizationTableMap;
  *
  * @method     ChildLocalizationQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildLocalizationQuery orderByParentId($order = Criteria::ASC) Order by the parent_id column
+ * @method     ChildLocalizationQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method     ChildLocalizationQuery orderByLocale($order = Criteria::ASC) Order by the locale column
  * @method     ChildLocalizationQuery orderByLanguageId($order = Criteria::ASC) Order by the language_id column
- * @method     ChildLocalizationQuery orderByCountryIsoNr($order = Criteria::ASC) Order by the country_iso_nr column
+ * @method     ChildLocalizationQuery orderByExtLanguageId($order = Criteria::ASC) Order by the ext_language_id column
+ * @method     ChildLocalizationQuery orderByRegion($order = Criteria::ASC) Order by the region column
+ * @method     ChildLocalizationQuery orderByScriptId($order = Criteria::ASC) Order by the script_id column
  * @method     ChildLocalizationQuery orderByIsDefault($order = Criteria::ASC) Order by the is_default column
  *
  * @method     ChildLocalizationQuery groupById() Group by the id column
  * @method     ChildLocalizationQuery groupByParentId() Group by the parent_id column
+ * @method     ChildLocalizationQuery groupByName() Group by the name column
+ * @method     ChildLocalizationQuery groupByLocale() Group by the locale column
  * @method     ChildLocalizationQuery groupByLanguageId() Group by the language_id column
- * @method     ChildLocalizationQuery groupByCountryIsoNr() Group by the country_iso_nr column
+ * @method     ChildLocalizationQuery groupByExtLanguageId() Group by the ext_language_id column
+ * @method     ChildLocalizationQuery groupByRegion() Group by the region column
+ * @method     ChildLocalizationQuery groupByScriptId() Group by the script_id column
  * @method     ChildLocalizationQuery groupByIsDefault() Group by the is_default column
  *
  * @method     ChildLocalizationQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -44,27 +52,39 @@ use keeko\core\model\Map\LocalizationTableMap;
  * @method     ChildLocalizationQuery rightJoinLanguage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Language relation
  * @method     ChildLocalizationQuery innerJoinLanguage($relationAlias = null) Adds a INNER JOIN clause to the query using the Language relation
  *
- * @method     ChildLocalizationQuery leftJoinCountry($relationAlias = null) Adds a LEFT JOIN clause to the query using the Country relation
- * @method     ChildLocalizationQuery rightJoinCountry($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Country relation
- * @method     ChildLocalizationQuery innerJoinCountry($relationAlias = null) Adds a INNER JOIN clause to the query using the Country relation
+ * @method     ChildLocalizationQuery leftJoinExtLang($relationAlias = null) Adds a LEFT JOIN clause to the query using the ExtLang relation
+ * @method     ChildLocalizationQuery rightJoinExtLang($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ExtLang relation
+ * @method     ChildLocalizationQuery innerJoinExtLang($relationAlias = null) Adds a INNER JOIN clause to the query using the ExtLang relation
+ *
+ * @method     ChildLocalizationQuery leftJoinScript($relationAlias = null) Adds a LEFT JOIN clause to the query using the Script relation
+ * @method     ChildLocalizationQuery rightJoinScript($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Script relation
+ * @method     ChildLocalizationQuery innerJoinScript($relationAlias = null) Adds a INNER JOIN clause to the query using the Script relation
  *
  * @method     ChildLocalizationQuery leftJoinLocalizationRelatedById($relationAlias = null) Adds a LEFT JOIN clause to the query using the LocalizationRelatedById relation
  * @method     ChildLocalizationQuery rightJoinLocalizationRelatedById($relationAlias = null) Adds a RIGHT JOIN clause to the query using the LocalizationRelatedById relation
  * @method     ChildLocalizationQuery innerJoinLocalizationRelatedById($relationAlias = null) Adds a INNER JOIN clause to the query using the LocalizationRelatedById relation
  *
+ * @method     ChildLocalizationQuery leftJoinLocalizationVariant($relationAlias = null) Adds a LEFT JOIN clause to the query using the LocalizationVariant relation
+ * @method     ChildLocalizationQuery rightJoinLocalizationVariant($relationAlias = null) Adds a RIGHT JOIN clause to the query using the LocalizationVariant relation
+ * @method     ChildLocalizationQuery innerJoinLocalizationVariant($relationAlias = null) Adds a INNER JOIN clause to the query using the LocalizationVariant relation
+ *
  * @method     ChildLocalizationQuery leftJoinApplicationUri($relationAlias = null) Adds a LEFT JOIN clause to the query using the ApplicationUri relation
  * @method     ChildLocalizationQuery rightJoinApplicationUri($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ApplicationUri relation
  * @method     ChildLocalizationQuery innerJoinApplicationUri($relationAlias = null) Adds a INNER JOIN clause to the query using the ApplicationUri relation
  *
- * @method     \keeko\core\model\LocalizationQuery|\keeko\core\model\LanguageQuery|\keeko\core\model\CountryQuery|\keeko\core\model\ApplicationUriQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \keeko\core\model\LocalizationQuery|\keeko\core\model\LanguageQuery|\keeko\core\model\LanguageScriptQuery|\keeko\core\model\LocalizationVariantQuery|\keeko\core\model\ApplicationUriQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildLocalization findOne(ConnectionInterface $con = null) Return the first ChildLocalization matching the query
  * @method     ChildLocalization findOneOrCreate(ConnectionInterface $con = null) Return the first ChildLocalization matching the query, or a new ChildLocalization object populated from the query conditions when no match is found
  *
  * @method     ChildLocalization findOneById(int $id) Return the first ChildLocalization filtered by the id column
  * @method     ChildLocalization findOneByParentId(int $parent_id) Return the first ChildLocalization filtered by the parent_id column
+ * @method     ChildLocalization findOneByName(string $name) Return the first ChildLocalization filtered by the name column
+ * @method     ChildLocalization findOneByLocale(string $locale) Return the first ChildLocalization filtered by the locale column
  * @method     ChildLocalization findOneByLanguageId(int $language_id) Return the first ChildLocalization filtered by the language_id column
- * @method     ChildLocalization findOneByCountryIsoNr(int $country_iso_nr) Return the first ChildLocalization filtered by the country_iso_nr column
+ * @method     ChildLocalization findOneByExtLanguageId(int $ext_language_id) Return the first ChildLocalization filtered by the ext_language_id column
+ * @method     ChildLocalization findOneByRegion(string $region) Return the first ChildLocalization filtered by the region column
+ * @method     ChildLocalization findOneByScriptId(int $script_id) Return the first ChildLocalization filtered by the script_id column
  * @method     ChildLocalization findOneByIsDefault(boolean $is_default) Return the first ChildLocalization filtered by the is_default column *
 
  * @method     ChildLocalization requirePk($key, ConnectionInterface $con = null) Return the ChildLocalization by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -72,15 +92,23 @@ use keeko\core\model\Map\LocalizationTableMap;
  *
  * @method     ChildLocalization requireOneById(int $id) Return the first ChildLocalization filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildLocalization requireOneByParentId(int $parent_id) Return the first ChildLocalization filtered by the parent_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLocalization requireOneByName(string $name) Return the first ChildLocalization filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLocalization requireOneByLocale(string $locale) Return the first ChildLocalization filtered by the locale column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildLocalization requireOneByLanguageId(int $language_id) Return the first ChildLocalization filtered by the language_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildLocalization requireOneByCountryIsoNr(int $country_iso_nr) Return the first ChildLocalization filtered by the country_iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLocalization requireOneByExtLanguageId(int $ext_language_id) Return the first ChildLocalization filtered by the ext_language_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLocalization requireOneByRegion(string $region) Return the first ChildLocalization filtered by the region column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLocalization requireOneByScriptId(int $script_id) Return the first ChildLocalization filtered by the script_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildLocalization requireOneByIsDefault(boolean $is_default) Return the first ChildLocalization filtered by the is_default column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildLocalization[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildLocalization objects based on current ModelCriteria
  * @method     ChildLocalization[]|ObjectCollection findById(int $id) Return ChildLocalization objects filtered by the id column
  * @method     ChildLocalization[]|ObjectCollection findByParentId(int $parent_id) Return ChildLocalization objects filtered by the parent_id column
+ * @method     ChildLocalization[]|ObjectCollection findByName(string $name) Return ChildLocalization objects filtered by the name column
+ * @method     ChildLocalization[]|ObjectCollection findByLocale(string $locale) Return ChildLocalization objects filtered by the locale column
  * @method     ChildLocalization[]|ObjectCollection findByLanguageId(int $language_id) Return ChildLocalization objects filtered by the language_id column
- * @method     ChildLocalization[]|ObjectCollection findByCountryIsoNr(int $country_iso_nr) Return ChildLocalization objects filtered by the country_iso_nr column
+ * @method     ChildLocalization[]|ObjectCollection findByExtLanguageId(int $ext_language_id) Return ChildLocalization objects filtered by the ext_language_id column
+ * @method     ChildLocalization[]|ObjectCollection findByRegion(string $region) Return ChildLocalization objects filtered by the region column
+ * @method     ChildLocalization[]|ObjectCollection findByScriptId(int $script_id) Return ChildLocalization objects filtered by the script_id column
  * @method     ChildLocalization[]|ObjectCollection findByIsDefault(boolean $is_default) Return ChildLocalization objects filtered by the is_default column
  * @method     ChildLocalization[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -174,7 +202,7 @@ abstract class LocalizationQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `id`, `parent_id`, `language_id`, `country_iso_nr`, `is_default` FROM `kk_localization` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `parent_id`, `name`, `locale`, `language_id`, `ext_language_id`, `region`, `script_id`, `is_default` FROM `kk_localization` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -349,6 +377,64 @@ abstract class LocalizationQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $name The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildLocalizationQuery The current query, for fluid interface
+     */
+    public function filterByName($name = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($name)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $name)) {
+                $name = str_replace('*', '%', $name);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(LocalizationTableMap::COL_NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the locale column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByLocale('fooValue');   // WHERE locale = 'fooValue'
+     * $query->filterByLocale('%fooValue%'); // WHERE locale LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $locale The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildLocalizationQuery The current query, for fluid interface
+     */
+    public function filterByLocale($locale = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($locale)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $locale)) {
+                $locale = str_replace('*', '%', $locale);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(LocalizationTableMap::COL_LOCALE, $locale, $comparison);
+    }
+
+    /**
      * Filter the query on the language_id column
      *
      * Example usage:
@@ -392,18 +478,18 @@ abstract class LocalizationQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the country_iso_nr column
+     * Filter the query on the ext_language_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByCountryIsoNr(1234); // WHERE country_iso_nr = 1234
-     * $query->filterByCountryIsoNr(array(12, 34)); // WHERE country_iso_nr IN (12, 34)
-     * $query->filterByCountryIsoNr(array('min' => 12)); // WHERE country_iso_nr > 12
+     * $query->filterByExtLanguageId(1234); // WHERE ext_language_id = 1234
+     * $query->filterByExtLanguageId(array(12, 34)); // WHERE ext_language_id IN (12, 34)
+     * $query->filterByExtLanguageId(array('min' => 12)); // WHERE ext_language_id > 12
      * </code>
      *
-     * @see       filterByCountry()
+     * @see       filterByExtLang()
      *
-     * @param     mixed $countryIsoNr The value to use as filter.
+     * @param     mixed $extLanguageId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -411,16 +497,16 @@ abstract class LocalizationQuery extends ModelCriteria
      *
      * @return $this|ChildLocalizationQuery The current query, for fluid interface
      */
-    public function filterByCountryIsoNr($countryIsoNr = null, $comparison = null)
+    public function filterByExtLanguageId($extLanguageId = null, $comparison = null)
     {
-        if (is_array($countryIsoNr)) {
+        if (is_array($extLanguageId)) {
             $useMinMax = false;
-            if (isset($countryIsoNr['min'])) {
-                $this->addUsingAlias(LocalizationTableMap::COL_COUNTRY_ISO_NR, $countryIsoNr['min'], Criteria::GREATER_EQUAL);
+            if (isset($extLanguageId['min'])) {
+                $this->addUsingAlias(LocalizationTableMap::COL_EXT_LANGUAGE_ID, $extLanguageId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($countryIsoNr['max'])) {
-                $this->addUsingAlias(LocalizationTableMap::COL_COUNTRY_ISO_NR, $countryIsoNr['max'], Criteria::LESS_EQUAL);
+            if (isset($extLanguageId['max'])) {
+                $this->addUsingAlias(LocalizationTableMap::COL_EXT_LANGUAGE_ID, $extLanguageId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -431,7 +517,79 @@ abstract class LocalizationQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(LocalizationTableMap::COL_COUNTRY_ISO_NR, $countryIsoNr, $comparison);
+        return $this->addUsingAlias(LocalizationTableMap::COL_EXT_LANGUAGE_ID, $extLanguageId, $comparison);
+    }
+
+    /**
+     * Filter the query on the region column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByRegion('fooValue');   // WHERE region = 'fooValue'
+     * $query->filterByRegion('%fooValue%'); // WHERE region LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $region The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildLocalizationQuery The current query, for fluid interface
+     */
+    public function filterByRegion($region = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($region)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $region)) {
+                $region = str_replace('*', '%', $region);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(LocalizationTableMap::COL_REGION, $region, $comparison);
+    }
+
+    /**
+     * Filter the query on the script_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByScriptId(1234); // WHERE script_id = 1234
+     * $query->filterByScriptId(array(12, 34)); // WHERE script_id IN (12, 34)
+     * $query->filterByScriptId(array('min' => 12)); // WHERE script_id > 12
+     * </code>
+     *
+     * @see       filterByScript()
+     *
+     * @param     mixed $scriptId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildLocalizationQuery The current query, for fluid interface
+     */
+    public function filterByScriptId($scriptId = null, $comparison = null)
+    {
+        if (is_array($scriptId)) {
+            $useMinMax = false;
+            if (isset($scriptId['min'])) {
+                $this->addUsingAlias(LocalizationTableMap::COL_SCRIPT_ID, $scriptId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($scriptId['max'])) {
+                $this->addUsingAlias(LocalizationTableMap::COL_SCRIPT_ID, $scriptId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(LocalizationTableMap::COL_SCRIPT_ID, $scriptId, $comparison);
     }
 
     /**
@@ -616,44 +774,44 @@ abstract class LocalizationQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \keeko\core\model\Country object
+     * Filter the query by a related \keeko\core\model\Language object
      *
-     * @param \keeko\core\model\Country|ObjectCollection $country The related object(s) to use as filter
+     * @param \keeko\core\model\Language|ObjectCollection $language The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildLocalizationQuery The current query, for fluid interface
      */
-    public function filterByCountry($country, $comparison = null)
+    public function filterByExtLang($language, $comparison = null)
     {
-        if ($country instanceof \keeko\core\model\Country) {
+        if ($language instanceof \keeko\core\model\Language) {
             return $this
-                ->addUsingAlias(LocalizationTableMap::COL_COUNTRY_ISO_NR, $country->getIsoNr(), $comparison);
-        } elseif ($country instanceof ObjectCollection) {
+                ->addUsingAlias(LocalizationTableMap::COL_EXT_LANGUAGE_ID, $language->getId(), $comparison);
+        } elseif ($language instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(LocalizationTableMap::COL_COUNTRY_ISO_NR, $country->toKeyValue('PrimaryKey', 'IsoNr'), $comparison);
+                ->addUsingAlias(LocalizationTableMap::COL_EXT_LANGUAGE_ID, $language->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByCountry() only accepts arguments of type \keeko\core\model\Country or Collection');
+            throw new PropelException('filterByExtLang() only accepts arguments of type \keeko\core\model\Language or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Country relation
+     * Adds a JOIN clause to the query using the ExtLang relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildLocalizationQuery The current query, for fluid interface
      */
-    public function joinCountry($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinExtLang($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Country');
+        $relationMap = $tableMap->getRelation('ExtLang');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -668,14 +826,14 @@ abstract class LocalizationQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Country');
+            $this->addJoinObject($join, 'ExtLang');
         }
 
         return $this;
     }
 
     /**
-     * Use the Country relation Country object
+     * Use the ExtLang relation Language object
      *
      * @see useQuery()
      *
@@ -683,13 +841,90 @@ abstract class LocalizationQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \keeko\core\model\CountryQuery A secondary query class using the current class as primary query
+     * @return \keeko\core\model\LanguageQuery A secondary query class using the current class as primary query
      */
-    public function useCountryQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useExtLangQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinCountry($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Country', '\keeko\core\model\CountryQuery');
+            ->joinExtLang($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ExtLang', '\keeko\core\model\LanguageQuery');
+    }
+
+    /**
+     * Filter the query by a related \keeko\core\model\LanguageScript object
+     *
+     * @param \keeko\core\model\LanguageScript|ObjectCollection $languageScript The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildLocalizationQuery The current query, for fluid interface
+     */
+    public function filterByScript($languageScript, $comparison = null)
+    {
+        if ($languageScript instanceof \keeko\core\model\LanguageScript) {
+            return $this
+                ->addUsingAlias(LocalizationTableMap::COL_SCRIPT_ID, $languageScript->getId(), $comparison);
+        } elseif ($languageScript instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(LocalizationTableMap::COL_SCRIPT_ID, $languageScript->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByScript() only accepts arguments of type \keeko\core\model\LanguageScript or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Script relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildLocalizationQuery The current query, for fluid interface
+     */
+    public function joinScript($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Script');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Script');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Script relation LanguageScript object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \keeko\core\model\LanguageScriptQuery A secondary query class using the current class as primary query
+     */
+    public function useScriptQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinScript($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Script', '\keeko\core\model\LanguageScriptQuery');
     }
 
     /**
@@ -766,6 +1001,79 @@ abstract class LocalizationQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related \keeko\core\model\LocalizationVariant object
+     *
+     * @param \keeko\core\model\LocalizationVariant|ObjectCollection $localizationVariant the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildLocalizationQuery The current query, for fluid interface
+     */
+    public function filterByLocalizationVariant($localizationVariant, $comparison = null)
+    {
+        if ($localizationVariant instanceof \keeko\core\model\LocalizationVariant) {
+            return $this
+                ->addUsingAlias(LocalizationTableMap::COL_ID, $localizationVariant->getLocalizationId(), $comparison);
+        } elseif ($localizationVariant instanceof ObjectCollection) {
+            return $this
+                ->useLocalizationVariantQuery()
+                ->filterByPrimaryKeys($localizationVariant->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByLocalizationVariant() only accepts arguments of type \keeko\core\model\LocalizationVariant or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the LocalizationVariant relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildLocalizationQuery The current query, for fluid interface
+     */
+    public function joinLocalizationVariant($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('LocalizationVariant');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'LocalizationVariant');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the LocalizationVariant relation LocalizationVariant object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \keeko\core\model\LocalizationVariantQuery A secondary query class using the current class as primary query
+     */
+    public function useLocalizationVariantQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinLocalizationVariant($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'LocalizationVariant', '\keeko\core\model\LocalizationVariantQuery');
+    }
+
+    /**
      * Filter the query by a related \keeko\core\model\ApplicationUri object
      *
      * @param \keeko\core\model\ApplicationUri|ObjectCollection $applicationUri the related object to use as filter
@@ -836,6 +1144,23 @@ abstract class LocalizationQuery extends ModelCriteria
         return $this
             ->joinApplicationUri($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'ApplicationUri', '\keeko\core\model\ApplicationUriQuery');
+    }
+
+    /**
+     * Filter the query by a related LanguageVariant object
+     * using the kk_localization_variant table as cross reference
+     *
+     * @param LanguageVariant $languageVariant the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildLocalizationQuery The current query, for fluid interface
+     */
+    public function filterByLanguageVariant($languageVariant, $comparison = Criteria::EQUAL)
+    {
+        return $this
+            ->useLocalizationVariantQuery()
+            ->filterByLanguageVariant($languageVariant, $comparison)
+            ->endUse();
     }
 
     /**

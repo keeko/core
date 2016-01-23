@@ -16,16 +16,16 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use keeko\core\model\Continent as ChildContinent;
+use keeko\core\model\ContinentQuery as ChildContinentQuery;
 use keeko\core\model\Country as ChildCountry;
 use keeko\core\model\CountryQuery as ChildCountryQuery;
 use keeko\core\model\Currency as ChildCurrency;
 use keeko\core\model\CurrencyQuery as ChildCurrencyQuery;
-use keeko\core\model\Localization as ChildLocalization;
-use keeko\core\model\LocalizationQuery as ChildLocalizationQuery;
+use keeko\core\model\RegionType as ChildRegionType;
+use keeko\core\model\RegionTypeQuery as ChildRegionTypeQuery;
 use keeko\core\model\Subdivision as ChildSubdivision;
 use keeko\core\model\SubdivisionQuery as ChildSubdivisionQuery;
-use keeko\core\model\Territory as ChildTerritory;
-use keeko\core\model\TerritoryQuery as ChildTerritoryQuery;
 use keeko\core\model\Map\CountryTableMap;
 
 /**
@@ -70,10 +70,16 @@ abstract class Country implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
-     * The value for the iso_nr field.
+     * The value for the id field.
      * @var        int
      */
-    protected $iso_nr;
+    protected $id;
+
+    /**
+     * The value for the numeric field.
+     * @var        int
+     */
+    protected $numeric;
 
     /**
      * The value for the alpha_2 field.
@@ -88,16 +94,16 @@ abstract class Country implements ActiveRecordInterface
     protected $alpha_3;
 
     /**
+     * The value for the short_name field.
+     * @var        string
+     */
+    protected $short_name;
+
+    /**
      * The value for the ioc field.
      * @var        string
      */
     protected $ioc;
-
-    /**
-     * The value for the capital field.
-     * @var        string
-     */
-    protected $capital;
 
     /**
      * The value for the tld field.
@@ -112,40 +118,70 @@ abstract class Country implements ActiveRecordInterface
     protected $phone;
 
     /**
-     * The value for the territory_iso_nr field.
+     * The value for the capital field.
+     * @var        string
+     */
+    protected $capital;
+
+    /**
+     * The value for the postal_code_format field.
+     * @var        string
+     */
+    protected $postal_code_format;
+
+    /**
+     * The value for the postal_code_regex field.
+     * @var        string
+     */
+    protected $postal_code_regex;
+
+    /**
+     * The value for the continent_id field.
      * @var        int
      */
-    protected $territory_iso_nr;
+    protected $continent_id;
 
     /**
-     * The value for the currency_iso_nr field.
+     * The value for the currency_id field.
      * @var        int
      */
-    protected $currency_iso_nr;
+    protected $currency_id;
 
     /**
-     * The value for the official_local_name field.
-     * @var        string
+     * The value for the type_id field.
+     * @var        int
      */
-    protected $official_local_name;
+    protected $type_id;
 
     /**
-     * The value for the official_en_name field.
-     * @var        string
+     * The value for the subtype_id field.
+     * @var        int
      */
-    protected $official_en_name;
+    protected $subtype_id;
 
     /**
-     * The value for the short_local_name field.
-     * @var        string
+     * The value for the sovereignity_id field.
+     * @var        int
      */
-    protected $short_local_name;
+    protected $sovereignity_id;
 
     /**
-     * The value for the short_en_name field.
+     * The value for the formal_name field.
      * @var        string
      */
-    protected $short_en_name;
+    protected $formal_name;
+
+    /**
+     * The value for the formal_native_name field.
+     * @var        string
+     */
+    protected $formal_native_name;
+
+    /**
+     * The value for the short_native_name field.
+     * @var        string
+     */
+    protected $short_native_name;
 
     /**
      * The value for the bbox_sw_lat field.
@@ -172,9 +208,9 @@ abstract class Country implements ActiveRecordInterface
     protected $bbox_ne_lng;
 
     /**
-     * @var        ChildTerritory
+     * @var        ChildContinent
      */
-    protected $aTerritory;
+    protected $aContinent;
 
     /**
      * @var        ChildCurrency
@@ -182,10 +218,25 @@ abstract class Country implements ActiveRecordInterface
     protected $aCurrency;
 
     /**
-     * @var        ObjectCollection|ChildLocalization[] Collection to store aggregation of ChildLocalization objects.
+     * @var        ChildRegionType
      */
-    protected $collLocalizations;
-    protected $collLocalizationsPartial;
+    protected $aType;
+
+    /**
+     * @var        ChildRegionType
+     */
+    protected $aSubtype;
+
+    /**
+     * @var        ChildCountry
+     */
+    protected $aCountryRelatedBySovereignityId;
+
+    /**
+     * @var        ObjectCollection|ChildCountry[] Collection to store aggregation of ChildCountry objects.
+     */
+    protected $collSubordinates;
+    protected $collSubordinatesPartial;
 
     /**
      * @var        ObjectCollection|ChildSubdivision[] Collection to store aggregation of ChildSubdivision objects.
@@ -203,9 +254,9 @@ abstract class Country implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildLocalization[]
+     * @var ObjectCollection|ChildCountry[]
      */
-    protected $localizationsScheduledForDeletion = null;
+    protected $subordinatesScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -431,13 +482,23 @@ abstract class Country implements ActiveRecordInterface
     }
 
     /**
-     * Get the [iso_nr] column value.
+     * Get the [id] column value.
      *
      * @return int
      */
-    public function getIsoNr()
+    public function getId()
     {
-        return $this->iso_nr;
+        return $this->id;
+    }
+
+    /**
+     * Get the [numeric] column value.
+     *
+     * @return int
+     */
+    public function getNumeric()
+    {
+        return $this->numeric;
     }
 
     /**
@@ -461,6 +522,16 @@ abstract class Country implements ActiveRecordInterface
     }
 
     /**
+     * Get the [short_name] column value.
+     *
+     * @return string
+     */
+    public function getShortName()
+    {
+        return $this->short_name;
+    }
+
+    /**
      * Get the [ioc] column value.
      *
      * @return string
@@ -468,16 +539,6 @@ abstract class Country implements ActiveRecordInterface
     public function getIoc()
     {
         return $this->ioc;
-    }
-
-    /**
-     * Get the [capital] column value.
-     *
-     * @return string
-     */
-    public function getCapital()
-    {
-        return $this->capital;
     }
 
     /**
@@ -501,63 +562,113 @@ abstract class Country implements ActiveRecordInterface
     }
 
     /**
-     * Get the [territory_iso_nr] column value.
+     * Get the [capital] column value.
+     *
+     * @return string
+     */
+    public function getCapital()
+    {
+        return $this->capital;
+    }
+
+    /**
+     * Get the [postal_code_format] column value.
+     *
+     * @return string
+     */
+    public function getPostalCodeFormat()
+    {
+        return $this->postal_code_format;
+    }
+
+    /**
+     * Get the [postal_code_regex] column value.
+     *
+     * @return string
+     */
+    public function getPostalCodeRegex()
+    {
+        return $this->postal_code_regex;
+    }
+
+    /**
+     * Get the [continent_id] column value.
      *
      * @return int
      */
-    public function getTerritoryIsoNr()
+    public function getContinentId()
     {
-        return $this->territory_iso_nr;
+        return $this->continent_id;
     }
 
     /**
-     * Get the [currency_iso_nr] column value.
+     * Get the [currency_id] column value.
      *
      * @return int
      */
-    public function getCurrencyIsoNr()
+    public function getCurrencyId()
     {
-        return $this->currency_iso_nr;
+        return $this->currency_id;
     }
 
     /**
-     * Get the [official_local_name] column value.
+     * Get the [type_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getOfficialLocalName()
+    public function getTypeId()
     {
-        return $this->official_local_name;
+        return $this->type_id;
     }
 
     /**
-     * Get the [official_en_name] column value.
+     * Get the [subtype_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getOfficialEnName()
+    public function getSubtypeId()
     {
-        return $this->official_en_name;
+        return $this->subtype_id;
     }
 
     /**
-     * Get the [short_local_name] column value.
+     * Get the [sovereignity_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getShortLocalName()
+    public function getSovereignityId()
     {
-        return $this->short_local_name;
+        return $this->sovereignity_id;
     }
 
     /**
-     * Get the [short_en_name] column value.
+     * Get the [formal_name] column value.
      *
      * @return string
      */
-    public function getShortEnName()
+    public function getFormalName()
     {
-        return $this->short_en_name;
+        return $this->formal_name;
+    }
+
+    /**
+     * Get the [formal_native_name] column value.
+     *
+     * @return string
+     */
+    public function getFormalNativeName()
+    {
+        return $this->formal_native_name;
+    }
+
+    /**
+     * Get the [short_native_name] column value.
+     *
+     * @return string
+     */
+    public function getShortNativeName()
+    {
+        return $this->short_native_name;
     }
 
     /**
@@ -601,24 +712,44 @@ abstract class Country implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [iso_nr] column.
+     * Set the value of [id] column.
      *
      * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setIsoNr($v)
+    public function setId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->iso_nr !== $v) {
-            $this->iso_nr = $v;
-            $this->modifiedColumns[CountryTableMap::COL_ISO_NR] = true;
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[CountryTableMap::COL_ID] = true;
         }
 
         return $this;
-    } // setIsoNr()
+    } // setId()
+
+    /**
+     * Set the value of [numeric] column.
+     *
+     * @param int $v new value
+     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
+     */
+    public function setNumeric($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->numeric !== $v) {
+            $this->numeric = $v;
+            $this->modifiedColumns[CountryTableMap::COL_NUMERIC] = true;
+        }
+
+        return $this;
+    } // setNumeric()
 
     /**
      * Set the value of [alpha_2] column.
@@ -661,6 +792,26 @@ abstract class Country implements ActiveRecordInterface
     } // setAlpha3()
 
     /**
+     * Set the value of [short_name] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
+     */
+    public function setShortName($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->short_name !== $v) {
+            $this->short_name = $v;
+            $this->modifiedColumns[CountryTableMap::COL_SHORT_NAME] = true;
+        }
+
+        return $this;
+    } // setShortName()
+
+    /**
      * Set the value of [ioc] column.
      *
      * @param string $v new value
@@ -679,26 +830,6 @@ abstract class Country implements ActiveRecordInterface
 
         return $this;
     } // setIoc()
-
-    /**
-     * Set the value of [capital] column.
-     *
-     * @param string $v new value
-     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
-     */
-    public function setCapital($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->capital !== $v) {
-            $this->capital = $v;
-            $this->modifiedColumns[CountryTableMap::COL_CAPITAL] = true;
-        }
-
-        return $this;
-    } // setCapital()
 
     /**
      * Set the value of [tld] column.
@@ -741,132 +872,244 @@ abstract class Country implements ActiveRecordInterface
     } // setPhone()
 
     /**
-     * Set the value of [territory_iso_nr] column.
+     * Set the value of [capital] column.
      *
-     * @param int $v new value
+     * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setTerritoryIsoNr($v)
+    public function setCapital($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
-        if ($this->territory_iso_nr !== $v) {
-            $this->territory_iso_nr = $v;
-            $this->modifiedColumns[CountryTableMap::COL_TERRITORY_ISO_NR] = true;
-        }
-
-        if ($this->aTerritory !== null && $this->aTerritory->getIsoNr() !== $v) {
-            $this->aTerritory = null;
+        if ($this->capital !== $v) {
+            $this->capital = $v;
+            $this->modifiedColumns[CountryTableMap::COL_CAPITAL] = true;
         }
 
         return $this;
-    } // setTerritoryIsoNr()
+    } // setCapital()
 
     /**
-     * Set the value of [currency_iso_nr] column.
+     * Set the value of [postal_code_format] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
+     */
+    public function setPostalCodeFormat($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->postal_code_format !== $v) {
+            $this->postal_code_format = $v;
+            $this->modifiedColumns[CountryTableMap::COL_POSTAL_CODE_FORMAT] = true;
+        }
+
+        return $this;
+    } // setPostalCodeFormat()
+
+    /**
+     * Set the value of [postal_code_regex] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
+     */
+    public function setPostalCodeRegex($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->postal_code_regex !== $v) {
+            $this->postal_code_regex = $v;
+            $this->modifiedColumns[CountryTableMap::COL_POSTAL_CODE_REGEX] = true;
+        }
+
+        return $this;
+    } // setPostalCodeRegex()
+
+    /**
+     * Set the value of [continent_id] column.
      *
      * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setCurrencyIsoNr($v)
+    public function setContinentId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->currency_iso_nr !== $v) {
-            $this->currency_iso_nr = $v;
-            $this->modifiedColumns[CountryTableMap::COL_CURRENCY_ISO_NR] = true;
+        if ($this->continent_id !== $v) {
+            $this->continent_id = $v;
+            $this->modifiedColumns[CountryTableMap::COL_CONTINENT_ID] = true;
         }
 
-        if ($this->aCurrency !== null && $this->aCurrency->getIsoNr() !== $v) {
+        if ($this->aContinent !== null && $this->aContinent->getId() !== $v) {
+            $this->aContinent = null;
+        }
+
+        return $this;
+    } // setContinentId()
+
+    /**
+     * Set the value of [currency_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
+     */
+    public function setCurrencyId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->currency_id !== $v) {
+            $this->currency_id = $v;
+            $this->modifiedColumns[CountryTableMap::COL_CURRENCY_ID] = true;
+        }
+
+        if ($this->aCurrency !== null && $this->aCurrency->getId() !== $v) {
             $this->aCurrency = null;
         }
 
         return $this;
-    } // setCurrencyIsoNr()
+    } // setCurrencyId()
 
     /**
-     * Set the value of [official_local_name] column.
+     * Set the value of [type_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
+     */
+    public function setTypeId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->type_id !== $v) {
+            $this->type_id = $v;
+            $this->modifiedColumns[CountryTableMap::COL_TYPE_ID] = true;
+        }
+
+        if ($this->aType !== null && $this->aType->getId() !== $v) {
+            $this->aType = null;
+        }
+
+        return $this;
+    } // setTypeId()
+
+    /**
+     * Set the value of [subtype_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
+     */
+    public function setSubtypeId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->subtype_id !== $v) {
+            $this->subtype_id = $v;
+            $this->modifiedColumns[CountryTableMap::COL_SUBTYPE_ID] = true;
+        }
+
+        if ($this->aSubtype !== null && $this->aSubtype->getId() !== $v) {
+            $this->aSubtype = null;
+        }
+
+        return $this;
+    } // setSubtypeId()
+
+    /**
+     * Set the value of [sovereignity_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
+     */
+    public function setSovereignityId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->sovereignity_id !== $v) {
+            $this->sovereignity_id = $v;
+            $this->modifiedColumns[CountryTableMap::COL_SOVEREIGNITY_ID] = true;
+        }
+
+        if ($this->aCountryRelatedBySovereignityId !== null && $this->aCountryRelatedBySovereignityId->getId() !== $v) {
+            $this->aCountryRelatedBySovereignityId = null;
+        }
+
+        return $this;
+    } // setSovereignityId()
+
+    /**
+     * Set the value of [formal_name] column.
      *
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setOfficialLocalName($v)
+    public function setFormalName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->official_local_name !== $v) {
-            $this->official_local_name = $v;
-            $this->modifiedColumns[CountryTableMap::COL_OFFICIAL_LOCAL_NAME] = true;
+        if ($this->formal_name !== $v) {
+            $this->formal_name = $v;
+            $this->modifiedColumns[CountryTableMap::COL_FORMAL_NAME] = true;
         }
 
         return $this;
-    } // setOfficialLocalName()
+    } // setFormalName()
 
     /**
-     * Set the value of [official_en_name] column.
+     * Set the value of [formal_native_name] column.
      *
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setOfficialEnName($v)
+    public function setFormalNativeName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->official_en_name !== $v) {
-            $this->official_en_name = $v;
-            $this->modifiedColumns[CountryTableMap::COL_OFFICIAL_EN_NAME] = true;
+        if ($this->formal_native_name !== $v) {
+            $this->formal_native_name = $v;
+            $this->modifiedColumns[CountryTableMap::COL_FORMAL_NATIVE_NAME] = true;
         }
 
         return $this;
-    } // setOfficialEnName()
+    } // setFormalNativeName()
 
     /**
-     * Set the value of [short_local_name] column.
+     * Set the value of [short_native_name] column.
      *
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setShortLocalName($v)
+    public function setShortNativeName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->short_local_name !== $v) {
-            $this->short_local_name = $v;
-            $this->modifiedColumns[CountryTableMap::COL_SHORT_LOCAL_NAME] = true;
+        if ($this->short_native_name !== $v) {
+            $this->short_native_name = $v;
+            $this->modifiedColumns[CountryTableMap::COL_SHORT_NATIVE_NAME] = true;
         }
 
         return $this;
-    } // setShortLocalName()
-
-    /**
-     * Set the value of [short_en_name] column.
-     *
-     * @param string $v new value
-     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
-     */
-    public function setShortEnName($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->short_en_name !== $v) {
-            $this->short_en_name = $v;
-            $this->modifiedColumns[CountryTableMap::COL_SHORT_EN_NAME] = true;
-        }
-
-        return $this;
-    } // setShortEnName()
+    } // setShortNativeName()
 
     /**
      * Set the value of [bbox_sw_lat] column.
@@ -984,55 +1227,73 @@ abstract class Country implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CountryTableMap::translateFieldName('IsoNr', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->iso_nr = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CountryTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CountryTableMap::translateFieldName('Alpha2', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CountryTableMap::translateFieldName('Numeric', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->numeric = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CountryTableMap::translateFieldName('Alpha2', TableMap::TYPE_PHPNAME, $indexType)];
             $this->alpha_2 = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CountryTableMap::translateFieldName('Alpha3', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CountryTableMap::translateFieldName('Alpha3', TableMap::TYPE_PHPNAME, $indexType)];
             $this->alpha_3 = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CountryTableMap::translateFieldName('Ioc', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CountryTableMap::translateFieldName('ShortName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->short_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CountryTableMap::translateFieldName('Ioc', TableMap::TYPE_PHPNAME, $indexType)];
             $this->ioc = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CountryTableMap::translateFieldName('Capital', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->capital = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CountryTableMap::translateFieldName('Tld', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CountryTableMap::translateFieldName('Tld', TableMap::TYPE_PHPNAME, $indexType)];
             $this->tld = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CountryTableMap::translateFieldName('Phone', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CountryTableMap::translateFieldName('Phone', TableMap::TYPE_PHPNAME, $indexType)];
             $this->phone = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CountryTableMap::translateFieldName('TerritoryIsoNr', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->territory_iso_nr = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : CountryTableMap::translateFieldName('Capital', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->capital = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : CountryTableMap::translateFieldName('CurrencyIsoNr', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->currency_iso_nr = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : CountryTableMap::translateFieldName('PostalCodeFormat', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->postal_code_format = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : CountryTableMap::translateFieldName('OfficialLocalName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->official_local_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : CountryTableMap::translateFieldName('PostalCodeRegex', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->postal_code_regex = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : CountryTableMap::translateFieldName('OfficialEnName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->official_en_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : CountryTableMap::translateFieldName('ContinentId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->continent_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : CountryTableMap::translateFieldName('ShortLocalName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->short_local_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : CountryTableMap::translateFieldName('CurrencyId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->currency_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : CountryTableMap::translateFieldName('ShortEnName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->short_en_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : CountryTableMap::translateFieldName('TypeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->type_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : CountryTableMap::translateFieldName('BboxSwLat', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : CountryTableMap::translateFieldName('SubtypeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->subtype_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : CountryTableMap::translateFieldName('SovereignityId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->sovereignity_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : CountryTableMap::translateFieldName('FormalName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->formal_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 17 + $startcol : CountryTableMap::translateFieldName('FormalNativeName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->formal_native_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 18 + $startcol : CountryTableMap::translateFieldName('ShortNativeName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->short_native_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 19 + $startcol : CountryTableMap::translateFieldName('BboxSwLat', TableMap::TYPE_PHPNAME, $indexType)];
             $this->bbox_sw_lat = (null !== $col) ? (double) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : CountryTableMap::translateFieldName('BboxSwLng', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 20 + $startcol : CountryTableMap::translateFieldName('BboxSwLng', TableMap::TYPE_PHPNAME, $indexType)];
             $this->bbox_sw_lng = (null !== $col) ? (double) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : CountryTableMap::translateFieldName('BboxNeLat', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 21 + $startcol : CountryTableMap::translateFieldName('BboxNeLat', TableMap::TYPE_PHPNAME, $indexType)];
             $this->bbox_ne_lat = (null !== $col) ? (double) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : CountryTableMap::translateFieldName('BboxNeLng', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 22 + $startcol : CountryTableMap::translateFieldName('BboxNeLng', TableMap::TYPE_PHPNAME, $indexType)];
             $this->bbox_ne_lng = (null !== $col) ? (double) $col : null;
             $this->resetModified();
 
@@ -1042,7 +1303,7 @@ abstract class Country implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 17; // 17 = CountryTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 23; // 23 = CountryTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Country'), 0, $e);
@@ -1064,11 +1325,20 @@ abstract class Country implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aTerritory !== null && $this->territory_iso_nr !== $this->aTerritory->getIsoNr()) {
-            $this->aTerritory = null;
+        if ($this->aContinent !== null && $this->continent_id !== $this->aContinent->getId()) {
+            $this->aContinent = null;
         }
-        if ($this->aCurrency !== null && $this->currency_iso_nr !== $this->aCurrency->getIsoNr()) {
+        if ($this->aCurrency !== null && $this->currency_id !== $this->aCurrency->getId()) {
             $this->aCurrency = null;
+        }
+        if ($this->aType !== null && $this->type_id !== $this->aType->getId()) {
+            $this->aType = null;
+        }
+        if ($this->aSubtype !== null && $this->subtype_id !== $this->aSubtype->getId()) {
+            $this->aSubtype = null;
+        }
+        if ($this->aCountryRelatedBySovereignityId !== null && $this->sovereignity_id !== $this->aCountryRelatedBySovereignityId->getId()) {
+            $this->aCountryRelatedBySovereignityId = null;
         }
     } // ensureConsistency
 
@@ -1109,9 +1379,12 @@ abstract class Country implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aTerritory = null;
+            $this->aContinent = null;
             $this->aCurrency = null;
-            $this->collLocalizations = null;
+            $this->aType = null;
+            $this->aSubtype = null;
+            $this->aCountryRelatedBySovereignityId = null;
+            $this->collSubordinates = null;
 
             $this->collSubdivisions = null;
 
@@ -1219,11 +1492,11 @@ abstract class Country implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aTerritory !== null) {
-                if ($this->aTerritory->isModified() || $this->aTerritory->isNew()) {
-                    $affectedRows += $this->aTerritory->save($con);
+            if ($this->aContinent !== null) {
+                if ($this->aContinent->isModified() || $this->aContinent->isNew()) {
+                    $affectedRows += $this->aContinent->save($con);
                 }
-                $this->setTerritory($this->aTerritory);
+                $this->setContinent($this->aContinent);
             }
 
             if ($this->aCurrency !== null) {
@@ -1231,6 +1504,27 @@ abstract class Country implements ActiveRecordInterface
                     $affectedRows += $this->aCurrency->save($con);
                 }
                 $this->setCurrency($this->aCurrency);
+            }
+
+            if ($this->aType !== null) {
+                if ($this->aType->isModified() || $this->aType->isNew()) {
+                    $affectedRows += $this->aType->save($con);
+                }
+                $this->setType($this->aType);
+            }
+
+            if ($this->aSubtype !== null) {
+                if ($this->aSubtype->isModified() || $this->aSubtype->isNew()) {
+                    $affectedRows += $this->aSubtype->save($con);
+                }
+                $this->setSubtype($this->aSubtype);
+            }
+
+            if ($this->aCountryRelatedBySovereignityId !== null) {
+                if ($this->aCountryRelatedBySovereignityId->isModified() || $this->aCountryRelatedBySovereignityId->isNew()) {
+                    $affectedRows += $this->aCountryRelatedBySovereignityId->save($con);
+                }
+                $this->setCountryRelatedBySovereignityId($this->aCountryRelatedBySovereignityId);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -1244,18 +1538,18 @@ abstract class Country implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->localizationsScheduledForDeletion !== null) {
-                if (!$this->localizationsScheduledForDeletion->isEmpty()) {
-                    foreach ($this->localizationsScheduledForDeletion as $localization) {
+            if ($this->subordinatesScheduledForDeletion !== null) {
+                if (!$this->subordinatesScheduledForDeletion->isEmpty()) {
+                    foreach ($this->subordinatesScheduledForDeletion as $subordinate) {
                         // need to save related object because we set the relation to null
-                        $localization->save($con);
+                        $subordinate->save($con);
                     }
-                    $this->localizationsScheduledForDeletion = null;
+                    $this->subordinatesScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collLocalizations !== null) {
-                foreach ($this->collLocalizations as $referrerFK) {
+            if ($this->collSubordinates !== null) {
+                foreach ($this->collSubordinates as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1299,10 +1593,17 @@ abstract class Country implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
+        $this->modifiedColumns[CountryTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CountryTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(CountryTableMap::COL_ISO_NR)) {
-            $modifiedColumns[':p' . $index++]  = '`iso_nr`';
+        if ($this->isColumnModified(CountryTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`id`';
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_NUMERIC)) {
+            $modifiedColumns[':p' . $index++]  = '`numeric`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_ALPHA_2)) {
             $modifiedColumns[':p' . $index++]  = '`alpha_2`';
@@ -1310,11 +1611,11 @@ abstract class Country implements ActiveRecordInterface
         if ($this->isColumnModified(CountryTableMap::COL_ALPHA_3)) {
             $modifiedColumns[':p' . $index++]  = '`alpha_3`';
         }
+        if ($this->isColumnModified(CountryTableMap::COL_SHORT_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`short_name`';
+        }
         if ($this->isColumnModified(CountryTableMap::COL_IOC)) {
             $modifiedColumns[':p' . $index++]  = '`ioc`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_CAPITAL)) {
-            $modifiedColumns[':p' . $index++]  = '`capital`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_TLD)) {
             $modifiedColumns[':p' . $index++]  = '`tld`';
@@ -1322,23 +1623,38 @@ abstract class Country implements ActiveRecordInterface
         if ($this->isColumnModified(CountryTableMap::COL_PHONE)) {
             $modifiedColumns[':p' . $index++]  = '`phone`';
         }
-        if ($this->isColumnModified(CountryTableMap::COL_TERRITORY_ISO_NR)) {
-            $modifiedColumns[':p' . $index++]  = '`territory_iso_nr`';
+        if ($this->isColumnModified(CountryTableMap::COL_CAPITAL)) {
+            $modifiedColumns[':p' . $index++]  = '`capital`';
         }
-        if ($this->isColumnModified(CountryTableMap::COL_CURRENCY_ISO_NR)) {
-            $modifiedColumns[':p' . $index++]  = '`currency_iso_nr`';
+        if ($this->isColumnModified(CountryTableMap::COL_POSTAL_CODE_FORMAT)) {
+            $modifiedColumns[':p' . $index++]  = '`postal_code_format`';
         }
-        if ($this->isColumnModified(CountryTableMap::COL_OFFICIAL_LOCAL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`official_local_name`';
+        if ($this->isColumnModified(CountryTableMap::COL_POSTAL_CODE_REGEX)) {
+            $modifiedColumns[':p' . $index++]  = '`postal_code_regex`';
         }
-        if ($this->isColumnModified(CountryTableMap::COL_OFFICIAL_EN_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`official_en_name`';
+        if ($this->isColumnModified(CountryTableMap::COL_CONTINENT_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`continent_id`';
         }
-        if ($this->isColumnModified(CountryTableMap::COL_SHORT_LOCAL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`short_local_name`';
+        if ($this->isColumnModified(CountryTableMap::COL_CURRENCY_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`currency_id`';
         }
-        if ($this->isColumnModified(CountryTableMap::COL_SHORT_EN_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`short_en_name`';
+        if ($this->isColumnModified(CountryTableMap::COL_TYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`type_id`';
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_SUBTYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`subtype_id`';
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_SOVEREIGNITY_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`sovereignity_id`';
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_FORMAL_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`formal_name`';
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_FORMAL_NATIVE_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`formal_native_name`';
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_SHORT_NATIVE_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`short_native_name`';
         }
         if ($this->isColumnModified(CountryTableMap::COL_BBOX_SW_LAT)) {
             $modifiedColumns[':p' . $index++]  = '`bbox_sw_lat`';
@@ -1363,8 +1679,11 @@ abstract class Country implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`iso_nr`':
-                        $stmt->bindValue($identifier, $this->iso_nr, PDO::PARAM_INT);
+                    case '`id`':
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case '`numeric`':
+                        $stmt->bindValue($identifier, $this->numeric, PDO::PARAM_INT);
                         break;
                     case '`alpha_2`':
                         $stmt->bindValue($identifier, $this->alpha_2, PDO::PARAM_STR);
@@ -1372,11 +1691,11 @@ abstract class Country implements ActiveRecordInterface
                     case '`alpha_3`':
                         $stmt->bindValue($identifier, $this->alpha_3, PDO::PARAM_STR);
                         break;
+                    case '`short_name`':
+                        $stmt->bindValue($identifier, $this->short_name, PDO::PARAM_STR);
+                        break;
                     case '`ioc`':
                         $stmt->bindValue($identifier, $this->ioc, PDO::PARAM_STR);
-                        break;
-                    case '`capital`':
-                        $stmt->bindValue($identifier, $this->capital, PDO::PARAM_STR);
                         break;
                     case '`tld`':
                         $stmt->bindValue($identifier, $this->tld, PDO::PARAM_STR);
@@ -1384,23 +1703,38 @@ abstract class Country implements ActiveRecordInterface
                     case '`phone`':
                         $stmt->bindValue($identifier, $this->phone, PDO::PARAM_STR);
                         break;
-                    case '`territory_iso_nr`':
-                        $stmt->bindValue($identifier, $this->territory_iso_nr, PDO::PARAM_INT);
+                    case '`capital`':
+                        $stmt->bindValue($identifier, $this->capital, PDO::PARAM_STR);
                         break;
-                    case '`currency_iso_nr`':
-                        $stmt->bindValue($identifier, $this->currency_iso_nr, PDO::PARAM_INT);
+                    case '`postal_code_format`':
+                        $stmt->bindValue($identifier, $this->postal_code_format, PDO::PARAM_STR);
                         break;
-                    case '`official_local_name`':
-                        $stmt->bindValue($identifier, $this->official_local_name, PDO::PARAM_STR);
+                    case '`postal_code_regex`':
+                        $stmt->bindValue($identifier, $this->postal_code_regex, PDO::PARAM_STR);
                         break;
-                    case '`official_en_name`':
-                        $stmt->bindValue($identifier, $this->official_en_name, PDO::PARAM_STR);
+                    case '`continent_id`':
+                        $stmt->bindValue($identifier, $this->continent_id, PDO::PARAM_INT);
                         break;
-                    case '`short_local_name`':
-                        $stmt->bindValue($identifier, $this->short_local_name, PDO::PARAM_STR);
+                    case '`currency_id`':
+                        $stmt->bindValue($identifier, $this->currency_id, PDO::PARAM_INT);
                         break;
-                    case '`short_en_name`':
-                        $stmt->bindValue($identifier, $this->short_en_name, PDO::PARAM_STR);
+                    case '`type_id`':
+                        $stmt->bindValue($identifier, $this->type_id, PDO::PARAM_INT);
+                        break;
+                    case '`subtype_id`':
+                        $stmt->bindValue($identifier, $this->subtype_id, PDO::PARAM_INT);
+                        break;
+                    case '`sovereignity_id`':
+                        $stmt->bindValue($identifier, $this->sovereignity_id, PDO::PARAM_INT);
+                        break;
+                    case '`formal_name`':
+                        $stmt->bindValue($identifier, $this->formal_name, PDO::PARAM_STR);
+                        break;
+                    case '`formal_native_name`':
+                        $stmt->bindValue($identifier, $this->formal_native_name, PDO::PARAM_STR);
+                        break;
+                    case '`short_native_name`':
+                        $stmt->bindValue($identifier, $this->short_native_name, PDO::PARAM_STR);
                         break;
                     case '`bbox_sw_lat`':
                         $stmt->bindValue($identifier, $this->bbox_sw_lat, PDO::PARAM_STR);
@@ -1421,6 +1755,13 @@ abstract class Country implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -1470,54 +1811,72 @@ abstract class Country implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getIsoNr();
+                return $this->getId();
                 break;
             case 1:
-                return $this->getAlpha2();
+                return $this->getNumeric();
                 break;
             case 2:
-                return $this->getAlpha3();
+                return $this->getAlpha2();
                 break;
             case 3:
-                return $this->getIoc();
+                return $this->getAlpha3();
                 break;
             case 4:
-                return $this->getCapital();
+                return $this->getShortName();
                 break;
             case 5:
-                return $this->getTld();
+                return $this->getIoc();
                 break;
             case 6:
-                return $this->getPhone();
+                return $this->getTld();
                 break;
             case 7:
-                return $this->getTerritoryIsoNr();
+                return $this->getPhone();
                 break;
             case 8:
-                return $this->getCurrencyIsoNr();
+                return $this->getCapital();
                 break;
             case 9:
-                return $this->getOfficialLocalName();
+                return $this->getPostalCodeFormat();
                 break;
             case 10:
-                return $this->getOfficialEnName();
+                return $this->getPostalCodeRegex();
                 break;
             case 11:
-                return $this->getShortLocalName();
+                return $this->getContinentId();
                 break;
             case 12:
-                return $this->getShortEnName();
+                return $this->getCurrencyId();
                 break;
             case 13:
-                return $this->getBboxSwLat();
+                return $this->getTypeId();
                 break;
             case 14:
-                return $this->getBboxSwLng();
+                return $this->getSubtypeId();
                 break;
             case 15:
-                return $this->getBboxNeLat();
+                return $this->getSovereignityId();
                 break;
             case 16:
+                return $this->getFormalName();
+                break;
+            case 17:
+                return $this->getFormalNativeName();
+                break;
+            case 18:
+                return $this->getShortNativeName();
+                break;
+            case 19:
+                return $this->getBboxSwLat();
+                break;
+            case 20:
+                return $this->getBboxSwLng();
+                break;
+            case 21:
+                return $this->getBboxNeLat();
+                break;
+            case 22:
                 return $this->getBboxNeLng();
                 break;
             default:
@@ -1550,23 +1909,29 @@ abstract class Country implements ActiveRecordInterface
         $alreadyDumpedObjects['Country'][$this->hashCode()] = true;
         $keys = CountryTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getIsoNr(),
-            $keys[1] => $this->getAlpha2(),
-            $keys[2] => $this->getAlpha3(),
-            $keys[3] => $this->getIoc(),
-            $keys[4] => $this->getCapital(),
-            $keys[5] => $this->getTld(),
-            $keys[6] => $this->getPhone(),
-            $keys[7] => $this->getTerritoryIsoNr(),
-            $keys[8] => $this->getCurrencyIsoNr(),
-            $keys[9] => $this->getOfficialLocalName(),
-            $keys[10] => $this->getOfficialEnName(),
-            $keys[11] => $this->getShortLocalName(),
-            $keys[12] => $this->getShortEnName(),
-            $keys[13] => $this->getBboxSwLat(),
-            $keys[14] => $this->getBboxSwLng(),
-            $keys[15] => $this->getBboxNeLat(),
-            $keys[16] => $this->getBboxNeLng(),
+            $keys[0] => $this->getId(),
+            $keys[1] => $this->getNumeric(),
+            $keys[2] => $this->getAlpha2(),
+            $keys[3] => $this->getAlpha3(),
+            $keys[4] => $this->getShortName(),
+            $keys[5] => $this->getIoc(),
+            $keys[6] => $this->getTld(),
+            $keys[7] => $this->getPhone(),
+            $keys[8] => $this->getCapital(),
+            $keys[9] => $this->getPostalCodeFormat(),
+            $keys[10] => $this->getPostalCodeRegex(),
+            $keys[11] => $this->getContinentId(),
+            $keys[12] => $this->getCurrencyId(),
+            $keys[13] => $this->getTypeId(),
+            $keys[14] => $this->getSubtypeId(),
+            $keys[15] => $this->getSovereignityId(),
+            $keys[16] => $this->getFormalName(),
+            $keys[17] => $this->getFormalNativeName(),
+            $keys[18] => $this->getShortNativeName(),
+            $keys[19] => $this->getBboxSwLat(),
+            $keys[20] => $this->getBboxSwLng(),
+            $keys[21] => $this->getBboxNeLat(),
+            $keys[22] => $this->getBboxNeLng(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1574,20 +1939,20 @@ abstract class Country implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aTerritory) {
+            if (null !== $this->aContinent) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'territory';
+                        $key = 'continent';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'kk_territory';
+                        $key = 'kk_continent';
                         break;
                     default:
-                        $key = 'Territory';
+                        $key = 'Continent';
                 }
 
-                $result[$key] = $this->aTerritory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aContinent->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aCurrency) {
 
@@ -1604,20 +1969,65 @@ abstract class Country implements ActiveRecordInterface
 
                 $result[$key] = $this->aCurrency->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collLocalizations) {
+            if (null !== $this->aType) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'localizations';
+                        $key = 'regionType';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'kk_localizations';
+                        $key = 'kk_region_type';
                         break;
                     default:
-                        $key = 'Localizations';
+                        $key = 'RegionType';
                 }
 
-                $result[$key] = $this->collLocalizations->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->aType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aSubtype) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'regionType';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_region_type';
+                        break;
+                    default:
+                        $key = 'RegionType';
+                }
+
+                $result[$key] = $this->aSubtype->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aCountryRelatedBySovereignityId) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'country';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_country';
+                        break;
+                    default:
+                        $key = 'Country';
+                }
+
+                $result[$key] = $this->aCountryRelatedBySovereignityId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collSubordinates) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'countries';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'kk_countries';
+                        break;
+                    default:
+                        $key = 'Countries';
+                }
+
+                $result[$key] = $this->collSubordinates->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collSubdivisions) {
 
@@ -1669,54 +2079,72 @@ abstract class Country implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setIsoNr($value);
+                $this->setId($value);
                 break;
             case 1:
-                $this->setAlpha2($value);
+                $this->setNumeric($value);
                 break;
             case 2:
-                $this->setAlpha3($value);
+                $this->setAlpha2($value);
                 break;
             case 3:
-                $this->setIoc($value);
+                $this->setAlpha3($value);
                 break;
             case 4:
-                $this->setCapital($value);
+                $this->setShortName($value);
                 break;
             case 5:
-                $this->setTld($value);
+                $this->setIoc($value);
                 break;
             case 6:
-                $this->setPhone($value);
+                $this->setTld($value);
                 break;
             case 7:
-                $this->setTerritoryIsoNr($value);
+                $this->setPhone($value);
                 break;
             case 8:
-                $this->setCurrencyIsoNr($value);
+                $this->setCapital($value);
                 break;
             case 9:
-                $this->setOfficialLocalName($value);
+                $this->setPostalCodeFormat($value);
                 break;
             case 10:
-                $this->setOfficialEnName($value);
+                $this->setPostalCodeRegex($value);
                 break;
             case 11:
-                $this->setShortLocalName($value);
+                $this->setContinentId($value);
                 break;
             case 12:
-                $this->setShortEnName($value);
+                $this->setCurrencyId($value);
                 break;
             case 13:
-                $this->setBboxSwLat($value);
+                $this->setTypeId($value);
                 break;
             case 14:
-                $this->setBboxSwLng($value);
+                $this->setSubtypeId($value);
                 break;
             case 15:
-                $this->setBboxNeLat($value);
+                $this->setSovereignityId($value);
                 break;
             case 16:
+                $this->setFormalName($value);
+                break;
+            case 17:
+                $this->setFormalNativeName($value);
+                break;
+            case 18:
+                $this->setShortNativeName($value);
+                break;
+            case 19:
+                $this->setBboxSwLat($value);
+                break;
+            case 20:
+                $this->setBboxSwLng($value);
+                break;
+            case 21:
+                $this->setBboxNeLat($value);
+                break;
+            case 22:
                 $this->setBboxNeLng($value);
                 break;
         } // switch()
@@ -1746,55 +2174,73 @@ abstract class Country implements ActiveRecordInterface
         $keys = CountryTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setIsoNr($arr[$keys[0]]);
+            $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setAlpha2($arr[$keys[1]]);
+            $this->setNumeric($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setAlpha3($arr[$keys[2]]);
+            $this->setAlpha2($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setIoc($arr[$keys[3]]);
+            $this->setAlpha3($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setCapital($arr[$keys[4]]);
+            $this->setShortName($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setTld($arr[$keys[5]]);
+            $this->setIoc($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setPhone($arr[$keys[6]]);
+            $this->setTld($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setTerritoryIsoNr($arr[$keys[7]]);
+            $this->setPhone($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setCurrencyIsoNr($arr[$keys[8]]);
+            $this->setCapital($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setOfficialLocalName($arr[$keys[9]]);
+            $this->setPostalCodeFormat($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setOfficialEnName($arr[$keys[10]]);
+            $this->setPostalCodeRegex($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setShortLocalName($arr[$keys[11]]);
+            $this->setContinentId($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setShortEnName($arr[$keys[12]]);
+            $this->setCurrencyId($arr[$keys[12]]);
         }
         if (array_key_exists($keys[13], $arr)) {
-            $this->setBboxSwLat($arr[$keys[13]]);
+            $this->setTypeId($arr[$keys[13]]);
         }
         if (array_key_exists($keys[14], $arr)) {
-            $this->setBboxSwLng($arr[$keys[14]]);
+            $this->setSubtypeId($arr[$keys[14]]);
         }
         if (array_key_exists($keys[15], $arr)) {
-            $this->setBboxNeLat($arr[$keys[15]]);
+            $this->setSovereignityId($arr[$keys[15]]);
         }
         if (array_key_exists($keys[16], $arr)) {
-            $this->setBboxNeLng($arr[$keys[16]]);
+            $this->setFormalName($arr[$keys[16]]);
+        }
+        if (array_key_exists($keys[17], $arr)) {
+            $this->setFormalNativeName($arr[$keys[17]]);
+        }
+        if (array_key_exists($keys[18], $arr)) {
+            $this->setShortNativeName($arr[$keys[18]]);
+        }
+        if (array_key_exists($keys[19], $arr)) {
+            $this->setBboxSwLat($arr[$keys[19]]);
+        }
+        if (array_key_exists($keys[20], $arr)) {
+            $this->setBboxSwLng($arr[$keys[20]]);
+        }
+        if (array_key_exists($keys[21], $arr)) {
+            $this->setBboxNeLat($arr[$keys[21]]);
+        }
+        if (array_key_exists($keys[22], $arr)) {
+            $this->setBboxNeLng($arr[$keys[22]]);
         }
     }
 
@@ -1837,8 +2283,11 @@ abstract class Country implements ActiveRecordInterface
     {
         $criteria = new Criteria(CountryTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(CountryTableMap::COL_ISO_NR)) {
-            $criteria->add(CountryTableMap::COL_ISO_NR, $this->iso_nr);
+        if ($this->isColumnModified(CountryTableMap::COL_ID)) {
+            $criteria->add(CountryTableMap::COL_ID, $this->id);
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_NUMERIC)) {
+            $criteria->add(CountryTableMap::COL_NUMERIC, $this->numeric);
         }
         if ($this->isColumnModified(CountryTableMap::COL_ALPHA_2)) {
             $criteria->add(CountryTableMap::COL_ALPHA_2, $this->alpha_2);
@@ -1846,11 +2295,11 @@ abstract class Country implements ActiveRecordInterface
         if ($this->isColumnModified(CountryTableMap::COL_ALPHA_3)) {
             $criteria->add(CountryTableMap::COL_ALPHA_3, $this->alpha_3);
         }
+        if ($this->isColumnModified(CountryTableMap::COL_SHORT_NAME)) {
+            $criteria->add(CountryTableMap::COL_SHORT_NAME, $this->short_name);
+        }
         if ($this->isColumnModified(CountryTableMap::COL_IOC)) {
             $criteria->add(CountryTableMap::COL_IOC, $this->ioc);
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_CAPITAL)) {
-            $criteria->add(CountryTableMap::COL_CAPITAL, $this->capital);
         }
         if ($this->isColumnModified(CountryTableMap::COL_TLD)) {
             $criteria->add(CountryTableMap::COL_TLD, $this->tld);
@@ -1858,23 +2307,38 @@ abstract class Country implements ActiveRecordInterface
         if ($this->isColumnModified(CountryTableMap::COL_PHONE)) {
             $criteria->add(CountryTableMap::COL_PHONE, $this->phone);
         }
-        if ($this->isColumnModified(CountryTableMap::COL_TERRITORY_ISO_NR)) {
-            $criteria->add(CountryTableMap::COL_TERRITORY_ISO_NR, $this->territory_iso_nr);
+        if ($this->isColumnModified(CountryTableMap::COL_CAPITAL)) {
+            $criteria->add(CountryTableMap::COL_CAPITAL, $this->capital);
         }
-        if ($this->isColumnModified(CountryTableMap::COL_CURRENCY_ISO_NR)) {
-            $criteria->add(CountryTableMap::COL_CURRENCY_ISO_NR, $this->currency_iso_nr);
+        if ($this->isColumnModified(CountryTableMap::COL_POSTAL_CODE_FORMAT)) {
+            $criteria->add(CountryTableMap::COL_POSTAL_CODE_FORMAT, $this->postal_code_format);
         }
-        if ($this->isColumnModified(CountryTableMap::COL_OFFICIAL_LOCAL_NAME)) {
-            $criteria->add(CountryTableMap::COL_OFFICIAL_LOCAL_NAME, $this->official_local_name);
+        if ($this->isColumnModified(CountryTableMap::COL_POSTAL_CODE_REGEX)) {
+            $criteria->add(CountryTableMap::COL_POSTAL_CODE_REGEX, $this->postal_code_regex);
         }
-        if ($this->isColumnModified(CountryTableMap::COL_OFFICIAL_EN_NAME)) {
-            $criteria->add(CountryTableMap::COL_OFFICIAL_EN_NAME, $this->official_en_name);
+        if ($this->isColumnModified(CountryTableMap::COL_CONTINENT_ID)) {
+            $criteria->add(CountryTableMap::COL_CONTINENT_ID, $this->continent_id);
         }
-        if ($this->isColumnModified(CountryTableMap::COL_SHORT_LOCAL_NAME)) {
-            $criteria->add(CountryTableMap::COL_SHORT_LOCAL_NAME, $this->short_local_name);
+        if ($this->isColumnModified(CountryTableMap::COL_CURRENCY_ID)) {
+            $criteria->add(CountryTableMap::COL_CURRENCY_ID, $this->currency_id);
         }
-        if ($this->isColumnModified(CountryTableMap::COL_SHORT_EN_NAME)) {
-            $criteria->add(CountryTableMap::COL_SHORT_EN_NAME, $this->short_en_name);
+        if ($this->isColumnModified(CountryTableMap::COL_TYPE_ID)) {
+            $criteria->add(CountryTableMap::COL_TYPE_ID, $this->type_id);
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_SUBTYPE_ID)) {
+            $criteria->add(CountryTableMap::COL_SUBTYPE_ID, $this->subtype_id);
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_SOVEREIGNITY_ID)) {
+            $criteria->add(CountryTableMap::COL_SOVEREIGNITY_ID, $this->sovereignity_id);
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_FORMAL_NAME)) {
+            $criteria->add(CountryTableMap::COL_FORMAL_NAME, $this->formal_name);
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_FORMAL_NATIVE_NAME)) {
+            $criteria->add(CountryTableMap::COL_FORMAL_NATIVE_NAME, $this->formal_native_name);
+        }
+        if ($this->isColumnModified(CountryTableMap::COL_SHORT_NATIVE_NAME)) {
+            $criteria->add(CountryTableMap::COL_SHORT_NATIVE_NAME, $this->short_native_name);
         }
         if ($this->isColumnModified(CountryTableMap::COL_BBOX_SW_LAT)) {
             $criteria->add(CountryTableMap::COL_BBOX_SW_LAT, $this->bbox_sw_lat);
@@ -1905,7 +2369,7 @@ abstract class Country implements ActiveRecordInterface
     public function buildPkeyCriteria()
     {
         $criteria = ChildCountryQuery::create();
-        $criteria->add(CountryTableMap::COL_ISO_NR, $this->iso_nr);
+        $criteria->add(CountryTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1918,7 +2382,7 @@ abstract class Country implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getIsoNr();
+        $validPk = null !== $this->getId();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1938,18 +2402,18 @@ abstract class Country implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getIsoNr();
+        return $this->getId();
     }
 
     /**
-     * Generic method to set the primary key (iso_nr column).
+     * Generic method to set the primary key (id column).
      *
      * @param       int $key Primary key.
      * @return void
      */
     public function setPrimaryKey($key)
     {
-        $this->setIsoNr($key);
+        $this->setId($key);
     }
 
     /**
@@ -1958,7 +2422,7 @@ abstract class Country implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getIsoNr();
+        return null === $this->getId();
     }
 
     /**
@@ -1974,19 +2438,24 @@ abstract class Country implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setIsoNr($this->getIsoNr());
+        $copyObj->setNumeric($this->getNumeric());
         $copyObj->setAlpha2($this->getAlpha2());
         $copyObj->setAlpha3($this->getAlpha3());
+        $copyObj->setShortName($this->getShortName());
         $copyObj->setIoc($this->getIoc());
-        $copyObj->setCapital($this->getCapital());
         $copyObj->setTld($this->getTld());
         $copyObj->setPhone($this->getPhone());
-        $copyObj->setTerritoryIsoNr($this->getTerritoryIsoNr());
-        $copyObj->setCurrencyIsoNr($this->getCurrencyIsoNr());
-        $copyObj->setOfficialLocalName($this->getOfficialLocalName());
-        $copyObj->setOfficialEnName($this->getOfficialEnName());
-        $copyObj->setShortLocalName($this->getShortLocalName());
-        $copyObj->setShortEnName($this->getShortEnName());
+        $copyObj->setCapital($this->getCapital());
+        $copyObj->setPostalCodeFormat($this->getPostalCodeFormat());
+        $copyObj->setPostalCodeRegex($this->getPostalCodeRegex());
+        $copyObj->setContinentId($this->getContinentId());
+        $copyObj->setCurrencyId($this->getCurrencyId());
+        $copyObj->setTypeId($this->getTypeId());
+        $copyObj->setSubtypeId($this->getSubtypeId());
+        $copyObj->setSovereignityId($this->getSovereignityId());
+        $copyObj->setFormalName($this->getFormalName());
+        $copyObj->setFormalNativeName($this->getFormalNativeName());
+        $copyObj->setShortNativeName($this->getShortNativeName());
         $copyObj->setBboxSwLat($this->getBboxSwLat());
         $copyObj->setBboxSwLng($this->getBboxSwLng());
         $copyObj->setBboxNeLat($this->getBboxNeLat());
@@ -1997,9 +2466,9 @@ abstract class Country implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getLocalizations() as $relObj) {
+            foreach ($this->getSubordinates() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addLocalization($relObj->copy($deepCopy));
+                    $copyObj->addSubordinate($relObj->copy($deepCopy));
                 }
             }
 
@@ -2013,6 +2482,7 @@ abstract class Country implements ActiveRecordInterface
 
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -2039,24 +2509,24 @@ abstract class Country implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildTerritory object.
+     * Declares an association between this object and a ChildContinent object.
      *
-     * @param  ChildTerritory $v
+     * @param  ChildContinent $v
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setTerritory(ChildTerritory $v = null)
+    public function setContinent(ChildContinent $v = null)
     {
         if ($v === null) {
-            $this->setTerritoryIsoNr(NULL);
+            $this->setContinentId(NULL);
         } else {
-            $this->setTerritoryIsoNr($v->getIsoNr());
+            $this->setContinentId($v->getId());
         }
 
-        $this->aTerritory = $v;
+        $this->aContinent = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildTerritory object, it will not be re-added.
+        // If this object has already been added to the ChildContinent object, it will not be re-added.
         if ($v !== null) {
             $v->addCountry($this);
         }
@@ -2067,26 +2537,26 @@ abstract class Country implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildTerritory object
+     * Get the associated ChildContinent object
      *
      * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildTerritory The associated ChildTerritory object.
+     * @return ChildContinent The associated ChildContinent object.
      * @throws PropelException
      */
-    public function getTerritory(ConnectionInterface $con = null)
+    public function getContinent(ConnectionInterface $con = null)
     {
-        if ($this->aTerritory === null && ($this->territory_iso_nr !== null)) {
-            $this->aTerritory = ChildTerritoryQuery::create()->findPk($this->territory_iso_nr, $con);
+        if ($this->aContinent === null && ($this->continent_id !== null)) {
+            $this->aContinent = ChildContinentQuery::create()->findPk($this->continent_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aTerritory->addCountries($this);
+                $this->aContinent->addCountries($this);
              */
         }
 
-        return $this->aTerritory;
+        return $this->aContinent;
     }
 
     /**
@@ -2099,9 +2569,9 @@ abstract class Country implements ActiveRecordInterface
     public function setCurrency(ChildCurrency $v = null)
     {
         if ($v === null) {
-            $this->setCurrencyIsoNr(NULL);
+            $this->setCurrencyId(NULL);
         } else {
-            $this->setCurrencyIsoNr($v->getIsoNr());
+            $this->setCurrencyId($v->getId());
         }
 
         $this->aCurrency = $v;
@@ -2126,8 +2596,8 @@ abstract class Country implements ActiveRecordInterface
      */
     public function getCurrency(ConnectionInterface $con = null)
     {
-        if ($this->aCurrency === null && ($this->currency_iso_nr !== null)) {
-            $this->aCurrency = ChildCurrencyQuery::create()->findPk($this->currency_iso_nr, $con);
+        if ($this->aCurrency === null && ($this->currency_id !== null)) {
+            $this->aCurrency = ChildCurrencyQuery::create()->findPk($this->currency_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
@@ -2138,6 +2608,159 @@ abstract class Country implements ActiveRecordInterface
         }
 
         return $this->aCurrency;
+    }
+
+    /**
+     * Declares an association between this object and a ChildRegionType object.
+     *
+     * @param  ChildRegionType $v
+     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setType(ChildRegionType $v = null)
+    {
+        if ($v === null) {
+            $this->setTypeId(NULL);
+        } else {
+            $this->setTypeId($v->getId());
+        }
+
+        $this->aType = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildRegionType object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCountryRelatedByTypeId($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildRegionType object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildRegionType The associated ChildRegionType object.
+     * @throws PropelException
+     */
+    public function getType(ConnectionInterface $con = null)
+    {
+        if ($this->aType === null && ($this->type_id !== null)) {
+            $this->aType = ChildRegionTypeQuery::create()->findPk($this->type_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aType->addCountriesRelatedByTypeId($this);
+             */
+        }
+
+        return $this->aType;
+    }
+
+    /**
+     * Declares an association between this object and a ChildRegionType object.
+     *
+     * @param  ChildRegionType $v
+     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setSubtype(ChildRegionType $v = null)
+    {
+        if ($v === null) {
+            $this->setSubtypeId(NULL);
+        } else {
+            $this->setSubtypeId($v->getId());
+        }
+
+        $this->aSubtype = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildRegionType object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCountryRelatedBySubtypeId($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildRegionType object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildRegionType The associated ChildRegionType object.
+     * @throws PropelException
+     */
+    public function getSubtype(ConnectionInterface $con = null)
+    {
+        if ($this->aSubtype === null && ($this->subtype_id !== null)) {
+            $this->aSubtype = ChildRegionTypeQuery::create()->findPk($this->subtype_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aSubtype->addCountriesRelatedBySubtypeId($this);
+             */
+        }
+
+        return $this->aSubtype;
+    }
+
+    /**
+     * Declares an association between this object and a ChildCountry object.
+     *
+     * @param  ChildCountry $v
+     * @return $this|\keeko\core\model\Country The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setCountryRelatedBySovereignityId(ChildCountry $v = null)
+    {
+        if ($v === null) {
+            $this->setSovereignityId(NULL);
+        } else {
+            $this->setSovereignityId($v->getId());
+        }
+
+        $this->aCountryRelatedBySovereignityId = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildCountry object, it will not be re-added.
+        if ($v !== null) {
+            $v->addSubordinate($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildCountry object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildCountry The associated ChildCountry object.
+     * @throws PropelException
+     */
+    public function getCountryRelatedBySovereignityId(ConnectionInterface $con = null)
+    {
+        if ($this->aCountryRelatedBySovereignityId === null && ($this->sovereignity_id !== null)) {
+            $this->aCountryRelatedBySovereignityId = ChildCountryQuery::create()->findPk($this->sovereignity_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aCountryRelatedBySovereignityId->addSubordinates($this);
+             */
+        }
+
+        return $this->aCountryRelatedBySovereignityId;
     }
 
 
@@ -2151,8 +2774,8 @@ abstract class Country implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('Localization' == $relationName) {
-            return $this->initLocalizations();
+        if ('Subordinate' == $relationName) {
+            return $this->initSubordinates();
         }
         if ('Subdivision' == $relationName) {
             return $this->initSubdivisions();
@@ -2160,31 +2783,31 @@ abstract class Country implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collLocalizations collection
+     * Clears out the collSubordinates collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addLocalizations()
+     * @see        addSubordinates()
      */
-    public function clearLocalizations()
+    public function clearSubordinates()
     {
-        $this->collLocalizations = null; // important to set this to NULL since that means it is uninitialized
+        $this->collSubordinates = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collLocalizations collection loaded partially.
+     * Reset is the collSubordinates collection loaded partially.
      */
-    public function resetPartialLocalizations($v = true)
+    public function resetPartialSubordinates($v = true)
     {
-        $this->collLocalizationsPartial = $v;
+        $this->collSubordinatesPartial = $v;
     }
 
     /**
-     * Initializes the collLocalizations collection.
+     * Initializes the collSubordinates collection.
      *
-     * By default this just sets the collLocalizations collection to an empty array (like clearcollLocalizations());
+     * By default this just sets the collSubordinates collection to an empty array (like clearcollSubordinates());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -2193,17 +2816,17 @@ abstract class Country implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initLocalizations($overrideExisting = true)
+    public function initSubordinates($overrideExisting = true)
     {
-        if (null !== $this->collLocalizations && !$overrideExisting) {
+        if (null !== $this->collSubordinates && !$overrideExisting) {
             return;
         }
-        $this->collLocalizations = new ObjectCollection();
-        $this->collLocalizations->setModel('\keeko\core\model\Localization');
+        $this->collSubordinates = new ObjectCollection();
+        $this->collSubordinates->setModel('\keeko\core\model\Country');
     }
 
     /**
-     * Gets an array of ChildLocalization objects which contain a foreign key that references this object.
+     * Gets an array of ChildCountry objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -2213,165 +2836,165 @@ abstract class Country implements ActiveRecordInterface
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
+     * @return ObjectCollection|ChildCountry[] List of ChildCountry objects
      * @throws PropelException
      */
-    public function getLocalizations(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getSubordinates(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collLocalizationsPartial && !$this->isNew();
-        if (null === $this->collLocalizations || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collLocalizations) {
+        $partial = $this->collSubordinatesPartial && !$this->isNew();
+        if (null === $this->collSubordinates || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collSubordinates) {
                 // return empty collection
-                $this->initLocalizations();
+                $this->initSubordinates();
             } else {
-                $collLocalizations = ChildLocalizationQuery::create(null, $criteria)
-                    ->filterByCountry($this)
+                $collSubordinates = ChildCountryQuery::create(null, $criteria)
+                    ->filterByCountryRelatedBySovereignityId($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collLocalizationsPartial && count($collLocalizations)) {
-                        $this->initLocalizations(false);
+                    if (false !== $this->collSubordinatesPartial && count($collSubordinates)) {
+                        $this->initSubordinates(false);
 
-                        foreach ($collLocalizations as $obj) {
-                            if (false == $this->collLocalizations->contains($obj)) {
-                                $this->collLocalizations->append($obj);
+                        foreach ($collSubordinates as $obj) {
+                            if (false == $this->collSubordinates->contains($obj)) {
+                                $this->collSubordinates->append($obj);
                             }
                         }
 
-                        $this->collLocalizationsPartial = true;
+                        $this->collSubordinatesPartial = true;
                     }
 
-                    return $collLocalizations;
+                    return $collSubordinates;
                 }
 
-                if ($partial && $this->collLocalizations) {
-                    foreach ($this->collLocalizations as $obj) {
+                if ($partial && $this->collSubordinates) {
+                    foreach ($this->collSubordinates as $obj) {
                         if ($obj->isNew()) {
-                            $collLocalizations[] = $obj;
+                            $collSubordinates[] = $obj;
                         }
                     }
                 }
 
-                $this->collLocalizations = $collLocalizations;
-                $this->collLocalizationsPartial = false;
+                $this->collSubordinates = $collSubordinates;
+                $this->collSubordinatesPartial = false;
             }
         }
 
-        return $this->collLocalizations;
+        return $this->collSubordinates;
     }
 
     /**
-     * Sets a collection of ChildLocalization objects related by a one-to-many relationship
+     * Sets a collection of ChildCountry objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $localizations A Propel collection.
+     * @param      Collection $subordinates A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildCountry The current object (for fluent API support)
      */
-    public function setLocalizations(Collection $localizations, ConnectionInterface $con = null)
+    public function setSubordinates(Collection $subordinates, ConnectionInterface $con = null)
     {
-        /** @var ChildLocalization[] $localizationsToDelete */
-        $localizationsToDelete = $this->getLocalizations(new Criteria(), $con)->diff($localizations);
+        /** @var ChildCountry[] $subordinatesToDelete */
+        $subordinatesToDelete = $this->getSubordinates(new Criteria(), $con)->diff($subordinates);
 
 
-        $this->localizationsScheduledForDeletion = $localizationsToDelete;
+        $this->subordinatesScheduledForDeletion = $subordinatesToDelete;
 
-        foreach ($localizationsToDelete as $localizationRemoved) {
-            $localizationRemoved->setCountry(null);
+        foreach ($subordinatesToDelete as $subordinateRemoved) {
+            $subordinateRemoved->setCountryRelatedBySovereignityId(null);
         }
 
-        $this->collLocalizations = null;
-        foreach ($localizations as $localization) {
-            $this->addLocalization($localization);
+        $this->collSubordinates = null;
+        foreach ($subordinates as $subordinate) {
+            $this->addSubordinate($subordinate);
         }
 
-        $this->collLocalizations = $localizations;
-        $this->collLocalizationsPartial = false;
+        $this->collSubordinates = $subordinates;
+        $this->collSubordinatesPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related Localization objects.
+     * Returns the number of related Country objects.
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct
      * @param      ConnectionInterface $con
-     * @return int             Count of related Localization objects.
+     * @return int             Count of related Country objects.
      * @throws PropelException
      */
-    public function countLocalizations(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countSubordinates(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collLocalizationsPartial && !$this->isNew();
-        if (null === $this->collLocalizations || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collLocalizations) {
+        $partial = $this->collSubordinatesPartial && !$this->isNew();
+        if (null === $this->collSubordinates || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSubordinates) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getLocalizations());
+                return count($this->getSubordinates());
             }
 
-            $query = ChildLocalizationQuery::create(null, $criteria);
+            $query = ChildCountryQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
 
             return $query
-                ->filterByCountry($this)
+                ->filterByCountryRelatedBySovereignityId($this)
                 ->count($con);
         }
 
-        return count($this->collLocalizations);
+        return count($this->collSubordinates);
     }
 
     /**
-     * Method called to associate a ChildLocalization object to this object
-     * through the ChildLocalization foreign key attribute.
+     * Method called to associate a ChildCountry object to this object
+     * through the ChildCountry foreign key attribute.
      *
-     * @param  ChildLocalization $l ChildLocalization
+     * @param  ChildCountry $l ChildCountry
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function addLocalization(ChildLocalization $l)
+    public function addSubordinate(ChildCountry $l)
     {
-        if ($this->collLocalizations === null) {
-            $this->initLocalizations();
-            $this->collLocalizationsPartial = true;
+        if ($this->collSubordinates === null) {
+            $this->initSubordinates();
+            $this->collSubordinatesPartial = true;
         }
 
-        if (!$this->collLocalizations->contains($l)) {
-            $this->doAddLocalization($l);
+        if (!$this->collSubordinates->contains($l)) {
+            $this->doAddSubordinate($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildLocalization $localization The ChildLocalization object to add.
+     * @param ChildCountry $subordinate The ChildCountry object to add.
      */
-    protected function doAddLocalization(ChildLocalization $localization)
+    protected function doAddSubordinate(ChildCountry $subordinate)
     {
-        $this->collLocalizations[]= $localization;
-        $localization->setCountry($this);
+        $this->collSubordinates[]= $subordinate;
+        $subordinate->setCountryRelatedBySovereignityId($this);
     }
 
     /**
-     * @param  ChildLocalization $localization The ChildLocalization object to remove.
+     * @param  ChildCountry $subordinate The ChildCountry object to remove.
      * @return $this|ChildCountry The current object (for fluent API support)
      */
-    public function removeLocalization(ChildLocalization $localization)
+    public function removeSubordinate(ChildCountry $subordinate)
     {
-        if ($this->getLocalizations()->contains($localization)) {
-            $pos = $this->collLocalizations->search($localization);
-            $this->collLocalizations->remove($pos);
-            if (null === $this->localizationsScheduledForDeletion) {
-                $this->localizationsScheduledForDeletion = clone $this->collLocalizations;
-                $this->localizationsScheduledForDeletion->clear();
+        if ($this->getSubordinates()->contains($subordinate)) {
+            $pos = $this->collSubordinates->search($subordinate);
+            $this->collSubordinates->remove($pos);
+            if (null === $this->subordinatesScheduledForDeletion) {
+                $this->subordinatesScheduledForDeletion = clone $this->collSubordinates;
+                $this->subordinatesScheduledForDeletion->clear();
             }
-            $this->localizationsScheduledForDeletion[]= $localization;
-            $localization->setCountry(null);
+            $this->subordinatesScheduledForDeletion[]= $subordinate;
+            $subordinate->setCountryRelatedBySovereignityId(null);
         }
 
         return $this;
@@ -2383,7 +3006,7 @@ abstract class Country implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Country is new, it will return
      * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Localizations from storage.
+     * been saved, it will retrieve related Subordinates from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -2392,14 +3015,14 @@ abstract class Country implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
+     * @return ObjectCollection|ChildCountry[] List of ChildCountry objects
      */
-    public function getLocalizationsJoinLocalizationRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getSubordinatesJoinContinent(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildLocalizationQuery::create(null, $criteria);
-        $query->joinWith('LocalizationRelatedByParentId', $joinBehavior);
+        $query = ChildCountryQuery::create(null, $criteria);
+        $query->joinWith('Continent', $joinBehavior);
 
-        return $this->getLocalizations($query, $con);
+        return $this->getSubordinates($query, $con);
     }
 
 
@@ -2408,7 +3031,7 @@ abstract class Country implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Country is new, it will return
      * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Localizations from storage.
+     * been saved, it will retrieve related Subordinates from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -2417,14 +3040,64 @@ abstract class Country implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
+     * @return ObjectCollection|ChildCountry[] List of ChildCountry objects
      */
-    public function getLocalizationsJoinLanguage(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getSubordinatesJoinCurrency(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildLocalizationQuery::create(null, $criteria);
-        $query->joinWith('Language', $joinBehavior);
+        $query = ChildCountryQuery::create(null, $criteria);
+        $query->joinWith('Currency', $joinBehavior);
 
-        return $this->getLocalizations($query, $con);
+        return $this->getSubordinates($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Country is new, it will return
+     * an empty collection; or if this Country has previously
+     * been saved, it will retrieve related Subordinates from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Country.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildCountry[] List of ChildCountry objects
+     */
+    public function getSubordinatesJoinType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCountryQuery::create(null, $criteria);
+        $query->joinWith('Type', $joinBehavior);
+
+        return $this->getSubordinates($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Country is new, it will return
+     * an empty collection; or if this Country has previously
+     * been saved, it will retrieve related Subordinates from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Country.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildCountry[] List of ChildCountry objects
+     */
+    public function getSubordinatesJoinSubtype(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCountryQuery::create(null, $criteria);
+        $query->joinWith('Subtype', $joinBehavior);
+
+        return $this->getSubordinates($query, $con);
     }
 
     /**
@@ -2662,10 +3335,10 @@ abstract class Country implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildSubdivision[] List of ChildSubdivision objects
      */
-    public function getSubdivisionsJoinSubdivisionType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getSubdivisionsJoinRegionType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildSubdivisionQuery::create(null, $criteria);
-        $query->joinWith('SubdivisionType', $joinBehavior);
+        $query->joinWith('RegionType', $joinBehavior);
 
         return $this->getSubdivisions($query, $con);
     }
@@ -2677,25 +3350,40 @@ abstract class Country implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aTerritory) {
-            $this->aTerritory->removeCountry($this);
+        if (null !== $this->aContinent) {
+            $this->aContinent->removeCountry($this);
         }
         if (null !== $this->aCurrency) {
             $this->aCurrency->removeCountry($this);
         }
-        $this->iso_nr = null;
+        if (null !== $this->aType) {
+            $this->aType->removeCountryRelatedByTypeId($this);
+        }
+        if (null !== $this->aSubtype) {
+            $this->aSubtype->removeCountryRelatedBySubtypeId($this);
+        }
+        if (null !== $this->aCountryRelatedBySovereignityId) {
+            $this->aCountryRelatedBySovereignityId->removeSubordinate($this);
+        }
+        $this->id = null;
+        $this->numeric = null;
         $this->alpha_2 = null;
         $this->alpha_3 = null;
+        $this->short_name = null;
         $this->ioc = null;
-        $this->capital = null;
         $this->tld = null;
         $this->phone = null;
-        $this->territory_iso_nr = null;
-        $this->currency_iso_nr = null;
-        $this->official_local_name = null;
-        $this->official_en_name = null;
-        $this->short_local_name = null;
-        $this->short_en_name = null;
+        $this->capital = null;
+        $this->postal_code_format = null;
+        $this->postal_code_regex = null;
+        $this->continent_id = null;
+        $this->currency_id = null;
+        $this->type_id = null;
+        $this->subtype_id = null;
+        $this->sovereignity_id = null;
+        $this->formal_name = null;
+        $this->formal_native_name = null;
+        $this->short_native_name = null;
         $this->bbox_sw_lat = null;
         $this->bbox_sw_lng = null;
         $this->bbox_ne_lat = null;
@@ -2718,8 +3406,8 @@ abstract class Country implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collLocalizations) {
-                foreach ($this->collLocalizations as $o) {
+            if ($this->collSubordinates) {
+                foreach ($this->collSubordinates as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -2730,10 +3418,13 @@ abstract class Country implements ActiveRecordInterface
             }
         } // if ($deep)
 
-        $this->collLocalizations = null;
+        $this->collSubordinates = null;
         $this->collSubdivisions = null;
-        $this->aTerritory = null;
+        $this->aContinent = null;
         $this->aCurrency = null;
+        $this->aType = null;
+        $this->aSubtype = null;
+        $this->aCountryRelatedBySovereignityId = null;
     }
 
     /**

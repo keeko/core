@@ -20,9 +20,10 @@ use keeko\core\model\Map\CurrencyTableMap;
  *
  *
  *
- * @method     ChildCurrencyQuery orderByIsoNr($order = Criteria::ASC) Order by the iso_nr column
- * @method     ChildCurrencyQuery orderByIso3($order = Criteria::ASC) Order by the iso3 column
- * @method     ChildCurrencyQuery orderByEnName($order = Criteria::ASC) Order by the en_name column
+ * @method     ChildCurrencyQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildCurrencyQuery orderByNumeric($order = Criteria::ASC) Order by the numeric column
+ * @method     ChildCurrencyQuery orderByAlpha3($order = Criteria::ASC) Order by the alpha_3 column
+ * @method     ChildCurrencyQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildCurrencyQuery orderBySymbolLeft($order = Criteria::ASC) Order by the symbol_left column
  * @method     ChildCurrencyQuery orderBySymbolRight($order = Criteria::ASC) Order by the symbol_right column
  * @method     ChildCurrencyQuery orderByDecimalDigits($order = Criteria::ASC) Order by the decimal_digits column
@@ -30,9 +31,10 @@ use keeko\core\model\Map\CurrencyTableMap;
  * @method     ChildCurrencyQuery orderBySubSymbolLeft($order = Criteria::ASC) Order by the sub_symbol_left column
  * @method     ChildCurrencyQuery orderBySubSymbolRight($order = Criteria::ASC) Order by the sub_symbol_right column
  *
- * @method     ChildCurrencyQuery groupByIsoNr() Group by the iso_nr column
- * @method     ChildCurrencyQuery groupByIso3() Group by the iso3 column
- * @method     ChildCurrencyQuery groupByEnName() Group by the en_name column
+ * @method     ChildCurrencyQuery groupById() Group by the id column
+ * @method     ChildCurrencyQuery groupByNumeric() Group by the numeric column
+ * @method     ChildCurrencyQuery groupByAlpha3() Group by the alpha_3 column
+ * @method     ChildCurrencyQuery groupByName() Group by the name column
  * @method     ChildCurrencyQuery groupBySymbolLeft() Group by the symbol_left column
  * @method     ChildCurrencyQuery groupBySymbolRight() Group by the symbol_right column
  * @method     ChildCurrencyQuery groupByDecimalDigits() Group by the decimal_digits column
@@ -53,9 +55,10 @@ use keeko\core\model\Map\CurrencyTableMap;
  * @method     ChildCurrency findOne(ConnectionInterface $con = null) Return the first ChildCurrency matching the query
  * @method     ChildCurrency findOneOrCreate(ConnectionInterface $con = null) Return the first ChildCurrency matching the query, or a new ChildCurrency object populated from the query conditions when no match is found
  *
- * @method     ChildCurrency findOneByIsoNr(int $iso_nr) Return the first ChildCurrency filtered by the iso_nr column
- * @method     ChildCurrency findOneByIso3(string $iso3) Return the first ChildCurrency filtered by the iso3 column
- * @method     ChildCurrency findOneByEnName(string $en_name) Return the first ChildCurrency filtered by the en_name column
+ * @method     ChildCurrency findOneById(int $id) Return the first ChildCurrency filtered by the id column
+ * @method     ChildCurrency findOneByNumeric(int $numeric) Return the first ChildCurrency filtered by the numeric column
+ * @method     ChildCurrency findOneByAlpha3(string $alpha_3) Return the first ChildCurrency filtered by the alpha_3 column
+ * @method     ChildCurrency findOneByName(string $name) Return the first ChildCurrency filtered by the name column
  * @method     ChildCurrency findOneBySymbolLeft(string $symbol_left) Return the first ChildCurrency filtered by the symbol_left column
  * @method     ChildCurrency findOneBySymbolRight(string $symbol_right) Return the first ChildCurrency filtered by the symbol_right column
  * @method     ChildCurrency findOneByDecimalDigits(int $decimal_digits) Return the first ChildCurrency filtered by the decimal_digits column
@@ -66,9 +69,10 @@ use keeko\core\model\Map\CurrencyTableMap;
  * @method     ChildCurrency requirePk($key, ConnectionInterface $con = null) Return the ChildCurrency by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCurrency requireOne(ConnectionInterface $con = null) Return the first ChildCurrency matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildCurrency requireOneByIsoNr(int $iso_nr) Return the first ChildCurrency filtered by the iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildCurrency requireOneByIso3(string $iso3) Return the first ChildCurrency filtered by the iso3 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildCurrency requireOneByEnName(string $en_name) Return the first ChildCurrency filtered by the en_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneById(int $id) Return the first ChildCurrency filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneByNumeric(int $numeric) Return the first ChildCurrency filtered by the numeric column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneByAlpha3(string $alpha_3) Return the first ChildCurrency filtered by the alpha_3 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCurrency requireOneByName(string $name) Return the first ChildCurrency filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCurrency requireOneBySymbolLeft(string $symbol_left) Return the first ChildCurrency filtered by the symbol_left column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCurrency requireOneBySymbolRight(string $symbol_right) Return the first ChildCurrency filtered by the symbol_right column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCurrency requireOneByDecimalDigits(int $decimal_digits) Return the first ChildCurrency filtered by the decimal_digits column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -77,9 +81,10 @@ use keeko\core\model\Map\CurrencyTableMap;
  * @method     ChildCurrency requireOneBySubSymbolRight(string $sub_symbol_right) Return the first ChildCurrency filtered by the sub_symbol_right column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildCurrency[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildCurrency objects based on current ModelCriteria
- * @method     ChildCurrency[]|ObjectCollection findByIsoNr(int $iso_nr) Return ChildCurrency objects filtered by the iso_nr column
- * @method     ChildCurrency[]|ObjectCollection findByIso3(string $iso3) Return ChildCurrency objects filtered by the iso3 column
- * @method     ChildCurrency[]|ObjectCollection findByEnName(string $en_name) Return ChildCurrency objects filtered by the en_name column
+ * @method     ChildCurrency[]|ObjectCollection findById(int $id) Return ChildCurrency objects filtered by the id column
+ * @method     ChildCurrency[]|ObjectCollection findByNumeric(int $numeric) Return ChildCurrency objects filtered by the numeric column
+ * @method     ChildCurrency[]|ObjectCollection findByAlpha3(string $alpha_3) Return ChildCurrency objects filtered by the alpha_3 column
+ * @method     ChildCurrency[]|ObjectCollection findByName(string $name) Return ChildCurrency objects filtered by the name column
  * @method     ChildCurrency[]|ObjectCollection findBySymbolLeft(string $symbol_left) Return ChildCurrency objects filtered by the symbol_left column
  * @method     ChildCurrency[]|ObjectCollection findBySymbolRight(string $symbol_right) Return ChildCurrency objects filtered by the symbol_right column
  * @method     ChildCurrency[]|ObjectCollection findByDecimalDigits(int $decimal_digits) Return ChildCurrency objects filtered by the decimal_digits column
@@ -178,7 +183,7 @@ abstract class CurrencyQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `iso_nr`, `iso3`, `en_name`, `symbol_left`, `symbol_right`, `decimal_digits`, `sub_divisor`, `sub_symbol_left`, `sub_symbol_right` FROM `kk_currency` WHERE `iso_nr` = :p0';
+        $sql = 'SELECT `id`, `numeric`, `alpha_3`, `name`, `symbol_left`, `symbol_right`, `decimal_digits`, `sub_divisor`, `sub_symbol_left`, `sub_symbol_right` FROM `kk_currency` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -252,7 +257,7 @@ abstract class CurrencyQuery extends ModelCriteria
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(CurrencyTableMap::COL_ISO_NR, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(CurrencyTableMap::COL_ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -265,20 +270,20 @@ abstract class CurrencyQuery extends ModelCriteria
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(CurrencyTableMap::COL_ISO_NR, $keys, Criteria::IN);
+        return $this->addUsingAlias(CurrencyTableMap::COL_ID, $keys, Criteria::IN);
     }
 
     /**
-     * Filter the query on the iso_nr column
+     * Filter the query on the id column
      *
      * Example usage:
      * <code>
-     * $query->filterByIsoNr(1234); // WHERE iso_nr = 1234
-     * $query->filterByIsoNr(array(12, 34)); // WHERE iso_nr IN (12, 34)
-     * $query->filterByIsoNr(array('min' => 12)); // WHERE iso_nr > 12
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
      * </code>
      *
-     * @param     mixed $isoNr The value to use as filter.
+     * @param     mixed $id The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -286,16 +291,16 @@ abstract class CurrencyQuery extends ModelCriteria
      *
      * @return $this|ChildCurrencyQuery The current query, for fluid interface
      */
-    public function filterByIsoNr($isoNr = null, $comparison = null)
+    public function filterById($id = null, $comparison = null)
     {
-        if (is_array($isoNr)) {
+        if (is_array($id)) {
             $useMinMax = false;
-            if (isset($isoNr['min'])) {
-                $this->addUsingAlias(CurrencyTableMap::COL_ISO_NR, $isoNr['min'], Criteria::GREATER_EQUAL);
+            if (isset($id['min'])) {
+                $this->addUsingAlias(CurrencyTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($isoNr['max'])) {
-                $this->addUsingAlias(CurrencyTableMap::COL_ISO_NR, $isoNr['max'], Criteria::LESS_EQUAL);
+            if (isset($id['max'])) {
+                $this->addUsingAlias(CurrencyTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -306,65 +311,106 @@ abstract class CurrencyQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(CurrencyTableMap::COL_ISO_NR, $isoNr, $comparison);
+        return $this->addUsingAlias(CurrencyTableMap::COL_ID, $id, $comparison);
     }
 
     /**
-     * Filter the query on the iso3 column
+     * Filter the query on the numeric column
      *
      * Example usage:
      * <code>
-     * $query->filterByIso3('fooValue');   // WHERE iso3 = 'fooValue'
-     * $query->filterByIso3('%fooValue%'); // WHERE iso3 LIKE '%fooValue%'
+     * $query->filterByNumeric(1234); // WHERE numeric = 1234
+     * $query->filterByNumeric(array(12, 34)); // WHERE numeric IN (12, 34)
+     * $query->filterByNumeric(array('min' => 12)); // WHERE numeric > 12
      * </code>
      *
-     * @param     string $iso3 The value to use as filter.
+     * @param     mixed $numeric The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCurrencyQuery The current query, for fluid interface
+     */
+    public function filterByNumeric($numeric = null, $comparison = null)
+    {
+        if (is_array($numeric)) {
+            $useMinMax = false;
+            if (isset($numeric['min'])) {
+                $this->addUsingAlias(CurrencyTableMap::COL_NUMERIC, $numeric['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($numeric['max'])) {
+                $this->addUsingAlias(CurrencyTableMap::COL_NUMERIC, $numeric['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CurrencyTableMap::COL_NUMERIC, $numeric, $comparison);
+    }
+
+    /**
+     * Filter the query on the alpha_3 column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByAlpha3('fooValue');   // WHERE alpha_3 = 'fooValue'
+     * $query->filterByAlpha3('%fooValue%'); // WHERE alpha_3 LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $alpha3 The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCurrencyQuery The current query, for fluid interface
      */
-    public function filterByIso3($iso3 = null, $comparison = null)
+    public function filterByAlpha3($alpha3 = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($iso3)) {
+            if (is_array($alpha3)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $iso3)) {
-                $iso3 = str_replace('*', '%', $iso3);
+            } elseif (preg_match('/[\%\*]/', $alpha3)) {
+                $alpha3 = str_replace('*', '%', $alpha3);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(CurrencyTableMap::COL_ISO3, $iso3, $comparison);
+        return $this->addUsingAlias(CurrencyTableMap::COL_ALPHA_3, $alpha3, $comparison);
     }
 
     /**
-     * Filter the query on the en_name column
+     * Filter the query on the name column
      *
      * Example usage:
      * <code>
-     * $query->filterByEnName('fooValue');   // WHERE en_name = 'fooValue'
-     * $query->filterByEnName('%fooValue%'); // WHERE en_name LIKE '%fooValue%'
+     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $enName The value to use as filter.
+     * @param     string $name The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCurrencyQuery The current query, for fluid interface
      */
-    public function filterByEnName($enName = null, $comparison = null)
+    public function filterByName($name = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($enName)) {
+            if (is_array($name)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $enName)) {
-                $enName = str_replace('*', '%', $enName);
+            } elseif (preg_match('/[\%\*]/', $name)) {
+                $name = str_replace('*', '%', $name);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(CurrencyTableMap::COL_EN_NAME, $enName, $comparison);
+        return $this->addUsingAlias(CurrencyTableMap::COL_NAME, $name, $comparison);
     }
 
     /**
@@ -577,7 +623,7 @@ abstract class CurrencyQuery extends ModelCriteria
     {
         if ($country instanceof \keeko\core\model\Country) {
             return $this
-                ->addUsingAlias(CurrencyTableMap::COL_ISO_NR, $country->getCurrencyIsoNr(), $comparison);
+                ->addUsingAlias(CurrencyTableMap::COL_ID, $country->getCurrencyId(), $comparison);
         } elseif ($country instanceof ObjectCollection) {
             return $this
                 ->useCountryQuery()
@@ -648,7 +694,7 @@ abstract class CurrencyQuery extends ModelCriteria
     public function prune($currency = null)
     {
         if ($currency) {
-            $this->addUsingAlias(CurrencyTableMap::COL_ISO_NR, $currency->getIsoNr(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(CurrencyTableMap::COL_ID, $currency->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;

@@ -54,8 +54,9 @@ if ($dbConfig->isLoaded()) {
 	$serviceContainer->setConnectionManager('keeko', $manager);
 	$serviceContainer->setDefaultDatasource('keeko');
 	
+	// set utf-8
 	$con = Propel::getWriteConnection('keeko');
-// 	$con->exec('SET NAMES utf-8;');
+	$con->exec('SET NAMES utf8 COLLATE utf8_unicode_ci, COLLATION_CONNECTION = utf8_unicode_ci, COLLATION_DATABASE = utf8_unicode_ci, COLLATION_SERVER = utf8_unicode_ci;');
 // 	$con->exec('SET SQL_SAFE_UPDATES=0;');
 	
 	if (KEEKO_ENVIRONMENT == KEEKO_DEVELOPMENT) {

@@ -596,10 +596,9 @@ abstract class LanguageScope implements ActiveRecordInterface
 
             if ($this->languagesScheduledForDeletion !== null) {
                 if (!$this->languagesScheduledForDeletion->isEmpty()) {
-                    foreach ($this->languagesScheduledForDeletion as $language) {
-                        // need to save related object because we set the relation to null
-                        $language->save($con);
-                    }
+                    \keeko\core\model\LanguageQuery::create()
+                        ->filterByPrimaryKeys($this->languagesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
                     $this->languagesScheduledForDeletion = null;
                 }
             }
@@ -1113,7 +1112,7 @@ abstract class LanguageScope implements ActiveRecordInterface
                 $this->initLanguages();
             } else {
                 $collLanguages = ChildLanguageQuery::create(null, $criteria)
-                    ->filterByLanguageScope($this)
+                    ->filterByScope($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -1167,7 +1166,7 @@ abstract class LanguageScope implements ActiveRecordInterface
         $this->languagesScheduledForDeletion = $languagesToDelete;
 
         foreach ($languagesToDelete as $languageRemoved) {
-            $languageRemoved->setLanguageScope(null);
+            $languageRemoved->setScope(null);
         }
 
         $this->collLanguages = null;
@@ -1208,7 +1207,7 @@ abstract class LanguageScope implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByLanguageScope($this)
+                ->filterByScope($this)
                 ->count($con);
         }
 
@@ -1242,7 +1241,7 @@ abstract class LanguageScope implements ActiveRecordInterface
     protected function doAddLanguage(ChildLanguage $language)
     {
         $this->collLanguages[]= $language;
-        $language->setLanguageScope($this);
+        $language->setScope($this);
     }
 
     /**
@@ -1258,8 +1257,8 @@ abstract class LanguageScope implements ActiveRecordInterface
                 $this->languagesScheduledForDeletion = clone $this->collLanguages;
                 $this->languagesScheduledForDeletion->clear();
             }
-            $this->languagesScheduledForDeletion[]= $language;
-            $language->setLanguageScope(null);
+            $this->languagesScheduledForDeletion[]= clone $language;
+            $language->setScope(null);
         }
 
         return $this;
@@ -1282,10 +1281,85 @@ abstract class LanguageScope implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
      */
-    public function getLanguagesJoinLanguageType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getLanguagesJoinLanguageRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildLanguageQuery::create(null, $criteria);
-        $query->joinWith('LanguageType', $joinBehavior);
+        $query->joinWith('LanguageRelatedByParentId', $joinBehavior);
+
+        return $this->getLanguages($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this LanguageScope is new, it will return
+     * an empty collection; or if this LanguageScope has previously
+     * been saved, it will retrieve related Languages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in LanguageScope.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
+     */
+    public function getLanguagesJoinType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLanguageQuery::create(null, $criteria);
+        $query->joinWith('Type', $joinBehavior);
+
+        return $this->getLanguages($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this LanguageScope is new, it will return
+     * an empty collection; or if this LanguageScope has previously
+     * been saved, it will retrieve related Languages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in LanguageScope.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
+     */
+    public function getLanguagesJoinScript(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLanguageQuery::create(null, $criteria);
+        $query->joinWith('Script', $joinBehavior);
+
+        return $this->getLanguages($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this LanguageScope is new, it will return
+     * an empty collection; or if this LanguageScope has previously
+     * been saved, it will retrieve related Languages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in LanguageScope.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
+     */
+    public function getLanguagesJoinFamily(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLanguageQuery::create(null, $criteria);
+        $query->joinWith('Family', $joinBehavior);
 
         return $this->getLanguages($query, $con);
     }

@@ -1,9 +1,9 @@
 <?php
 namespace keeko\core\service;
 
-use Composer\EventDispatcher\EventSubscriberInterface;
 use keeko\core\events\KernelTargetEvent;
 use phootwork\collection\Stack;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Translation\Translator;
 
 class KeekoTranslator extends Translator implements EventSubscriberInterface {

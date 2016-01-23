@@ -240,7 +240,7 @@ class UserTableMap extends TableMap
     {
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
-            'validate' => array('rule1' => array ('column' => 'login_name','validator' => 'NotNull',), 'rule2' => array ('column' => 'email','validator' => 'NotNull',), 'rule3' => array ('column' => 'email','validator' => 'Email',), 'rule4' => array ('column' => 'password','validator' => 'NotNull',), ),
+            'validate' => array('rule1' => array ('column' => 'email','validator' => 'NotNull',), 'rule2' => array ('column' => 'email','validator' => 'Email',), 'rule3' => array ('column' => 'password','validator' => 'NotNull',), ),
         );
     } // getBehaviors()
 

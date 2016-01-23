@@ -59,7 +59,7 @@ class LanguageTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 10;
+    const NUM_COLUMNS = 16;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class LanguageTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 10;
+    const NUM_HYDRATE_COLUMNS = 16;
 
     /**
      * the column name for the id field
@@ -97,19 +97,39 @@ class LanguageTableMap extends TableMap
     const COL_ALPHA_3 = 'kk_language.alpha_3';
 
     /**
-     * the column name for the local_name field
+     * the column name for the parent_id field
      */
-    const COL_LOCAL_NAME = 'kk_language.local_name';
+    const COL_PARENT_ID = 'kk_language.parent_id';
 
     /**
-     * the column name for the en_name field
+     * the column name for the macrolanguage_status field
      */
-    const COL_EN_NAME = 'kk_language.en_name';
+    const COL_MACROLANGUAGE_STATUS = 'kk_language.macrolanguage_status';
+
+    /**
+     * the column name for the name field
+     */
+    const COL_NAME = 'kk_language.name';
+
+    /**
+     * the column name for the native_name field
+     */
+    const COL_NATIVE_NAME = 'kk_language.native_name';
 
     /**
      * the column name for the collate field
      */
     const COL_COLLATE = 'kk_language.collate';
+
+    /**
+     * the column name for the subtag field
+     */
+    const COL_SUBTAG = 'kk_language.subtag';
+
+    /**
+     * the column name for the prefix field
+     */
+    const COL_PREFIX = 'kk_language.prefix';
 
     /**
      * the column name for the scope_id field
@@ -120,6 +140,16 @@ class LanguageTableMap extends TableMap
      * the column name for the type_id field
      */
     const COL_TYPE_ID = 'kk_language.type_id';
+
+    /**
+     * the column name for the family_id field
+     */
+    const COL_FAMILY_ID = 'kk_language.family_id';
+
+    /**
+     * the column name for the default_script_id field
+     */
+    const COL_DEFAULT_SCRIPT_ID = 'kk_language.default_script_id';
 
     /**
      * The default string format for model objects of the related table
@@ -133,11 +163,11 @@ class LanguageTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Alpha2', 'Alpha3T', 'Alpha3B', 'Alpha3', 'LocalName', 'EnName', 'Collate', 'ScopeId', 'TypeId', ),
-        self::TYPE_CAMELNAME     => array('id', 'alpha2', 'alpha3T', 'alpha3B', 'alpha3', 'localName', 'enName', 'collate', 'scopeId', 'typeId', ),
-        self::TYPE_COLNAME       => array(LanguageTableMap::COL_ID, LanguageTableMap::COL_ALPHA_2, LanguageTableMap::COL_ALPHA_3T, LanguageTableMap::COL_ALPHA_3B, LanguageTableMap::COL_ALPHA_3, LanguageTableMap::COL_LOCAL_NAME, LanguageTableMap::COL_EN_NAME, LanguageTableMap::COL_COLLATE, LanguageTableMap::COL_SCOPE_ID, LanguageTableMap::COL_TYPE_ID, ),
-        self::TYPE_FIELDNAME     => array('id', 'alpha_2', 'alpha_3T', 'alpha_3B', 'alpha_3', 'local_name', 'en_name', 'collate', 'scope_id', 'type_id', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('Id', 'Alpha2', 'Alpha3T', 'Alpha3B', 'Alpha3', 'ParentId', 'MacrolanguageStatus', 'Name', 'NativeName', 'Collate', 'Subtag', 'Prefix', 'ScopeId', 'TypeId', 'FamilyId', 'DefaultScriptId', ),
+        self::TYPE_CAMELNAME     => array('id', 'alpha2', 'alpha3T', 'alpha3B', 'alpha3', 'parentId', 'macrolanguageStatus', 'name', 'nativeName', 'collate', 'subtag', 'prefix', 'scopeId', 'typeId', 'familyId', 'defaultScriptId', ),
+        self::TYPE_COLNAME       => array(LanguageTableMap::COL_ID, LanguageTableMap::COL_ALPHA_2, LanguageTableMap::COL_ALPHA_3T, LanguageTableMap::COL_ALPHA_3B, LanguageTableMap::COL_ALPHA_3, LanguageTableMap::COL_PARENT_ID, LanguageTableMap::COL_MACROLANGUAGE_STATUS, LanguageTableMap::COL_NAME, LanguageTableMap::COL_NATIVE_NAME, LanguageTableMap::COL_COLLATE, LanguageTableMap::COL_SUBTAG, LanguageTableMap::COL_PREFIX, LanguageTableMap::COL_SCOPE_ID, LanguageTableMap::COL_TYPE_ID, LanguageTableMap::COL_FAMILY_ID, LanguageTableMap::COL_DEFAULT_SCRIPT_ID, ),
+        self::TYPE_FIELDNAME     => array('id', 'alpha_2', 'alpha_3T', 'alpha_3B', 'alpha_3', 'parent_id', 'macrolanguage_status', 'name', 'native_name', 'collate', 'subtag', 'prefix', 'scope_id', 'type_id', 'family_id', 'default_script_id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
     );
 
     /**
@@ -147,11 +177,11 @@ class LanguageTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Alpha2' => 1, 'Alpha3T' => 2, 'Alpha3B' => 3, 'Alpha3' => 4, 'LocalName' => 5, 'EnName' => 6, 'Collate' => 7, 'ScopeId' => 8, 'TypeId' => 9, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'alpha2' => 1, 'alpha3T' => 2, 'alpha3B' => 3, 'alpha3' => 4, 'localName' => 5, 'enName' => 6, 'collate' => 7, 'scopeId' => 8, 'typeId' => 9, ),
-        self::TYPE_COLNAME       => array(LanguageTableMap::COL_ID => 0, LanguageTableMap::COL_ALPHA_2 => 1, LanguageTableMap::COL_ALPHA_3T => 2, LanguageTableMap::COL_ALPHA_3B => 3, LanguageTableMap::COL_ALPHA_3 => 4, LanguageTableMap::COL_LOCAL_NAME => 5, LanguageTableMap::COL_EN_NAME => 6, LanguageTableMap::COL_COLLATE => 7, LanguageTableMap::COL_SCOPE_ID => 8, LanguageTableMap::COL_TYPE_ID => 9, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'alpha_2' => 1, 'alpha_3T' => 2, 'alpha_3B' => 3, 'alpha_3' => 4, 'local_name' => 5, 'en_name' => 6, 'collate' => 7, 'scope_id' => 8, 'type_id' => 9, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Alpha2' => 1, 'Alpha3T' => 2, 'Alpha3B' => 3, 'Alpha3' => 4, 'ParentId' => 5, 'MacrolanguageStatus' => 6, 'Name' => 7, 'NativeName' => 8, 'Collate' => 9, 'Subtag' => 10, 'Prefix' => 11, 'ScopeId' => 12, 'TypeId' => 13, 'FamilyId' => 14, 'DefaultScriptId' => 15, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'alpha2' => 1, 'alpha3T' => 2, 'alpha3B' => 3, 'alpha3' => 4, 'parentId' => 5, 'macrolanguageStatus' => 6, 'name' => 7, 'nativeName' => 8, 'collate' => 9, 'subtag' => 10, 'prefix' => 11, 'scopeId' => 12, 'typeId' => 13, 'familyId' => 14, 'defaultScriptId' => 15, ),
+        self::TYPE_COLNAME       => array(LanguageTableMap::COL_ID => 0, LanguageTableMap::COL_ALPHA_2 => 1, LanguageTableMap::COL_ALPHA_3T => 2, LanguageTableMap::COL_ALPHA_3B => 3, LanguageTableMap::COL_ALPHA_3 => 4, LanguageTableMap::COL_PARENT_ID => 5, LanguageTableMap::COL_MACROLANGUAGE_STATUS => 6, LanguageTableMap::COL_NAME => 7, LanguageTableMap::COL_NATIVE_NAME => 8, LanguageTableMap::COL_COLLATE => 9, LanguageTableMap::COL_SUBTAG => 10, LanguageTableMap::COL_PREFIX => 11, LanguageTableMap::COL_SCOPE_ID => 12, LanguageTableMap::COL_TYPE_ID => 13, LanguageTableMap::COL_FAMILY_ID => 14, LanguageTableMap::COL_DEFAULT_SCRIPT_ID => 15, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'alpha_2' => 1, 'alpha_3T' => 2, 'alpha_3B' => 3, 'alpha_3' => 4, 'parent_id' => 5, 'macrolanguage_status' => 6, 'name' => 7, 'native_name' => 8, 'collate' => 9, 'subtag' => 10, 'prefix' => 11, 'scope_id' => 12, 'type_id' => 13, 'family_id' => 14, 'default_script_id' => 15, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
     );
 
     /**
@@ -176,11 +206,17 @@ class LanguageTableMap extends TableMap
         $this->addColumn('alpha_3T', 'Alpha3T', 'VARCHAR', false, 3, null);
         $this->addColumn('alpha_3B', 'Alpha3B', 'VARCHAR', false, 3, null);
         $this->addColumn('alpha_3', 'Alpha3', 'VARCHAR', false, 3, null);
-        $this->addColumn('local_name', 'LocalName', 'VARCHAR', false, 128, null);
-        $this->addColumn('en_name', 'EnName', 'VARCHAR', false, 128, null);
+        $this->addForeignKey('parent_id', 'ParentId', 'INTEGER', 'kk_language', 'id', false, 10, null);
+        $this->addColumn('macrolanguage_status', 'MacrolanguageStatus', 'CHAR', false, 1, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 128, null);
+        $this->addColumn('native_name', 'NativeName', 'VARCHAR', false, 128, null);
         $this->addColumn('collate', 'Collate', 'VARCHAR', false, 10, null);
-        $this->addForeignKey('scope_id', 'ScopeId', 'INTEGER', 'kk_language_scope', 'id', false, 10, null);
+        $this->addColumn('subtag', 'Subtag', 'VARCHAR', false, 76, null);
+        $this->addColumn('prefix', 'Prefix', 'VARCHAR', false, 76, null);
+        $this->addForeignKey('scope_id', 'ScopeId', 'INTEGER', 'kk_language_scope', 'id', true, 10, null);
         $this->addForeignKey('type_id', 'TypeId', 'INTEGER', 'kk_language_type', 'id', false, 10, null);
+        $this->addForeignKey('family_id', 'FamilyId', 'INTEGER', 'kk_language_family', 'id', false, 10, null);
+        $this->addForeignKey('default_script_id', 'DefaultScriptId', 'INTEGER', 'kk_language_script', 'id', false, 10, null);
     } // initialize()
 
     /**
@@ -188,27 +224,62 @@ class LanguageTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('LanguageScope', '\\keeko\\core\\model\\LanguageScope', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('LanguageRelatedByParentId', '\\keeko\\core\\model\\Language', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':parent_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Scope', '\\keeko\\core\\model\\LanguageScope', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':scope_id',
     1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('LanguageType', '\\keeko\\core\\model\\LanguageType', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Type', '\\keeko\\core\\model\\LanguageType', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':type_id',
     1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('Localization', '\\keeko\\core\\model\\Localization', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('Script', '\\keeko\\core\\model\\LanguageScript', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':default_script_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Family', '\\keeko\\core\\model\\LanguageFamily', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':family_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Sublanguage', '\\keeko\\core\\model\\Language', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':parent_id',
+    1 => ':id',
+  ),
+), null, null, 'Sublanguages', false);
+        $this->addRelation('LocalizationRelatedByLanguageId', '\\keeko\\core\\model\\Localization', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':language_id',
     1 => ':id',
   ),
-), null, null, 'Localizations', false);
+), null, null, 'LocalizationsRelatedByLanguageId', false);
+        $this->addRelation('LocalizationRelatedByExtLanguageId', '\\keeko\\core\\model\\Localization', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':ext_language_id',
+    1 => ':id',
+  ),
+), null, null, 'LocalizationsRelatedByExtLanguageId', false);
     } // buildRelations()
 
     /**
@@ -357,22 +428,34 @@ class LanguageTableMap extends TableMap
             $criteria->addSelectColumn(LanguageTableMap::COL_ALPHA_3T);
             $criteria->addSelectColumn(LanguageTableMap::COL_ALPHA_3B);
             $criteria->addSelectColumn(LanguageTableMap::COL_ALPHA_3);
-            $criteria->addSelectColumn(LanguageTableMap::COL_LOCAL_NAME);
-            $criteria->addSelectColumn(LanguageTableMap::COL_EN_NAME);
+            $criteria->addSelectColumn(LanguageTableMap::COL_PARENT_ID);
+            $criteria->addSelectColumn(LanguageTableMap::COL_MACROLANGUAGE_STATUS);
+            $criteria->addSelectColumn(LanguageTableMap::COL_NAME);
+            $criteria->addSelectColumn(LanguageTableMap::COL_NATIVE_NAME);
             $criteria->addSelectColumn(LanguageTableMap::COL_COLLATE);
+            $criteria->addSelectColumn(LanguageTableMap::COL_SUBTAG);
+            $criteria->addSelectColumn(LanguageTableMap::COL_PREFIX);
             $criteria->addSelectColumn(LanguageTableMap::COL_SCOPE_ID);
             $criteria->addSelectColumn(LanguageTableMap::COL_TYPE_ID);
+            $criteria->addSelectColumn(LanguageTableMap::COL_FAMILY_ID);
+            $criteria->addSelectColumn(LanguageTableMap::COL_DEFAULT_SCRIPT_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.alpha_2');
             $criteria->addSelectColumn($alias . '.alpha_3T');
             $criteria->addSelectColumn($alias . '.alpha_3B');
             $criteria->addSelectColumn($alias . '.alpha_3');
-            $criteria->addSelectColumn($alias . '.local_name');
-            $criteria->addSelectColumn($alias . '.en_name');
+            $criteria->addSelectColumn($alias . '.parent_id');
+            $criteria->addSelectColumn($alias . '.macrolanguage_status');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.native_name');
             $criteria->addSelectColumn($alias . '.collate');
+            $criteria->addSelectColumn($alias . '.subtag');
+            $criteria->addSelectColumn($alias . '.prefix');
             $criteria->addSelectColumn($alias . '.scope_id');
             $criteria->addSelectColumn($alias . '.type_id');
+            $criteria->addSelectColumn($alias . '.family_id');
+            $criteria->addSelectColumn($alias . '.default_script_id');
         }
     }
 

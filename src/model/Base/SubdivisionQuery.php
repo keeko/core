@@ -21,24 +21,22 @@ use keeko\core\model\Map\SubdivisionTableMap;
  *
  *
  * @method     ChildSubdivisionQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildSubdivisionQuery orderByIso($order = Criteria::ASC) Order by the iso column
+ * @method     ChildSubdivisionQuery orderByCode($order = Criteria::ASC) Order by the code column
  * @method     ChildSubdivisionQuery orderByName($order = Criteria::ASC) Order by the name column
- * @method     ChildSubdivisionQuery orderByLocalName($order = Criteria::ASC) Order by the local_name column
- * @method     ChildSubdivisionQuery orderByEnName($order = Criteria::ASC) Order by the en_name column
+ * @method     ChildSubdivisionQuery orderByNativeName($order = Criteria::ASC) Order by the native_name column
  * @method     ChildSubdivisionQuery orderByAltNames($order = Criteria::ASC) Order by the alt_names column
  * @method     ChildSubdivisionQuery orderByParentId($order = Criteria::ASC) Order by the parent_id column
- * @method     ChildSubdivisionQuery orderByCountryIsoNr($order = Criteria::ASC) Order by the country_iso_nr column
- * @method     ChildSubdivisionQuery orderBySubdivisionTypeId($order = Criteria::ASC) Order by the subdivision_type_id column
+ * @method     ChildSubdivisionQuery orderByCountryId($order = Criteria::ASC) Order by the country_id column
+ * @method     ChildSubdivisionQuery orderByTypeId($order = Criteria::ASC) Order by the type_id column
  *
  * @method     ChildSubdivisionQuery groupById() Group by the id column
- * @method     ChildSubdivisionQuery groupByIso() Group by the iso column
+ * @method     ChildSubdivisionQuery groupByCode() Group by the code column
  * @method     ChildSubdivisionQuery groupByName() Group by the name column
- * @method     ChildSubdivisionQuery groupByLocalName() Group by the local_name column
- * @method     ChildSubdivisionQuery groupByEnName() Group by the en_name column
+ * @method     ChildSubdivisionQuery groupByNativeName() Group by the native_name column
  * @method     ChildSubdivisionQuery groupByAltNames() Group by the alt_names column
  * @method     ChildSubdivisionQuery groupByParentId() Group by the parent_id column
- * @method     ChildSubdivisionQuery groupByCountryIsoNr() Group by the country_iso_nr column
- * @method     ChildSubdivisionQuery groupBySubdivisionTypeId() Group by the subdivision_type_id column
+ * @method     ChildSubdivisionQuery groupByCountryId() Group by the country_id column
+ * @method     ChildSubdivisionQuery groupByTypeId() Group by the type_id column
  *
  * @method     ChildSubdivisionQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildSubdivisionQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -48,48 +46,45 @@ use keeko\core\model\Map\SubdivisionTableMap;
  * @method     ChildSubdivisionQuery rightJoinCountry($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Country relation
  * @method     ChildSubdivisionQuery innerJoinCountry($relationAlias = null) Adds a INNER JOIN clause to the query using the Country relation
  *
- * @method     ChildSubdivisionQuery leftJoinSubdivisionType($relationAlias = null) Adds a LEFT JOIN clause to the query using the SubdivisionType relation
- * @method     ChildSubdivisionQuery rightJoinSubdivisionType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SubdivisionType relation
- * @method     ChildSubdivisionQuery innerJoinSubdivisionType($relationAlias = null) Adds a INNER JOIN clause to the query using the SubdivisionType relation
+ * @method     ChildSubdivisionQuery leftJoinRegionType($relationAlias = null) Adds a LEFT JOIN clause to the query using the RegionType relation
+ * @method     ChildSubdivisionQuery rightJoinRegionType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the RegionType relation
+ * @method     ChildSubdivisionQuery innerJoinRegionType($relationAlias = null) Adds a INNER JOIN clause to the query using the RegionType relation
  *
- * @method     \keeko\core\model\CountryQuery|\keeko\core\model\SubdivisionTypeQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \keeko\core\model\CountryQuery|\keeko\core\model\RegionTypeQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildSubdivision findOne(ConnectionInterface $con = null) Return the first ChildSubdivision matching the query
  * @method     ChildSubdivision findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSubdivision matching the query, or a new ChildSubdivision object populated from the query conditions when no match is found
  *
  * @method     ChildSubdivision findOneById(int $id) Return the first ChildSubdivision filtered by the id column
- * @method     ChildSubdivision findOneByIso(string $iso) Return the first ChildSubdivision filtered by the iso column
+ * @method     ChildSubdivision findOneByCode(string $code) Return the first ChildSubdivision filtered by the code column
  * @method     ChildSubdivision findOneByName(string $name) Return the first ChildSubdivision filtered by the name column
- * @method     ChildSubdivision findOneByLocalName(string $local_name) Return the first ChildSubdivision filtered by the local_name column
- * @method     ChildSubdivision findOneByEnName(string $en_name) Return the first ChildSubdivision filtered by the en_name column
+ * @method     ChildSubdivision findOneByNativeName(string $native_name) Return the first ChildSubdivision filtered by the native_name column
  * @method     ChildSubdivision findOneByAltNames(string $alt_names) Return the first ChildSubdivision filtered by the alt_names column
  * @method     ChildSubdivision findOneByParentId(int $parent_id) Return the first ChildSubdivision filtered by the parent_id column
- * @method     ChildSubdivision findOneByCountryIsoNr(int $country_iso_nr) Return the first ChildSubdivision filtered by the country_iso_nr column
- * @method     ChildSubdivision findOneBySubdivisionTypeId(int $subdivision_type_id) Return the first ChildSubdivision filtered by the subdivision_type_id column *
+ * @method     ChildSubdivision findOneByCountryId(int $country_id) Return the first ChildSubdivision filtered by the country_id column
+ * @method     ChildSubdivision findOneByTypeId(int $type_id) Return the first ChildSubdivision filtered by the type_id column *
 
  * @method     ChildSubdivision requirePk($key, ConnectionInterface $con = null) Return the ChildSubdivision by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubdivision requireOne(ConnectionInterface $con = null) Return the first ChildSubdivision matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSubdivision requireOneById(int $id) Return the first ChildSubdivision filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSubdivision requireOneByIso(string $iso) Return the first ChildSubdivision filtered by the iso column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneByCode(string $code) Return the first ChildSubdivision filtered by the code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubdivision requireOneByName(string $name) Return the first ChildSubdivision filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSubdivision requireOneByLocalName(string $local_name) Return the first ChildSubdivision filtered by the local_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSubdivision requireOneByEnName(string $en_name) Return the first ChildSubdivision filtered by the en_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneByNativeName(string $native_name) Return the first ChildSubdivision filtered by the native_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubdivision requireOneByAltNames(string $alt_names) Return the first ChildSubdivision filtered by the alt_names column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubdivision requireOneByParentId(int $parent_id) Return the first ChildSubdivision filtered by the parent_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSubdivision requireOneByCountryIsoNr(int $country_iso_nr) Return the first ChildSubdivision filtered by the country_iso_nr column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSubdivision requireOneBySubdivisionTypeId(int $subdivision_type_id) Return the first ChildSubdivision filtered by the subdivision_type_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneByCountryId(int $country_id) Return the first ChildSubdivision filtered by the country_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubdivision requireOneByTypeId(int $type_id) Return the first ChildSubdivision filtered by the type_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSubdivision[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSubdivision objects based on current ModelCriteria
  * @method     ChildSubdivision[]|ObjectCollection findById(int $id) Return ChildSubdivision objects filtered by the id column
- * @method     ChildSubdivision[]|ObjectCollection findByIso(string $iso) Return ChildSubdivision objects filtered by the iso column
+ * @method     ChildSubdivision[]|ObjectCollection findByCode(string $code) Return ChildSubdivision objects filtered by the code column
  * @method     ChildSubdivision[]|ObjectCollection findByName(string $name) Return ChildSubdivision objects filtered by the name column
- * @method     ChildSubdivision[]|ObjectCollection findByLocalName(string $local_name) Return ChildSubdivision objects filtered by the local_name column
- * @method     ChildSubdivision[]|ObjectCollection findByEnName(string $en_name) Return ChildSubdivision objects filtered by the en_name column
+ * @method     ChildSubdivision[]|ObjectCollection findByNativeName(string $native_name) Return ChildSubdivision objects filtered by the native_name column
  * @method     ChildSubdivision[]|ObjectCollection findByAltNames(string $alt_names) Return ChildSubdivision objects filtered by the alt_names column
  * @method     ChildSubdivision[]|ObjectCollection findByParentId(int $parent_id) Return ChildSubdivision objects filtered by the parent_id column
- * @method     ChildSubdivision[]|ObjectCollection findByCountryIsoNr(int $country_iso_nr) Return ChildSubdivision objects filtered by the country_iso_nr column
- * @method     ChildSubdivision[]|ObjectCollection findBySubdivisionTypeId(int $subdivision_type_id) Return ChildSubdivision objects filtered by the subdivision_type_id column
+ * @method     ChildSubdivision[]|ObjectCollection findByCountryId(int $country_id) Return ChildSubdivision objects filtered by the country_id column
+ * @method     ChildSubdivision[]|ObjectCollection findByTypeId(int $type_id) Return ChildSubdivision objects filtered by the type_id column
  * @method     ChildSubdivision[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -182,7 +177,7 @@ abstract class SubdivisionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `id`, `iso`, `name`, `local_name`, `en_name`, `alt_names`, `parent_id`, `country_iso_nr`, `subdivision_type_id` FROM `kk_subdivision` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `code`, `name`, `native_name`, `alt_names`, `parent_id`, `country_id`, `type_id` FROM `kk_subdivision` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -314,32 +309,32 @@ abstract class SubdivisionQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the iso column
+     * Filter the query on the code column
      *
      * Example usage:
      * <code>
-     * $query->filterByIso('fooValue');   // WHERE iso = 'fooValue'
-     * $query->filterByIso('%fooValue%'); // WHERE iso LIKE '%fooValue%'
+     * $query->filterByCode('fooValue');   // WHERE code = 'fooValue'
+     * $query->filterByCode('%fooValue%'); // WHERE code LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $iso The value to use as filter.
+     * @param     string $code The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildSubdivisionQuery The current query, for fluid interface
      */
-    public function filterByIso($iso = null, $comparison = null)
+    public function filterByCode($code = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($iso)) {
+            if (is_array($code)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $iso)) {
-                $iso = str_replace('*', '%', $iso);
+            } elseif (preg_match('/[\%\*]/', $code)) {
+                $code = str_replace('*', '%', $code);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(SubdivisionTableMap::COL_ISO, $iso, $comparison);
+        return $this->addUsingAlias(SubdivisionTableMap::COL_CODE, $code, $comparison);
     }
 
     /**
@@ -372,61 +367,32 @@ abstract class SubdivisionQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the local_name column
+     * Filter the query on the native_name column
      *
      * Example usage:
      * <code>
-     * $query->filterByLocalName('fooValue');   // WHERE local_name = 'fooValue'
-     * $query->filterByLocalName('%fooValue%'); // WHERE local_name LIKE '%fooValue%'
+     * $query->filterByNativeName('fooValue');   // WHERE native_name = 'fooValue'
+     * $query->filterByNativeName('%fooValue%'); // WHERE native_name LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $localName The value to use as filter.
+     * @param     string $nativeName The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildSubdivisionQuery The current query, for fluid interface
      */
-    public function filterByLocalName($localName = null, $comparison = null)
+    public function filterByNativeName($nativeName = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($localName)) {
+            if (is_array($nativeName)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $localName)) {
-                $localName = str_replace('*', '%', $localName);
+            } elseif (preg_match('/[\%\*]/', $nativeName)) {
+                $nativeName = str_replace('*', '%', $nativeName);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(SubdivisionTableMap::COL_LOCAL_NAME, $localName, $comparison);
-    }
-
-    /**
-     * Filter the query on the en_name column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByEnName('fooValue');   // WHERE en_name = 'fooValue'
-     * $query->filterByEnName('%fooValue%'); // WHERE en_name LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $enName The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildSubdivisionQuery The current query, for fluid interface
-     */
-    public function filterByEnName($enName = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($enName)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $enName)) {
-                $enName = str_replace('*', '%', $enName);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(SubdivisionTableMap::COL_EN_NAME, $enName, $comparison);
+        return $this->addUsingAlias(SubdivisionTableMap::COL_NATIVE_NAME, $nativeName, $comparison);
     }
 
     /**
@@ -500,18 +466,18 @@ abstract class SubdivisionQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the country_iso_nr column
+     * Filter the query on the country_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByCountryIsoNr(1234); // WHERE country_iso_nr = 1234
-     * $query->filterByCountryIsoNr(array(12, 34)); // WHERE country_iso_nr IN (12, 34)
-     * $query->filterByCountryIsoNr(array('min' => 12)); // WHERE country_iso_nr > 12
+     * $query->filterByCountryId(1234); // WHERE country_id = 1234
+     * $query->filterByCountryId(array(12, 34)); // WHERE country_id IN (12, 34)
+     * $query->filterByCountryId(array('min' => 12)); // WHERE country_id > 12
      * </code>
      *
      * @see       filterByCountry()
      *
-     * @param     mixed $countryIsoNr The value to use as filter.
+     * @param     mixed $countryId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -519,16 +485,16 @@ abstract class SubdivisionQuery extends ModelCriteria
      *
      * @return $this|ChildSubdivisionQuery The current query, for fluid interface
      */
-    public function filterByCountryIsoNr($countryIsoNr = null, $comparison = null)
+    public function filterByCountryId($countryId = null, $comparison = null)
     {
-        if (is_array($countryIsoNr)) {
+        if (is_array($countryId)) {
             $useMinMax = false;
-            if (isset($countryIsoNr['min'])) {
-                $this->addUsingAlias(SubdivisionTableMap::COL_COUNTRY_ISO_NR, $countryIsoNr['min'], Criteria::GREATER_EQUAL);
+            if (isset($countryId['min'])) {
+                $this->addUsingAlias(SubdivisionTableMap::COL_COUNTRY_ID, $countryId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($countryIsoNr['max'])) {
-                $this->addUsingAlias(SubdivisionTableMap::COL_COUNTRY_ISO_NR, $countryIsoNr['max'], Criteria::LESS_EQUAL);
+            if (isset($countryId['max'])) {
+                $this->addUsingAlias(SubdivisionTableMap::COL_COUNTRY_ID, $countryId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -539,22 +505,22 @@ abstract class SubdivisionQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SubdivisionTableMap::COL_COUNTRY_ISO_NR, $countryIsoNr, $comparison);
+        return $this->addUsingAlias(SubdivisionTableMap::COL_COUNTRY_ID, $countryId, $comparison);
     }
 
     /**
-     * Filter the query on the subdivision_type_id column
+     * Filter the query on the type_id column
      *
      * Example usage:
      * <code>
-     * $query->filterBySubdivisionTypeId(1234); // WHERE subdivision_type_id = 1234
-     * $query->filterBySubdivisionTypeId(array(12, 34)); // WHERE subdivision_type_id IN (12, 34)
-     * $query->filterBySubdivisionTypeId(array('min' => 12)); // WHERE subdivision_type_id > 12
+     * $query->filterByTypeId(1234); // WHERE type_id = 1234
+     * $query->filterByTypeId(array(12, 34)); // WHERE type_id IN (12, 34)
+     * $query->filterByTypeId(array('min' => 12)); // WHERE type_id > 12
      * </code>
      *
-     * @see       filterBySubdivisionType()
+     * @see       filterByRegionType()
      *
-     * @param     mixed $subdivisionTypeId The value to use as filter.
+     * @param     mixed $typeId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -562,16 +528,16 @@ abstract class SubdivisionQuery extends ModelCriteria
      *
      * @return $this|ChildSubdivisionQuery The current query, for fluid interface
      */
-    public function filterBySubdivisionTypeId($subdivisionTypeId = null, $comparison = null)
+    public function filterByTypeId($typeId = null, $comparison = null)
     {
-        if (is_array($subdivisionTypeId)) {
+        if (is_array($typeId)) {
             $useMinMax = false;
-            if (isset($subdivisionTypeId['min'])) {
-                $this->addUsingAlias(SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID, $subdivisionTypeId['min'], Criteria::GREATER_EQUAL);
+            if (isset($typeId['min'])) {
+                $this->addUsingAlias(SubdivisionTableMap::COL_TYPE_ID, $typeId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($subdivisionTypeId['max'])) {
-                $this->addUsingAlias(SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID, $subdivisionTypeId['max'], Criteria::LESS_EQUAL);
+            if (isset($typeId['max'])) {
+                $this->addUsingAlias(SubdivisionTableMap::COL_TYPE_ID, $typeId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -582,7 +548,7 @@ abstract class SubdivisionQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID, $subdivisionTypeId, $comparison);
+        return $this->addUsingAlias(SubdivisionTableMap::COL_TYPE_ID, $typeId, $comparison);
     }
 
     /**
@@ -599,14 +565,14 @@ abstract class SubdivisionQuery extends ModelCriteria
     {
         if ($country instanceof \keeko\core\model\Country) {
             return $this
-                ->addUsingAlias(SubdivisionTableMap::COL_COUNTRY_ISO_NR, $country->getIsoNr(), $comparison);
+                ->addUsingAlias(SubdivisionTableMap::COL_COUNTRY_ID, $country->getId(), $comparison);
         } elseif ($country instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(SubdivisionTableMap::COL_COUNTRY_ISO_NR, $country->toKeyValue('PrimaryKey', 'IsoNr'), $comparison);
+                ->addUsingAlias(SubdivisionTableMap::COL_COUNTRY_ID, $country->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
             throw new PropelException('filterByCountry() only accepts arguments of type \keeko\core\model\Country or Collection');
         }
@@ -663,44 +629,44 @@ abstract class SubdivisionQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \keeko\core\model\SubdivisionType object
+     * Filter the query by a related \keeko\core\model\RegionType object
      *
-     * @param \keeko\core\model\SubdivisionType|ObjectCollection $subdivisionType The related object(s) to use as filter
+     * @param \keeko\core\model\RegionType|ObjectCollection $regionType The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildSubdivisionQuery The current query, for fluid interface
      */
-    public function filterBySubdivisionType($subdivisionType, $comparison = null)
+    public function filterByRegionType($regionType, $comparison = null)
     {
-        if ($subdivisionType instanceof \keeko\core\model\SubdivisionType) {
+        if ($regionType instanceof \keeko\core\model\RegionType) {
             return $this
-                ->addUsingAlias(SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID, $subdivisionType->getId(), $comparison);
-        } elseif ($subdivisionType instanceof ObjectCollection) {
+                ->addUsingAlias(SubdivisionTableMap::COL_TYPE_ID, $regionType->getId(), $comparison);
+        } elseif ($regionType instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID, $subdivisionType->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(SubdivisionTableMap::COL_TYPE_ID, $regionType->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterBySubdivisionType() only accepts arguments of type \keeko\core\model\SubdivisionType or Collection');
+            throw new PropelException('filterByRegionType() only accepts arguments of type \keeko\core\model\RegionType or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the SubdivisionType relation
+     * Adds a JOIN clause to the query using the RegionType relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildSubdivisionQuery The current query, for fluid interface
      */
-    public function joinSubdivisionType($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinRegionType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('SubdivisionType');
+        $relationMap = $tableMap->getRelation('RegionType');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -715,14 +681,14 @@ abstract class SubdivisionQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'SubdivisionType');
+            $this->addJoinObject($join, 'RegionType');
         }
 
         return $this;
     }
 
     /**
-     * Use the SubdivisionType relation SubdivisionType object
+     * Use the RegionType relation RegionType object
      *
      * @see useQuery()
      *
@@ -730,13 +696,13 @@ abstract class SubdivisionQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \keeko\core\model\SubdivisionTypeQuery A secondary query class using the current class as primary query
+     * @return \keeko\core\model\RegionTypeQuery A secondary query class using the current class as primary query
      */
-    public function useSubdivisionTypeQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useRegionTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinSubdivisionType($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'SubdivisionType', '\keeko\core\model\SubdivisionTypeQuery');
+            ->joinRegionType($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'RegionType', '\keeko\core\model\RegionTypeQuery');
     }
 
     /**

@@ -59,7 +59,7 @@ class SubdivisionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 9;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class SubdivisionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 9;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the id field
@@ -77,9 +77,9 @@ class SubdivisionTableMap extends TableMap
     const COL_ID = 'kk_subdivision.id';
 
     /**
-     * the column name for the iso field
+     * the column name for the code field
      */
-    const COL_ISO = 'kk_subdivision.iso';
+    const COL_CODE = 'kk_subdivision.code';
 
     /**
      * the column name for the name field
@@ -87,14 +87,9 @@ class SubdivisionTableMap extends TableMap
     const COL_NAME = 'kk_subdivision.name';
 
     /**
-     * the column name for the local_name field
+     * the column name for the native_name field
      */
-    const COL_LOCAL_NAME = 'kk_subdivision.local_name';
-
-    /**
-     * the column name for the en_name field
-     */
-    const COL_EN_NAME = 'kk_subdivision.en_name';
+    const COL_NATIVE_NAME = 'kk_subdivision.native_name';
 
     /**
      * the column name for the alt_names field
@@ -107,14 +102,14 @@ class SubdivisionTableMap extends TableMap
     const COL_PARENT_ID = 'kk_subdivision.parent_id';
 
     /**
-     * the column name for the country_iso_nr field
+     * the column name for the country_id field
      */
-    const COL_COUNTRY_ISO_NR = 'kk_subdivision.country_iso_nr';
+    const COL_COUNTRY_ID = 'kk_subdivision.country_id';
 
     /**
-     * the column name for the subdivision_type_id field
+     * the column name for the type_id field
      */
-    const COL_SUBDIVISION_TYPE_ID = 'kk_subdivision.subdivision_type_id';
+    const COL_TYPE_ID = 'kk_subdivision.type_id';
 
     /**
      * The default string format for model objects of the related table
@@ -128,11 +123,11 @@ class SubdivisionTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Iso', 'Name', 'LocalName', 'EnName', 'AltNames', 'ParentId', 'CountryIsoNr', 'SubdivisionTypeId', ),
-        self::TYPE_CAMELNAME     => array('id', 'iso', 'name', 'localName', 'enName', 'altNames', 'parentId', 'countryIsoNr', 'subdivisionTypeId', ),
-        self::TYPE_COLNAME       => array(SubdivisionTableMap::COL_ID, SubdivisionTableMap::COL_ISO, SubdivisionTableMap::COL_NAME, SubdivisionTableMap::COL_LOCAL_NAME, SubdivisionTableMap::COL_EN_NAME, SubdivisionTableMap::COL_ALT_NAMES, SubdivisionTableMap::COL_PARENT_ID, SubdivisionTableMap::COL_COUNTRY_ISO_NR, SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID, ),
-        self::TYPE_FIELDNAME     => array('id', 'iso', 'name', 'local_name', 'en_name', 'alt_names', 'parent_id', 'country_iso_nr', 'subdivision_type_id', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('Id', 'Code', 'Name', 'NativeName', 'AltNames', 'ParentId', 'CountryId', 'TypeId', ),
+        self::TYPE_CAMELNAME     => array('id', 'code', 'name', 'nativeName', 'altNames', 'parentId', 'countryId', 'typeId', ),
+        self::TYPE_COLNAME       => array(SubdivisionTableMap::COL_ID, SubdivisionTableMap::COL_CODE, SubdivisionTableMap::COL_NAME, SubdivisionTableMap::COL_NATIVE_NAME, SubdivisionTableMap::COL_ALT_NAMES, SubdivisionTableMap::COL_PARENT_ID, SubdivisionTableMap::COL_COUNTRY_ID, SubdivisionTableMap::COL_TYPE_ID, ),
+        self::TYPE_FIELDNAME     => array('id', 'code', 'name', 'native_name', 'alt_names', 'parent_id', 'country_id', 'type_id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -142,11 +137,11 @@ class SubdivisionTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Iso' => 1, 'Name' => 2, 'LocalName' => 3, 'EnName' => 4, 'AltNames' => 5, 'ParentId' => 6, 'CountryIsoNr' => 7, 'SubdivisionTypeId' => 8, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'iso' => 1, 'name' => 2, 'localName' => 3, 'enName' => 4, 'altNames' => 5, 'parentId' => 6, 'countryIsoNr' => 7, 'subdivisionTypeId' => 8, ),
-        self::TYPE_COLNAME       => array(SubdivisionTableMap::COL_ID => 0, SubdivisionTableMap::COL_ISO => 1, SubdivisionTableMap::COL_NAME => 2, SubdivisionTableMap::COL_LOCAL_NAME => 3, SubdivisionTableMap::COL_EN_NAME => 4, SubdivisionTableMap::COL_ALT_NAMES => 5, SubdivisionTableMap::COL_PARENT_ID => 6, SubdivisionTableMap::COL_COUNTRY_ISO_NR => 7, SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID => 8, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'iso' => 1, 'name' => 2, 'local_name' => 3, 'en_name' => 4, 'alt_names' => 5, 'parent_id' => 6, 'country_iso_nr' => 7, 'subdivision_type_id' => 8, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Code' => 1, 'Name' => 2, 'NativeName' => 3, 'AltNames' => 4, 'ParentId' => 5, 'CountryId' => 6, 'TypeId' => 7, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'code' => 1, 'name' => 2, 'nativeName' => 3, 'altNames' => 4, 'parentId' => 5, 'countryId' => 6, 'typeId' => 7, ),
+        self::TYPE_COLNAME       => array(SubdivisionTableMap::COL_ID => 0, SubdivisionTableMap::COL_CODE => 1, SubdivisionTableMap::COL_NAME => 2, SubdivisionTableMap::COL_NATIVE_NAME => 3, SubdivisionTableMap::COL_ALT_NAMES => 4, SubdivisionTableMap::COL_PARENT_ID => 5, SubdivisionTableMap::COL_COUNTRY_ID => 6, SubdivisionTableMap::COL_TYPE_ID => 7, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'code' => 1, 'name' => 2, 'native_name' => 3, 'alt_names' => 4, 'parent_id' => 5, 'country_id' => 6, 'type_id' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -167,14 +162,13 @@ class SubdivisionTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('iso', 'Iso', 'VARCHAR', false, 45, null);
+        $this->addColumn('code', 'Code', 'VARCHAR', false, 45, null);
         $this->addColumn('name', 'Name', 'VARCHAR', false, 128, null);
-        $this->addColumn('local_name', 'LocalName', 'VARCHAR', false, 128, null);
-        $this->addColumn('en_name', 'EnName', 'VARCHAR', false, 128, null);
+        $this->addColumn('native_name', 'NativeName', 'VARCHAR', false, 128, null);
         $this->addColumn('alt_names', 'AltNames', 'VARCHAR', false, 255, null);
         $this->addColumn('parent_id', 'ParentId', 'INTEGER', false, null, null);
-        $this->addForeignKey('country_iso_nr', 'CountryIsoNr', 'INTEGER', 'kk_country', 'iso_nr', true, null, null);
-        $this->addForeignKey('subdivision_type_id', 'SubdivisionTypeId', 'INTEGER', 'kk_subdivision_type', 'id', false, null, null);
+        $this->addForeignKey('country_id', 'CountryId', 'INTEGER', 'kk_country', 'id', true, null, null);
+        $this->addForeignKey('type_id', 'TypeId', 'INTEGER', 'kk_region_type', 'id', true, null, null);
     } // initialize()
 
     /**
@@ -185,14 +179,14 @@ class SubdivisionTableMap extends TableMap
         $this->addRelation('Country', '\\keeko\\core\\model\\Country', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
-    0 => ':country_iso_nr',
-    1 => ':iso_nr',
+    0 => ':country_id',
+    1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('SubdivisionType', '\\keeko\\core\\model\\SubdivisionType', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('RegionType', '\\keeko\\core\\model\\RegionType', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
-    0 => ':subdivision_type_id',
+    0 => ':type_id',
     1 => ':id',
   ),
 ), null, null, null, false);
@@ -340,24 +334,22 @@ class SubdivisionTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(SubdivisionTableMap::COL_ID);
-            $criteria->addSelectColumn(SubdivisionTableMap::COL_ISO);
+            $criteria->addSelectColumn(SubdivisionTableMap::COL_CODE);
             $criteria->addSelectColumn(SubdivisionTableMap::COL_NAME);
-            $criteria->addSelectColumn(SubdivisionTableMap::COL_LOCAL_NAME);
-            $criteria->addSelectColumn(SubdivisionTableMap::COL_EN_NAME);
+            $criteria->addSelectColumn(SubdivisionTableMap::COL_NATIVE_NAME);
             $criteria->addSelectColumn(SubdivisionTableMap::COL_ALT_NAMES);
             $criteria->addSelectColumn(SubdivisionTableMap::COL_PARENT_ID);
-            $criteria->addSelectColumn(SubdivisionTableMap::COL_COUNTRY_ISO_NR);
-            $criteria->addSelectColumn(SubdivisionTableMap::COL_SUBDIVISION_TYPE_ID);
+            $criteria->addSelectColumn(SubdivisionTableMap::COL_COUNTRY_ID);
+            $criteria->addSelectColumn(SubdivisionTableMap::COL_TYPE_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.iso');
+            $criteria->addSelectColumn($alias . '.code');
             $criteria->addSelectColumn($alias . '.name');
-            $criteria->addSelectColumn($alias . '.local_name');
-            $criteria->addSelectColumn($alias . '.en_name');
+            $criteria->addSelectColumn($alias . '.native_name');
             $criteria->addSelectColumn($alias . '.alt_names');
             $criteria->addSelectColumn($alias . '.parent_id');
-            $criteria->addSelectColumn($alias . '.country_iso_nr');
-            $criteria->addSelectColumn($alias . '.subdivision_type_id');
+            $criteria->addSelectColumn($alias . '.country_id');
+            $criteria->addSelectColumn($alias . '.type_id');
         }
     }
 

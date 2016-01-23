@@ -16,7 +16,7 @@ trait TwigRenderTrait {
 		$request = Request::createFromGlobals();
 		$prefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
 		$user = $this->getServiceContainer()->getAuthManager()->getUser();
-		$app = $this->getServiceContainer()->getApplication();
+		$app = $this->getServiceContainer()->getKernel()->getApplication();
 		return [
 			'global' => [
 				'plattform_name' => $prefs->getPlattformName(),

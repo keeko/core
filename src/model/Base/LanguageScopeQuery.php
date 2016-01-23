@@ -334,7 +334,7 @@ abstract class LanguageScopeQuery extends ModelCriteria
      *
      * @return $this|ChildLanguageScopeQuery The current query, for fluid interface
      */
-    public function joinLanguage($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinLanguage($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Language');
@@ -369,7 +369,7 @@ abstract class LanguageScopeQuery extends ModelCriteria
      *
      * @return \keeko\core\model\LanguageQuery A secondary query class using the current class as primary query
      */
-    public function useLanguageQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useLanguageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinLanguage($relationAlias, $joinType)
