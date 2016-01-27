@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class InstallerKernel extends AbstractKernel {
 
-	public function main(array $options = []) {
+	public function process(array $options = []) {
 		try {
 			$steps = isset($options['steps']) ? $options['steps'] : ['setup'];
 			

@@ -14,6 +14,8 @@ use Puli\TwigExtension\PuliExtension;
 use Puli\TwigExtension\PuliTemplateLoader;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Translation\Loader\JsonFileLoader;
+use Puli\Discovery\Api\Discovery;
+use Puli\UrlGenerator\Api\UrlGenerator;
 
 class ServiceContainer {
 
@@ -35,9 +37,6 @@ class ServiceContainer {
 	/** @var KeekoTranslator */
 	private $translator;
 	
-	/** @var ResourceRepository */
-	private $puli;
-	
 	/** @var EventDispatcher */
 	private $dispatcher;
 	
@@ -47,6 +46,17 @@ class ServiceContainer {
 	/** @var Twig_Environment */
 	private $twig;
 	
+	/** @var Puli\GeneratedPuliFactory */
+	private $puliFactory;
+	
+	/** @var ResourceRepository */
+	private $resourceRepository;
+	
+	/** @var Discovery */
+	private $resourceDiscovery;
+	
+	/** @var UrlGenerator */
+	private $urlGenerator;
 	
 	public function __construct(AbstractKernel $kernel) {
 		$this->kernel = $kernel;
@@ -158,19 +168,56 @@ class ServiceContainer {
 	}
 	
 	/**
+	 *
+	 * @return Puli\GeneratedPuliFactory
+	 */
+	private function getPuliFactory() {
+		if ($this->puliFactory === null) {
+			$factoryClass = PULI_FACTORY_CLASS;
+			$this->puliFactory = new $factoryClass();
+		}
+		return $this->puliFactory;
+	}
+	
+	/**
 	 * Returns an instance to the puli repository
 	 *
 	 * @return ResourceRepository
 	 */
 	public function getResourceRepository() {
-		if ($this->puli === null) {
-			$factoryClass = PULI_FACTORY_CLASS;
-			$factory = new $factoryClass();
-			
-			$this->puli = $factory->createRepository();
+		if ($this->resourceRepository === null) {
+			$this->resourceRepository = $this->getPuliFactory()->createRepository();
 		}
 		
-		return $this->puli;
+		return $this->resourceRepository;
+	}
+	
+	/**
+	 * Returns an instance to the puli discovery
+	 *
+	 * @return Discovery
+	 */
+	public function getResourceDiscovery() {
+		if ($this->resourceDiscovery === null) {
+			$repo = $this->getResourceRepository();
+			$this->resourceDiscovery = $this->getPuliFactory()->createDiscovery($repo);
+		}
+		
+		return $this->resourceDiscovery;
+	}
+	
+	/**
+	 * Returns the url generator for puli resources
+	 *
+	 * @return UrlGenerator
+	 */
+	public function getUrlGenerator() {
+		if ($this->urlGenerator === null) {
+			$discovery = $this->getResourceDiscovery();
+			$this->urlGenerator = $this->getPuliFactory()->createUrlGenerator($discovery);
+		}
+		
+		return $this->urlGenerator;
 	}
 
 	/**
@@ -185,7 +232,8 @@ class ServiceContainer {
 			$this->twig = new Twig_Environment($loader);
 				
 			// puli extension
-			$this->twig->addExtension(new PuliExtension($repo));
+			$generator = $this->getUrlGenerator();
+			$this->twig->addExtension(new PuliExtension($repo, $generator));
 	
 			// translator function
 			$translator = $this->getTranslator();

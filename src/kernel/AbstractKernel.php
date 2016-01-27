@@ -29,7 +29,7 @@ abstract class AbstractKernel {
 	 *
 	 * @return Response
 	 */
-	abstract public function main(array $options = []);
+	abstract public function process(array $options = []);
 	
 	/**
 	 * Runs a kernel target

@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 use keeko\core\model\Country;
 use keeko\core\model\CountryQuery;

@@ -9,5 +9,5 @@ if (!KEEKO_DATABASE_LOADED) {
 }
 
 $kernel = new AppKernel();
-$response = $kernel->main();
+$response = $kernel->process();
 $response->send();

@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AppKernel extends AbstractKernel {
 
-	public function main(array $options = []) {
+	public function process(array $options = []) {
 		try {
 			$request = Request::createFromGlobals();
 

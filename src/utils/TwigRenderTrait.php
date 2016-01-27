@@ -1,9 +1,8 @@
 <?php
 namespace keeko\core\utils;
 
-use Symfony\Component\HttpFoundation\Request;
 use keeko\core\service\ServiceContainer;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 trait TwigRenderTrait {
 	
@@ -25,7 +24,6 @@ trait TwigRenderTrait {
 					'root_url' => $app->getRootUrl(),
 					'app_url' => $app->getAppUrl(),
 					'app_path' => $app->getAppPath(),
-					'app_root' => sprintf('%s/_keeko/apps/%s', $app->getRootUrl(), $app->getModel()->getName()),
 					'destination' => $app->getDestinationPath(),
 					'target' => $app->getTargetPath(),
 					'tail' => $app->getTailPath()
@@ -44,7 +42,6 @@ trait TwigRenderTrait {
 	 */
 	protected function render($name, $variables = []) {
 		$twig = $this->getServiceContainer()->getTwig();
-		return new Response($twig->render($name,
-			array_merge($this->getGlobalTwigVariables(), $variables)));
+		return $twig->render($name, array_merge($this->getGlobalTwigVariables(), $variables));
 	}
 }
