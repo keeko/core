@@ -38,6 +38,10 @@ use keeko\core\model\Map\PackageTableMap;
  * @method     ChildPackageQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildPackageQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method     ChildPackageQuery leftJoinExtension($relationAlias = null) Adds a LEFT JOIN clause to the query using the Extension relation
+ * @method     ChildPackageQuery rightJoinExtension($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Extension relation
+ * @method     ChildPackageQuery innerJoinExtension($relationAlias = null) Adds a INNER JOIN clause to the query using the Extension relation
+ *
  * @method     ChildPackageQuery leftJoinApplication($relationAlias = null) Adds a LEFT JOIN clause to the query using the Application relation
  * @method     ChildPackageQuery rightJoinApplication($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Application relation
  * @method     ChildPackageQuery innerJoinApplication($relationAlias = null) Adds a INNER JOIN clause to the query using the Application relation
@@ -46,7 +50,7 @@ use keeko\core\model\Map\PackageTableMap;
  * @method     ChildPackageQuery rightJoinModule($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Module relation
  * @method     ChildPackageQuery innerJoinModule($relationAlias = null) Adds a INNER JOIN clause to the query using the Module relation
  *
- * @method     \keeko\core\model\ApplicationQuery|\keeko\core\model\ModuleQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \keeko\core\model\ExtensionQuery|\keeko\core\model\ApplicationQuery|\keeko\core\model\ModuleQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPackage findOne(ConnectionInterface $con = null) Return the first ChildPackage matching the query
  * @method     ChildPackage findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPackage matching the query, or a new ChildPackage object populated from the query conditions when no match is found
@@ -441,6 +445,79 @@ abstract class PackageQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PackageTableMap::COL_DESCENDANT_CLASS, $descendantClass, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \keeko\core\model\Extension object
+     *
+     * @param \keeko\core\model\Extension|ObjectCollection $extension the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPackageQuery The current query, for fluid interface
+     */
+    public function filterByExtension($extension, $comparison = null)
+    {
+        if ($extension instanceof \keeko\core\model\Extension) {
+            return $this
+                ->addUsingAlias(PackageTableMap::COL_ID, $extension->getPackageId(), $comparison);
+        } elseif ($extension instanceof ObjectCollection) {
+            return $this
+                ->useExtensionQuery()
+                ->filterByPrimaryKeys($extension->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByExtension() only accepts arguments of type \keeko\core\model\Extension or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Extension relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPackageQuery The current query, for fluid interface
+     */
+    public function joinExtension($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Extension');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Extension');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Extension relation Extension object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \keeko\core\model\ExtensionQuery A secondary query class using the current class as primary query
+     */
+    public function useExtensionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinExtension($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Extension', '\keeko\core\model\ExtensionQuery');
     }
 
     /**

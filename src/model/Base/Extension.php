@@ -7,39 +7,32 @@ use \PDO;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Propel\Runtime\ActiveQuery\PropelQuery;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use keeko\core\model\Application as ChildApplication;
-use keeko\core\model\ApplicationQuery as ChildApplicationQuery;
-use keeko\core\model\Extension as ChildExtension;
 use keeko\core\model\ExtensionQuery as ChildExtensionQuery;
-use keeko\core\model\Module as ChildModule;
-use keeko\core\model\ModuleQuery as ChildModuleQuery;
 use keeko\core\model\Package as ChildPackage;
 use keeko\core\model\PackageQuery as ChildPackageQuery;
-use keeko\core\model\Map\PackageTableMap;
+use keeko\core\model\Map\ExtensionTableMap;
 
 /**
- * Base class that represents a row from the 'kk_package' table.
+ * Base class that represents a row from the 'kk_extension' table.
  *
  *
  *
 * @package    propel.generator..Base
 */
-abstract class Package implements ActiveRecordInterface
+abstract class Extension implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\keeko\\core\\model\\Map\\PackageTableMap';
+    const TABLE_MAP = '\\keeko\\core\\model\\Map\\ExtensionTableMap';
 
 
     /**
@@ -75,50 +68,27 @@ abstract class Package implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the name field.
+     * The value for the key field.
      * @var        string
      */
-    protected $name;
+    protected $key;
 
     /**
-     * The value for the title field.
+     * The value for the data field.
      * @var        string
      */
-    protected $title;
+    protected $data;
 
     /**
-     * The value for the description field.
-     * @var        string
+     * The value for the package_id field.
+     * @var        int
      */
-    protected $description;
+    protected $package_id;
 
     /**
-     * The value for the installed_version field.
-     * @var        string
+     * @var        ChildPackage
      */
-    protected $installed_version;
-
-    /**
-     * The value for the descendant_class field.
-     * @var        string
-     */
-    protected $descendant_class;
-
-    /**
-     * @var        ObjectCollection|ChildExtension[] Collection to store aggregation of ChildExtension objects.
-     */
-    protected $collExtensions;
-    protected $collExtensionsPartial;
-
-    /**
-     * @var        ChildApplication one-to-one related ChildApplication object
-     */
-    protected $singleApplication;
-
-    /**
-     * @var        ChildModule one-to-one related ChildModule object
-     */
-    protected $singleModule;
+    protected $aPackage;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -129,13 +99,7 @@ abstract class Package implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildExtension[]
-     */
-    protected $extensionsScheduledForDeletion = null;
-
-    /**
-     * Initializes internal state of keeko\core\model\Base\Package object.
+     * Initializes internal state of keeko\core\model\Base\Extension object.
      */
     public function __construct()
     {
@@ -230,9 +194,9 @@ abstract class Package implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Package</code> instance.  If
-     * <code>obj</code> is an instance of <code>Package</code>, delegates to
-     * <code>equals(Package)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Extension</code> instance.  If
+     * <code>obj</code> is an instance of <code>Extension</code>, delegates to
+     * <code>equals(Extension)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -298,7 +262,7 @@ abstract class Package implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Package The current object, for fluid interface
+     * @return $this|Extension The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -362,60 +326,40 @@ abstract class Package implements ActiveRecordInterface
     }
 
     /**
-     * Get the [name] column value.
+     * Get the [key] column value.
      *
      * @return string
      */
-    public function getName()
+    public function getKey()
     {
-        return $this->name;
+        return $this->key;
     }
 
     /**
-     * Get the [title] column value.
+     * Get the [data] column value.
      *
      * @return string
      */
-    public function getTitle()
+    public function getData()
     {
-        return $this->title;
+        return $this->data;
     }
 
     /**
-     * Get the [description] column value.
+     * Get the [package_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getDescription()
+    public function getPackageId()
     {
-        return $this->description;
-    }
-
-    /**
-     * Get the [installed_version] column value.
-     *
-     * @return string
-     */
-    public function getInstalledVersion()
-    {
-        return $this->installed_version;
-    }
-
-    /**
-     * Get the [descendant_class] column value.
-     *
-     * @return string
-     */
-    public function getDescendantClass()
-    {
-        return $this->descendant_class;
+        return $this->package_id;
     }
 
     /**
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return $this|\keeko\core\model\Package The current object (for fluent API support)
+     * @return $this|\keeko\core\model\Extension The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -425,111 +369,75 @@ abstract class Package implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[PackageTableMap::COL_ID] = true;
+            $this->modifiedColumns[ExtensionTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
-     * Set the value of [name] column.
+     * Set the value of [key] column.
      *
      * @param string $v new value
-     * @return $this|\keeko\core\model\Package The current object (for fluent API support)
+     * @return $this|\keeko\core\model\Extension The current object (for fluent API support)
      */
-    public function setName($v)
+    public function setKey($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->name !== $v) {
-            $this->name = $v;
-            $this->modifiedColumns[PackageTableMap::COL_NAME] = true;
+        if ($this->key !== $v) {
+            $this->key = $v;
+            $this->modifiedColumns[ExtensionTableMap::COL_KEY] = true;
         }
 
         return $this;
-    } // setName()
+    } // setKey()
 
     /**
-     * Set the value of [title] column.
+     * Set the value of [data] column.
      *
      * @param string $v new value
-     * @return $this|\keeko\core\model\Package The current object (for fluent API support)
+     * @return $this|\keeko\core\model\Extension The current object (for fluent API support)
      */
-    public function setTitle($v)
+    public function setData($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->title !== $v) {
-            $this->title = $v;
-            $this->modifiedColumns[PackageTableMap::COL_TITLE] = true;
+        if ($this->data !== $v) {
+            $this->data = $v;
+            $this->modifiedColumns[ExtensionTableMap::COL_DATA] = true;
         }
 
         return $this;
-    } // setTitle()
+    } // setData()
 
     /**
-     * Set the value of [description] column.
+     * Set the value of [package_id] column.
      *
-     * @param string $v new value
-     * @return $this|\keeko\core\model\Package The current object (for fluent API support)
+     * @param int $v new value
+     * @return $this|\keeko\core\model\Extension The current object (for fluent API support)
      */
-    public function setDescription($v)
+    public function setPackageId($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->description !== $v) {
-            $this->description = $v;
-            $this->modifiedColumns[PackageTableMap::COL_DESCRIPTION] = true;
+        if ($this->package_id !== $v) {
+            $this->package_id = $v;
+            $this->modifiedColumns[ExtensionTableMap::COL_PACKAGE_ID] = true;
+        }
+
+        if ($this->aPackage !== null && $this->aPackage->getId() !== $v) {
+            $this->aPackage = null;
         }
 
         return $this;
-    } // setDescription()
-
-    /**
-     * Set the value of [installed_version] column.
-     *
-     * @param string $v new value
-     * @return $this|\keeko\core\model\Package The current object (for fluent API support)
-     */
-    public function setInstalledVersion($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->installed_version !== $v) {
-            $this->installed_version = $v;
-            $this->modifiedColumns[PackageTableMap::COL_INSTALLED_VERSION] = true;
-        }
-
-        return $this;
-    } // setInstalledVersion()
-
-    /**
-     * Set the value of [descendant_class] column.
-     *
-     * @param string $v new value
-     * @return $this|\keeko\core\model\Package The current object (for fluent API support)
-     */
-    public function setDescendantClass($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->descendant_class !== $v) {
-            $this->descendant_class = $v;
-            $this->modifiedColumns[PackageTableMap::COL_DESCENDANT_CLASS] = true;
-        }
-
-        return $this;
-    } // setDescendantClass()
+    } // setPackageId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -567,23 +475,17 @@ abstract class Package implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PackageTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ExtensionTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PackageTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ExtensionTableMap::translateFieldName('Key', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->key = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PackageTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->title = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ExtensionTableMap::translateFieldName('Data', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->data = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PackageTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->description = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PackageTableMap::translateFieldName('InstalledVersion', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->installed_version = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : PackageTableMap::translateFieldName('DescendantClass', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->descendant_class = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ExtensionTableMap::translateFieldName('PackageId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->package_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -592,10 +494,10 @@ abstract class Package implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 6; // 6 = PackageTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = ExtensionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Package'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Extension'), 0, $e);
         }
     }
 
@@ -614,6 +516,9 @@ abstract class Package implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aPackage !== null && $this->package_id !== $this->aPackage->getId()) {
+            $this->aPackage = null;
+        }
     } // ensureConsistency
 
     /**
@@ -637,13 +542,13 @@ abstract class Package implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(PackageTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(ExtensionTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildPackageQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildExtensionQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -653,12 +558,7 @@ abstract class Package implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collExtensions = null;
-
-            $this->singleApplication = null;
-
-            $this->singleModule = null;
-
+            $this->aPackage = null;
         } // if (deep)
     }
 
@@ -668,8 +568,8 @@ abstract class Package implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Package::setDeleted()
-     * @see Package::isDeleted()
+     * @see Extension::setDeleted()
+     * @see Extension::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -678,11 +578,11 @@ abstract class Package implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PackageTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ExtensionTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildPackageQuery::create()
+            $deleteQuery = ChildExtensionQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -713,7 +613,7 @@ abstract class Package implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PackageTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ExtensionTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -732,7 +632,7 @@ abstract class Package implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                PackageTableMap::addInstanceToPool($this);
+                ExtensionTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -758,6 +658,18 @@ abstract class Package implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aPackage !== null) {
+                if ($this->aPackage->isModified() || $this->aPackage->isNew()) {
+                    $affectedRows += $this->aPackage->save($con);
+                }
+                $this->setPackage($this->aPackage);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -767,35 +679,6 @@ abstract class Package implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
-            }
-
-            if ($this->extensionsScheduledForDeletion !== null) {
-                if (!$this->extensionsScheduledForDeletion->isEmpty()) {
-                    \keeko\core\model\ExtensionQuery::create()
-                        ->filterByPrimaryKeys($this->extensionsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->extensionsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collExtensions !== null) {
-                foreach ($this->collExtensions as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->singleApplication !== null) {
-                if (!$this->singleApplication->isDeleted() && ($this->singleApplication->isNew() || $this->singleApplication->isModified())) {
-                    $affectedRows += $this->singleApplication->save($con);
-                }
-            }
-
-            if ($this->singleModule !== null) {
-                if (!$this->singleModule->isDeleted() && ($this->singleModule->isNew() || $this->singleModule->isModified())) {
-                    $affectedRows += $this->singleModule->save($con);
-                }
             }
 
             $this->alreadyInSave = false;
@@ -818,33 +701,27 @@ abstract class Package implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[PackageTableMap::COL_ID] = true;
+        $this->modifiedColumns[ExtensionTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . PackageTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . ExtensionTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(PackageTableMap::COL_ID)) {
+        if ($this->isColumnModified(ExtensionTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(PackageTableMap::COL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`name`';
+        if ($this->isColumnModified(ExtensionTableMap::COL_KEY)) {
+            $modifiedColumns[':p' . $index++]  = '`key`';
         }
-        if ($this->isColumnModified(PackageTableMap::COL_TITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`title`';
+        if ($this->isColumnModified(ExtensionTableMap::COL_DATA)) {
+            $modifiedColumns[':p' . $index++]  = '`data`';
         }
-        if ($this->isColumnModified(PackageTableMap::COL_DESCRIPTION)) {
-            $modifiedColumns[':p' . $index++]  = '`description`';
-        }
-        if ($this->isColumnModified(PackageTableMap::COL_INSTALLED_VERSION)) {
-            $modifiedColumns[':p' . $index++]  = '`installed_version`';
-        }
-        if ($this->isColumnModified(PackageTableMap::COL_DESCENDANT_CLASS)) {
-            $modifiedColumns[':p' . $index++]  = '`descendant_class`';
+        if ($this->isColumnModified(ExtensionTableMap::COL_PACKAGE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`package_id`';
         }
 
         $sql = sprintf(
-            'INSERT INTO `kk_package` (%s) VALUES (%s)',
+            'INSERT INTO `kk_extension` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -856,20 +733,14 @@ abstract class Package implements ActiveRecordInterface
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`name`':
-                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                    case '`key`':
+                        $stmt->bindValue($identifier, $this->key, PDO::PARAM_STR);
                         break;
-                    case '`title`':
-                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+                    case '`data`':
+                        $stmt->bindValue($identifier, $this->data, PDO::PARAM_STR);
                         break;
-                    case '`description`':
-                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
-                        break;
-                    case '`installed_version`':
-                        $stmt->bindValue($identifier, $this->installed_version, PDO::PARAM_STR);
-                        break;
-                    case '`descendant_class`':
-                        $stmt->bindValue($identifier, $this->descendant_class, PDO::PARAM_STR);
+                    case '`package_id`':
+                        $stmt->bindValue($identifier, $this->package_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -917,7 +788,7 @@ abstract class Package implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = PackageTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ExtensionTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -937,19 +808,13 @@ abstract class Package implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getName();
+                return $this->getKey();
                 break;
             case 2:
-                return $this->getTitle();
+                return $this->getData();
                 break;
             case 3:
-                return $this->getDescription();
-                break;
-            case 4:
-                return $this->getInstalledVersion();
-                break;
-            case 5:
-                return $this->getDescendantClass();
+                return $this->getPackageId();
                 break;
             default:
                 return null;
@@ -975,18 +840,16 @@ abstract class Package implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['Package'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Extension'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Package'][$this->hashCode()] = true;
-        $keys = PackageTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Extension'][$this->hashCode()] = true;
+        $keys = ExtensionTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getName(),
-            $keys[2] => $this->getTitle(),
-            $keys[3] => $this->getDescription(),
-            $keys[4] => $this->getInstalledVersion(),
-            $keys[5] => $this->getDescendantClass(),
+            $keys[1] => $this->getKey(),
+            $keys[2] => $this->getData(),
+            $keys[3] => $this->getPackageId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -994,50 +857,20 @@ abstract class Package implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collExtensions) {
+            if (null !== $this->aPackage) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'extensions';
+                        $key = 'package';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'kk_extensions';
+                        $key = 'kk_package';
                         break;
                     default:
-                        $key = 'Extensions';
+                        $key = 'Package';
                 }
 
-                $result[$key] = $this->collExtensions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->singleApplication) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'application';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'kk_application';
-                        break;
-                    default:
-                        $key = 'Application';
-                }
-
-                $result[$key] = $this->singleApplication->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleModule) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'module';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'kk_module';
-                        break;
-                    default:
-                        $key = 'Module';
-                }
-
-                $result[$key] = $this->singleModule->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
+                $result[$key] = $this->aPackage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1053,11 +886,11 @@ abstract class Package implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\keeko\core\model\Package
+     * @return $this|\keeko\core\model\Extension
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = PackageTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ExtensionTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -1068,7 +901,7 @@ abstract class Package implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\keeko\core\model\Package
+     * @return $this|\keeko\core\model\Extension
      */
     public function setByPosition($pos, $value)
     {
@@ -1077,19 +910,13 @@ abstract class Package implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setName($value);
+                $this->setKey($value);
                 break;
             case 2:
-                $this->setTitle($value);
+                $this->setData($value);
                 break;
             case 3:
-                $this->setDescription($value);
-                break;
-            case 4:
-                $this->setInstalledVersion($value);
-                break;
-            case 5:
-                $this->setDescendantClass($value);
+                $this->setPackageId($value);
                 break;
         } // switch()
 
@@ -1115,25 +942,19 @@ abstract class Package implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = PackageTableMap::getFieldNames($keyType);
+        $keys = ExtensionTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setName($arr[$keys[1]]);
+            $this->setKey($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setTitle($arr[$keys[2]]);
+            $this->setData($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setDescription($arr[$keys[3]]);
-        }
-        if (array_key_exists($keys[4], $arr)) {
-            $this->setInstalledVersion($arr[$keys[4]]);
-        }
-        if (array_key_exists($keys[5], $arr)) {
-            $this->setDescendantClass($arr[$keys[5]]);
+            $this->setPackageId($arr[$keys[3]]);
         }
     }
 
@@ -1154,7 +975,7 @@ abstract class Package implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\keeko\core\model\Package The current object, for fluid interface
+     * @return $this|\keeko\core\model\Extension The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1174,25 +995,19 @@ abstract class Package implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(PackageTableMap::DATABASE_NAME);
+        $criteria = new Criteria(ExtensionTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(PackageTableMap::COL_ID)) {
-            $criteria->add(PackageTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(ExtensionTableMap::COL_ID)) {
+            $criteria->add(ExtensionTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(PackageTableMap::COL_NAME)) {
-            $criteria->add(PackageTableMap::COL_NAME, $this->name);
+        if ($this->isColumnModified(ExtensionTableMap::COL_KEY)) {
+            $criteria->add(ExtensionTableMap::COL_KEY, $this->key);
         }
-        if ($this->isColumnModified(PackageTableMap::COL_TITLE)) {
-            $criteria->add(PackageTableMap::COL_TITLE, $this->title);
+        if ($this->isColumnModified(ExtensionTableMap::COL_DATA)) {
+            $criteria->add(ExtensionTableMap::COL_DATA, $this->data);
         }
-        if ($this->isColumnModified(PackageTableMap::COL_DESCRIPTION)) {
-            $criteria->add(PackageTableMap::COL_DESCRIPTION, $this->description);
-        }
-        if ($this->isColumnModified(PackageTableMap::COL_INSTALLED_VERSION)) {
-            $criteria->add(PackageTableMap::COL_INSTALLED_VERSION, $this->installed_version);
-        }
-        if ($this->isColumnModified(PackageTableMap::COL_DESCENDANT_CLASS)) {
-            $criteria->add(PackageTableMap::COL_DESCENDANT_CLASS, $this->descendant_class);
+        if ($this->isColumnModified(ExtensionTableMap::COL_PACKAGE_ID)) {
+            $criteria->add(ExtensionTableMap::COL_PACKAGE_ID, $this->package_id);
         }
 
         return $criteria;
@@ -1210,8 +1025,8 @@ abstract class Package implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildPackageQuery::create();
-        $criteria->add(PackageTableMap::COL_ID, $this->id);
+        $criteria = ChildExtensionQuery::create();
+        $criteria->add(ExtensionTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1273,42 +1088,16 @@ abstract class Package implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \keeko\core\model\Package (or compatible) type.
+     * @param      object $copyObj An object of \keeko\core\model\Extension (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setName($this->getName());
-        $copyObj->setTitle($this->getTitle());
-        $copyObj->setDescription($this->getDescription());
-        $copyObj->setInstalledVersion($this->getInstalledVersion());
-        $copyObj->setDescendantClass($this->getDescendantClass());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getExtensions() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addExtension($relObj->copy($deepCopy));
-                }
-            }
-
-            $relObj = $this->getApplication();
-            if ($relObj) {
-                $copyObj->setApplication($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getModule();
-            if ($relObj) {
-                $copyObj->setModule($relObj->copy($deepCopy));
-            }
-
-        } // if ($deepCopy)
-
+        $copyObj->setKey($this->getKey());
+        $copyObj->setData($this->getData());
+        $copyObj->setPackageId($this->getPackageId());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1324,7 +1113,7 @@ abstract class Package implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \keeko\core\model\Package Clone of current object.
+     * @return \keeko\core\model\Extension Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1337,310 +1126,55 @@ abstract class Package implements ActiveRecordInterface
         return $copyObj;
     }
 
-
     /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
+     * Declares an association between this object and a ChildPackage object.
      *
-     * @param      string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('Extension' == $relationName) {
-            return $this->initExtensions();
-        }
-    }
-
-    /**
-     * Clears out the collExtensions collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addExtensions()
-     */
-    public function clearExtensions()
-    {
-        $this->collExtensions = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collExtensions collection loaded partially.
-     */
-    public function resetPartialExtensions($v = true)
-    {
-        $this->collExtensionsPartial = $v;
-    }
-
-    /**
-     * Initializes the collExtensions collection.
-     *
-     * By default this just sets the collExtensions collection to an empty array (like clearcollExtensions());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initExtensions($overrideExisting = true)
-    {
-        if (null !== $this->collExtensions && !$overrideExisting) {
-            return;
-        }
-        $this->collExtensions = new ObjectCollection();
-        $this->collExtensions->setModel('\keeko\core\model\Extension');
-    }
-
-    /**
-     * Gets an array of ChildExtension objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildPackage is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildExtension[] List of ChildExtension objects
+     * @param  ChildPackage $v
+     * @return $this|\keeko\core\model\Extension The current object (for fluent API support)
      * @throws PropelException
      */
-    public function getExtensions(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function setPackage(ChildPackage $v = null)
     {
-        $partial = $this->collExtensionsPartial && !$this->isNew();
-        if (null === $this->collExtensions || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collExtensions) {
-                // return empty collection
-                $this->initExtensions();
-            } else {
-                $collExtensions = ChildExtensionQuery::create(null, $criteria)
-                    ->filterByPackage($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collExtensionsPartial && count($collExtensions)) {
-                        $this->initExtensions(false);
-
-                        foreach ($collExtensions as $obj) {
-                            if (false == $this->collExtensions->contains($obj)) {
-                                $this->collExtensions->append($obj);
-                            }
-                        }
-
-                        $this->collExtensionsPartial = true;
-                    }
-
-                    return $collExtensions;
-                }
-
-                if ($partial && $this->collExtensions) {
-                    foreach ($this->collExtensions as $obj) {
-                        if ($obj->isNew()) {
-                            $collExtensions[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collExtensions = $collExtensions;
-                $this->collExtensionsPartial = false;
-            }
+        if ($v === null) {
+            $this->setPackageId(NULL);
+        } else {
+            $this->setPackageId($v->getId());
         }
 
-        return $this->collExtensions;
-    }
+        $this->aPackage = $v;
 
-    /**
-     * Sets a collection of ChildExtension objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $extensions A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildPackage The current object (for fluent API support)
-     */
-    public function setExtensions(Collection $extensions, ConnectionInterface $con = null)
-    {
-        /** @var ChildExtension[] $extensionsToDelete */
-        $extensionsToDelete = $this->getExtensions(new Criteria(), $con)->diff($extensions);
-
-
-        $this->extensionsScheduledForDeletion = $extensionsToDelete;
-
-        foreach ($extensionsToDelete as $extensionRemoved) {
-            $extensionRemoved->setPackage(null);
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildPackage object, it will not be re-added.
+        if ($v !== null) {
+            $v->addExtension($this);
         }
 
-        $this->collExtensions = null;
-        foreach ($extensions as $extension) {
-            $this->addExtension($extension);
-        }
-
-        $this->collExtensions = $extensions;
-        $this->collExtensionsPartial = false;
 
         return $this;
     }
 
+
     /**
-     * Returns the number of related Extension objects.
+     * Get the associated ChildPackage object
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Extension objects.
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildPackage The associated ChildPackage object.
      * @throws PropelException
      */
-    public function countExtensions(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function getPackage(ConnectionInterface $con = null)
     {
-        $partial = $this->collExtensionsPartial && !$this->isNew();
-        if (null === $this->collExtensions || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collExtensions) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getExtensions());
-            }
-
-            $query = ChildExtensionQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByPackage($this)
-                ->count($con);
+        if ($this->aPackage === null && ($this->package_id !== null)) {
+            $this->aPackage = ChildPackageQuery::create()->findPk($this->package_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aPackage->addExtensions($this);
+             */
         }
 
-        return count($this->collExtensions);
-    }
-
-    /**
-     * Method called to associate a ChildExtension object to this object
-     * through the ChildExtension foreign key attribute.
-     *
-     * @param  ChildExtension $l ChildExtension
-     * @return $this|\keeko\core\model\Package The current object (for fluent API support)
-     */
-    public function addExtension(ChildExtension $l)
-    {
-        if ($this->collExtensions === null) {
-            $this->initExtensions();
-            $this->collExtensionsPartial = true;
-        }
-
-        if (!$this->collExtensions->contains($l)) {
-            $this->doAddExtension($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildExtension $extension The ChildExtension object to add.
-     */
-    protected function doAddExtension(ChildExtension $extension)
-    {
-        $this->collExtensions[]= $extension;
-        $extension->setPackage($this);
-    }
-
-    /**
-     * @param  ChildExtension $extension The ChildExtension object to remove.
-     * @return $this|ChildPackage The current object (for fluent API support)
-     */
-    public function removeExtension(ChildExtension $extension)
-    {
-        if ($this->getExtensions()->contains($extension)) {
-            $pos = $this->collExtensions->search($extension);
-            $this->collExtensions->remove($pos);
-            if (null === $this->extensionsScheduledForDeletion) {
-                $this->extensionsScheduledForDeletion = clone $this->collExtensions;
-                $this->extensionsScheduledForDeletion->clear();
-            }
-            $this->extensionsScheduledForDeletion[]= clone $extension;
-            $extension->setPackage(null);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets a single ChildApplication object, which is related to this object by a one-to-one relationship.
-     *
-     * @param  ConnectionInterface $con optional connection object
-     * @return ChildApplication
-     * @throws PropelException
-     */
-    public function getApplication(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleApplication === null && !$this->isNew()) {
-            $this->singleApplication = ChildApplicationQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleApplication;
-    }
-
-    /**
-     * Sets a single ChildApplication object as related to this object by a one-to-one relationship.
-     *
-     * @param  ChildApplication $v ChildApplication
-     * @return $this|\keeko\core\model\Package The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setApplication(ChildApplication $v = null)
-    {
-        $this->singleApplication = $v;
-
-        // Make sure that that the passed-in ChildApplication isn't already associated with this object
-        if ($v !== null && $v->getPackage(null, false) === null) {
-            $v->setPackage($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets a single ChildModule object, which is related to this object by a one-to-one relationship.
-     *
-     * @param  ConnectionInterface $con optional connection object
-     * @return ChildModule
-     * @throws PropelException
-     */
-    public function getModule(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleModule === null && !$this->isNew()) {
-            $this->singleModule = ChildModuleQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleModule;
-    }
-
-    /**
-     * Sets a single ChildModule object as related to this object by a one-to-one relationship.
-     *
-     * @param  ChildModule $v ChildModule
-     * @return $this|\keeko\core\model\Package The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setModule(ChildModule $v = null)
-    {
-        $this->singleModule = $v;
-
-        // Make sure that that the passed-in ChildModule isn't already associated with this object
-        if ($v !== null && $v->getPackage(null, false) === null) {
-            $v->setPackage($this);
-        }
-
-        return $this;
+        return $this->aPackage;
     }
 
     /**
@@ -1650,12 +1184,13 @@ abstract class Package implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aPackage) {
+            $this->aPackage->removeExtension($this);
+        }
         $this->id = null;
-        $this->name = null;
-        $this->title = null;
-        $this->description = null;
-        $this->installed_version = null;
-        $this->descendant_class = null;
+        $this->key = null;
+        $this->data = null;
+        $this->package_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -1674,22 +1209,9 @@ abstract class Package implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collExtensions) {
-                foreach ($this->collExtensions as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->singleApplication) {
-                $this->singleApplication->clearAllReferences($deep);
-            }
-            if ($this->singleModule) {
-                $this->singleModule->clearAllReferences($deep);
-            }
         } // if ($deep)
 
-        $this->collExtensions = null;
-        $this->singleApplication = null;
-        $this->singleModule = null;
+        $this->aPackage = null;
     }
 
     /**
@@ -1699,35 +1221,7 @@ abstract class Package implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(PackageTableMap::DEFAULT_STRING_FORMAT);
-    }
-
-    // concrete_inheritance_parent behavior
-
-    /**
-     * Whether or not this object is the parent of a child object
-     *
-     * @return    bool
-     */
-    public function hasChildObject()
-    {
-        return $this->getDescendantClass() !== null;
-    }
-
-    /**
-     * Get the child object of this object
-     *
-     * @return    mixed
-     */
-    public function getChildObject()
-    {
-        if (!$this->hasChildObject()) {
-            return null;
-        }
-        $childObjectClass = $this->getDescendantClass();
-        $childObject = PropelQuery::from($childObjectClass)->findPk($this->getPrimaryKey());
-
-        return $childObject->hasChildObject() ? $childObject->getChildObject() : $childObject;
+        return (string) $this->exportTo(ExtensionTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

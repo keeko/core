@@ -7,6 +7,9 @@ use keeko\core\model\PackageQuery;
 use keeko\core\service\ServiceContainer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use keeko\core\schema\KeekoPackageSchema;
+use keeko\core\model\ExtensionQuery;
+use keeko\core\model\Extension;
+use phootwork\json\Json;
 
 abstract class AbstractPackageInstaller {
 	
@@ -46,9 +49,24 @@ abstract class AbstractPackageInstaller {
 			$model->setInstalledVersion($info->getPrettyVersion());
 			$model->save();
 		}
+		
+		$this->updateExtensions($model, $pkg);
 	}
 	
 	protected function getPackageSchema($packageName) {
 		return $this->service->getPackageManager()->getPackage($packageName);
+	}
+	
+	protected function updateExtensions(Package &$model, KeekoPackageSchema $pkg) {
+		// remove all existing extensions from this package first
+		ExtensionQuery::create()->filterByPackage($model)->deleteAll();
+		
+		// add them one by one
+		foreach ($pkg->getExtensions() as $key => $data) {
+			$ext = new Extension();
+			$ext->setKey($key);
+			$ext->setData(Json::encode($data));
+			$ext->save();
+		}
 	}
 }

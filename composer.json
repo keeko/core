@@ -14,7 +14,7 @@
 		}
 	},
 	"require" : {
-		"php" : ">=5.4",
+		"php" : ">=5.5.9",
 		"keeko/composer-installer" : "*",
 		"composer/composer" : "dev-master@dev",
 		"propel/propel" : "2.0.0-alpha5@alpha",
@@ -39,7 +39,8 @@
 		"phootwork/lang" : "~0",
 		"phootwork/json" : "~1",
 		"gossi/swagger" : "~0",
-		"gossi/propel-l10n-behavior" : "~0"
+		"gossi/propel-l10n-behavior" : "~0",
+		"tobscure/json-api" : "~0"
 	},
 	"require-dev" : {
 		"phpunit/phpunit" : "~4"

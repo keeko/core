@@ -1,5 +1,5 @@
 <?php
-namespace keeko\core\utils;
+namespace keeko\core\model\types;
 
 use keeko\core\model\ActivityObject;
 

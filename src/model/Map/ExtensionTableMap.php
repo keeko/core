@@ -11,12 +11,12 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
-use keeko\core\model\Package;
-use keeko\core\model\PackageQuery;
+use keeko\core\model\Extension;
+use keeko\core\model\ExtensionQuery;
 
 
 /**
- * This class defines the structure of the 'kk_package' table.
+ * This class defines the structure of the 'kk_extension' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use keeko\core\model\PackageQuery;
  * (i.e. if it's a text column type).
  *
  */
-class PackageTableMap extends TableMap
+class ExtensionTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class PackageTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.PackageTableMap';
+    const CLASS_NAME = '.Map.ExtensionTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class PackageTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'kk_package';
+    const TABLE_NAME = 'kk_extension';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\keeko\\core\\model\\Package';
+    const OM_CLASS = '\\keeko\\core\\model\\Extension';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Package';
+    const CLASS_DEFAULT = 'Extension';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,37 +69,27 @@ class PackageTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the id field
      */
-    const COL_ID = 'kk_package.id';
+    const COL_ID = 'kk_extension.id';
 
     /**
-     * the column name for the name field
+     * the column name for the key field
      */
-    const COL_NAME = 'kk_package.name';
+    const COL_KEY = 'kk_extension.key';
 
     /**
-     * the column name for the title field
+     * the column name for the data field
      */
-    const COL_TITLE = 'kk_package.title';
+    const COL_DATA = 'kk_extension.data';
 
     /**
-     * the column name for the description field
+     * the column name for the package_id field
      */
-    const COL_DESCRIPTION = 'kk_package.description';
-
-    /**
-     * the column name for the installed_version field
-     */
-    const COL_INSTALLED_VERSION = 'kk_package.installed_version';
-
-    /**
-     * the column name for the descendant_class field
-     */
-    const COL_DESCENDANT_CLASS = 'kk_package.descendant_class';
+    const COL_PACKAGE_ID = 'kk_extension.package_id';
 
     /**
      * The default string format for model objects of the related table
@@ -113,11 +103,11 @@ class PackageTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Name', 'Title', 'Description', 'InstalledVersion', 'DescendantClass', ),
-        self::TYPE_CAMELNAME     => array('id', 'name', 'title', 'description', 'installedVersion', 'descendantClass', ),
-        self::TYPE_COLNAME       => array(PackageTableMap::COL_ID, PackageTableMap::COL_NAME, PackageTableMap::COL_TITLE, PackageTableMap::COL_DESCRIPTION, PackageTableMap::COL_INSTALLED_VERSION, PackageTableMap::COL_DESCENDANT_CLASS, ),
-        self::TYPE_FIELDNAME     => array('id', 'name', 'title', 'description', 'installed_version', 'descendant_class', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id', 'Key', 'Data', 'PackageId', ),
+        self::TYPE_CAMELNAME     => array('id', 'key', 'data', 'packageId', ),
+        self::TYPE_COLNAME       => array(ExtensionTableMap::COL_ID, ExtensionTableMap::COL_KEY, ExtensionTableMap::COL_DATA, ExtensionTableMap::COL_PACKAGE_ID, ),
+        self::TYPE_FIELDNAME     => array('id', 'key', 'data', 'package_id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -127,11 +117,11 @@ class PackageTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, 'Title' => 2, 'Description' => 3, 'InstalledVersion' => 4, 'DescendantClass' => 5, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'installedVersion' => 4, 'descendantClass' => 5, ),
-        self::TYPE_COLNAME       => array(PackageTableMap::COL_ID => 0, PackageTableMap::COL_NAME => 1, PackageTableMap::COL_TITLE => 2, PackageTableMap::COL_DESCRIPTION => 3, PackageTableMap::COL_INSTALLED_VERSION => 4, PackageTableMap::COL_DESCENDANT_CLASS => 5, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, 'title' => 2, 'description' => 3, 'installed_version' => 4, 'descendant_class' => 5, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Key' => 1, 'Data' => 2, 'PackageId' => 3, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'key' => 1, 'data' => 2, 'packageId' => 3, ),
+        self::TYPE_COLNAME       => array(ExtensionTableMap::COL_ID => 0, ExtensionTableMap::COL_KEY => 1, ExtensionTableMap::COL_DATA => 2, ExtensionTableMap::COL_PACKAGE_ID => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'key' => 1, 'data' => 2, 'package_id' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -144,19 +134,17 @@ class PackageTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('kk_package');
-        $this->setPhpName('Package');
+        $this->setName('kk_extension');
+        $this->setPhpName('Extension');
         $this->setIdentifierQuoting(true);
-        $this->setClassName('\\keeko\\core\\model\\Package');
+        $this->setClassName('\\keeko\\core\\model\\Extension');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
-        $this->addColumn('title', 'Title', 'VARCHAR', false, 255, null);
-        $this->addColumn('description', 'Description', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('installed_version', 'InstalledVersion', 'VARCHAR', false, 50, null);
-        $this->addColumn('descendant_class', 'DescendantClass', 'VARCHAR', false, 100, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
+        $this->addColumn('key', 'Key', 'VARCHAR', true, 255, null);
+        $this->addColumn('data', 'Data', 'LONGVARCHAR', true, null, null);
+        $this->addForeignKey('package_id', 'PackageId', 'INTEGER', 'kk_package', 'id', true, 10, null);
     } // initialize()
 
     /**
@@ -164,52 +152,14 @@ class PackageTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Extension', '\\keeko\\core\\model\\Extension', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('Package', '\\keeko\\core\\model\\Package', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':package_id',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Extensions', false);
-        $this->addRelation('Application', '\\keeko\\core\\model\\Application', RelationMap::ONE_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':id',
-    1 => ':id',
-  ),
-), 'CASCADE', null, null, false);
-        $this->addRelation('Module', '\\keeko\\core\\model\\Module', RelationMap::ONE_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':id',
-    1 => ':id',
-  ),
 ), 'CASCADE', null, null, false);
     } // buildRelations()
-
-    /**
-     *
-     * Gets the list of behaviors registered for this table
-     *
-     * @return array Associative array (name => parameters) of behaviors
-     */
-    public function getBehaviors()
-    {
-        return array(
-            'concrete_inheritance_parent' => array('descendant_column' => 'descendant_class', ),
-        );
-    } // getBehaviors()
-    /**
-     * Method to invalidate the instance pool of all tables related to kk_package     * by a foreign key with ON DELETE CASCADE
-     */
-    public static function clearRelatedInstancePool()
-    {
-        // Invalidate objects in related instance pools,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        ExtensionTableMap::clearInstancePool();
-        ApplicationTableMap::clearInstancePool();
-        ModuleTableMap::clearInstancePool();
-    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -268,7 +218,7 @@ class PackageTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? PackageTableMap::CLASS_DEFAULT : PackageTableMap::OM_CLASS;
+        return $withPrefix ? ExtensionTableMap::CLASS_DEFAULT : ExtensionTableMap::OM_CLASS;
     }
 
     /**
@@ -282,22 +232,22 @@ class PackageTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Package object, last column rank)
+     * @return array           (Extension object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = PackageTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = PackageTableMap::getInstanceFromPool($key))) {
+        $key = ExtensionTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = ExtensionTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + PackageTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + ExtensionTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = PackageTableMap::OM_CLASS;
-            /** @var Package $obj */
+            $cls = ExtensionTableMap::OM_CLASS;
+            /** @var Extension $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            PackageTableMap::addInstanceToPool($obj, $key);
+            ExtensionTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -320,18 +270,18 @@ class PackageTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = PackageTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = PackageTableMap::getInstanceFromPool($key))) {
+            $key = ExtensionTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = ExtensionTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Package $obj */
+                /** @var Extension $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                PackageTableMap::addInstanceToPool($obj, $key);
+                ExtensionTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -352,19 +302,15 @@ class PackageTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(PackageTableMap::COL_ID);
-            $criteria->addSelectColumn(PackageTableMap::COL_NAME);
-            $criteria->addSelectColumn(PackageTableMap::COL_TITLE);
-            $criteria->addSelectColumn(PackageTableMap::COL_DESCRIPTION);
-            $criteria->addSelectColumn(PackageTableMap::COL_INSTALLED_VERSION);
-            $criteria->addSelectColumn(PackageTableMap::COL_DESCENDANT_CLASS);
+            $criteria->addSelectColumn(ExtensionTableMap::COL_ID);
+            $criteria->addSelectColumn(ExtensionTableMap::COL_KEY);
+            $criteria->addSelectColumn(ExtensionTableMap::COL_DATA);
+            $criteria->addSelectColumn(ExtensionTableMap::COL_PACKAGE_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.name');
-            $criteria->addSelectColumn($alias . '.title');
-            $criteria->addSelectColumn($alias . '.description');
-            $criteria->addSelectColumn($alias . '.installed_version');
-            $criteria->addSelectColumn($alias . '.descendant_class');
+            $criteria->addSelectColumn($alias . '.key');
+            $criteria->addSelectColumn($alias . '.data');
+            $criteria->addSelectColumn($alias . '.package_id');
         }
     }
 
@@ -377,7 +323,7 @@ class PackageTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(PackageTableMap::DATABASE_NAME)->getTable(PackageTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(ExtensionTableMap::DATABASE_NAME)->getTable(ExtensionTableMap::TABLE_NAME);
     }
 
     /**
@@ -385,16 +331,16 @@ class PackageTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(PackageTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(PackageTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new PackageTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(ExtensionTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(ExtensionTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new ExtensionTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Package or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Extension or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Package object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Extension object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -405,27 +351,27 @@ class PackageTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PackageTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ExtensionTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \keeko\core\model\Package) { // it's a model object
+        } elseif ($values instanceof \keeko\core\model\Extension) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(PackageTableMap::DATABASE_NAME);
-            $criteria->add(PackageTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(ExtensionTableMap::DATABASE_NAME);
+            $criteria->add(ExtensionTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = PackageQuery::create()->mergeWith($criteria);
+        $query = ExtensionQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            PackageTableMap::clearInstancePool();
+            ExtensionTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                PackageTableMap::removeInstanceFromPool($singleval);
+                ExtensionTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -433,20 +379,20 @@ class PackageTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the kk_package table.
+     * Deletes all rows from the kk_extension table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return PackageQuery::create()->doDeleteAll($con);
+        return ExtensionQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Package or Criteria object.
+     * Performs an INSERT on the database, given a Extension or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Package object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Extension object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -455,22 +401,22 @@ class PackageTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PackageTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ExtensionTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Package object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Extension object
         }
 
-        if ($criteria->containsKey(PackageTableMap::COL_ID) && $criteria->keyContainsValue(PackageTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.PackageTableMap::COL_ID.')');
+        if ($criteria->containsKey(ExtensionTableMap::COL_ID) && $criteria->keyContainsValue(ExtensionTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.ExtensionTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = PackageQuery::create()->mergeWith($criteria);
+        $query = ExtensionQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -479,7 +425,7 @@ class PackageTableMap extends TableMap
         });
     }
 
-} // PackageTableMap
+} // ExtensionTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-PackageTableMap::buildTableMap();
+ExtensionTableMap::buildTableMap();

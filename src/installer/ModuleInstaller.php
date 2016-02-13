@@ -2,6 +2,8 @@
 namespace keeko\core\installer;
 
 use Composer\IO\IOInterface;
+use gossi\swagger\Parameter;
+use gossi\swagger\Path;
 use gossi\swagger\Swagger;
 use keeko\core\events\ModuleEvent;
 use keeko\core\model\Action;
@@ -15,6 +17,8 @@ use keeko\core\model\ModuleQuery;
 use keeko\core\package\ModuleManager;
 use keeko\core\schema\ModuleSchema;
 use keeko\core\service\ServiceContainer;
+use phootwork\json\Json;
+use Propel\Runtime\ActiveQuery\Criteria;
 
 class ModuleInstaller extends AbstractPackageInstaller {
 	
@@ -174,7 +178,7 @@ class ModuleInstaller extends AbstractPackageInstaller {
 		}
 	}
 	
-	private function updateApi(Module $model, $actions) {
+	private function updateApi(Module $model, ModuleSchema $module, $actions) {
 		$repo = $this->service->getResourceRepository();
 		$filename = sprintf('/packages/%s/api.json', $model->getName());
 		if (!$repo->contains($filename)) {
@@ -182,18 +186,50 @@ class ModuleInstaller extends AbstractPackageInstaller {
 		}
 
 		// delete every api existent for the given module prior to create the new ones
-// 		$q = ApiQuery::create()
-// 			->useActionQuery()
-// 				->filterByModule($model)
-// 			->endUse();
-		
-// 		echo $q->toString();
-		
-// 		$q->delete();
+		ApiQuery::create()
+			->filterBy('ActionId', array_values($actions), Criteria::IN)
+			->deleteAll()
+		;
 	
-		// TODO: Work out extension system before defining parent endpoints
-		
-// 		$swagger = new Swagger($repo->get($fileName)->getBody());
+		$extensions = $this->service->getExtensionRegistry()->getExtensionsByPackage('keeko.api', $model->getName());
+		$methods = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'];
+		$json = Json::decode($repo->get($filename)->getBody());
+		$swagger = new Swagger($json);
+		foreach ($swagger->getPaths() as $path) {
+			/* @var $path Path */
+			foreach ($methods as $method) {
+				if ($path->hasOperation($method)) {
+					$op = $path->getOperation($method);
+					$actionName = $op->getOperationId();
+
+					if (!isset($actions[$actionName])) {
+						continue;
+					}
+					
+					// find required parameters
+					$required = [];
+					
+					foreach ($op->getParameters() as $param) {
+						/* @var $param Parameter */
+						if ($param->getIn() == 'path' && $param->getRequired()) {
+							$required[] = $param->getName();
+						}
+					}
+					
+					$prefix = isset($extensions[$actionName])
+						? $extensions[$actionName]
+						: $module->getSlug();
+					
+					$fullPath = str_replace('//', '/', $prefix . '/' . $path->getPath());
+					$api = new Api();
+					$api->setMethod($method);
+					$api->setRoute($fullPath);
+					$api->setActionId($actions[$actionName]);
+					$api->setRequiredParams(implode(',', $required));
+					$api->save();
+				}
+			}
+		}
 
 // 		foreach ($data['api']['apis'] as $apis) {
 // 			$path = $apis['path'];

@@ -234,6 +234,10 @@
             "install-path": "vendor/symfony/yaml",
             "installer": "composer"
         },
+        "tobscure/json-api": {
+            "install-path": "vendor/tobscure/json-api",
+            "installer": "composer"
+        },
         "twig/twig": {
             "install-path": "vendor/twig/twig",
             "installer": "composer"

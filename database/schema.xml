@@ -295,6 +295,19 @@
 		</foreign-key>
 	</table>
 
+	<table name="extension" namespace="\keeko\core\model">
+		<!-- Fields -->
+		<column name="id" type="INTEGER" size="10" primaryKey="true" required="true" autoIncrement="true" />
+		<column name="key" type="VARCHAR" required="true" />
+		<column name="data" type="LONGVARCHAR" required="true" />
+		<column name="package_id" type="INTEGER" size="10" required="true" />
+
+		<!-- Foreign Keys -->
+		<foreign-key foreignTable="package" onDelete="cascade" name="extension_fk_package">
+			<reference local="package_id" foreign="id" />
+		</foreign-key>
+	</table>
+
 	<table name="preference" namespace="\keeko\core\model">
 		<!-- Fields -->
 		<column name="key" type="VARCHAR" size="255" primaryKey="true" required="true"/>

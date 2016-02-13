@@ -3,8 +3,10 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\User as BaseUser;
-use keeko\core\utils\ActivityObjectInterface;
+use keeko\core\model\types\ActivityObjectInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use keeko\core\model\types\APIModelInterface;
+use keeko\core\model\serializer\UserSerializer;
 
 /**
  * Skeleton subclass for representing a row from the 'kk_user' table.
@@ -16,15 +18,25 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * long as it does not already exist in the output directory.
  *
  */
-class User extends BaseUser {
+class User extends BaseUser implements APIModelInterface {
 
+	private static $serializer = null;
+	
+	public static function getSerializer() {
+		if (self::$serializer === null) {
+			self::$serializer = new UserSerializer();
+		}
+	
+		return self::$serializer;
+	}
+	
 	public function newActivity(array $activity) {
 		$resolver = new OptionsResolver();
 		$resolver->setRequired(['verb', 'object']);
 		$resolver->setOptional(['target']);
 		$resolver->setAllowedTypes([
-			'target' => ['keeko\core\utils\ActivityObjectInterface', 'keeko\core\model\ActivityObject'],
-			'object' => ['keeko\core\utils\ActivityObjectInterface', 'keeko\core\model\ActivityObject']
+			'target' => ['keeko\core\model\types\ActivityObjectInterface', 'keeko\core\model\ActivityObject'],
+			'object' => ['keeko\core\model\types\ActivityObjectInterface', 'keeko\core\model\ActivityObject']
 		]);
 		$options = $resolver->resolve($activity);
 
@@ -56,9 +68,11 @@ class User extends BaseUser {
 			->filterByType($ao->getType())
 			->filterByReferenceId($ao->getId());
 
-		$version = $ao->getVersion();
-		if (!empty($version)) {
-			$q = $q->filterByVersion($version);
+		if (method_exists($ao, 'getVersion')) {
+			$version = $ao->getVersion();
+			if (!empty($version)) {
+				$q = $q->filterByVersion($version);
+			}
 		}
 
 		$result = $q->findOne();

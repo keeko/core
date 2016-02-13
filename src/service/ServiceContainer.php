@@ -58,6 +58,9 @@ class ServiceContainer {
 	/** @var UrlGenerator */
 	private $urlGenerator;
 	
+	/** @var ExtensionRegistry */
+	private $extensionRegistry;
+	
 	public function __construct(AbstractKernel $kernel) {
 		$this->kernel = $kernel;
 	}
@@ -250,5 +253,18 @@ class ServiceContainer {
 		}
 		
 		return $this->twig;
+	}
+	
+	/**
+	 * Returns the extension registry
+	 *
+	 * @return ExtensionRegistry
+	 */
+	public function getExtensionRegistry() {
+		if ($this->extensionRegistry === null) {
+			$this->extensionRegistry = new ExtensionRegistry();
+		}
+		
+		return $this->extensionRegistry;
 	}
 }

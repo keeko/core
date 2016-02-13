@@ -7,16 +7,13 @@ use phootwork\collection\Set;
 class ModuleSchema extends KeekoPackageSchema {
 	
 	/** @var Map<string, ActionSchema> */
-	private $actions;
+	protected $actions;
 	
 	/**
 	 * @param array $contents
 	 */
-	protected function parse($contents) {
-		$data = new Map($contents);
-	
-		$this->title = $data->get('title', '');
-		$this->class = $data->get('class', '');
+	protected function parse($contents = []) {
+		$data = parent::parse($contents);
 		
 		$this->actions = new Map();
 		foreach ($data->get('actions', []) as $name => $actionData) {
@@ -25,10 +22,7 @@ class ModuleSchema extends KeekoPackageSchema {
 	}
 	
 	public function toArray() {
-		$arr = [
-			'title' => $this->title,
-			'class' => $this->class
-		];
+		$arr = parent::toArray();
 		
 		if ($this->actions->size() > 0) {
 			$actions = [];
@@ -37,8 +31,6 @@ class ModuleSchema extends KeekoPackageSchema {
 			}
 			$arr['actions'] = $actions;
 		}
-		
-// 		print_r($arr);
 
 		return $arr;
 	}
@@ -82,6 +74,6 @@ class ModuleSchema extends KeekoPackageSchema {
 	public function getActionNames() {
 		return $this->actions->keys();
 	}
-	
+
 }
 

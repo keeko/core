@@ -443,6 +443,26 @@ CREATE TABLE `kk_action`
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- kk_extension
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `kk_extension`;
+
+CREATE TABLE `kk_extension`
+(
+    `id` INTEGER(10) NOT NULL AUTO_INCREMENT,
+    `key` VARCHAR(255) NOT NULL,
+    `data` TEXT NOT NULL,
+    `package_id` INTEGER(10) NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `extension_fi_package` (`package_id`),
+    CONSTRAINT `extension_fk_package`
+        FOREIGN KEY (`package_id`)
+        REFERENCES `kk_package` (`id`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
 -- kk_preference
 -- ---------------------------------------------------------------------
 
