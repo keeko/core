@@ -7,8 +7,9 @@ class SystemPreferences extends Preferences {
 
 	const VERSION = 'version';
 	const PLATTFORM_NAME = 'plattform_name';
-	const API_URL = 'api_url';
 	const ROOT_URL = 'root_url';
+	const API_URL = 'api_url';
+	const API_VERSION = 'api_version';
 	
 	/**
 	 * Returns the plattforms name
@@ -26,6 +27,15 @@ class SystemPreferences extends Preferences {
 	 */
 	public function getApiUrl() {
 		return $this->get(self::API_URL);
+	}
+	
+	/**
+	 * Returns the API version
+	 *
+	 * @return string
+	 */
+	public function getApiVersion() {
+		return $this->get(self::API_VERSION);
 	}
 	
 	/**

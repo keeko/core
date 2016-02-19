@@ -18,7 +18,6 @@ use keeko\core\package\ModuleManager;
 use keeko\core\schema\ModuleSchema;
 use keeko\core\service\ServiceContainer;
 use phootwork\json\Json;
-use Propel\Runtime\ActiveQuery\Criteria;
 
 class ModuleInstaller extends AbstractPackageInstaller {
 	
@@ -187,17 +186,16 @@ class ModuleInstaller extends AbstractPackageInstaller {
 
 		// delete every api existent for the given module prior to create the new ones
 		ApiQuery::create()
-			->filterBy('ActionId', array_values($actions), Criteria::IN)
-			->deleteAll()
+			->filterByActionId(array_values($actions))
+			->delete()
 		;
 	
 		$extensions = $this->service->getExtensionRegistry()->getExtensionsByPackage('keeko.api', $model->getName());
-		$methods = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'];
 		$json = Json::decode($repo->get($filename)->getBody());
 		$swagger = new Swagger($json);
 		foreach ($swagger->getPaths() as $path) {
 			/* @var $path Path */
-			foreach ($methods as $method) {
+			foreach (Swagger::$METHODS as $method) {
 				if ($path->hasOperation($method)) {
 					$op = $path->getOperation($method);
 					$actionName = $op->getOperationId();
@@ -230,30 +228,6 @@ class ModuleInstaller extends AbstractPackageInstaller {
 				}
 			}
 		}
-
-// 		foreach ($data['api']['apis'] as $apis) {
-// 			$path = $apis['path'];
-// 			foreach ($apis['operations'] as $op) {
-// 				// fetch required params
-// 				$required = [];
-// 				if (isset($op['parameters'])) {
-// 					foreach ($op['parameters'] as $param) {
-// 						if (isset($param['paramType']) && $param['paramType'] == 'path') {
-// 							$required[] = $param['name'];
-// 						}
-// 					}
-// 				}
-	
-// 				// create record
-// 				$fullPath = str_replace('//', '/', $base . '/' . $path);
-// 				$api = new Api();
-// 				$api->setMethod($op['method']);
-// 				$api->setRoute($fullPath);
-// 				$api->setActionId($actionMap[$op['nickname']]);
-// 				$api->setRequiredParams(implode(',', $required));
-// 				$api->save();
-// 			}
-// 		}
 	
 		$model->setApi(true);
 		$model->save();

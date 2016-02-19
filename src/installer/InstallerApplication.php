@@ -206,6 +206,11 @@ class InstallerApplication extends AbstractApplication {
 		$pref->setKey(SystemPreferences::API_URL);
 		$pref->setValue($apiUrl);
 		$pref->save();
+		
+		$pref = new Preference();
+		$pref->setKey(SystemPreferences::API_VERSION);
+		$pref->setValue('1');
+		$pref->save();
 
 		// 3) modules
 		$this->installModule('keeko/user');

@@ -29,6 +29,14 @@ class GroupSerializer extends AbstractSerializer {
 			'is_system' => $model->getIsSystem()
 		];
 	}
+	
+	public function getFields() {
+		return ['name', 'is_guest', 'is_default', 'is_active', 'is_system'];
+	}
+	
+	public function getSortFields() {
+		return ['name'];
+	}
 
 	public function users($model, $related) {
 		$relationship = new Relationship(new Collection($model->getUsers(), User::getSerializer()));

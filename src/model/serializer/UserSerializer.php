@@ -33,6 +33,14 @@ class UserSerializer extends AbstractSerializer {
 		];
 	}
 	
+	public function getFields() {
+		return ['login_name', 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex', 'created_at', 'updated_at'];
+	}
+	
+	public function getSortFields() {
+		return ['login_name', 'given_name', 'family_name', 'display_name', 'email', 'birthday'];
+	}
+	
 	public function groups($model, $related) {
 		$relationship = new Relationship(new Collection($model->getGroups(), Group::getSerializer()));
 		return $this->addRelationshipSelfLink($relationship, $model, $related);

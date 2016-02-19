@@ -21,4 +21,18 @@ interface ModelSerializerInterface extends SerializerInterface {
 	 * return ['users' => 'user/users'];
 	 */
 	public function getRelationships();
+	
+	/**
+	 * Returns all available fields
+	 *
+	 * @return array
+	 */
+	public function getFields();
+	
+	/**
+	 * Returns the sort fields
+	 *
+	 * @return array
+	 */
+	public function getSortFields();
 }
