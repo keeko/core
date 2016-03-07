@@ -5,7 +5,7 @@
 	tablePrefix="kk_">
 
 	<!-- Language -->
-	<table name="language" namespace="\keeko\core\model">
+	<table name="language" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="alpha_2" type="VARCHAR" size="2" desc="ISO 639-1 two-letter code" />
@@ -42,19 +42,19 @@
 		</foreign-key>
 	</table>
 
-	<table name="language_scope" namespace="\keeko\core\model">
+	<table name="language_scope" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
 	</table>
 
-	<table name="language_type" namespace="\keeko\core\model">
+	<table name="language_type" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
 	</table>
 	
-	<table name="language_script" namespace="\keeko\core\model">
+	<table name="language_script" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="alpha_4" type="CHAR" size="4" desc="ISO 15924 alpha-4 code"/>
@@ -64,7 +64,7 @@
 		<column name="direction" type="VARCHAR"/>
 	</table>
 	
-	<table name="language_family" namespace="\keeko\core\model">
+	<table name="language_family" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="parent_id" type="INTEGER"/>
@@ -72,7 +72,7 @@
 		<column name="name" type="VARCHAR"/>
 	</table>
 	
-	<table name="language_variant" namespace="\keeko\core\model">
+	<table name="language_variant" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
@@ -82,7 +82,7 @@
 	</table>
 	
 	<!-- Currency -->
-	<table name="currency" namespace="\keeko\core\model">
+	<table name="currency" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="numeric" type="INTEGER" />
@@ -97,7 +97,7 @@
 	</table>
 
 	<!-- Regions (Countries and Continents) -->
-	<table name="country" namespace="\keeko\core\model">
+	<table name="country" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="numeric" type="INTEGER" desc="ISO 3166-1 numeric three-digit country code" />
@@ -141,7 +141,7 @@
 		</foreign-key>
 	</table>
 
-	<table name="continent" namespace="\keeko\core\model">
+	<table name="continent" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="parent_id" type="INTEGER" />
@@ -149,7 +149,7 @@
 		<column name="name" type="VARCHAR" size="45" required="true" />
 	</table>
 
-	<table name="subdivision" namespace="\keeko\core\model">
+	<table name="subdivision" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="code" type="VARCHAR" size="45" desc="The ISO 3166-2 subdivision code"/>
@@ -169,7 +169,7 @@
 		</foreign-key>
 	</table>
 
-	<table name="region_type" namespace="\keeko\core\model">
+	<table name="region_type" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" size="128" />
@@ -181,7 +181,7 @@
 		</foreign-key>
 	</table>
 	
-	<table name="region_area" namespace="\keeko\core\model">
+	<table name="region_area" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" size="128" />
@@ -229,6 +229,7 @@
 		</foreign-key>
 	</table>
 
+	<!-- Foundation -->
 	<table name="package" namespace="\keeko\core\model">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
@@ -329,7 +330,8 @@
 		</foreign-key>
 	</table>
 
-	<table name="auth" namespace="\keeko\core\model">
+	<!-- auth -->
+	<table name="session" namespace="\keeko\core\model">
 		<!-- Fields -->
 		<column name="token" type="VARCHAR" primaryKey="true" required="true" size="32"/>
 		<column name="user_id" type="INTEGER" size="10" required="true" />
@@ -338,11 +340,12 @@
 		<behavior name="timestampable"></behavior>
 
 		<!-- Foreign Keys -->
-		<foreign-key foreignTable="user" onDelete="none" name="auth_fk_user">
+		<foreign-key foreignTable="user" onDelete="none" name="session_fk_user">
 			<reference local="user_id" foreign="id" />
 		</foreign-key>
 	</table>
 
+	<!-- user -->
 	<table name="user" namespace="\keeko\core\model">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" size="10"/>
@@ -353,7 +356,7 @@
 		<column name="display_name" type="VARCHAR" size="100" />
 		<column name="email" type="VARCHAR" size="255"/>
 		<column name="birthday" type="DATE" />
-		<column name="sex" type="TINYINT" />
+		<column name="sex" type="TINYINT" description="1 = male; 0 = female"/>
 		<column name="password_recover_code" type="VARCHAR" size="32" />
 		<column name="password_recover_time" type="TIMESTAMP" />
 
@@ -387,6 +390,7 @@
 		</foreign-key>
 	</table>
 
+	<!-- group -->
 	<table name="group" namespace="\keeko\core\model">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" size="10" primaryKey="true" required="true" autoIncrement="true" />

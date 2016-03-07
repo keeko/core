@@ -52,9 +52,9 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildUserQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildUserQuery leftJoinAuth($relationAlias = null) Adds a LEFT JOIN clause to the query using the Auth relation
- * @method     ChildUserQuery rightJoinAuth($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Auth relation
- * @method     ChildUserQuery innerJoinAuth($relationAlias = null) Adds a INNER JOIN clause to the query using the Auth relation
+ * @method     ChildUserQuery leftJoinSession($relationAlias = null) Adds a LEFT JOIN clause to the query using the Session relation
+ * @method     ChildUserQuery rightJoinSession($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Session relation
+ * @method     ChildUserQuery innerJoinSession($relationAlias = null) Adds a INNER JOIN clause to the query using the Session relation
  *
  * @method     ChildUserQuery leftJoinUserGroup($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserGroup relation
  * @method     ChildUserQuery rightJoinUserGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserGroup relation
@@ -64,7 +64,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery rightJoinActivity($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Activity relation
  * @method     ChildUserQuery innerJoinActivity($relationAlias = null) Adds a INNER JOIN clause to the query using the Activity relation
  *
- * @method     \keeko\core\model\AuthQuery|\keeko\core\model\UserGroupQuery|\keeko\core\model\ActivityQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \keeko\core\model\SessionQuery|\keeko\core\model\UserGroupQuery|\keeko\core\model\ActivityQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -754,40 +754,40 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \keeko\core\model\Auth object
+     * Filter the query by a related \keeko\core\model\Session object
      *
-     * @param \keeko\core\model\Auth|ObjectCollection $auth the related object to use as filter
+     * @param \keeko\core\model\Session|ObjectCollection $session the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildUserQuery The current query, for fluid interface
      */
-    public function filterByAuth($auth, $comparison = null)
+    public function filterBySession($session, $comparison = null)
     {
-        if ($auth instanceof \keeko\core\model\Auth) {
+        if ($session instanceof \keeko\core\model\Session) {
             return $this
-                ->addUsingAlias(UserTableMap::COL_ID, $auth->getUserId(), $comparison);
-        } elseif ($auth instanceof ObjectCollection) {
+                ->addUsingAlias(UserTableMap::COL_ID, $session->getUserId(), $comparison);
+        } elseif ($session instanceof ObjectCollection) {
             return $this
-                ->useAuthQuery()
-                ->filterByPrimaryKeys($auth->getPrimaryKeys())
+                ->useSessionQuery()
+                ->filterByPrimaryKeys($session->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByAuth() only accepts arguments of type \keeko\core\model\Auth or Collection');
+            throw new PropelException('filterBySession() only accepts arguments of type \keeko\core\model\Session or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Auth relation
+     * Adds a JOIN clause to the query using the Session relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
-    public function joinAuth($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinSession($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Auth');
+        $relationMap = $tableMap->getRelation('Session');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -802,14 +802,14 @@ abstract class UserQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Auth');
+            $this->addJoinObject($join, 'Session');
         }
 
         return $this;
     }
 
     /**
-     * Use the Auth relation Auth object
+     * Use the Session relation Session object
      *
      * @see useQuery()
      *
@@ -817,13 +817,13 @@ abstract class UserQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \keeko\core\model\AuthQuery A secondary query class using the current class as primary query
+     * @return \keeko\core\model\SessionQuery A secondary query class using the current class as primary query
      */
-    public function useAuthQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useSessionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinAuth($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Auth', '\keeko\core\model\AuthQuery');
+            ->joinSession($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Session', '\keeko\core\model\SessionQuery');
     }
 
     /**

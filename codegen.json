@@ -1,0 +1,68 @@
+{
+	"models": {
+	    "user" : {
+	        "tags": "user",
+			"write" : {
+				"conversion" : {
+					"password" : "password_hash($v, PASSWORD_BCRYPT)"
+				},
+				"filter" : [
+					"password_recover_code",
+					"password_recover_time"
+				]
+			},
+			"read" : {
+				"filter" : [
+					"password",
+					"password_recover_code",
+					"password_recover_time"
+				]
+			}
+		},
+		"user_group": {
+			"tags": "user"
+		},
+		"group": {
+			"tags": "group"
+		},
+		"group_action": {
+			"tags": "security"
+		},
+		"auth": {
+			"tags": "auth"
+		},
+		"package": {
+			"tags": "foundation"
+		},
+		"application": {
+			"tags": "foundation"
+		},
+		"application_uri": {
+			"tags": "foundation"
+		},
+		"module": {
+			"tags": "foundation"
+		},
+		"action": {
+			"tags": "foundation"
+		},
+		"extension": {
+			"tags": "foundation"
+		},
+		"preference": {
+			"tags": "foundation"
+		},
+		"api": {
+			"tags": "foundation"
+		},
+		"session": {
+			"tags": "security"
+		},
+		"activity": {
+			"tags": "user"
+		},
+		"activity_object": {
+			"tags": "user"
+		}
+	}
+}

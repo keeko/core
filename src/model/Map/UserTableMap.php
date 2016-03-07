@@ -206,13 +206,13 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Auth', '\\keeko\\core\\model\\Auth', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('Session', '\\keeko\\core\\model\\Session', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':user_id',
     1 => ':id',
   ),
-), null, null, 'Auths', false);
+), null, null, 'Sessions', false);
         $this->addRelation('UserGroup', '\\keeko\\core\\model\\UserGroup', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (

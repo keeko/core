@@ -3,10 +3,8 @@
 namespace keeko\core\model\Base;
 
 use \Exception;
-use \PDO;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
-use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Collection\ObjectCollection;
@@ -717,7 +715,7 @@ abstract class Country implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setId($v)
+    protected function setId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -737,7 +735,7 @@ abstract class Country implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setNumeric($v)
+    protected function setNumeric($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -757,7 +755,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setAlpha2($v)
+    protected function setAlpha2($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -777,7 +775,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setAlpha3($v)
+    protected function setAlpha3($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -797,7 +795,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setShortName($v)
+    protected function setShortName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -817,7 +815,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setIoc($v)
+    protected function setIoc($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -837,7 +835,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setTld($v)
+    protected function setTld($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -857,7 +855,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setPhone($v)
+    protected function setPhone($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -877,7 +875,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setCapital($v)
+    protected function setCapital($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -897,7 +895,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setPostalCodeFormat($v)
+    protected function setPostalCodeFormat($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -917,7 +915,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setPostalCodeRegex($v)
+    protected function setPostalCodeRegex($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -937,7 +935,7 @@ abstract class Country implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setContinentId($v)
+    protected function setContinentId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -961,7 +959,7 @@ abstract class Country implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setCurrencyId($v)
+    protected function setCurrencyId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -985,7 +983,7 @@ abstract class Country implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setTypeId($v)
+    protected function setTypeId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -1009,7 +1007,7 @@ abstract class Country implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setSubtypeId($v)
+    protected function setSubtypeId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -1033,7 +1031,7 @@ abstract class Country implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setSovereignityId($v)
+    protected function setSovereignityId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -1057,7 +1055,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setFormalName($v)
+    protected function setFormalName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -1077,7 +1075,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setFormalNativeName($v)
+    protected function setFormalNativeName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -1097,7 +1095,7 @@ abstract class Country implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setShortNativeName($v)
+    protected function setShortNativeName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -1117,7 +1115,7 @@ abstract class Country implements ActiveRecordInterface
      * @param double $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setBboxSwLat($v)
+    protected function setBboxSwLat($v)
     {
         if ($v !== null) {
             $v = (double) $v;
@@ -1137,7 +1135,7 @@ abstract class Country implements ActiveRecordInterface
      * @param double $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setBboxSwLng($v)
+    protected function setBboxSwLng($v)
     {
         if ($v !== null) {
             $v = (double) $v;
@@ -1157,7 +1155,7 @@ abstract class Country implements ActiveRecordInterface
      * @param double $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setBboxNeLat($v)
+    protected function setBboxNeLat($v)
     {
         if ($v !== null) {
             $v = (double) $v;
@@ -1177,7 +1175,7 @@ abstract class Country implements ActiveRecordInterface
      * @param double $v new value
      * @return $this|\keeko\core\model\Country The current object (for fluent API support)
      */
-    public function setBboxNeLng($v)
+    protected function setBboxNeLng($v)
     {
         if ($v !== null) {
             $v = (double) $v;
@@ -1341,446 +1339,6 @@ abstract class Country implements ActiveRecordInterface
             $this->aCountryRelatedBySovereignityId = null;
         }
     } // ensureConsistency
-
-    /**
-     * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
-     *
-     * This will only work if the object has been saved and has a valid primary key set.
-     *
-     * @param      boolean $deep (optional) Whether to also de-associated any related objects.
-     * @param      ConnectionInterface $con (optional) The ConnectionInterface connection to use.
-     * @return void
-     * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
-     */
-    public function reload($deep = false, ConnectionInterface $con = null)
-    {
-        if ($this->isDeleted()) {
-            throw new PropelException("Cannot reload a deleted object.");
-        }
-
-        if ($this->isNew()) {
-            throw new PropelException("Cannot reload an unsaved object.");
-        }
-
-        if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(CountryTableMap::DATABASE_NAME);
-        }
-
-        // We don't need to alter the object instance pool; we're just modifying this instance
-        // already in the pool.
-
-        $dataFetcher = ChildCountryQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
-        $row = $dataFetcher->fetch();
-        $dataFetcher->close();
-        if (!$row) {
-            throw new PropelException('Cannot find matching row in the database to reload object values.');
-        }
-        $this->hydrate($row, 0, true, $dataFetcher->getIndexType()); // rehydrate
-
-        if ($deep) {  // also de-associate any related objects?
-
-            $this->aContinent = null;
-            $this->aCurrency = null;
-            $this->aType = null;
-            $this->aSubtype = null;
-            $this->aCountryRelatedBySovereignityId = null;
-            $this->collSubordinates = null;
-
-            $this->collSubdivisions = null;
-
-        } // if (deep)
-    }
-
-    /**
-     * Removes this object from datastore and sets delete attribute.
-     *
-     * @param      ConnectionInterface $con
-     * @return void
-     * @throws PropelException
-     * @see Country::setDeleted()
-     * @see Country::isDeleted()
-     */
-    public function delete(ConnectionInterface $con = null)
-    {
-        if ($this->isDeleted()) {
-            throw new PropelException("This object has already been deleted.");
-        }
-
-        if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(CountryTableMap::DATABASE_NAME);
-        }
-
-        $con->transaction(function () use ($con) {
-            $deleteQuery = ChildCountryQuery::create()
-                ->filterByPrimaryKey($this->getPrimaryKey());
-            $ret = $this->preDelete($con);
-            if ($ret) {
-                $deleteQuery->delete($con);
-                $this->postDelete($con);
-                $this->setDeleted(true);
-            }
-        });
-    }
-
-    /**
-     * Persists this object to the database.
-     *
-     * If the object is new, it inserts it; otherwise an update is performed.
-     * All modified related objects will also be persisted in the doSave()
-     * method.  This method wraps all precipitate database operations in a
-     * single transaction.
-     *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
-     * @throws PropelException
-     * @see doSave()
-     */
-    public function save(ConnectionInterface $con = null)
-    {
-        if ($this->isDeleted()) {
-            throw new PropelException("You cannot save an object that has been deleted.");
-        }
-
-        if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(CountryTableMap::DATABASE_NAME);
-        }
-
-        return $con->transaction(function () use ($con) {
-            $isInsert = $this->isNew();
-            $ret = $this->preSave($con);
-            if ($isInsert) {
-                $ret = $ret && $this->preInsert($con);
-            } else {
-                $ret = $ret && $this->preUpdate($con);
-            }
-            if ($ret) {
-                $affectedRows = $this->doSave($con);
-                if ($isInsert) {
-                    $this->postInsert($con);
-                } else {
-                    $this->postUpdate($con);
-                }
-                $this->postSave($con);
-                CountryTableMap::addInstanceToPool($this);
-            } else {
-                $affectedRows = 0;
-            }
-
-            return $affectedRows;
-        });
-    }
-
-    /**
-     * Performs the work of inserting or updating the row in the database.
-     *
-     * If the object is new, it inserts it; otherwise an update is performed.
-     * All related objects are also updated in this method.
-     *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
-     * @throws PropelException
-     * @see save()
-     */
-    protected function doSave(ConnectionInterface $con)
-    {
-        $affectedRows = 0; // initialize var to track total num of affected rows
-        if (!$this->alreadyInSave) {
-            $this->alreadyInSave = true;
-
-            // We call the save method on the following object(s) if they
-            // were passed to this object by their corresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            if ($this->aContinent !== null) {
-                if ($this->aContinent->isModified() || $this->aContinent->isNew()) {
-                    $affectedRows += $this->aContinent->save($con);
-                }
-                $this->setContinent($this->aContinent);
-            }
-
-            if ($this->aCurrency !== null) {
-                if ($this->aCurrency->isModified() || $this->aCurrency->isNew()) {
-                    $affectedRows += $this->aCurrency->save($con);
-                }
-                $this->setCurrency($this->aCurrency);
-            }
-
-            if ($this->aType !== null) {
-                if ($this->aType->isModified() || $this->aType->isNew()) {
-                    $affectedRows += $this->aType->save($con);
-                }
-                $this->setType($this->aType);
-            }
-
-            if ($this->aSubtype !== null) {
-                if ($this->aSubtype->isModified() || $this->aSubtype->isNew()) {
-                    $affectedRows += $this->aSubtype->save($con);
-                }
-                $this->setSubtype($this->aSubtype);
-            }
-
-            if ($this->aCountryRelatedBySovereignityId !== null) {
-                if ($this->aCountryRelatedBySovereignityId->isModified() || $this->aCountryRelatedBySovereignityId->isNew()) {
-                    $affectedRows += $this->aCountryRelatedBySovereignityId->save($con);
-                }
-                $this->setCountryRelatedBySovereignityId($this->aCountryRelatedBySovereignityId);
-            }
-
-            if ($this->isNew() || $this->isModified()) {
-                // persist changes
-                if ($this->isNew()) {
-                    $this->doInsert($con);
-                    $affectedRows += 1;
-                } else {
-                    $affectedRows += $this->doUpdate($con);
-                }
-                $this->resetModified();
-            }
-
-            if ($this->subordinatesScheduledForDeletion !== null) {
-                if (!$this->subordinatesScheduledForDeletion->isEmpty()) {
-                    foreach ($this->subordinatesScheduledForDeletion as $subordinate) {
-                        // need to save related object because we set the relation to null
-                        $subordinate->save($con);
-                    }
-                    $this->subordinatesScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collSubordinates !== null) {
-                foreach ($this->collSubordinates as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->subdivisionsScheduledForDeletion !== null) {
-                if (!$this->subdivisionsScheduledForDeletion->isEmpty()) {
-                    \keeko\core\model\SubdivisionQuery::create()
-                        ->filterByPrimaryKeys($this->subdivisionsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->subdivisionsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collSubdivisions !== null) {
-                foreach ($this->collSubdivisions as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            $this->alreadyInSave = false;
-
-        }
-
-        return $affectedRows;
-    } // doSave()
-
-    /**
-     * Insert the row in the database.
-     *
-     * @param      ConnectionInterface $con
-     *
-     * @throws PropelException
-     * @see doSave()
-     */
-    protected function doInsert(ConnectionInterface $con)
-    {
-        $modifiedColumns = array();
-        $index = 0;
-
-        $this->modifiedColumns[CountryTableMap::COL_ID] = true;
-        if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CountryTableMap::COL_ID . ')');
-        }
-
-         // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(CountryTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`id`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_NUMERIC)) {
-            $modifiedColumns[':p' . $index++]  = '`numeric`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_ALPHA_2)) {
-            $modifiedColumns[':p' . $index++]  = '`alpha_2`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_ALPHA_3)) {
-            $modifiedColumns[':p' . $index++]  = '`alpha_3`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_SHORT_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`short_name`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_IOC)) {
-            $modifiedColumns[':p' . $index++]  = '`ioc`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_TLD)) {
-            $modifiedColumns[':p' . $index++]  = '`tld`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_PHONE)) {
-            $modifiedColumns[':p' . $index++]  = '`phone`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_CAPITAL)) {
-            $modifiedColumns[':p' . $index++]  = '`capital`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_POSTAL_CODE_FORMAT)) {
-            $modifiedColumns[':p' . $index++]  = '`postal_code_format`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_POSTAL_CODE_REGEX)) {
-            $modifiedColumns[':p' . $index++]  = '`postal_code_regex`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_CONTINENT_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`continent_id`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_CURRENCY_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`currency_id`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`type_id`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_SUBTYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`subtype_id`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_SOVEREIGNITY_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`sovereignity_id`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_FORMAL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`formal_name`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_FORMAL_NATIVE_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`formal_native_name`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_SHORT_NATIVE_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`short_native_name`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_BBOX_SW_LAT)) {
-            $modifiedColumns[':p' . $index++]  = '`bbox_sw_lat`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_BBOX_SW_LNG)) {
-            $modifiedColumns[':p' . $index++]  = '`bbox_sw_lng`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_BBOX_NE_LAT)) {
-            $modifiedColumns[':p' . $index++]  = '`bbox_ne_lat`';
-        }
-        if ($this->isColumnModified(CountryTableMap::COL_BBOX_NE_LNG)) {
-            $modifiedColumns[':p' . $index++]  = '`bbox_ne_lng`';
-        }
-
-        $sql = sprintf(
-            'INSERT INTO `kk_country` (%s) VALUES (%s)',
-            implode(', ', $modifiedColumns),
-            implode(', ', array_keys($modifiedColumns))
-        );
-
-        try {
-            $stmt = $con->prepare($sql);
-            foreach ($modifiedColumns as $identifier => $columnName) {
-                switch ($columnName) {
-                    case '`id`':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
-                    case '`numeric`':
-                        $stmt->bindValue($identifier, $this->numeric, PDO::PARAM_INT);
-                        break;
-                    case '`alpha_2`':
-                        $stmt->bindValue($identifier, $this->alpha_2, PDO::PARAM_STR);
-                        break;
-                    case '`alpha_3`':
-                        $stmt->bindValue($identifier, $this->alpha_3, PDO::PARAM_STR);
-                        break;
-                    case '`short_name`':
-                        $stmt->bindValue($identifier, $this->short_name, PDO::PARAM_STR);
-                        break;
-                    case '`ioc`':
-                        $stmt->bindValue($identifier, $this->ioc, PDO::PARAM_STR);
-                        break;
-                    case '`tld`':
-                        $stmt->bindValue($identifier, $this->tld, PDO::PARAM_STR);
-                        break;
-                    case '`phone`':
-                        $stmt->bindValue($identifier, $this->phone, PDO::PARAM_STR);
-                        break;
-                    case '`capital`':
-                        $stmt->bindValue($identifier, $this->capital, PDO::PARAM_STR);
-                        break;
-                    case '`postal_code_format`':
-                        $stmt->bindValue($identifier, $this->postal_code_format, PDO::PARAM_STR);
-                        break;
-                    case '`postal_code_regex`':
-                        $stmt->bindValue($identifier, $this->postal_code_regex, PDO::PARAM_STR);
-                        break;
-                    case '`continent_id`':
-                        $stmt->bindValue($identifier, $this->continent_id, PDO::PARAM_INT);
-                        break;
-                    case '`currency_id`':
-                        $stmt->bindValue($identifier, $this->currency_id, PDO::PARAM_INT);
-                        break;
-                    case '`type_id`':
-                        $stmt->bindValue($identifier, $this->type_id, PDO::PARAM_INT);
-                        break;
-                    case '`subtype_id`':
-                        $stmt->bindValue($identifier, $this->subtype_id, PDO::PARAM_INT);
-                        break;
-                    case '`sovereignity_id`':
-                        $stmt->bindValue($identifier, $this->sovereignity_id, PDO::PARAM_INT);
-                        break;
-                    case '`formal_name`':
-                        $stmt->bindValue($identifier, $this->formal_name, PDO::PARAM_STR);
-                        break;
-                    case '`formal_native_name`':
-                        $stmt->bindValue($identifier, $this->formal_native_name, PDO::PARAM_STR);
-                        break;
-                    case '`short_native_name`':
-                        $stmt->bindValue($identifier, $this->short_native_name, PDO::PARAM_STR);
-                        break;
-                    case '`bbox_sw_lat`':
-                        $stmt->bindValue($identifier, $this->bbox_sw_lat, PDO::PARAM_STR);
-                        break;
-                    case '`bbox_sw_lng`':
-                        $stmt->bindValue($identifier, $this->bbox_sw_lng, PDO::PARAM_STR);
-                        break;
-                    case '`bbox_ne_lat`':
-                        $stmt->bindValue($identifier, $this->bbox_ne_lat, PDO::PARAM_STR);
-                        break;
-                    case '`bbox_ne_lng`':
-                        $stmt->bindValue($identifier, $this->bbox_ne_lng, PDO::PARAM_STR);
-                        break;
-                }
-            }
-            $stmt->execute();
-        } catch (Exception $e) {
-            Propel::log($e->getMessage(), Propel::LOG_ERR);
-            throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
-        }
-
-        try {
-            $pk = $con->lastInsertId();
-        } catch (Exception $e) {
-            throw new PropelException('Unable to get autoincrement id.', 0, $e);
-        }
-        $this->setId($pk);
-
-        $this->setNew(false);
-    }
-
-    /**
-     * Update the row in the database.
-     *
-     * @param      ConnectionInterface $con
-     *
-     * @return Integer Number of updated rows
-     * @see doSave()
-     */
-    protected function doUpdate(ConnectionInterface $con)
-    {
-        $selectCriteria = $this->buildPkeyCriteria();
-        $valuesCriteria = $this->buildCriteria();
-
-        return $selectCriteria->doUpdate($valuesCriteria, $con);
-    }
 
     /**
      * Retrieves a field from the object by name passed in as a string.
@@ -2047,231 +1605,6 @@ abstract class Country implements ActiveRecordInterface
         }
 
         return $result;
-    }
-
-    /**
-     * Sets a field from the object by name passed in as a string.
-     *
-     * @param  string $name
-     * @param  mixed  $value field value
-     * @param  string $type The type of fieldname the $name is of:
-     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
-     *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\keeko\core\model\Country
-     */
-    public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
-    {
-        $pos = CountryTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
-
-        return $this->setByPosition($pos, $value);
-    }
-
-    /**
-     * Sets a field from the object by Position as specified in the xml schema.
-     * Zero-based.
-     *
-     * @param  int $pos position in xml schema
-     * @param  mixed $value field value
-     * @return $this|\keeko\core\model\Country
-     */
-    public function setByPosition($pos, $value)
-    {
-        switch ($pos) {
-            case 0:
-                $this->setId($value);
-                break;
-            case 1:
-                $this->setNumeric($value);
-                break;
-            case 2:
-                $this->setAlpha2($value);
-                break;
-            case 3:
-                $this->setAlpha3($value);
-                break;
-            case 4:
-                $this->setShortName($value);
-                break;
-            case 5:
-                $this->setIoc($value);
-                break;
-            case 6:
-                $this->setTld($value);
-                break;
-            case 7:
-                $this->setPhone($value);
-                break;
-            case 8:
-                $this->setCapital($value);
-                break;
-            case 9:
-                $this->setPostalCodeFormat($value);
-                break;
-            case 10:
-                $this->setPostalCodeRegex($value);
-                break;
-            case 11:
-                $this->setContinentId($value);
-                break;
-            case 12:
-                $this->setCurrencyId($value);
-                break;
-            case 13:
-                $this->setTypeId($value);
-                break;
-            case 14:
-                $this->setSubtypeId($value);
-                break;
-            case 15:
-                $this->setSovereignityId($value);
-                break;
-            case 16:
-                $this->setFormalName($value);
-                break;
-            case 17:
-                $this->setFormalNativeName($value);
-                break;
-            case 18:
-                $this->setShortNativeName($value);
-                break;
-            case 19:
-                $this->setBboxSwLat($value);
-                break;
-            case 20:
-                $this->setBboxSwLng($value);
-                break;
-            case 21:
-                $this->setBboxNeLat($value);
-                break;
-            case 22:
-                $this->setBboxNeLng($value);
-                break;
-        } // switch()
-
-        return $this;
-    }
-
-    /**
-     * Populates the object using an array.
-     *
-     * This is particularly useful when populating an object from one of the
-     * request arrays (e.g. $_POST).  This method goes through the column
-     * names, checking to see whether a matching key exists in populated
-     * array. If so the setByName() method is called for that column.
-     *
-     * You can specify the key type of the array by additionally passing one
-     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
-     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     * The default key type is the column's TableMap::TYPE_PHPNAME.
-     *
-     * @param      array  $arr     An array to populate the object from.
-     * @param      string $keyType The type of keys the array uses.
-     * @return void
-     */
-    public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
-    {
-        $keys = CountryTableMap::getFieldNames($keyType);
-
-        if (array_key_exists($keys[0], $arr)) {
-            $this->setId($arr[$keys[0]]);
-        }
-        if (array_key_exists($keys[1], $arr)) {
-            $this->setNumeric($arr[$keys[1]]);
-        }
-        if (array_key_exists($keys[2], $arr)) {
-            $this->setAlpha2($arr[$keys[2]]);
-        }
-        if (array_key_exists($keys[3], $arr)) {
-            $this->setAlpha3($arr[$keys[3]]);
-        }
-        if (array_key_exists($keys[4], $arr)) {
-            $this->setShortName($arr[$keys[4]]);
-        }
-        if (array_key_exists($keys[5], $arr)) {
-            $this->setIoc($arr[$keys[5]]);
-        }
-        if (array_key_exists($keys[6], $arr)) {
-            $this->setTld($arr[$keys[6]]);
-        }
-        if (array_key_exists($keys[7], $arr)) {
-            $this->setPhone($arr[$keys[7]]);
-        }
-        if (array_key_exists($keys[8], $arr)) {
-            $this->setCapital($arr[$keys[8]]);
-        }
-        if (array_key_exists($keys[9], $arr)) {
-            $this->setPostalCodeFormat($arr[$keys[9]]);
-        }
-        if (array_key_exists($keys[10], $arr)) {
-            $this->setPostalCodeRegex($arr[$keys[10]]);
-        }
-        if (array_key_exists($keys[11], $arr)) {
-            $this->setContinentId($arr[$keys[11]]);
-        }
-        if (array_key_exists($keys[12], $arr)) {
-            $this->setCurrencyId($arr[$keys[12]]);
-        }
-        if (array_key_exists($keys[13], $arr)) {
-            $this->setTypeId($arr[$keys[13]]);
-        }
-        if (array_key_exists($keys[14], $arr)) {
-            $this->setSubtypeId($arr[$keys[14]]);
-        }
-        if (array_key_exists($keys[15], $arr)) {
-            $this->setSovereignityId($arr[$keys[15]]);
-        }
-        if (array_key_exists($keys[16], $arr)) {
-            $this->setFormalName($arr[$keys[16]]);
-        }
-        if (array_key_exists($keys[17], $arr)) {
-            $this->setFormalNativeName($arr[$keys[17]]);
-        }
-        if (array_key_exists($keys[18], $arr)) {
-            $this->setShortNativeName($arr[$keys[18]]);
-        }
-        if (array_key_exists($keys[19], $arr)) {
-            $this->setBboxSwLat($arr[$keys[19]]);
-        }
-        if (array_key_exists($keys[20], $arr)) {
-            $this->setBboxSwLng($arr[$keys[20]]);
-        }
-        if (array_key_exists($keys[21], $arr)) {
-            $this->setBboxNeLat($arr[$keys[21]]);
-        }
-        if (array_key_exists($keys[22], $arr)) {
-            $this->setBboxNeLng($arr[$keys[22]]);
-        }
-    }
-
-     /**
-     * Populate the current object from a string, using a given parser format
-     * <code>
-     * $book = new Book();
-     * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
-     * </code>
-     *
-     * You can specify the key type of the array by additionally passing one
-     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
-     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     * The default key type is the column's TableMap::TYPE_PHPNAME.
-     *
-     * @param mixed $parser A AbstractParser instance,
-     *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
-     * @param string $data The source data to import from
-     * @param string $keyType The type of keys the array uses.
-     *
-     * @return $this|\keeko\core\model\Country The current object, for fluid interface
-     */
-    public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
-    {
-        if (!$parser instanceof AbstractParser) {
-            $parser = AbstractParser::getParser($parser);
-        }
-
-        $this->fromArray($parser->toArray($data), $keyType);
-
-        return $this;
     }
 
     /**

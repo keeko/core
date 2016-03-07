@@ -1,74 +1,22 @@
 <?php
 namespace keeko\core\model\serializer;
 
-use keeko\core\model\serializer\AbstractSerializer;
-use keeko\core\utils\HydrateUtils;
+use keeko\framework\model\AbstractSerializer;
+use keeko\framework\utils\HydrateUtils;
 use Tobscure\JsonApi\Relationship;
 use keeko\core\model\Group;
+use keeko\core\model\GroupQuery;
 use Tobscure\JsonApi\Collection;
 use keeko\core\model\UserGroupQuery;
-use keeko\core\model\GroupQuery;
 
+/**
+ */
 class UserSerializer extends AbstractSerializer {
 
-	public function getType($model) {
-		return 'user/users';
-	}
-	
-	public function getId($model) {
-		return $model->getId();
-	}
-	
-	public function getAttributes($model, array $fields = null) {
-		return [
-			'login_name' => $model->getLoginName(),
-			'given_name' => $model->getGivenName(),
-			'family_name' => $model->getFamilyName(),
-			'display_name' => $model->getDisplayName(),
-			'email' => $model->getEmail(),
-			'birthday' => $model->getBirthday(\DateTime::ISO8601),
-			'sex' => $model->getSex(),
-			'created_at' => $model->getCreatedAt(\DateTime::ISO8601),
-			'updated_at' => $model->getUpdatedAt(\DateTime::ISO8601)
-		];
-	}
-	
-	public function getFields() {
-		return ['login_name', 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex', 'created_at', 'updated_at'];
-	}
-	
-	public function getSortFields() {
-		return ['login_name', 'given_name', 'family_name', 'display_name', 'email', 'birthday'];
-	}
-	
-	public function groups($model, $related) {
-		$relationship = new Relationship(new Collection($model->getGroups(), Group::getSerializer()));
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
-	}
-	
-	public function hydrate($model, $data) {
-		// attributes
-		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
-		
-		$user = HydrateUtils::hydrate($attribs, $model, ['login_name', 'password' => function ($v) {
-			return password_hash($v, PASSWORD_BCRYPT);
-		}, 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex']);
-
-		// relationships
-		$this->hydrateRelationships($model, $data);
-
-		return $user;
-	}
-	
-	public function getRelationships() {
-		return ['group' => 'group/groups'];
-	}
-
-	public function setGroups($model, $data) {
-		UserGroupQuery::create()->filterByUser($model)->deleteAll();
-		$this->addGroups($model, $data);
-	}
-	
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
 	public function addGroups($model, $data) {
 		foreach ($data as $item) {
 			$group = GroupQuery::create()->findOneById($item['id']);
@@ -77,7 +25,90 @@ class UserSerializer extends AbstractSerializer {
 			}
 		}
 	}
-	
+
+	/**
+	 * @param mixed $model
+	 * @param array $fields
+	 */
+	public function getAttributes($model, array $fields = null) {
+		return [
+			'id' => $model->Id(),
+			'login_name' => $model->LoginName(),
+			'password' => $model->Password(),
+			'given_name' => $model->GivenName(),
+			'family_name' => $model->FamilyName(),
+			'display_name' => $model->DisplayName(),
+			'email' => $model->Email(),
+			'birthday' => $model->Birthday(\DateTime::ISO8601),
+			'sex' => $model->Sex(),
+		];
+	}
+
+	/**
+	 */
+	public function getFields() {
+		return ['id', 'login_name', 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex', 'created_at', 'updated_at'];
+	}
+
+	/**
+	 * @param mixed $model
+	 */
+	public function getId($model) {
+		return $model->getId();
+	}
+
+	/**
+	 */
+	public function getRelationships() {
+		return [
+			'group' => Group::getSerializer()->getType(null)
+		];
+	}
+
+	/**
+	 */
+	public function getSortFields() {
+		return ['id', 'login_name', 'password', 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex'];
+	}
+
+	/**
+	 * @param mixed $model
+	 */
+	public function getType($model) {
+		return 'core/user';
+	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $related
+	 */
+	public function group($model, $related) {
+		$relationship = new Relationship(new Collection($model->getGroups(), Group::getSerializer()));
+		return $this->addRelationshipSelfLink($relationship, $model, $related);
+	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	public function hydrate($model, $data) {
+		// attributes
+		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
+
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'login_name', 'password' => function($v) {
+			return password_hash($v, PASSWORD_BCRYPT);
+		}, 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex']);
+
+		// relationships
+		$this->hydrateRelationships($model, $data);
+
+		return $model;
+	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
 	public function removeGroups($model, $data) {
 		foreach ($data as $item) {
 			$group = GroupQuery::create()->findOneById($item['id']);
@@ -85,5 +116,14 @@ class UserSerializer extends AbstractSerializer {
 				$model->removeGroup($group);
 			}
 		}
+	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	public function setGroups($model, $data) {
+		UserGroupQuery::create()->filterByGroup($model)->delete();
+		$this->addGroups($model, $data);
 	}
 }

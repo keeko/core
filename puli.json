@@ -24,11 +24,13 @@
         },
         "gossi/propel-l10n-behavior": {
             "install-path": "vendor/gossi/propel-l10n-behavior",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "gossi/swagger": {
             "install-path": "vendor/gossi/swagger",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "justinrainbow/json-schema": {
             "install-path": "vendor/justinrainbow/json-schema",
@@ -38,25 +40,35 @@
             "install-path": "vendor/keeko/composer-installer",
             "installer": "composer"
         },
+        "keeko/framework": {
+            "install-path": "vendor/keeko/framework",
+            "installer": "composer",
+            "env": "dev"
+        },
         "monolog/monolog": {
             "install-path": "vendor/monolog/monolog",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phootwork/collection": {
             "install-path": "vendor/phootwork/collection",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phootwork/file": {
             "install-path": "vendor/phootwork/file",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phootwork/json": {
             "install-path": "vendor/phootwork/json",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phootwork/lang": {
             "install-path": "vendor/phootwork/lang",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phpdocumentor/reflection-docblock": {
             "install-path": "vendor/phpdocumentor/reflection-docblock",
@@ -192,7 +204,8 @@
         },
         "symfony/event-dispatcher": {
             "install-path": "vendor/symfony/event-dispatcher",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "symfony/filesystem": {
             "install-path": "vendor/symfony/filesystem",
@@ -204,7 +217,8 @@
         },
         "symfony/http-foundation": {
             "install-path": "vendor/symfony/http-foundation",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "symfony/options-resolver": {
             "install-path": "vendor/symfony/options-resolver",
@@ -220,7 +234,8 @@
         },
         "symfony/routing": {
             "install-path": "vendor/symfony/routing",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "symfony/translation": {
             "install-path": "vendor/symfony/translation",
@@ -236,7 +251,8 @@
         },
         "tobscure/json-api": {
             "install-path": "vendor/tobscure/json-api",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "twig/twig": {
             "install-path": "vendor/twig/twig",

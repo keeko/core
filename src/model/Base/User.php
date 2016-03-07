@@ -31,10 +31,10 @@ use Symfony\Component\Validator\Validator\LegacyValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use keeko\core\model\Activity as ChildActivity;
 use keeko\core\model\ActivityQuery as ChildActivityQuery;
-use keeko\core\model\Auth as ChildAuth;
-use keeko\core\model\AuthQuery as ChildAuthQuery;
 use keeko\core\model\Group as ChildGroup;
 use keeko\core\model\GroupQuery as ChildGroupQuery;
+use keeko\core\model\Session as ChildSession;
+use keeko\core\model\SessionQuery as ChildSessionQuery;
 use keeko\core\model\User as ChildUser;
 use keeko\core\model\UserGroup as ChildUserGroup;
 use keeko\core\model\UserGroupQuery as ChildUserGroupQuery;
@@ -161,10 +161,10 @@ abstract class User implements ActiveRecordInterface
     protected $updated_at;
 
     /**
-     * @var        ObjectCollection|ChildAuth[] Collection to store aggregation of ChildAuth objects.
+     * @var        ObjectCollection|ChildSession[] Collection to store aggregation of ChildSession objects.
      */
-    protected $collAuths;
-    protected $collAuthsPartial;
+    protected $collSessions;
+    protected $collSessionsPartial;
 
     /**
      * @var        ObjectCollection|ChildUserGroup[] Collection to store aggregation of ChildUserGroup objects.
@@ -221,9 +221,9 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildAuth[]
+     * @var ObjectCollection|ChildSession[]
      */
-    protected $authsScheduledForDeletion = null;
+    protected $sessionsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -546,7 +546,7 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * Get the [sex] column value.
-     *
+     * 1 = male; 0 = female
      * @return int
      */
     public function getSex()
@@ -786,7 +786,7 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * Set the value of [sex] column.
-     *
+     * 1 = male; 0 = female
      * @param int $v new value
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
@@ -1039,7 +1039,7 @@ abstract class User implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collAuths = null;
+            $this->collSessions = null;
 
             $this->collUserGroups = null;
 
@@ -1197,17 +1197,17 @@ abstract class User implements ActiveRecordInterface
             }
 
 
-            if ($this->authsScheduledForDeletion !== null) {
-                if (!$this->authsScheduledForDeletion->isEmpty()) {
-                    \keeko\core\model\AuthQuery::create()
-                        ->filterByPrimaryKeys($this->authsScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->sessionsScheduledForDeletion !== null) {
+                if (!$this->sessionsScheduledForDeletion->isEmpty()) {
+                    \keeko\core\model\SessionQuery::create()
+                        ->filterByPrimaryKeys($this->sessionsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->authsScheduledForDeletion = null;
+                    $this->sessionsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collAuths !== null) {
-                foreach ($this->collAuths as $referrerFK) {
+            if ($this->collSessions !== null) {
+                foreach ($this->collSessions as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1540,20 +1540,20 @@ abstract class User implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collAuths) {
+            if (null !== $this->collSessions) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'auths';
+                        $key = 'sessions';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'kk_auths';
+                        $key = 'kk_sessions';
                         break;
                     default:
-                        $key = 'Auths';
+                        $key = 'Sessions';
                 }
 
-                $result[$key] = $this->collAuths->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collSessions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collUserGroups) {
 
@@ -1907,9 +1907,9 @@ abstract class User implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getAuths() as $relObj) {
+            foreach ($this->getSessions() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addAuth($relObj->copy($deepCopy));
+                    $copyObj->addSession($relObj->copy($deepCopy));
                 }
             }
 
@@ -1966,8 +1966,8 @@ abstract class User implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('Auth' == $relationName) {
-            return $this->initAuths();
+        if ('Session' == $relationName) {
+            return $this->initSessions();
         }
         if ('UserGroup' == $relationName) {
             return $this->initUserGroups();
@@ -1978,31 +1978,31 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collAuths collection
+     * Clears out the collSessions collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addAuths()
+     * @see        addSessions()
      */
-    public function clearAuths()
+    public function clearSessions()
     {
-        $this->collAuths = null; // important to set this to NULL since that means it is uninitialized
+        $this->collSessions = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collAuths collection loaded partially.
+     * Reset is the collSessions collection loaded partially.
      */
-    public function resetPartialAuths($v = true)
+    public function resetPartialSessions($v = true)
     {
-        $this->collAuthsPartial = $v;
+        $this->collSessionsPartial = $v;
     }
 
     /**
-     * Initializes the collAuths collection.
+     * Initializes the collSessions collection.
      *
-     * By default this just sets the collAuths collection to an empty array (like clearcollAuths());
+     * By default this just sets the collSessions collection to an empty array (like clearcollSessions());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -2011,17 +2011,17 @@ abstract class User implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initAuths($overrideExisting = true)
+    public function initSessions($overrideExisting = true)
     {
-        if (null !== $this->collAuths && !$overrideExisting) {
+        if (null !== $this->collSessions && !$overrideExisting) {
             return;
         }
-        $this->collAuths = new ObjectCollection();
-        $this->collAuths->setModel('\keeko\core\model\Auth');
+        $this->collSessions = new ObjectCollection();
+        $this->collSessions->setModel('\keeko\core\model\Session');
     }
 
     /**
-     * Gets an array of ChildAuth objects which contain a foreign key that references this object.
+     * Gets an array of ChildSession objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -2031,108 +2031,108 @@ abstract class User implements ActiveRecordInterface
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildAuth[] List of ChildAuth objects
+     * @return ObjectCollection|ChildSession[] List of ChildSession objects
      * @throws PropelException
      */
-    public function getAuths(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getSessions(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collAuthsPartial && !$this->isNew();
-        if (null === $this->collAuths || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collAuths) {
+        $partial = $this->collSessionsPartial && !$this->isNew();
+        if (null === $this->collSessions || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collSessions) {
                 // return empty collection
-                $this->initAuths();
+                $this->initSessions();
             } else {
-                $collAuths = ChildAuthQuery::create(null, $criteria)
+                $collSessions = ChildSessionQuery::create(null, $criteria)
                     ->filterByUser($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collAuthsPartial && count($collAuths)) {
-                        $this->initAuths(false);
+                    if (false !== $this->collSessionsPartial && count($collSessions)) {
+                        $this->initSessions(false);
 
-                        foreach ($collAuths as $obj) {
-                            if (false == $this->collAuths->contains($obj)) {
-                                $this->collAuths->append($obj);
+                        foreach ($collSessions as $obj) {
+                            if (false == $this->collSessions->contains($obj)) {
+                                $this->collSessions->append($obj);
                             }
                         }
 
-                        $this->collAuthsPartial = true;
+                        $this->collSessionsPartial = true;
                     }
 
-                    return $collAuths;
+                    return $collSessions;
                 }
 
-                if ($partial && $this->collAuths) {
-                    foreach ($this->collAuths as $obj) {
+                if ($partial && $this->collSessions) {
+                    foreach ($this->collSessions as $obj) {
                         if ($obj->isNew()) {
-                            $collAuths[] = $obj;
+                            $collSessions[] = $obj;
                         }
                     }
                 }
 
-                $this->collAuths = $collAuths;
-                $this->collAuthsPartial = false;
+                $this->collSessions = $collSessions;
+                $this->collSessionsPartial = false;
             }
         }
 
-        return $this->collAuths;
+        return $this->collSessions;
     }
 
     /**
-     * Sets a collection of ChildAuth objects related by a one-to-many relationship
+     * Sets a collection of ChildSession objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $auths A Propel collection.
+     * @param      Collection $sessions A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildUser The current object (for fluent API support)
      */
-    public function setAuths(Collection $auths, ConnectionInterface $con = null)
+    public function setSessions(Collection $sessions, ConnectionInterface $con = null)
     {
-        /** @var ChildAuth[] $authsToDelete */
-        $authsToDelete = $this->getAuths(new Criteria(), $con)->diff($auths);
+        /** @var ChildSession[] $sessionsToDelete */
+        $sessionsToDelete = $this->getSessions(new Criteria(), $con)->diff($sessions);
 
 
-        $this->authsScheduledForDeletion = $authsToDelete;
+        $this->sessionsScheduledForDeletion = $sessionsToDelete;
 
-        foreach ($authsToDelete as $authRemoved) {
-            $authRemoved->setUser(null);
+        foreach ($sessionsToDelete as $sessionRemoved) {
+            $sessionRemoved->setUser(null);
         }
 
-        $this->collAuths = null;
-        foreach ($auths as $auth) {
-            $this->addAuth($auth);
+        $this->collSessions = null;
+        foreach ($sessions as $session) {
+            $this->addSession($session);
         }
 
-        $this->collAuths = $auths;
-        $this->collAuthsPartial = false;
+        $this->collSessions = $sessions;
+        $this->collSessionsPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related Auth objects.
+     * Returns the number of related Session objects.
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct
      * @param      ConnectionInterface $con
-     * @return int             Count of related Auth objects.
+     * @return int             Count of related Session objects.
      * @throws PropelException
      */
-    public function countAuths(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countSessions(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collAuthsPartial && !$this->isNew();
-        if (null === $this->collAuths || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collAuths) {
+        $partial = $this->collSessionsPartial && !$this->isNew();
+        if (null === $this->collSessions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSessions) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getAuths());
+                return count($this->getSessions());
             }
 
-            $query = ChildAuthQuery::create(null, $criteria);
+            $query = ChildSessionQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
@@ -2142,54 +2142,54 @@ abstract class User implements ActiveRecordInterface
                 ->count($con);
         }
 
-        return count($this->collAuths);
+        return count($this->collSessions);
     }
 
     /**
-     * Method called to associate a ChildAuth object to this object
-     * through the ChildAuth foreign key attribute.
+     * Method called to associate a ChildSession object to this object
+     * through the ChildSession foreign key attribute.
      *
-     * @param  ChildAuth $l ChildAuth
+     * @param  ChildSession $l ChildSession
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
-    public function addAuth(ChildAuth $l)
+    public function addSession(ChildSession $l)
     {
-        if ($this->collAuths === null) {
-            $this->initAuths();
-            $this->collAuthsPartial = true;
+        if ($this->collSessions === null) {
+            $this->initSessions();
+            $this->collSessionsPartial = true;
         }
 
-        if (!$this->collAuths->contains($l)) {
-            $this->doAddAuth($l);
+        if (!$this->collSessions->contains($l)) {
+            $this->doAddSession($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildAuth $auth The ChildAuth object to add.
+     * @param ChildSession $session The ChildSession object to add.
      */
-    protected function doAddAuth(ChildAuth $auth)
+    protected function doAddSession(ChildSession $session)
     {
-        $this->collAuths[]= $auth;
-        $auth->setUser($this);
+        $this->collSessions[]= $session;
+        $session->setUser($this);
     }
 
     /**
-     * @param  ChildAuth $auth The ChildAuth object to remove.
+     * @param  ChildSession $session The ChildSession object to remove.
      * @return $this|ChildUser The current object (for fluent API support)
      */
-    public function removeAuth(ChildAuth $auth)
+    public function removeSession(ChildSession $session)
     {
-        if ($this->getAuths()->contains($auth)) {
-            $pos = $this->collAuths->search($auth);
-            $this->collAuths->remove($pos);
-            if (null === $this->authsScheduledForDeletion) {
-                $this->authsScheduledForDeletion = clone $this->collAuths;
-                $this->authsScheduledForDeletion->clear();
+        if ($this->getSessions()->contains($session)) {
+            $pos = $this->collSessions->search($session);
+            $this->collSessions->remove($pos);
+            if (null === $this->sessionsScheduledForDeletion) {
+                $this->sessionsScheduledForDeletion = clone $this->collSessions;
+                $this->sessionsScheduledForDeletion->clear();
             }
-            $this->authsScheduledForDeletion[]= clone $auth;
-            $auth->setUser(null);
+            $this->sessionsScheduledForDeletion[]= clone $session;
+            $session->setUser(null);
         }
 
         return $this;
@@ -2989,8 +2989,8 @@ abstract class User implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collAuths) {
-                foreach ($this->collAuths as $o) {
+            if ($this->collSessions) {
+                foreach ($this->collSessions as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -3011,7 +3011,7 @@ abstract class User implements ActiveRecordInterface
             }
         } // if ($deep)
 
-        $this->collAuths = null;
+        $this->collSessions = null;
         $this->collUserGroups = null;
         $this->collActivities = null;
         $this->collGroups = null;
@@ -3093,8 +3093,8 @@ abstract class User implements ActiveRecordInterface
                 $failureMap->addAll($retval);
             }
 
-            if (null !== $this->collAuths) {
-                foreach ($this->collAuths as $referrerFK) {
+            if (null !== $this->collSessions) {
+                foreach ($this->collSessions as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
                         if (!$referrerFK->validate($validator)) {
                             $failureMap->addAll($referrerFK->getValidationFailures());
