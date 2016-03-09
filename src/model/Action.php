@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\Action as BaseAction;
-use keeko\core\model\serializer\ActionSerializer;
+use keeko\core\serializer\ActionSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\Application as BaseApplication;
-use keeko\core\model\serializer\ApplicationSerializer;
+use keeko\core\serializer\ApplicationSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

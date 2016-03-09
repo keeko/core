@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\Country as BaseCountry;
-use keeko\core\model\serializer\CountrySerializer;
+use keeko\core\serializer\CountrySerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

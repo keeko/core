@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\ActivityObject as BaseActivityObject;
-use keeko\core\model\serializer\ActivityObjectSerializer;
+use keeko\core\serializer\ActivityObjectSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

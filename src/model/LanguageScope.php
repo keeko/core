@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\LanguageScope as BaseLanguageScope;
-use keeko\core\model\serializer\LanguageScopeSerializer;
+use keeko\core\serializer\LanguageScopeSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

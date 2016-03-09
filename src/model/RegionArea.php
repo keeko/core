@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\RegionArea as BaseRegionArea;
-use keeko\core\model\serializer\RegionAreaSerializer;
+use keeko\core\serializer\RegionAreaSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

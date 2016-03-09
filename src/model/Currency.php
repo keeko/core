@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\Currency as BaseCurrency;
-use keeko\core\model\serializer\CurrencySerializer;
+use keeko\core\serializer\CurrencySerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

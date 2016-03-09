@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\Preference as BasePreference;
-use keeko\core\model\serializer\PreferenceSerializer;
+use keeko\core\serializer\PreferenceSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

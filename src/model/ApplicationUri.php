@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\ApplicationUri as BaseApplicationUri;
-use keeko\core\model\serializer\ApplicationUriSerializer;
+use keeko\core\serializer\ApplicationUriSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

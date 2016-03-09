@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\Session as BaseSession;
-use keeko\core\model\serializer\SessionSerializer;
+use keeko\core\serializer\SessionSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

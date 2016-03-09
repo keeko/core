@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\Group as BaseGroup;
-use keeko\core\model\serializer\GroupSerializer;
+use keeko\core\serializer\GroupSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

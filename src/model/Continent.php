@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\Continent as BaseContinent;
-use keeko\core\model\serializer\ContinentSerializer;
+use keeko\core\serializer\ContinentSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

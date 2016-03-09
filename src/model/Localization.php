@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\Localization as BaseLocalization;
-use keeko\core\model\serializer\LocalizationSerializer;
+use keeko\core\serializer\LocalizationSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

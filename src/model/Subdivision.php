@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\Subdivision as BaseSubdivision;
-use keeko\core\model\serializer\SubdivisionSerializer;
+use keeko\core\serializer\SubdivisionSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

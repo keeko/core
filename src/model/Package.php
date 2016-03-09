@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\Package as BasePackage;
-use keeko\core\model\serializer\PackageSerializer;
+use keeko\core\serializer\PackageSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**

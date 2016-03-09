@@ -2,7 +2,7 @@
 namespace keeko\core\model;
 
 use keeko\core\model\Base\LanguageScript as BaseLanguageScript;
-use keeko\core\model\serializer\LanguageScriptSerializer;
+use keeko\core\serializer\LanguageScriptSerializer;
 use keeko\framework\model\ApiModelInterface;
 
 /**
