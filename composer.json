@@ -365,9 +365,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\LocalizationLocalizationJsonResponse"
-						}
+						"response": []
 					},
 					"localization-to-localization-relationship-update": {
 						"title": "Updates the relationship of localization to localization",
@@ -376,9 +374,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\LocalizationLocalizationJsonResponse"
-						}
+						"response": []
 					},
 					"localization-to-language-relationship-read": {
 						"title": "Reads the relationship of localization to language",
@@ -387,9 +383,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\LocalizationLanguageJsonResponse"
-						}
+						"response": []
 					},
 					"localization-to-language-relationship-update": {
 						"title": "Updates the relationship of localization to language",
@@ -398,9 +392,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\LocalizationLanguageJsonResponse"
-						}
+						"response": []
 					},
 					"localization-to-language_script-relationship-read": {
 						"title": "Reads the relationship of localization to language_script",
@@ -409,9 +401,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\LocalizationLanguageScriptJsonResponse"
-						}
+						"response": []
 					},
 					"localization-to-language_script-relationship-update": {
 						"title": "Updates the relationship of localization to language_script",
@@ -420,9 +410,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\LocalizationLanguageScriptJsonResponse"
-						}
+						"response": []
 					},
 					"localization-to-language_variant-relationship-read": {
 						"title": "Reads the relationship of localization to language_variant",
@@ -431,9 +419,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\LocalizationLanguageVariantJsonResponse"
-						}
+						"response": []
 					},
 					"localization-to-language_variant-relationship-update": {
 						"title": "Updates the relationship of localization to language_variant",
@@ -442,9 +428,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\LocalizationLanguageVariantJsonResponse"
-						}
+						"response": []
 					},
 					"localization-to-language_variant-relationship-add": {
 						"title": "Adds language_variant as relationship to localization",
@@ -453,9 +437,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\LocalizationLanguageVariantJsonResponse"
-						}
+						"response": []
 					},
 					"localization-to-language_variant-relationship-remove": {
 						"title": "Removes language_variant as relationship of localization",
@@ -464,9 +446,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\LocalizationLanguageVariantJsonResponse"
-						}
+						"response": []
 					},
 					"package-create": {
 						"title": "Creates a package",
@@ -585,9 +565,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ApplicationPackageJsonResponse"
-						}
+						"response": []
 					},
 					"application-to-package-relationship-update": {
 						"title": "Updates the relationship of application to package",
@@ -596,9 +574,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ApplicationPackageJsonResponse"
-						}
+						"response": []
 					},
 					"application_uri-create": {
 						"title": "Creates an application-uri",
@@ -662,9 +638,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ApplicationUriApplicationJsonResponse"
-						}
+						"response": []
 					},
 					"application_uri-to-application-relationship-update": {
 						"title": "Updates the relationship of application_uri to application",
@@ -673,9 +647,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ApplicationUriApplicationJsonResponse"
-						}
+						"response": []
 					},
 					"application_uri-to-localization-relationship-read": {
 						"title": "Reads the relationship of application_uri to localization",
@@ -684,9 +656,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ApplicationUriLocalizationJsonResponse"
-						}
+						"response": []
 					},
 					"application_uri-to-localization-relationship-update": {
 						"title": "Updates the relationship of application_uri to localization",
@@ -695,9 +665,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ApplicationUriLocalizationJsonResponse"
-						}
+						"response": []
 					},
 					"module-create": {
 						"title": "Creates a module",
@@ -761,9 +729,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ModulePackageJsonResponse"
-						}
+						"response": []
 					},
 					"module-to-package-relationship-update": {
 						"title": "Updates the relationship of module to package",
@@ -772,9 +738,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ModulePackageJsonResponse"
-						}
+						"response": []
 					},
 					"action-create": {
 						"title": "Creates an action",
@@ -838,9 +802,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ActionModuleJsonResponse"
-						}
+						"response": []
 					},
 					"action-to-module-relationship-update": {
 						"title": "Updates the relationship of action to module",
@@ -849,9 +811,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ActionModuleJsonResponse"
-						}
+						"response": []
 					},
 					"action-to-group-relationship-read": {
 						"title": "Reads the relationship of action to group",
@@ -860,9 +820,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ActionGroupJsonResponse"
-						}
+						"response": []
 					},
 					"action-to-group-relationship-update": {
 						"title": "Updates the relationship of action to group",
@@ -871,9 +829,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ActionGroupJsonResponse"
-						}
+						"response": []
 					},
 					"action-to-group-relationship-add": {
 						"title": "Adds group as relationship to action",
@@ -882,9 +838,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ActionGroupJsonResponse"
-						}
+						"response": []
 					},
 					"action-to-group-relationship-remove": {
 						"title": "Removes group as relationship of action",
@@ -893,9 +847,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ActionGroupJsonResponse"
-						}
+						"response": []
 					},
 					"extension-create": {
 						"title": "Creates an extension",
@@ -959,9 +911,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ExtensionPackageJsonResponse"
-						}
+						"response": []
 					},
 					"extension-to-package-relationship-update": {
 						"title": "Updates the relationship of extension to package",
@@ -970,9 +920,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ExtensionPackageJsonResponse"
-						}
+						"response": []
 					},
 					"preference-create": {
 						"title": "Creates a preference",
@@ -1091,9 +1039,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ApiActionJsonResponse"
-						}
+						"response": []
 					},
 					"api-to-action-relationship-update": {
 						"title": "Updates the relationship of api to action",
@@ -1102,9 +1048,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ApiActionJsonResponse"
-						}
+						"response": []
 					},
 					"session-create": {
 						"title": "Creates a session",
@@ -1168,9 +1112,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\SessionUserJsonResponse"
-						}
+						"response": []
 					},
 					"session-to-user-relationship-update": {
 						"title": "Updates the relationship of session to user",
@@ -1179,9 +1121,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\SessionUserJsonResponse"
-						}
+						"response": []
 					},
 					"user-create": {
 						"title": "Creates an user",
@@ -1245,9 +1185,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\UserGroupJsonResponse"
-						}
+						"response": []
 					},
 					"user-to-group-relationship-update": {
 						"title": "Updates the relationship of user to group",
@@ -1256,9 +1194,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\UserGroupJsonResponse"
-						}
+						"response": []
 					},
 					"user-to-group-relationship-add": {
 						"title": "Adds group as relationship to user",
@@ -1267,9 +1203,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\UserGroupJsonResponse"
-						}
+						"response": []
 					},
 					"user-to-group-relationship-remove": {
 						"title": "Removes group as relationship of user",
@@ -1278,9 +1212,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\UserGroupJsonResponse"
-						}
+						"response": []
 					},
 					"group-create": {
 						"title": "Creates a group",
@@ -1344,9 +1276,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\GroupUserJsonResponse"
-						}
+						"response": []
 					},
 					"group-to-user-relationship-update": {
 						"title": "Updates the relationship of group to user",
@@ -1355,9 +1285,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\GroupUserJsonResponse"
-						}
+						"response": []
 					},
 					"group-to-user-relationship-add": {
 						"title": "Adds user as relationship to group",
@@ -1366,9 +1294,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\GroupUserJsonResponse"
-						}
+						"response": []
 					},
 					"group-to-user-relationship-remove": {
 						"title": "Removes user as relationship of group",
@@ -1377,9 +1303,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\GroupUserJsonResponse"
-						}
+						"response": []
 					},
 					"group-to-action-relationship-read": {
 						"title": "Reads the relationship of group to action",
@@ -1487,9 +1411,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ActivityUserJsonResponse"
-						}
+						"response": []
 					},
 					"activity-to-user-relationship-update": {
 						"title": "Updates the relationship of activity to user",
@@ -1498,9 +1420,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ActivityUserJsonResponse"
-						}
+						"response": []
 					},
 					"activity-to-activity_object-relationship-read": {
 						"title": "Reads the relationship of activity to activity_object",
@@ -1509,9 +1429,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ActivityActivityObjectJsonResponse"
-						}
+						"response": []
 					},
 					"activity-to-activity_object-relationship-update": {
 						"title": "Updates the relationship of activity to activity_object",
@@ -1520,9 +1438,7 @@
 						"acl": [
 							"admin"
 						],
-						"response": {
-							"json": "keeko\\core\\response\\ActivityActivityObjectJsonResponse"
-						}
+						"response": []
 					},
 					"activity_object-create": {
 						"title": "Creates an activity-object",
