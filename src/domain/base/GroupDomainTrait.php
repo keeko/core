@@ -155,8 +155,9 @@ trait GroupDomainTrait {
 	 * Implement this functionality at keeko\core\domain\GroupDomain
 	 * 
 	 * @param GroupQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(GroupQuery $query);
+	abstract protected function applyFilter(GroupQuery $query, $filter);
 
 	/**
 	 * Returns the service container

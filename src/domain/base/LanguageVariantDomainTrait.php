@@ -70,8 +70,9 @@ trait LanguageVariantDomainTrait {
 	 * Implement this functionality at keeko\core\domain\LanguageVariantDomain
 	 * 
 	 * @param LanguageVariantQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(LanguageVariantQuery $query);
+	abstract protected function applyFilter(LanguageVariantQuery $query, $filter);
 
 	/**
 	 * Returns the service container

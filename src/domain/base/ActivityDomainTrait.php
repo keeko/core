@@ -155,8 +155,9 @@ trait ActivityDomainTrait {
 	 * Implement this functionality at keeko\core\domain\ActivityDomain
 	 * 
 	 * @param ActivityQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(ActivityQuery $query);
+	abstract protected function applyFilter(ActivityQuery $query, $filter);
 
 	/**
 	 * Returns the service container

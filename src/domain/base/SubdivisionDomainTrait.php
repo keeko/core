@@ -70,8 +70,9 @@ trait SubdivisionDomainTrait {
 	 * Implement this functionality at keeko\core\domain\SubdivisionDomain
 	 * 
 	 * @param SubdivisionQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(SubdivisionQuery $query);
+	abstract protected function applyFilter(SubdivisionQuery $query, $filter);
 
 	/**
 	 * Returns the service container

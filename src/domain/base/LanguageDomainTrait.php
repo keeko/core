@@ -70,8 +70,9 @@ trait LanguageDomainTrait {
 	 * Implement this functionality at keeko\core\domain\LanguageDomain
 	 * 
 	 * @param LanguageQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(LanguageQuery $query);
+	abstract protected function applyFilter(LanguageQuery $query, $filter);
 
 	/**
 	 * Returns the service container

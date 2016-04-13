@@ -155,8 +155,9 @@ trait ApplicationUriDomainTrait {
 	 * Implement this functionality at keeko\core\domain\ApplicationUriDomain
 	 * 
 	 * @param ApplicationUriQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(ApplicationUriQuery $query);
+	abstract protected function applyFilter(ApplicationUriQuery $query, $filter);
 
 	/**
 	 * Returns the service container

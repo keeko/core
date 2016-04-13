@@ -155,8 +155,9 @@ trait ApiDomainTrait {
 	 * Implement this functionality at keeko\core\domain\ApiDomain
 	 * 
 	 * @param ApiQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(ApiQuery $query);
+	abstract protected function applyFilter(ApiQuery $query, $filter);
 
 	/**
 	 * Returns the service container

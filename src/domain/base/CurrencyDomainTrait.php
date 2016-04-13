@@ -70,8 +70,9 @@ trait CurrencyDomainTrait {
 	 * Implement this functionality at keeko\core\domain\CurrencyDomain
 	 * 
 	 * @param CurrencyQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(CurrencyQuery $query);
+	abstract protected function applyFilter(CurrencyQuery $query, $filter);
 
 	/**
 	 * Returns the service container

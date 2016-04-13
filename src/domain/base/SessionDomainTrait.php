@@ -155,8 +155,9 @@ trait SessionDomainTrait {
 	 * Implement this functionality at keeko\core\domain\SessionDomain
 	 * 
 	 * @param SessionQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(SessionQuery $query);
+	abstract protected function applyFilter(SessionQuery $query, $filter);
 
 	/**
 	 * Returns the service container

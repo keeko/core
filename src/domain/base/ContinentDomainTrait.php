@@ -70,8 +70,9 @@ trait ContinentDomainTrait {
 	 * Implement this functionality at keeko\core\domain\ContinentDomain
 	 * 
 	 * @param ContinentQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(ContinentQuery $query);
+	abstract protected function applyFilter(ContinentQuery $query, $filter);
 
 	/**
 	 * Returns the service container

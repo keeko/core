@@ -155,8 +155,9 @@ trait PackageDomainTrait {
 	 * Implement this functionality at keeko\core\domain\PackageDomain
 	 * 
 	 * @param PackageQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(PackageQuery $query);
+	abstract protected function applyFilter(PackageQuery $query, $filter);
 
 	/**
 	 * Returns the service container

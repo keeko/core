@@ -155,8 +155,9 @@ trait LocalizationDomainTrait {
 	 * Implement this functionality at keeko\core\domain\LocalizationDomain
 	 * 
 	 * @param LocalizationQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(LocalizationQuery $query);
+	abstract protected function applyFilter(LocalizationQuery $query, $filter);
 
 	/**
 	 * Returns the service container

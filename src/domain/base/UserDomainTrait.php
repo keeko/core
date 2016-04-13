@@ -155,8 +155,9 @@ trait UserDomainTrait {
 	 * Implement this functionality at keeko\core\domain\UserDomain
 	 * 
 	 * @param UserQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(UserQuery $query);
+	abstract protected function applyFilter(UserQuery $query, $filter);
 
 	/**
 	 * Returns the service container

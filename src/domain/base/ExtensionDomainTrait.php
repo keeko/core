@@ -155,8 +155,9 @@ trait ExtensionDomainTrait {
 	 * Implement this functionality at keeko\core\domain\ExtensionDomain
 	 * 
 	 * @param ExtensionQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(ExtensionQuery $query);
+	abstract protected function applyFilter(ExtensionQuery $query, $filter);
 
 	/**
 	 * Returns the service container

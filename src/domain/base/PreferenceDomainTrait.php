@@ -155,8 +155,9 @@ trait PreferenceDomainTrait {
 	 * Implement this functionality at keeko\core\domain\PreferenceDomain
 	 * 
 	 * @param PreferenceQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(PreferenceQuery $query);
+	abstract protected function applyFilter(PreferenceQuery $query, $filter);
 
 	/**
 	 * Returns the service container

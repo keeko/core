@@ -70,8 +70,9 @@ trait LanguageScriptDomainTrait {
 	 * Implement this functionality at keeko\core\domain\LanguageScriptDomain
 	 * 
 	 * @param LanguageScriptQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(LanguageScriptQuery $query);
+	abstract protected function applyFilter(LanguageScriptQuery $query, $filter);
 
 	/**
 	 * Returns the service container

@@ -155,8 +155,9 @@ trait ModuleDomainTrait {
 	 * Implement this functionality at keeko\core\domain\ModuleDomain
 	 * 
 	 * @param ModuleQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(ModuleQuery $query);
+	abstract protected function applyFilter(ModuleQuery $query, $filter);
 
 	/**
 	 * Returns the service container

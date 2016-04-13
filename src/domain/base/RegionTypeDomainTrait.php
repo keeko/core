@@ -70,8 +70,9 @@ trait RegionTypeDomainTrait {
 	 * Implement this functionality at keeko\core\domain\RegionTypeDomain
 	 * 
 	 * @param RegionTypeQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(RegionTypeQuery $query);
+	abstract protected function applyFilter(RegionTypeQuery $query, $filter);
 
 	/**
 	 * Returns the service container

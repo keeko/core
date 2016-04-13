@@ -70,8 +70,9 @@ trait CountryDomainTrait {
 	 * Implement this functionality at keeko\core\domain\CountryDomain
 	 * 
 	 * @param CountryQuery $query
+	 * @param mixed $filter
 	 */
-	abstract protected function applyFilter(CountryQuery $query);
+	abstract protected function applyFilter(CountryQuery $query, $filter);
 
 	/**
 	 * Returns the service container
