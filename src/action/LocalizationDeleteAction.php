@@ -1,15 +1,36 @@
 <?php
 namespace keeko\core\action;
 
-use keeko\core\action\base\LocalizationDeleteActionTrait;
 use keeko\framework\foundation\AbstractAction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use keeko\core\domain\LocalizationDomain;
 
 /**
- * Deletes a localization
+ * Action Class for localization-delete
  * 
- * @author gossi
+ * This code is automatically created. Modifications will probably be overwritten.
  */
 class LocalizationDeleteAction extends AbstractAction {
 
-	use LocalizationDeleteActionTrait;
+	/**
+	 * @param OptionsResolver $resolver
+	 */
+	public function configureParams(OptionsResolver $resolver) {
+		$resolver->setRequired(['id']);
+	}
+
+	/**
+	 * Automatically generated run method
+	 * 
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function run(Request $request) {
+		$id = $this->getParam('id');
+		$domain = new LocalizationDomain($this->getServiceContainer());
+		$payload = $domain->delete($id);
+		return $this->response->run($request, $payload);
+	}
 }

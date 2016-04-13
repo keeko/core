@@ -1,15 +1,29 @@
 <?php
 namespace keeko\core\action;
 
-use keeko\core\action\base\ModuleCreateActionTrait;
 use keeko\framework\foundation\AbstractAction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use phootwork\json\Json;
+use keeko\core\domain\ModuleDomain;
 
 /**
- * Creates a module
+ * Action Class for module-create
  * 
- * @author gossi
+ * This code is automatically created. Modifications will probably be overwritten.
  */
 class ModuleCreateAction extends AbstractAction {
 
-	use ModuleCreateActionTrait;
+	/**
+	 * Automatically generated run method
+	 * 
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function run(Request $request) {
+		$data = Json::decode($request->getContent());
+		$domain = new ModuleDomain($this->getServiceContainer());
+		$payload = $domain->create($data);
+		return $this->response->run($request, $payload);
+	}
 }

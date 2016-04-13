@@ -1,15 +1,29 @@
 <?php
 namespace keeko\core\action;
 
-use keeko\core\action\base\ApplicationUriCreateActionTrait;
 use keeko\framework\foundation\AbstractAction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use phootwork\json\Json;
+use keeko\core\domain\ApplicationUriDomain;
 
 /**
- * Creates an application-uri
+ * Action Class for application_uri-create
  * 
- * @author gossi
+ * This code is automatically created. Modifications will probably be overwritten.
  */
 class ApplicationUriCreateAction extends AbstractAction {
 
-	use ApplicationUriCreateActionTrait;
+	/**
+	 * Automatically generated run method
+	 * 
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function run(Request $request) {
+		$data = Json::decode($request->getContent());
+		$domain = new ApplicationUriDomain($this->getServiceContainer());
+		$payload = $domain->create($data);
+		return $this->response->run($request, $payload);
+	}
 }

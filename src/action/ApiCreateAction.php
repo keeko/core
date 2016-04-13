@@ -1,15 +1,29 @@
 <?php
 namespace keeko\core\action;
 
-use keeko\core\action\base\ApiCreateActionTrait;
 use keeko\framework\foundation\AbstractAction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use phootwork\json\Json;
+use keeko\core\domain\ApiDomain;
 
 /**
- * Creates an api
+ * Action Class for api-create
  * 
- * @author gossi
+ * This code is automatically created. Modifications will probably be overwritten.
  */
 class ApiCreateAction extends AbstractAction {
 
-	use ApiCreateActionTrait;
+	/**
+	 * Automatically generated run method
+	 * 
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function run(Request $request) {
+		$data = Json::decode($request->getContent());
+		$domain = new ApiDomain($this->getServiceContainer());
+		$payload = $domain->create($data);
+		return $this->response->run($request, $payload);
+	}
 }

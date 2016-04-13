@@ -2,9 +2,9 @@
 namespace keeko\core\action;
 
 use keeko\framework\foundation\AbstractAction;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use keeko\core\model\UserQuery;
 

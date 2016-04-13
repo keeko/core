@@ -20,6 +20,8 @@ use keeko\framework\domain\payload\NotDeleted;
 trait ActivityDomainTrait {
 
 	/**
+	 * Creates a new Activity with the provided data
+	 * 
 	 * @param mixed $data
 	 */
 	public function create($data) {
@@ -39,6 +41,8 @@ trait ActivityDomainTrait {
 	}
 
 	/**
+	 * Deletes a Activity with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function delete($id) {
@@ -51,16 +55,17 @@ trait ActivityDomainTrait {
 
 		// delete
 		$activity->delete();
-		$payload = ['model' => $activity];
 
 		if ($activity->isDeleted()) {
-			return new Deleted($payload);
+			return new Deleted(['model' => $activity]);
 		}
 
-		return new NotDeleted($payload);
+		return new NotDeleted(['message' => 'Could not delete Activity']);
 	}
 
 	/**
+	 * Returns a paginated result
+	 * 
 	 * @param Parameters $params
 	 */
 	public function paginate(Parameters $params) {
@@ -92,6 +97,8 @@ trait ActivityDomainTrait {
 	}
 
 	/**
+	 * Returns one Activity with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function read($id) {
@@ -110,6 +117,8 @@ trait ActivityDomainTrait {
 	}
 
 	/**
+	 * Updates a Activity with the given idand the provided data
+	 * 
 	 * @param mixed $id
 	 * @param mixed $data
 	 */

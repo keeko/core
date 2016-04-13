@@ -20,6 +20,8 @@ use keeko\framework\domain\payload\NotDeleted;
 trait ApplicationUriDomainTrait {
 
 	/**
+	 * Creates a new ApplicationUri with the provided data
+	 * 
 	 * @param mixed $data
 	 */
 	public function create($data) {
@@ -39,6 +41,8 @@ trait ApplicationUriDomainTrait {
 	}
 
 	/**
+	 * Deletes a ApplicationUri with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function delete($id) {
@@ -51,16 +55,17 @@ trait ApplicationUriDomainTrait {
 
 		// delete
 		$applicationUri->delete();
-		$payload = ['model' => $applicationUri];
 
 		if ($applicationUri->isDeleted()) {
-			return new Deleted($payload);
+			return new Deleted(['model' => $applicationUri]);
 		}
 
-		return new NotDeleted($payload);
+		return new NotDeleted(['message' => 'Could not delete ApplicationUri']);
 	}
 
 	/**
+	 * Returns a paginated result
+	 * 
 	 * @param Parameters $params
 	 */
 	public function paginate(Parameters $params) {
@@ -92,6 +97,8 @@ trait ApplicationUriDomainTrait {
 	}
 
 	/**
+	 * Returns one ApplicationUri with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function read($id) {
@@ -110,6 +117,8 @@ trait ApplicationUriDomainTrait {
 	}
 
 	/**
+	 * Updates a ApplicationUri with the given idand the provided data
+	 * 
 	 * @param mixed $id
 	 * @param mixed $data
 	 */

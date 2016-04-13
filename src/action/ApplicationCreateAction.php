@@ -1,15 +1,29 @@
 <?php
 namespace keeko\core\action;
 
-use keeko\core\action\base\ApplicationCreateActionTrait;
 use keeko\framework\foundation\AbstractAction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use phootwork\json\Json;
+use keeko\core\domain\ApplicationDomain;
 
 /**
- * Creates an application
+ * Action Class for application-create
  * 
- * @author gossi
+ * This code is automatically created. Modifications will probably be overwritten.
  */
 class ApplicationCreateAction extends AbstractAction {
 
-	use ApplicationCreateActionTrait;
+	/**
+	 * Automatically generated run method
+	 * 
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function run(Request $request) {
+		$data = Json::decode($request->getContent());
+		$domain = new ApplicationDomain($this->getServiceContainer());
+		$payload = $domain->create($data);
+		return $this->response->run($request, $payload);
+	}
 }

@@ -20,6 +20,8 @@ use keeko\framework\domain\payload\NotDeleted;
 trait UserDomainTrait {
 
 	/**
+	 * Creates a new User with the provided data
+	 * 
 	 * @param mixed $data
 	 */
 	public function create($data) {
@@ -39,6 +41,8 @@ trait UserDomainTrait {
 	}
 
 	/**
+	 * Deletes a User with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function delete($id) {
@@ -51,16 +55,17 @@ trait UserDomainTrait {
 
 		// delete
 		$user->delete();
-		$payload = ['model' => $user];
 
 		if ($user->isDeleted()) {
-			return new Deleted($payload);
+			return new Deleted(['model' => $user]);
 		}
 
-		return new NotDeleted($payload);
+		return new NotDeleted(['message' => 'Could not delete User']);
 	}
 
 	/**
+	 * Returns a paginated result
+	 * 
 	 * @param Parameters $params
 	 */
 	public function paginate(Parameters $params) {
@@ -92,6 +97,8 @@ trait UserDomainTrait {
 	}
 
 	/**
+	 * Returns one User with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function read($id) {
@@ -110,6 +117,8 @@ trait UserDomainTrait {
 	}
 
 	/**
+	 * Updates a User with the given idand the provided data
+	 * 
 	 * @param mixed $id
 	 * @param mixed $data
 	 */

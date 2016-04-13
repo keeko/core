@@ -5,6 +5,10 @@
         "bootstrap-file": "vendor/autoload.php"
     },
     "packages": {
+        "composer/ca-bundle": {
+            "install-path": "vendor/composer/ca-bundle",
+            "installer": "composer"
+        },
         "composer/composer": {
             "install-path": "vendor/composer/composer",
             "installer": "composer"
@@ -49,6 +53,10 @@
             "install-path": "vendor/monolog/monolog",
             "installer": "composer",
             "env": "dev"
+        },
+        "paragonie/random_compat": {
+            "install-path": "vendor/paragonie/random_compat",
+            "installer": "composer"
         },
         "phootwork/collection": {
             "install-path": "vendor/phootwork/collection",

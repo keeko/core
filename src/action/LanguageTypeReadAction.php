@@ -1,15 +1,36 @@
 <?php
 namespace keeko\core\action;
 
-use keeko\core\action\base\LanguageTypeReadActionTrait;
 use keeko\framework\foundation\AbstractAction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use keeko\core\domain\LanguageTypeDomain;
 
 /**
- * Reads a language-type
+ * Action Class for language_type-read
  * 
- * @author gossi
+ * This code is automatically created. Modifications will probably be overwritten.
  */
 class LanguageTypeReadAction extends AbstractAction {
 
-	use LanguageTypeReadActionTrait;
+	/**
+	 * @param OptionsResolver $resolver
+	 */
+	public function configureParams(OptionsResolver $resolver) {
+		$resolver->setRequired(['id']);
+	}
+
+	/**
+	 * Automatically generated run method
+	 * 
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function run(Request $request) {
+		$id = $this->getParam('id');
+		$domain = new LanguageTypeDomain($this->getServiceContainer());
+		$payload = $domain->read($id);
+		return $this->response->run($request, $payload);
+	}
 }

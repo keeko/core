@@ -2,12 +2,12 @@
 namespace keeko\core\action;
 
 use keeko\framework\foundation\AbstractAction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\framework\exceptions\ValidationException;
 use Tobscure\JsonApi\Exception\InvalidParameterException;
 use phootwork\json\Json;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use keeko\core\model\ModuleQuery;
 
 /**

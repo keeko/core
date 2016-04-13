@@ -20,6 +20,8 @@ use keeko\framework\domain\payload\NotDeleted;
 trait ApiDomainTrait {
 
 	/**
+	 * Creates a new Api with the provided data
+	 * 
 	 * @param mixed $data
 	 */
 	public function create($data) {
@@ -39,6 +41,8 @@ trait ApiDomainTrait {
 	}
 
 	/**
+	 * Deletes a Api with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function delete($id) {
@@ -51,16 +55,17 @@ trait ApiDomainTrait {
 
 		// delete
 		$api->delete();
-		$payload = ['model' => $api];
 
 		if ($api->isDeleted()) {
-			return new Deleted($payload);
+			return new Deleted(['model' => $api]);
 		}
 
-		return new NotDeleted($payload);
+		return new NotDeleted(['message' => 'Could not delete Api']);
 	}
 
 	/**
+	 * Returns a paginated result
+	 * 
 	 * @param Parameters $params
 	 */
 	public function paginate(Parameters $params) {
@@ -92,6 +97,8 @@ trait ApiDomainTrait {
 	}
 
 	/**
+	 * Returns one Api with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function read($id) {
@@ -110,6 +117,8 @@ trait ApiDomainTrait {
 	}
 
 	/**
+	 * Updates a Api with the given idand the provided data
+	 * 
 	 * @param mixed $id
 	 * @param mixed $data
 	 */

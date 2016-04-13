@@ -20,6 +20,8 @@ use keeko\framework\domain\payload\NotDeleted;
 trait GroupDomainTrait {
 
 	/**
+	 * Creates a new Group with the provided data
+	 * 
 	 * @param mixed $data
 	 */
 	public function create($data) {
@@ -39,6 +41,8 @@ trait GroupDomainTrait {
 	}
 
 	/**
+	 * Deletes a Group with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function delete($id) {
@@ -51,16 +55,17 @@ trait GroupDomainTrait {
 
 		// delete
 		$group->delete();
-		$payload = ['model' => $group];
 
 		if ($group->isDeleted()) {
-			return new Deleted($payload);
+			return new Deleted(['model' => $group]);
 		}
 
-		return new NotDeleted($payload);
+		return new NotDeleted(['message' => 'Could not delete Group']);
 	}
 
 	/**
+	 * Returns a paginated result
+	 * 
 	 * @param Parameters $params
 	 */
 	public function paginate(Parameters $params) {
@@ -92,6 +97,8 @@ trait GroupDomainTrait {
 	}
 
 	/**
+	 * Returns one Group with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function read($id) {
@@ -110,6 +117,8 @@ trait GroupDomainTrait {
 	}
 
 	/**
+	 * Updates a Group with the given idand the provided data
+	 * 
 	 * @param mixed $id
 	 * @param mixed $data
 	 */

@@ -20,6 +20,8 @@ use keeko\framework\domain\payload\NotDeleted;
 trait ExtensionDomainTrait {
 
 	/**
+	 * Creates a new Extension with the provided data
+	 * 
 	 * @param mixed $data
 	 */
 	public function create($data) {
@@ -39,6 +41,8 @@ trait ExtensionDomainTrait {
 	}
 
 	/**
+	 * Deletes a Extension with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function delete($id) {
@@ -51,16 +55,17 @@ trait ExtensionDomainTrait {
 
 		// delete
 		$extension->delete();
-		$payload = ['model' => $extension];
 
 		if ($extension->isDeleted()) {
-			return new Deleted($payload);
+			return new Deleted(['model' => $extension]);
 		}
 
-		return new NotDeleted($payload);
+		return new NotDeleted(['message' => 'Could not delete Extension']);
 	}
 
 	/**
+	 * Returns a paginated result
+	 * 
 	 * @param Parameters $params
 	 */
 	public function paginate(Parameters $params) {
@@ -92,6 +97,8 @@ trait ExtensionDomainTrait {
 	}
 
 	/**
+	 * Returns one Extension with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function read($id) {
@@ -110,6 +117,8 @@ trait ExtensionDomainTrait {
 	}
 
 	/**
+	 * Updates a Extension with the given idand the provided data
+	 * 
 	 * @param mixed $id
 	 * @param mixed $data
 	 */

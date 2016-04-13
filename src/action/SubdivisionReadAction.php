@@ -1,15 +1,36 @@
 <?php
 namespace keeko\core\action;
 
-use keeko\core\action\base\SubdivisionReadActionTrait;
 use keeko\framework\foundation\AbstractAction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use keeko\core\domain\SubdivisionDomain;
 
 /**
- * Reads a subdivision
+ * Action Class for subdivision-read
  * 
- * @author gossi
+ * This code is automatically created. Modifications will probably be overwritten.
  */
 class SubdivisionReadAction extends AbstractAction {
 
-	use SubdivisionReadActionTrait;
+	/**
+	 * @param OptionsResolver $resolver
+	 */
+	public function configureParams(OptionsResolver $resolver) {
+		$resolver->setRequired(['id']);
+	}
+
+	/**
+	 * Automatically generated run method
+	 * 
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function run(Request $request) {
+		$id = $this->getParam('id');
+		$domain = new SubdivisionDomain($this->getServiceContainer());
+		$payload = $domain->read($id);
+		return $this->response->run($request, $payload);
+	}
 }

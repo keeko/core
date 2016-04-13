@@ -20,6 +20,8 @@ use keeko\framework\domain\payload\NotDeleted;
 trait PreferenceDomainTrait {
 
 	/**
+	 * Creates a new Preference with the provided data
+	 * 
 	 * @param mixed $data
 	 */
 	public function create($data) {
@@ -39,6 +41,8 @@ trait PreferenceDomainTrait {
 	}
 
 	/**
+	 * Deletes a Preference with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function delete($id) {
@@ -51,16 +55,17 @@ trait PreferenceDomainTrait {
 
 		// delete
 		$preference->delete();
-		$payload = ['model' => $preference];
 
 		if ($preference->isDeleted()) {
-			return new Deleted($payload);
+			return new Deleted(['model' => $preference]);
 		}
 
-		return new NotDeleted($payload);
+		return new NotDeleted(['message' => 'Could not delete Preference']);
 	}
 
 	/**
+	 * Returns a paginated result
+	 * 
 	 * @param Parameters $params
 	 */
 	public function paginate(Parameters $params) {
@@ -92,6 +97,8 @@ trait PreferenceDomainTrait {
 	}
 
 	/**
+	 * Returns one Preference with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function read($id) {
@@ -110,6 +117,8 @@ trait PreferenceDomainTrait {
 	}
 
 	/**
+	 * Updates a Preference with the given idand the provided data
+	 * 
 	 * @param mixed $id
 	 * @param mixed $data
 	 */

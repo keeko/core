@@ -1,15 +1,29 @@
 <?php
 namespace keeko\core\action;
 
-use keeko\core\action\base\SessionCreateActionTrait;
 use keeko\framework\foundation\AbstractAction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use phootwork\json\Json;
+use keeko\core\domain\SessionDomain;
 
 /**
- * Creates a session
+ * Action Class for session-create
  * 
- * @author gossi
+ * This code is automatically created. Modifications will probably be overwritten.
  */
 class SessionCreateAction extends AbstractAction {
 
-	use SessionCreateActionTrait;
+	/**
+	 * Automatically generated run method
+	 * 
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function run(Request $request) {
+		$data = Json::decode($request->getContent());
+		$domain = new SessionDomain($this->getServiceContainer());
+		$payload = $domain->create($data);
+		return $this->response->run($request, $payload);
+	}
 }

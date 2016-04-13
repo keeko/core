@@ -20,6 +20,8 @@ use keeko\framework\domain\payload\NotDeleted;
 trait SessionDomainTrait {
 
 	/**
+	 * Creates a new Session with the provided data
+	 * 
 	 * @param mixed $data
 	 */
 	public function create($data) {
@@ -39,6 +41,8 @@ trait SessionDomainTrait {
 	}
 
 	/**
+	 * Deletes a Session with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function delete($id) {
@@ -51,16 +55,17 @@ trait SessionDomainTrait {
 
 		// delete
 		$session->delete();
-		$payload = ['model' => $session];
 
 		if ($session->isDeleted()) {
-			return new Deleted($payload);
+			return new Deleted(['model' => $session]);
 		}
 
-		return new NotDeleted($payload);
+		return new NotDeleted(['message' => 'Could not delete Session']);
 	}
 
 	/**
+	 * Returns a paginated result
+	 * 
 	 * @param Parameters $params
 	 */
 	public function paginate(Parameters $params) {
@@ -92,6 +97,8 @@ trait SessionDomainTrait {
 	}
 
 	/**
+	 * Returns one Session with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function read($id) {
@@ -110,6 +117,8 @@ trait SessionDomainTrait {
 	}
 
 	/**
+	 * Updates a Session with the given idand the provided data
+	 * 
 	 * @param mixed $id
 	 * @param mixed $data
 	 */

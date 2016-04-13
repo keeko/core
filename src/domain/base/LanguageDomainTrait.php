@@ -14,6 +14,8 @@ use keeko\framework\utils\NameUtils;
 trait LanguageDomainTrait {
 
 	/**
+	 * Returns a paginated result
+	 * 
 	 * @param Parameters $params
 	 */
 	public function paginate(Parameters $params) {
@@ -45,6 +47,8 @@ trait LanguageDomainTrait {
 	}
 
 	/**
+	 * Returns one Language with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function read($id) {

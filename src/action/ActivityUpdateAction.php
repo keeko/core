@@ -1,15 +1,38 @@
 <?php
 namespace keeko\core\action;
 
-use keeko\core\action\base\ActivityUpdateActionTrait;
 use keeko\framework\foundation\AbstractAction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use phootwork\json\Json;
+use keeko\core\domain\ActivityDomain;
 
 /**
- * Updates an activity
+ * Action Class for activity-update
  * 
- * @author gossi
+ * This code is automatically created. Modifications will probably be overwritten.
  */
 class ActivityUpdateAction extends AbstractAction {
 
-	use ActivityUpdateActionTrait;
+	/**
+	 * @param OptionsResolver $resolver
+	 */
+	public function configureParams(OptionsResolver $resolver) {
+		$resolver->setRequired(['id']);
+	}
+
+	/**
+	 * Automatically generated run method
+	 * 
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function run(Request $request) {
+		$id = $this->getParam('id');
+		$data = Json::decode($request->getContent());
+		$domain = new ActivityDomain($this->getServiceContainer());
+		$payload = $domain->update($id, $data);
+		return $this->response->run($request, $payload);
+	}
 }

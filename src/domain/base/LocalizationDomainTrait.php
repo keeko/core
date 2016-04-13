@@ -20,6 +20,8 @@ use keeko\framework\domain\payload\NotDeleted;
 trait LocalizationDomainTrait {
 
 	/**
+	 * Creates a new Localization with the provided data
+	 * 
 	 * @param mixed $data
 	 */
 	public function create($data) {
@@ -39,6 +41,8 @@ trait LocalizationDomainTrait {
 	}
 
 	/**
+	 * Deletes a Localization with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function delete($id) {
@@ -51,16 +55,17 @@ trait LocalizationDomainTrait {
 
 		// delete
 		$localization->delete();
-		$payload = ['model' => $localization];
 
 		if ($localization->isDeleted()) {
-			return new Deleted($payload);
+			return new Deleted(['model' => $localization]);
 		}
 
-		return new NotDeleted($payload);
+		return new NotDeleted(['message' => 'Could not delete Localization']);
 	}
 
 	/**
+	 * Returns a paginated result
+	 * 
 	 * @param Parameters $params
 	 */
 	public function paginate(Parameters $params) {
@@ -92,6 +97,8 @@ trait LocalizationDomainTrait {
 	}
 
 	/**
+	 * Returns one Localization with the given id
+	 * 
 	 * @param mixed $id
 	 */
 	public function read($id) {
@@ -110,6 +117,8 @@ trait LocalizationDomainTrait {
 	}
 
 	/**
+	 * Updates a Localization with the given idand the provided data
+	 * 
 	 * @param mixed $id
 	 * @param mixed $data
 	 */
