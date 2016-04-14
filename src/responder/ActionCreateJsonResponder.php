@@ -8,22 +8,22 @@ use keeko\framework\foundation\AbstractPayloadResponder;
 use keeko\framework\exceptions\ValidationException;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Resource;
-use keeko\core\model\Activity;
+use keeko\core\model\Action;
 
 /**
- * Automatically generated JsonResponder for Creates an activity
+ * Automatically generated JsonResponder for Creates an action
  * 
  * @author gossi
  */
-class ActivityCreateJsonResponder extends AbstractPayloadResponder {
+class ActionCreateJsonResponder extends AbstractPayloadResponder {
 
 	/**
 	 * @param Request $request
 	 * @param PayloadInterface $payload
 	 */
 	public function created(Request $request, PayloadInterface $payload) {
-		$serializer = Activity::getSerializer();
-		$resource = new Resource($payload->get('model'), $serializer);
+		$serializer = Action::getSerializer();
+		$resource = new Resource($payload->getModel(), $serializer);
 		$document = new Document($resource);
 
 		return new JsonResponse($document->toArray(), 201, ['Location' => $resource->getLinks()['self']]);
@@ -34,7 +34,7 @@ class ActivityCreateJsonResponder extends AbstractPayloadResponder {
 	 * @param PayloadInterface $payload
 	 */
 	public function notValid(Request $request, PayloadInterface $payload) {
-		new ValidationException($payload->get('errors'));
+		throw new ValidationException($payload->getViolations());
 	}
 
 	/**

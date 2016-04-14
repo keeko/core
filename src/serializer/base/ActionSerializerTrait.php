@@ -6,26 +6,11 @@ use Tobscure\JsonApi\Relationship;
 use keeko\core\model\Module;
 use Tobscure\JsonApi\Resource;
 use keeko\core\model\Group;
-use keeko\core\model\GroupQuery;
 use Tobscure\JsonApi\Collection;
-use keeko\core\model\GroupActionQuery;
 
 /**
  */
 trait ActionSerializerTrait {
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function addGroups($model, $data) {
-		foreach ($data as $item) {
-			$group = GroupQuery::create()->findOneById($item['id']);
-			if ($group !== null) {
-				$model->addGroup($group);
-			}
-		}
-	}
 
 	/**
 	 * @param mixed $model
@@ -79,11 +64,10 @@ trait ActionSerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function group($model, $related) {
+	public function group($model) {
 		$relationship = new Relationship(new Collection($model->getGroups(), Group::getSerializer()));
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'group');
 	}
 
 	/**
@@ -104,44 +88,13 @@ trait ActionSerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function module($model, $related) {
+	public function module($model) {
 		$serializer = Module::getSerializer();
 		$relationship = new Relationship(new Resource($model->getModule(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function removeGroups($model, $data) {
-		foreach ($data as $item) {
-			$group = GroupQuery::create()->findOneById($item['id']);
-			if ($group !== null) {
-				$model->removeGroup($group);
-			}
-		}
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setGroups($model, $data) {
-		GroupActionQuery::create()->filterByGroup($model)->delete();
-		$this->addGroups($model, $data);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setModule($model, $data) {
-		$model->setModuleId($data['id']);
+		return $this->addRelationshipSelfLink($relationship, $model, 'module');
 	}
 }

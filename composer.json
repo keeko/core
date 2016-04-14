@@ -784,7 +784,7 @@
 							"admin"
 						],
 						"response": {
-							"json": "keeko\\core\\responder\\JsonResponderCreateJsonResponder"
+							"json": "keeko\\core\\responder\\ActionCreateJsonResponder"
 						}
 					},
 					"action-read": {
@@ -795,7 +795,7 @@
 							"admin"
 						],
 						"response": {
-							"json": "keeko\\core\\responder\\JsonResponderReadJsonResponder"
+							"json": "keeko\\core\\responder\\ActionReadJsonResponder"
 						}
 					},
 					"action-list": {
@@ -806,7 +806,7 @@
 							"admin"
 						],
 						"response": {
-							"json": "keeko\\core\\responder\\JsonResponderListJsonResponder"
+							"json": "keeko\\core\\responder\\ActionListJsonResponder"
 						}
 					},
 					"action-update": {
@@ -817,7 +817,7 @@
 							"admin"
 						],
 						"response": {
-							"json": "keeko\\core\\responder\\JsonResponderUpdateJsonResponder"
+							"json": "keeko\\core\\responder\\ActionUpdateJsonResponder"
 						}
 					},
 					"action-delete": {
@@ -828,7 +828,7 @@
 							"admin"
 						],
 						"response": {
-							"json": "keeko\\core\\responder\\JsonResponderDeleteJsonResponder"
+							"json": "keeko\\core\\responder\\ActionDeleteJsonResponder"
 						}
 					},
 					"action-to-module-relationship-read": {

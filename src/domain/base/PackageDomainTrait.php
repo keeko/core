@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\Package;
 use keeko\core\model\PackageQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -23,6 +25,7 @@ trait PackageDomainTrait {
 	 * Creates a new Package with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +47,11 @@ trait PackageDomainTrait {
 	 * Deletes a Package with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$package = PackageQuery::create()->findOneById($id);
+		$package = $this->get($id);
 
 		if ($package === null) {
 			return new NotFound(['message' => 'Package not found.']);
@@ -67,6 +71,7 @@ trait PackageDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +105,18 @@ trait PackageDomainTrait {
 	 * Returns one Package with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$package = PackageQuery::create()->findOneById($id);
+		$package = $this->get($id);
 
 		// check existence
 		if ($package === null) {
-			$payload = new NotFound(['message' => 'Package not found.']);
-		} else {
-			$payload = new Found(['model' => $package]);
+			return new NotFound(['message' => 'Package not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $package]);
 	}
 
 	/**
@@ -121,10 +124,11 @@ trait PackageDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$package = PackageQuery::create()->findOneById($id);
+		$package = $this->get($id);
 
 		if ($package === null) {
 			return new NotFound(['message' => 'Package not found.']);
@@ -158,6 +162,25 @@ trait PackageDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(PackageQuery $query, $filter);
+
+	/**
+	 * Returns one Package with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return Package|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$package = PackageQuery::create()->findOneById($id);
+		$this->pool->set($id, $package);
+
+		return $package;
+	}
 
 	/**
 	 * Returns the service container

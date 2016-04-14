@@ -5,8 +5,7 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use keeko\core\model\UserQuery;
+use keeko\core\domain\UserDomain;
 
 /**
  */
@@ -27,13 +26,8 @@ class UserGroupReadAction extends AbstractAction {
 	 */
 	public function run(Request $request) {
 		$id = $this->getParam('id');
-		$user = UserQuery::create()->findOneById($id);
-
-		if ($user === null) {
-			throw new ResourceNotFoundException('User with id ' . $id . ' does not exist');
-		}
-
-		// run response
-		return $this->response->run($request, $user);
+		$domain = new UserDomain($this->getServiceContainer());
+		$payload = $domain->read($id);
+		return $this->responder->run($request, $payload);
 	}
 }

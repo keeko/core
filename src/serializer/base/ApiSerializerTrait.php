@@ -12,15 +12,14 @@ trait ApiSerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function action($model, $related) {
+	public function action($model) {
 		$serializer = Action::getSerializer();
 		$relationship = new Relationship(new Resource($model->getAction(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'action');
 	}
 
 	/**
@@ -85,13 +84,5 @@ trait ApiSerializerTrait {
 		$this->hydrateRelationships($model, $data);
 
 		return $model;
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setAction($model, $data) {
-		$model->setActionId($data['id']);
 	}
 }

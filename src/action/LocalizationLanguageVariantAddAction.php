@@ -5,10 +5,9 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use phootwork\json\Json;
 use Tobscure\JsonApi\Exception\InvalidParameterException;
-use keeko\core\model\LocalizationQuery;
-use keeko\core\model\LanguageVariantQuery;
+use keeko\core\domain\LocalizationDomain;
 
 /**
  */
@@ -28,29 +27,14 @@ class LocalizationLanguageVariantAddAction extends AbstractAction {
 	 * @return Response
 	 */
 	public function run(Request $request) {
-		$body = $request->getContent();
+		$body = Json::decode($request->getContent());
 		if (!isset($body['data'])) {
 			throw new InvalidParameterException();
 		}
 		$data = $body['data'];
-
 		$id = $this->getParam('id');
-		$localization = LocalizationQuery::create()->findOneById($id);
-
-		if ($localization === null) {
-			throw new ResourceNotFoundException('localization with id ' . $id . ' does not exist');
-		} 
-
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				throw new InvalidParameterException();
-			}
-			$languageVariant = LanguageVariantQuery::create()->findOneById($entry['id']);
-			$localization->addLanguageVariant($languageVariant);
-			$localization->save();	
-		}
-
-		// run response
-		return $this->response->run($request, $localization);
+		$domain = new LocalizationDomain($this->getServiceContainer());
+		$payload = $domain->addLanguageVariant($id, $data);
+		return $this->responder->run($request, $payload);
 	}
 }

@@ -5,11 +5,9 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use phootwork\json\Json;
 use Tobscure\JsonApi\Exception\InvalidParameterException;
-use keeko\core\model\UserGroupQuery;
-use keeko\core\model\GroupQuery;
-use keeko\core\model\UserQuery;
+use keeko\core\domain\GroupDomain;
 
 /**
  */
@@ -29,33 +27,14 @@ class GroupUserUpdateAction extends AbstractAction {
 	 * @return Response
 	 */
 	public function run(Request $request) {
-		$body = $request->getContent();
+		$body = Json::decode($request->getContent());
 		if (!isset($body['data'])) {
 			throw new InvalidParameterException();
 		}
 		$data = $body['data'];
-
 		$id = $this->getParam('id');
-		$group = GroupQuery::create()->findOneById($id);
-
-		if ($group === null) {
-			throw new ResourceNotFoundException('group with id ' . $id . ' does not exist');
-		}
-
-		// remove all relationships before
-		UserGroupQuery::create()->filterByGroup($group)->delete();
-
-		// add them
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				throw new InvalidParameterException();
-			}
-			$user = UserQuery::create()->findOneById($entry['id']);
-			$group->addUser($user);
-			$group->save();	
-		}
-
-		// run response
-		return $this->response->run($request, $group);
+		$domain = new GroupDomain($this->getServiceContainer());
+		$payload = $domain->updateUser($id, $data);
+		return $this->responder->run($request, $payload);
 	}
 }

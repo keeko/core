@@ -25,7 +25,7 @@
 		<column name="default_script_id" type="INTEGER" size="10" />
 
 		<!-- Foreign Keys -->
-		<foreign-key foreignTable="language" name="language_fk_parent" refPhpName="Sublanguage">
+		<foreign-key foreignTable="language" name="language_fk_parent" phpName="Parent" refPhpName="Sublanguage">
 			<reference local="parent_id" foreign="id" />
 		</foreign-key>
 		<foreign-key foreignTable="language_scope" name="language_fk_scope" phpName="Scope">
@@ -164,7 +164,7 @@
 		<foreign-key foreignTable="country" name="subdivision_fk_country">
 			<reference local="country_id" foreign="id" />
 		</foreign-key>
-		<foreign-key foreignTable="region_type" name="subdivision_fk_type">
+		<foreign-key foreignTable="region_type" name="subdivision_fk_type" phpName="Type">
 			<reference local="type_id" foreign="id" />
 		</foreign-key>
 	</table>
@@ -176,7 +176,7 @@
 		<column name="area_id" type="INTEGER" size="10" required="true" />
 
 		<!-- Foreign Keys -->
-		<foreign-key foreignTable="region_area" name="region_type_fk_area">
+		<foreign-key foreignTable="region_area" name="region_type_fk_area" phpName="Area" refPhpName="Type">
 			<reference local="area_id" foreign="id" />
 		</foreign-key>
 	</table>
@@ -201,7 +201,7 @@
 		<column name="is_default" type="BOOLEAN" />
 
 		<!-- Foreign Keys -->
-		<foreign-key foreignTable="localization" name="localization_fk_parent">
+		<foreign-key foreignTable="localization" name="localization_fk_parent" phpName="Parent">
 			<reference local="parent_id" foreign="id" />
 		</foreign-key>
 		<foreign-key foreignTable="language" name="localization_fk_language" phpName="Language">

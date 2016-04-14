@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\Subdivision;
 use keeko\core\model\SubdivisionQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -17,6 +19,7 @@ trait SubdivisionDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -50,20 +53,18 @@ trait SubdivisionDomainTrait {
 	 * Returns one Subdivision with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$subdivision = SubdivisionQuery::create()->findOneById($id);
+		$subdivision = $this->get($id);
 
 		// check existence
 		if ($subdivision === null) {
-			$payload = new NotFound(['message' => 'Subdivision not found.']);
-		} else {
-			$payload = new Found(['model' => $subdivision]);
+			return new NotFound(['message' => 'Subdivision not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $subdivision]);
 	}
 
 	/**
@@ -73,6 +74,25 @@ trait SubdivisionDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(SubdivisionQuery $query, $filter);
+
+	/**
+	 * Returns one Subdivision with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return Subdivision|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$subdivision = SubdivisionQuery::create()->findOneById($id);
+		$this->pool->set($id, $subdivision);
+
+		return $subdivision;
+	}
 
 	/**
 	 * Returns the service container

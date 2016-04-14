@@ -24,6 +24,6 @@ class LanguageListAction extends AbstractAction {
 		$params = new Parameters($request->query->all());
 		$domain = new LanguageDomain($this->getServiceContainer());
 		$payload = $domain->paginate($params);
-		return $this->response->run($request, $payload);
+		return $this->responder->run($request, $payload);
 	}
 }

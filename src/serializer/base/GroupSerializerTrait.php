@@ -4,26 +4,11 @@ namespace keeko\core\serializer\base;
 use keeko\framework\utils\HydrateUtils;
 use Tobscure\JsonApi\Relationship;
 use keeko\core\model\User;
-use keeko\core\model\UserQuery;
 use Tobscure\JsonApi\Collection;
-use keeko\core\model\UserGroupQuery;
 
 /**
  */
 trait GroupSerializerTrait {
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function addUsers($model, $data) {
-		foreach ($data as $item) {
-			$user = UserQuery::create()->findOneById($item['id']);
-			if ($user !== null) {
-				$model->addUser($user);
-			}
-		}
-	}
 
 	/**
 	 * @param mixed $model
@@ -93,32 +78,9 @@ trait GroupSerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $data
 	 */
-	public function removeUsers($model, $data) {
-		foreach ($data as $item) {
-			$user = UserQuery::create()->findOneById($item['id']);
-			if ($user !== null) {
-				$model->removeUser($user);
-			}
-		}
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setUsers($model, $data) {
-		UserGroupQuery::create()->filterByUser($model)->delete();
-		$this->addUsers($model, $data);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $related
-	 */
-	public function user($model, $related) {
+	public function user($model) {
 		$relationship = new Relationship(new Collection($model->getUsers(), User::getSerializer()));
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'user');
 	}
 }

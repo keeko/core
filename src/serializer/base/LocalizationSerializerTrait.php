@@ -8,9 +8,7 @@ use Tobscure\JsonApi\Resource;
 use keeko\core\model\Language;
 use keeko\core\model\LanguageScript;
 use keeko\core\model\LanguageVariant;
-use keeko\core\model\LanguageVariantQuery;
 use Tobscure\JsonApi\Collection;
-use keeko\core\model\LocalizationVariantQuery;
 
 /**
  */
@@ -18,28 +16,14 @@ trait LocalizationSerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $data
 	 */
-	public function addLanguageVariants($model, $data) {
-		foreach ($data as $item) {
-			$languageVariant = LanguageVariantQuery::create()->findOneById($item['id']);
-			if ($languageVariant !== null) {
-				$model->addLanguageVariant($languageVariant);
-			}
-		}
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $related
-	 */
-	public function extLang($model, $related) {
+	public function extLang($model) {
 		$serializer = Language::getSerializer();
 		$relationship = new Relationship(new Resource($model->getExtLang(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'ext-lang');
 	}
 
 	/**
@@ -77,7 +61,7 @@ trait LocalizationSerializerTrait {
 	 */
 	public function getRelationships() {
 		return [
-			'localization' => Localization::getSerializer()->getType(null),
+			'parent' => Localization::getSerializer()->getType(null),
 			'language' => Language::getSerializer()->getType(null),
 			'ext-lang' => Language::getSerializer()->getType(null),
 			'script' => LanguageScript::getSerializer()->getType(null),
@@ -116,103 +100,45 @@ trait LocalizationSerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function language($model, $related) {
+	public function language($model) {
 		$serializer = Language::getSerializer();
 		$relationship = new Relationship(new Resource($model->getLanguage(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'language');
 	}
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function languageVariant($model, $related) {
+	public function languageVariant($model) {
 		$relationship = new Relationship(new Collection($model->getLanguageVariants(), LanguageVariant::getSerializer()));
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'language-variant');
 	}
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function localization($model, $related) {
+	public function parent($model) {
 		$serializer = Localization::getSerializer();
-		$relationship = new Relationship(new Resource($model->getLocalization(), $serializer));
+		$relationship = new Relationship(new Resource($model->getParent(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'parent');
 	}
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $data
 	 */
-	public function removeLanguageVariants($model, $data) {
-		foreach ($data as $item) {
-			$languageVariant = LanguageVariantQuery::create()->findOneById($item['id']);
-			if ($languageVariant !== null) {
-				$model->removeLanguageVariant($languageVariant);
-			}
-		}
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $related
-	 */
-	public function script($model, $related) {
+	public function script($model) {
 		$serializer = LanguageScript::getSerializer();
 		$relationship = new Relationship(new Resource($model->getScript(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setExtLang($model, $data) {
-		$model->setExtLangId($data['id']);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setLanguage($model, $data) {
-		$model->setLanguageId($data['id']);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setLanguageVariants($model, $data) {
-		LocalizationVariantQuery::create()->filterByLanguageVariant($model)->delete();
-		$this->addLanguageVariants($model, $data);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setLocalization($model, $data) {
-		$model->setLocalizationId($data['id']);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setScript($model, $data) {
-		$model->setScriptId($data['id']);
+		return $this->addRelationshipSelfLink($relationship, $model, 'script');
 	}
 }

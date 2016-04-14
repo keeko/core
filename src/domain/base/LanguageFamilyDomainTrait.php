@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\LanguageFamily;
 use keeko\core\model\LanguageFamilyQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -17,6 +19,7 @@ trait LanguageFamilyDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -50,20 +53,18 @@ trait LanguageFamilyDomainTrait {
 	 * Returns one LanguageFamily with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$languageFamily = LanguageFamilyQuery::create()->findOneById($id);
+		$languageFamily = $this->get($id);
 
 		// check existence
 		if ($languageFamily === null) {
-			$payload = new NotFound(['message' => 'LanguageFamily not found.']);
-		} else {
-			$payload = new Found(['model' => $languageFamily]);
+			return new NotFound(['message' => 'LanguageFamily not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $languageFamily]);
 	}
 
 	/**
@@ -73,6 +74,25 @@ trait LanguageFamilyDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(LanguageFamilyQuery $query, $filter);
+
+	/**
+	 * Returns one LanguageFamily with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return LanguageFamily|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$languageFamily = LanguageFamilyQuery::create()->findOneById($id);
+		$this->pool->set($id, $languageFamily);
+
+		return $languageFamily;
+	}
 
 	/**
 	 * Returns the service container

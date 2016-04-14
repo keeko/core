@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\Activity;
 use keeko\core\model\ActivityQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -23,6 +25,7 @@ trait ActivityDomainTrait {
 	 * Creates a new Activity with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +47,11 @@ trait ActivityDomainTrait {
 	 * Deletes a Activity with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$activity = ActivityQuery::create()->findOneById($id);
+		$activity = $this->get($id);
 
 		if ($activity === null) {
 			return new NotFound(['message' => 'Activity not found.']);
@@ -67,6 +71,7 @@ trait ActivityDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +105,93 @@ trait ActivityDomainTrait {
 	 * Returns one Activity with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$activity = ActivityQuery::create()->findOneById($id);
+		$activity = $this->get($id);
 
 		// check existence
 		if ($activity === null) {
-			$payload = new NotFound(['message' => 'Activity not found.']);
-		} else {
-			$payload = new Found(['model' => $activity]);
+			return new NotFound(['message' => 'Activity not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $activity]);
+	}
+
+	/**
+	 * Sets the User id
+	 * 
+	 * @param mixed $id
+	 * @param mixed $actorId
+	 * @return PayloadInterface
+	 */
+	public function setActorId($id, $actorId) {
+		// find
+		$activity = $this->get($id);
+
+		if ($activity === null) {
+			return new NotFound(['message' => 'Activity not found.']);
+		}
+
+		// update
+		if ($activity->getActorId() !== $actorId) {
+			$activity->setActorId($actorId);
+			$activity->save();
+			return Updated(['model' => $activity]);
+		}
+
+		return NotUpdated(['model' => $activity]);
+	}
+
+	/**
+	 * Sets the ActivityObject id
+	 * 
+	 * @param mixed $id
+	 * @param mixed $objectId
+	 * @return PayloadInterface
+	 */
+	public function setObjectId($id, $objectId) {
+		// find
+		$activity = $this->get($id);
+
+		if ($activity === null) {
+			return new NotFound(['message' => 'Activity not found.']);
+		}
+
+		// update
+		if ($activity->getObjectId() !== $objectId) {
+			$activity->setObjectId($objectId);
+			$activity->save();
+			return Updated(['model' => $activity]);
+		}
+
+		return NotUpdated(['model' => $activity]);
+	}
+
+	/**
+	 * Sets the ActivityObject id
+	 * 
+	 * @param mixed $id
+	 * @param mixed $targetId
+	 * @return PayloadInterface
+	 */
+	public function setTargetId($id, $targetId) {
+		// find
+		$activity = $this->get($id);
+
+		if ($activity === null) {
+			return new NotFound(['message' => 'Activity not found.']);
+		}
+
+		// update
+		if ($activity->getTargetId() !== $targetId) {
+			$activity->setTargetId($targetId);
+			$activity->save();
+			return Updated(['model' => $activity]);
+		}
+
+		return NotUpdated(['model' => $activity]);
 	}
 
 	/**
@@ -121,10 +199,11 @@ trait ActivityDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$activity = ActivityQuery::create()->findOneById($id);
+		$activity = $this->get($id);
 
 		if ($activity === null) {
 			return new NotFound(['message' => 'Activity not found.']);
@@ -158,6 +237,25 @@ trait ActivityDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(ActivityQuery $query, $filter);
+
+	/**
+	 * Returns one Activity with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return Activity|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$activity = ActivityQuery::create()->findOneById($id);
+		$this->pool->set($id, $activity);
+
+		return $activity;
+	}
 
 	/**
 	 * Returns the service container

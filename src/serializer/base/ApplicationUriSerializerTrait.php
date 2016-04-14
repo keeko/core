@@ -13,15 +13,14 @@ trait ApplicationUriSerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function application($model, $related) {
+	public function application($model) {
 		$serializer = Application::getSerializer();
 		$relationship = new Relationship(new Resource($model->getApplication(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'application');
 	}
 
 	/**
@@ -92,30 +91,13 @@ trait ApplicationUriSerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function localization($model, $related) {
+	public function localization($model) {
 		$serializer = Localization::getSerializer();
 		$relationship = new Relationship(new Resource($model->getLocalization(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setApplication($model, $data) {
-		$model->setApplicationId($data['id']);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setLocalization($model, $data) {
-		$model->setLocalizationId($data['id']);
+		return $this->addRelationshipSelfLink($relationship, $model, 'localization');
 	}
 }

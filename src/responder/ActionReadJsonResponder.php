@@ -6,17 +6,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use keeko\framework\domain\payload\PayloadInterface;
 use keeko\framework\foundation\AbstractPayloadResponder;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use keeko\core\model\LanguageType;
+use keeko\core\model\Action;
+use keeko\core\model\Module;
+use keeko\core\model\Group;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Parameters;
 
 /**
- * Automatically generated JsonResponder for Reads a language-type
+ * Automatically generated JsonResponder for Reads an action
  * 
  * @author gossi
  */
-class LanguageTypeReadJsonResponder extends AbstractPayloadResponder {
+class ActionReadJsonResponder extends AbstractPayloadResponder {
 
 	/**
 	 * @param Request $request
@@ -24,11 +26,13 @@ class LanguageTypeReadJsonResponder extends AbstractPayloadResponder {
 	 */
 	public function found(Request $request, PayloadInterface $payload) {
 		$params = new Parameters($request->query->all());
-		$serializer = LanguageType::getSerializer();
-		$resource = new Resource($payload->get('model'), $serializer);
-		$resource = $resource->with($params->getInclude([]));
+		$serializer = Action::getSerializer();
+		$resource = new Resource($payload->getModel(), $serializer);
+		$resource = $resource->with($params->getInclude(['module', 'groups']));
 		$resource = $resource->fields($params->getFields([
-			'language-type' => LanguageType::getSerializer()->getFields()
+			'action' => Action::getSerializer()->getFields(),
+			'module' => Module::getSerializer()->getFields(),
+			'groups' => Group::getSerializer()->getFields()
 		]));
 		$document = new Document($resource);
 
@@ -40,7 +44,7 @@ class LanguageTypeReadJsonResponder extends AbstractPayloadResponder {
 	 * @param PayloadInterface $payload
 	 */
 	public function notFound(Request $request, PayloadInterface $payload) {
-		throw new ResourceNotFoundException($payload->get('message'));
+		throw new ResourceNotFoundException($payload->getMessage());
 	}
 
 	/**

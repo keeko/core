@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\RegionArea;
 use keeko\core\model\RegionAreaQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -17,6 +19,7 @@ trait RegionAreaDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -50,20 +53,18 @@ trait RegionAreaDomainTrait {
 	 * Returns one RegionArea with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$regionArea = RegionAreaQuery::create()->findOneById($id);
+		$regionArea = $this->get($id);
 
 		// check existence
 		if ($regionArea === null) {
-			$payload = new NotFound(['message' => 'RegionArea not found.']);
-		} else {
-			$payload = new Found(['model' => $regionArea]);
+			return new NotFound(['message' => 'RegionArea not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $regionArea]);
 	}
 
 	/**
@@ -73,6 +74,25 @@ trait RegionAreaDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(RegionAreaQuery $query, $filter);
+
+	/**
+	 * Returns one RegionArea with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return RegionArea|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$regionArea = RegionAreaQuery::create()->findOneById($id);
+		$this->pool->set($id, $regionArea);
+
+		return $regionArea;
+	}
 
 	/**
 	 * Returns the service container

@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\Module;
 use keeko\core\model\ModuleQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -23,6 +25,7 @@ trait ModuleDomainTrait {
 	 * Creates a new Module with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +47,11 @@ trait ModuleDomainTrait {
 	 * Deletes a Module with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$module = ModuleQuery::create()->findOneById($id);
+		$module = $this->get($id);
 
 		if ($module === null) {
 			return new NotFound(['message' => 'Module not found.']);
@@ -67,6 +71,7 @@ trait ModuleDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +105,43 @@ trait ModuleDomainTrait {
 	 * Returns one Module with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$module = ModuleQuery::create()->findOneById($id);
+		$module = $this->get($id);
 
 		// check existence
 		if ($module === null) {
-			$payload = new NotFound(['message' => 'Module not found.']);
-		} else {
-			$payload = new Found(['model' => $module]);
+			return new NotFound(['message' => 'Module not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $module]);
+	}
+
+	/**
+	 * Sets the Package id
+	 * 
+	 * @param mixed $id
+	 * @param mixed $id
+	 * @return PayloadInterface
+	 */
+	public function setPackageId($id, $id) {
+		// find
+		$module = $this->get($id);
+
+		if ($module === null) {
+			return new NotFound(['message' => 'Module not found.']);
+		}
+
+		// update
+		if ($module->getId() !== $id) {
+			$module->setId($id);
+			$module->save();
+			return Updated(['model' => $module]);
+		}
+
+		return NotUpdated(['model' => $module]);
 	}
 
 	/**
@@ -121,10 +149,11 @@ trait ModuleDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$module = ModuleQuery::create()->findOneById($id);
+		$module = $this->get($id);
 
 		if ($module === null) {
 			return new NotFound(['message' => 'Module not found.']);
@@ -158,6 +187,25 @@ trait ModuleDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(ModuleQuery $query, $filter);
+
+	/**
+	 * Returns one Module with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return Module|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$module = ModuleQuery::create()->findOneById($id);
+		$this->pool->set($id, $module);
+
+		return $module;
+	}
 
 	/**
 	 * Returns the service container

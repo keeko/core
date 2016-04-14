@@ -5,7 +5,7 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\core\model\ApplicationQuery;
+use keeko\core\domain\ApplicationDomain;
 
 /**
  */
@@ -26,9 +26,8 @@ class ApplicationPackageReadAction extends AbstractAction {
 	 */
 	public function run(Request $request) {
 		$id = $this->getParam('id');
-		$application = ApplicationQuery::create()->findOneById($id);
-
-		// run response
-		return $this->response->run($request, $application);
+		$domain = new ApplicationDomain($this->getServiceContainer());
+		$payload = $domain->read($id);
+		return $this->responder->run($request, $payload);
 	}
 }

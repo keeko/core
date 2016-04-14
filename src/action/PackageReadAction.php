@@ -31,6 +31,6 @@ class PackageReadAction extends AbstractAction {
 		$id = $this->getParam('id');
 		$domain = new PackageDomain($this->getServiceContainer());
 		$payload = $domain->read($id);
-		return $this->response->run($request, $payload);
+		return $this->responder->run($request, $payload);
 	}
 }

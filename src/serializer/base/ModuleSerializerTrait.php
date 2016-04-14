@@ -81,22 +81,13 @@ trait ModuleSerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function package($model, $related) {
+	public function package($model) {
 		$serializer = Package::getSerializer();
 		$relationship = new Relationship(new Resource($model->getPackage(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setPackage($model, $data) {
-		$model->setPackageId($data['id']);
+		return $this->addRelationshipSelfLink($relationship, $model, 'package');
 	}
 }

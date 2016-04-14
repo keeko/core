@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\Application;
 use keeko\core\model\ApplicationQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -23,6 +25,7 @@ trait ApplicationDomainTrait {
 	 * Creates a new Application with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +47,11 @@ trait ApplicationDomainTrait {
 	 * Deletes a Application with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$application = ApplicationQuery::create()->findOneById($id);
+		$application = $this->get($id);
 
 		if ($application === null) {
 			return new NotFound(['message' => 'Application not found.']);
@@ -67,6 +71,7 @@ trait ApplicationDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +105,43 @@ trait ApplicationDomainTrait {
 	 * Returns one Application with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$application = ApplicationQuery::create()->findOneById($id);
+		$application = $this->get($id);
 
 		// check existence
 		if ($application === null) {
-			$payload = new NotFound(['message' => 'Application not found.']);
-		} else {
-			$payload = new Found(['model' => $application]);
+			return new NotFound(['message' => 'Application not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $application]);
+	}
+
+	/**
+	 * Sets the Package id
+	 * 
+	 * @param mixed $id
+	 * @param mixed $id
+	 * @return PayloadInterface
+	 */
+	public function setPackageId($id, $id) {
+		// find
+		$application = $this->get($id);
+
+		if ($application === null) {
+			return new NotFound(['message' => 'Application not found.']);
+		}
+
+		// update
+		if ($application->getId() !== $id) {
+			$application->setId($id);
+			$application->save();
+			return Updated(['model' => $application]);
+		}
+
+		return NotUpdated(['model' => $application]);
 	}
 
 	/**
@@ -121,10 +149,11 @@ trait ApplicationDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$application = ApplicationQuery::create()->findOneById($id);
+		$application = $this->get($id);
 
 		if ($application === null) {
 			return new NotFound(['message' => 'Application not found.']);
@@ -158,6 +187,25 @@ trait ApplicationDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(ApplicationQuery $query, $filter);
+
+	/**
+	 * Returns one Application with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return Application|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$application = ApplicationQuery::create()->findOneById($id);
+		$this->pool->set($id, $application);
+
+		return $application;
+	}
 
 	/**
 	 * Returns the service container

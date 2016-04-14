@@ -5,7 +5,7 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\core\model\SessionQuery;
+use keeko\core\domain\SessionDomain;
 
 /**
  */
@@ -26,9 +26,8 @@ class SessionUserReadAction extends AbstractAction {
 	 */
 	public function run(Request $request) {
 		$id = $this->getParam('id');
-		$session = SessionQuery::create()->findOneById($id);
-
-		// run response
-		return $this->response->run($request, $session);
+		$domain = new SessionDomain($this->getServiceContainer());
+		$payload = $domain->read($id);
+		return $this->responder->run($request, $payload);
 	}
 }

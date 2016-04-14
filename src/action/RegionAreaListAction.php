@@ -24,6 +24,6 @@ class RegionAreaListAction extends AbstractAction {
 		$params = new Parameters($request->query->all());
 		$domain = new RegionAreaDomain($this->getServiceContainer());
 		$payload = $domain->paginate($params);
-		return $this->response->run($request, $payload);
+		return $this->responder->run($request, $payload);
 	}
 }

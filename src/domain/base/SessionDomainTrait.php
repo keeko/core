@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\Session;
 use keeko\core\model\SessionQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -23,6 +25,7 @@ trait SessionDomainTrait {
 	 * Creates a new Session with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +47,11 @@ trait SessionDomainTrait {
 	 * Deletes a Session with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$session = SessionQuery::create()->findOneById($id);
+		$session = $this->get($id);
 
 		if ($session === null) {
 			return new NotFound(['message' => 'Session not found.']);
@@ -67,6 +71,7 @@ trait SessionDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +105,43 @@ trait SessionDomainTrait {
 	 * Returns one Session with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$session = SessionQuery::create()->findOneById($id);
+		$session = $this->get($id);
 
 		// check existence
 		if ($session === null) {
-			$payload = new NotFound(['message' => 'Session not found.']);
-		} else {
-			$payload = new Found(['model' => $session]);
+			return new NotFound(['message' => 'Session not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $session]);
+	}
+
+	/**
+	 * Sets the User id
+	 * 
+	 * @param mixed $id
+	 * @param mixed $userId
+	 * @return PayloadInterface
+	 */
+	public function setUserId($id, $userId) {
+		// find
+		$session = $this->get($id);
+
+		if ($session === null) {
+			return new NotFound(['message' => 'Session not found.']);
+		}
+
+		// update
+		if ($session->getUserId() !== $userId) {
+			$session->setUserId($userId);
+			$session->save();
+			return Updated(['model' => $session]);
+		}
+
+		return NotUpdated(['model' => $session]);
 	}
 
 	/**
@@ -121,10 +149,11 @@ trait SessionDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$session = SessionQuery::create()->findOneById($id);
+		$session = $this->get($id);
 
 		if ($session === null) {
 			return new NotFound(['message' => 'Session not found.']);
@@ -158,6 +187,25 @@ trait SessionDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(SessionQuery $query, $filter);
+
+	/**
+	 * Returns one Session with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return Session|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$session = SessionQuery::create()->findOneById($id);
+		$this->pool->set($id, $session);
+
+		return $session;
+	}
 
 	/**
 	 * Returns the service container

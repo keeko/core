@@ -5,8 +5,7 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use keeko\core\model\GroupQuery;
+use keeko\core\domain\GroupDomain;
 
 /**
  */
@@ -27,13 +26,8 @@ class GroupUserReadAction extends AbstractAction {
 	 */
 	public function run(Request $request) {
 		$id = $this->getParam('id');
-		$group = GroupQuery::create()->findOneById($id);
-
-		if ($group === null) {
-			throw new ResourceNotFoundException('Group with id ' . $id . ' does not exist');
-		}
-
-		// run response
-		return $this->response->run($request, $group);
+		$domain = new GroupDomain($this->getServiceContainer());
+		$payload = $domain->read($id);
+		return $this->responder->run($request, $payload);
 	}
 }

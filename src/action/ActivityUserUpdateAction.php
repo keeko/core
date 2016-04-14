@@ -5,10 +5,9 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\framework\exceptions\ValidationException;
-use Tobscure\JsonApi\Exception\InvalidParameterException;
 use phootwork\json\Json;
-use keeko\core\model\ActivityQuery;
+use Tobscure\JsonApi\Exception\InvalidParameterException;
+use keeko\core\domain\ActivityDomain;
 
 /**
  */
@@ -33,21 +32,9 @@ class ActivityUserUpdateAction extends AbstractAction {
 			throw new InvalidParameterException();
 		}
 		$data = $body['data'];
-
-		if (!isset($data['id'])) {
-			throw new InvalidParameterException();
-		}
-
 		$id = $this->getParam('id');
-		$activity = ActivityQuery::create()->findOneById($id);
-		$activity->setUserId($data['id']);
-
-		// validate
-		if (!$activity->validate()) {
-			throw new ValidationException($activity->getValidationFailures());
-		} else {
-			$activity->save();
-			return $this->response->run($request, $activity);
-		}
+		$domain = new ActivityDomain($this->getServiceContainer());
+		$payload = $domain->setActor($id, $data);
+		return $this->responder->run($request, $payload);
 	}
 }

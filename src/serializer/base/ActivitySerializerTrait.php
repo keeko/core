@@ -13,15 +13,14 @@ trait ActivitySerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function actor($model, $related) {
+	public function actor($model) {
 		$serializer = User::getSerializer();
 		$relationship = new Relationship(new Resource($model->getActor(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'actor');
 	}
 
 	/**
@@ -92,51 +91,25 @@ trait ActivitySerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function object($model, $related) {
+	public function object($model) {
 		$serializer = ActivityObject::getSerializer();
 		$relationship = new Relationship(new Resource($model->getObject(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'object');
 	}
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $data
 	 */
-	public function setActor($model, $data) {
-		$model->setActorId($data['id']);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setObject($model, $data) {
-		$model->setObjectId($data['id']);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setTarget($model, $data) {
-		$model->setTargetId($data['id']);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $related
-	 */
-	public function target($model, $related) {
+	public function target($model) {
 		$serializer = ActivityObject::getSerializer();
 		$relationship = new Relationship(new Resource($model->getTarget(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'target');
 	}
 }

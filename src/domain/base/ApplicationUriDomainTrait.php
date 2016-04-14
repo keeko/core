@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\ApplicationUri;
 use keeko\core\model\ApplicationUriQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -23,6 +25,7 @@ trait ApplicationUriDomainTrait {
 	 * Creates a new ApplicationUri with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +47,11 @@ trait ApplicationUriDomainTrait {
 	 * Deletes a ApplicationUri with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$applicationUri = ApplicationUriQuery::create()->findOneById($id);
+		$applicationUri = $this->get($id);
 
 		if ($applicationUri === null) {
 			return new NotFound(['message' => 'ApplicationUri not found.']);
@@ -67,6 +71,7 @@ trait ApplicationUriDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +105,68 @@ trait ApplicationUriDomainTrait {
 	 * Returns one ApplicationUri with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$applicationUri = ApplicationUriQuery::create()->findOneById($id);
+		$applicationUri = $this->get($id);
 
 		// check existence
 		if ($applicationUri === null) {
-			$payload = new NotFound(['message' => 'ApplicationUri not found.']);
-		} else {
-			$payload = new Found(['model' => $applicationUri]);
+			return new NotFound(['message' => 'ApplicationUri not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $applicationUri]);
+	}
+
+	/**
+	 * Sets the Application id
+	 * 
+	 * @param mixed $id
+	 * @param mixed $applicationId
+	 * @return PayloadInterface
+	 */
+	public function setApplicationId($id, $applicationId) {
+		// find
+		$applicationUri = $this->get($id);
+
+		if ($applicationUri === null) {
+			return new NotFound(['message' => 'ApplicationUri not found.']);
+		}
+
+		// update
+		if ($applicationUri->getApplicationId() !== $applicationId) {
+			$applicationUri->setApplicationId($applicationId);
+			$applicationUri->save();
+			return Updated(['model' => $applicationUri]);
+		}
+
+		return NotUpdated(['model' => $applicationUri]);
+	}
+
+	/**
+	 * Sets the Localization id
+	 * 
+	 * @param mixed $id
+	 * @param mixed $localizationId
+	 * @return PayloadInterface
+	 */
+	public function setLocalizationId($id, $localizationId) {
+		// find
+		$applicationUri = $this->get($id);
+
+		if ($applicationUri === null) {
+			return new NotFound(['message' => 'ApplicationUri not found.']);
+		}
+
+		// update
+		if ($applicationUri->getLocalizationId() !== $localizationId) {
+			$applicationUri->setLocalizationId($localizationId);
+			$applicationUri->save();
+			return Updated(['model' => $applicationUri]);
+		}
+
+		return NotUpdated(['model' => $applicationUri]);
 	}
 
 	/**
@@ -121,10 +174,11 @@ trait ApplicationUriDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$applicationUri = ApplicationUriQuery::create()->findOneById($id);
+		$applicationUri = $this->get($id);
 
 		if ($applicationUri === null) {
 			return new NotFound(['message' => 'ApplicationUri not found.']);
@@ -158,6 +212,25 @@ trait ApplicationUriDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(ApplicationUriQuery $query, $filter);
+
+	/**
+	 * Returns one ApplicationUri with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return ApplicationUri|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$applicationUri = ApplicationUriQuery::create()->findOneById($id);
+		$this->pool->set($id, $applicationUri);
+
+		return $applicationUri;
+	}
 
 	/**
 	 * Returns the service container

@@ -5,10 +5,9 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\framework\exceptions\ValidationException;
-use Tobscure\JsonApi\Exception\InvalidParameterException;
 use phootwork\json\Json;
-use keeko\core\model\ModuleQuery;
+use Tobscure\JsonApi\Exception\InvalidParameterException;
+use keeko\core\domain\ModuleDomain;
 
 /**
  */
@@ -33,21 +32,9 @@ class ModulePackageUpdateAction extends AbstractAction {
 			throw new InvalidParameterException();
 		}
 		$data = $body['data'];
-
-		if (!isset($data['id'])) {
-			throw new InvalidParameterException();
-		}
-
 		$id = $this->getParam('id');
-		$module = ModuleQuery::create()->findOneById($id);
-		$module->setPackageId($data['id']);
-
-		// validate
-		if (!$module->validate()) {
-			throw new ValidationException($module->getValidationFailures());
-		} else {
-			$module->save();
-			return $this->response->run($request, $module);
-		}
+		$domain = new ModuleDomain($this->getServiceContainer());
+		$payload = $domain->setPackage($id, $data);
+		return $this->responder->run($request, $payload);
 	}
 }

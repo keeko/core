@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\LanguageScript;
 use keeko\core\model\LanguageScriptQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -17,6 +19,7 @@ trait LanguageScriptDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -50,20 +53,18 @@ trait LanguageScriptDomainTrait {
 	 * Returns one LanguageScript with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$languageScript = LanguageScriptQuery::create()->findOneById($id);
+		$languageScript = $this->get($id);
 
 		// check existence
 		if ($languageScript === null) {
-			$payload = new NotFound(['message' => 'LanguageScript not found.']);
-		} else {
-			$payload = new Found(['model' => $languageScript]);
+			return new NotFound(['message' => 'LanguageScript not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $languageScript]);
 	}
 
 	/**
@@ -73,6 +74,25 @@ trait LanguageScriptDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(LanguageScriptQuery $query, $filter);
+
+	/**
+	 * Returns one LanguageScript with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return LanguageScript|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$languageScript = LanguageScriptQuery::create()->findOneById($id);
+		$this->pool->set($id, $languageScript);
+
+		return $languageScript;
+	}
 
 	/**
 	 * Returns the service container

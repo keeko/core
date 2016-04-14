@@ -5,10 +5,9 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\framework\exceptions\ValidationException;
-use Tobscure\JsonApi\Exception\InvalidParameterException;
 use phootwork\json\Json;
-use keeko\core\model\LocalizationQuery;
+use Tobscure\JsonApi\Exception\InvalidParameterException;
+use keeko\core\domain\LocalizationDomain;
 
 /**
  */
@@ -33,21 +32,9 @@ class LocalizationLanguageUpdateAction extends AbstractAction {
 			throw new InvalidParameterException();
 		}
 		$data = $body['data'];
-
-		if (!isset($data['id'])) {
-			throw new InvalidParameterException();
-		}
-
 		$id = $this->getParam('id');
-		$localization = LocalizationQuery::create()->findOneById($id);
-		$localization->setLanguageId($data['id']);
-
-		// validate
-		if (!$localization->validate()) {
-			throw new ValidationException($localization->getValidationFailures());
-		} else {
-			$localization->save();
-			return $this->response->run($request, $localization);
-		}
+		$domain = new LocalizationDomain($this->getServiceContainer());
+		$payload = $domain->setExtLang($id, $data);
+		return $this->responder->run($request, $payload);
 	}
 }

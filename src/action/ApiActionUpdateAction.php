@@ -5,10 +5,9 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\framework\exceptions\ValidationException;
-use Tobscure\JsonApi\Exception\InvalidParameterException;
 use phootwork\json\Json;
-use keeko\core\model\ApiQuery;
+use Tobscure\JsonApi\Exception\InvalidParameterException;
+use keeko\core\domain\ApiDomain;
 
 /**
  */
@@ -33,21 +32,9 @@ class ApiActionUpdateAction extends AbstractAction {
 			throw new InvalidParameterException();
 		}
 		$data = $body['data'];
-
-		if (!isset($data['id'])) {
-			throw new InvalidParameterException();
-		}
-
 		$id = $this->getParam('id');
-		$api = ApiQuery::create()->findOneById($id);
-		$api->setActionId($data['id']);
-
-		// validate
-		if (!$api->validate()) {
-			throw new ValidationException($api->getValidationFailures());
-		} else {
-			$api->save();
-			return $this->response->run($request, $api);
-		}
+		$domain = new ApiDomain($this->getServiceContainer());
+		$payload = $domain->setAction($id, $data);
+		return $this->responder->run($request, $payload);
 	}
 }

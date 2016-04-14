@@ -73,22 +73,13 @@ trait SessionSerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $data
 	 */
-	public function setUser($model, $data) {
-		$model->setUserId($data['id']);
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $related
-	 */
-	public function user($model, $related) {
+	public function user($model) {
 		$serializer = User::getSerializer();
 		$relationship = new Relationship(new Resource($model->getUser(), $serializer));
 		$relationship->setLinks([
 			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
 		]);
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'user');
 	}
 }

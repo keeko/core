@@ -31,6 +31,6 @@ class ActivityObjectDeleteAction extends AbstractAction {
 		$id = $this->getParam('id');
 		$domain = new ActivityObjectDomain($this->getServiceContainer());
 		$payload = $domain->delete($id);
-		return $this->response->run($request, $payload);
+		return $this->responder->run($request, $payload);
 	}
 }

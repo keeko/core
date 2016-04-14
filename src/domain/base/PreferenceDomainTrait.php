@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\Preference;
 use keeko\core\model\PreferenceQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -23,6 +25,7 @@ trait PreferenceDomainTrait {
 	 * Creates a new Preference with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +47,11 @@ trait PreferenceDomainTrait {
 	 * Deletes a Preference with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$preference = PreferenceQuery::create()->findOneById($id);
+		$preference = $this->get($id);
 
 		if ($preference === null) {
 			return new NotFound(['message' => 'Preference not found.']);
@@ -67,6 +71,7 @@ trait PreferenceDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +105,18 @@ trait PreferenceDomainTrait {
 	 * Returns one Preference with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$preference = PreferenceQuery::create()->findOneById($id);
+		$preference = $this->get($id);
 
 		// check existence
 		if ($preference === null) {
-			$payload = new NotFound(['message' => 'Preference not found.']);
-		} else {
-			$payload = new Found(['model' => $preference]);
+			return new NotFound(['message' => 'Preference not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $preference]);
 	}
 
 	/**
@@ -121,10 +124,11 @@ trait PreferenceDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$preference = PreferenceQuery::create()->findOneById($id);
+		$preference = $this->get($id);
 
 		if ($preference === null) {
 			return new NotFound(['message' => 'Preference not found.']);
@@ -158,6 +162,25 @@ trait PreferenceDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(PreferenceQuery $query, $filter);
+
+	/**
+	 * Returns one Preference with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return Preference|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$preference = PreferenceQuery::create()->findOneById($id);
+		$this->pool->set($id, $preference);
+
+		return $preference;
+	}
 
 	/**
 	 * Returns the service container

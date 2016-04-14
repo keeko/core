@@ -5,7 +5,7 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\core\model\LocalizationQuery;
+use keeko\core\domain\LocalizationDomain;
 
 /**
  */
@@ -26,9 +26,8 @@ class LocalizationLanguageScriptReadAction extends AbstractAction {
 	 */
 	public function run(Request $request) {
 		$id = $this->getParam('id');
-		$localization = LocalizationQuery::create()->findOneById($id);
-
-		// run response
-		return $this->response->run($request, $localization);
+		$domain = new LocalizationDomain($this->getServiceContainer());
+		$payload = $domain->read($id);
+		return $this->responder->run($request, $payload);
 	}
 }

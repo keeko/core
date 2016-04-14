@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\Continent;
 use keeko\core\model\ContinentQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -17,6 +19,7 @@ trait ContinentDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -50,20 +53,18 @@ trait ContinentDomainTrait {
 	 * Returns one Continent with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$continent = ContinentQuery::create()->findOneById($id);
+		$continent = $this->get($id);
 
 		// check existence
 		if ($continent === null) {
-			$payload = new NotFound(['message' => 'Continent not found.']);
-		} else {
-			$payload = new Found(['model' => $continent]);
+			return new NotFound(['message' => 'Continent not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $continent]);
 	}
 
 	/**
@@ -73,6 +74,25 @@ trait ContinentDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(ContinentQuery $query, $filter);
+
+	/**
+	 * Returns one Continent with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return Continent|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$continent = ContinentQuery::create()->findOneById($id);
+		$this->pool->set($id, $continent);
+
+		return $continent;
+	}
 
 	/**
 	 * Returns the service container

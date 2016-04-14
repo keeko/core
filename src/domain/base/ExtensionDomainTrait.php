@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\Extension;
 use keeko\core\model\ExtensionQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -23,6 +25,7 @@ trait ExtensionDomainTrait {
 	 * Creates a new Extension with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +47,11 @@ trait ExtensionDomainTrait {
 	 * Deletes a Extension with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$extension = ExtensionQuery::create()->findOneById($id);
+		$extension = $this->get($id);
 
 		if ($extension === null) {
 			return new NotFound(['message' => 'Extension not found.']);
@@ -67,6 +71,7 @@ trait ExtensionDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +105,43 @@ trait ExtensionDomainTrait {
 	 * Returns one Extension with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$extension = ExtensionQuery::create()->findOneById($id);
+		$extension = $this->get($id);
 
 		// check existence
 		if ($extension === null) {
-			$payload = new NotFound(['message' => 'Extension not found.']);
-		} else {
-			$payload = new Found(['model' => $extension]);
+			return new NotFound(['message' => 'Extension not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $extension]);
+	}
+
+	/**
+	 * Sets the Package id
+	 * 
+	 * @param mixed $id
+	 * @param mixed $packageId
+	 * @return PayloadInterface
+	 */
+	public function setPackageId($id, $packageId) {
+		// find
+		$extension = $this->get($id);
+
+		if ($extension === null) {
+			return new NotFound(['message' => 'Extension not found.']);
+		}
+
+		// update
+		if ($extension->getPackageId() !== $packageId) {
+			$extension->setPackageId($packageId);
+			$extension->save();
+			return Updated(['model' => $extension]);
+		}
+
+		return NotUpdated(['model' => $extension]);
 	}
 
 	/**
@@ -121,10 +149,11 @@ trait ExtensionDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$extension = ExtensionQuery::create()->findOneById($id);
+		$extension = $this->get($id);
 
 		if ($extension === null) {
 			return new NotFound(['message' => 'Extension not found.']);
@@ -158,6 +187,25 @@ trait ExtensionDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(ExtensionQuery $query, $filter);
+
+	/**
+	 * Returns one Extension with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return Extension|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$extension = ExtensionQuery::create()->findOneById($id);
+		$this->pool->set($id, $extension);
+
+		return $extension;
+	}
 
 	/**
 	 * Returns the service container

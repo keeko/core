@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\ActivityObject;
 use keeko\core\model\ActivityObjectQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -23,6 +25,7 @@ trait ActivityObjectDomainTrait {
 	 * Creates a new ActivityObject with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +47,11 @@ trait ActivityObjectDomainTrait {
 	 * Deletes a ActivityObject with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$activityObject = ActivityObjectQuery::create()->findOneById($id);
+		$activityObject = $this->get($id);
 
 		if ($activityObject === null) {
 			return new NotFound(['message' => 'ActivityObject not found.']);
@@ -67,6 +71,7 @@ trait ActivityObjectDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +105,18 @@ trait ActivityObjectDomainTrait {
 	 * Returns one ActivityObject with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$activityObject = ActivityObjectQuery::create()->findOneById($id);
+		$activityObject = $this->get($id);
 
 		// check existence
 		if ($activityObject === null) {
-			$payload = new NotFound(['message' => 'ActivityObject not found.']);
-		} else {
-			$payload = new Found(['model' => $activityObject]);
+			return new NotFound(['message' => 'ActivityObject not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $activityObject]);
 	}
 
 	/**
@@ -121,10 +124,11 @@ trait ActivityObjectDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$activityObject = ActivityObjectQuery::create()->findOneById($id);
+		$activityObject = $this->get($id);
 
 		if ($activityObject === null) {
 			return new NotFound(['message' => 'ActivityObject not found.']);
@@ -158,6 +162,25 @@ trait ActivityObjectDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(ActivityObjectQuery $query, $filter);
+
+	/**
+	 * Returns one ActivityObject with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return ActivityObject|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$activityObject = ActivityObjectQuery::create()->findOneById($id);
+		$this->pool->set($id, $activityObject);
+
+		return $activityObject;
+	}
 
 	/**
 	 * Returns the service container

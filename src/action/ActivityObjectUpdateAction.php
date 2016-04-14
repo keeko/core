@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use phootwork\json\Json;
+use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\ActivityObjectDomain;
 
 /**
@@ -30,9 +31,13 @@ class ActivityObjectUpdateAction extends AbstractAction {
 	 */
 	public function run(Request $request) {
 		$id = $this->getParam('id');
-		$data = Json::decode($request->getContent());
+		$body = Json::decode($request->getContent());
+		if (!isset($body['data'])) {
+			throw new InvalidParameterException();
+		}
+		$data = $body['data'];
 		$domain = new ActivityObjectDomain($this->getServiceContainer());
 		$payload = $domain->update($id, $data);
-		return $this->response->run($request, $payload);
+		return $this->responder->run($request, $payload);
 	}
 }

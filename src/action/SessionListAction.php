@@ -24,6 +24,6 @@ class SessionListAction extends AbstractAction {
 		$params = new Parameters($request->query->all());
 		$domain = new SessionDomain($this->getServiceContainer());
 		$payload = $domain->paginate($params);
-		return $this->response->run($request, $payload);
+		return $this->responder->run($request, $payload);
 	}
 }

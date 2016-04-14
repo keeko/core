@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\Api;
 use keeko\core\model\ApiQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -23,6 +25,7 @@ trait ApiDomainTrait {
 	 * Creates a new Api with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +47,11 @@ trait ApiDomainTrait {
 	 * Deletes a Api with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$api = ApiQuery::create()->findOneById($id);
+		$api = $this->get($id);
 
 		if ($api === null) {
 			return new NotFound(['message' => 'Api not found.']);
@@ -67,6 +71,7 @@ trait ApiDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +105,43 @@ trait ApiDomainTrait {
 	 * Returns one Api with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$api = ApiQuery::create()->findOneById($id);
+		$api = $this->get($id);
 
 		// check existence
 		if ($api === null) {
-			$payload = new NotFound(['message' => 'Api not found.']);
-		} else {
-			$payload = new Found(['model' => $api]);
+			return new NotFound(['message' => 'Api not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $api]);
+	}
+
+	/**
+	 * Sets the Action id
+	 * 
+	 * @param mixed $id
+	 * @param mixed $actionId
+	 * @return PayloadInterface
+	 */
+	public function setActionId($id, $actionId) {
+		// find
+		$api = $this->get($id);
+
+		if ($api === null) {
+			return new NotFound(['message' => 'Api not found.']);
+		}
+
+		// update
+		if ($api->getActionId() !== $actionId) {
+			$api->setActionId($actionId);
+			$api->save();
+			return Updated(['model' => $api]);
+		}
+
+		return NotUpdated(['model' => $api]);
 	}
 
 	/**
@@ -121,10 +149,11 @@ trait ApiDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$api = ApiQuery::create()->findOneById($id);
+		$api = $this->get($id);
 
 		if ($api === null) {
 			return new NotFound(['message' => 'Api not found.']);
@@ -158,6 +187,25 @@ trait ApiDomainTrait {
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(ApiQuery $query, $filter);
+
+	/**
+	 * Returns one Api with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return Api|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$api = ApiQuery::create()->findOneById($id);
+		$this->pool->set($id, $api);
+
+		return $api;
+	}
 
 	/**
 	 * Returns the service container

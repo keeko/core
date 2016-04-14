@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\User;
 use keeko\core\model\UserQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -14,15 +16,56 @@ use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
+use keeko\core\model\GroupQuery;
+use keeko\core\model\UserGroupQuery;
 
 /**
  */
 trait UserDomainTrait {
 
 	/**
+	 * Adds Group to User
+	 * 
+	 * @param mixed $id
+	 * @param mixed $data
+	 * @return PayloadInterface
+	 */
+	public function addGroup($id, $data) {
+		// find
+		$user = $this->get($id);
+
+		if ($user === null) {
+			return new NotFound(['message' => 'User not found.']);
+		}
+		 
+		// update
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			}
+			$group = GroupQuery::create()->findOneById($entry['id']);
+			$user->addGroup($group);
+		}
+
+		if (count($errors) > 0) {
+			return new NotValid(['errors' => $errors]);
+		}
+
+		$rows = $user->save();
+
+		if ($rows > 0) {
+			return Updated(['model' => $user]);
+		}
+
+		return NotUpdated(['model' => $user]);
+	}
+
+	/**
 	 * Creates a new User with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +87,11 @@ trait UserDomainTrait {
 	 * Deletes a User with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$user = UserQuery::create()->findOneById($id);
+		$user = $this->get($id);
 
 		if ($user === null) {
 			return new NotFound(['message' => 'User not found.']);
@@ -67,6 +111,7 @@ trait UserDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +145,56 @@ trait UserDomainTrait {
 	 * Returns one User with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$user = UserQuery::create()->findOneById($id);
+		$user = $this->get($id);
 
 		// check existence
 		if ($user === null) {
-			$payload = new NotFound(['message' => 'User not found.']);
-		} else {
-			$payload = new Found(['model' => $user]);
+			return new NotFound(['message' => 'User not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $user]);
+	}
+
+	/**
+	 * Removes Group from User
+	 * 
+	 * @param mixed $id
+	 * @param mixed $data
+	 * @return PayloadInterface
+	 */
+	public function removeGroup($id, $data) {
+		// find
+		$user = $this->get($id);
+
+		if ($user === null) {
+			return new NotFound(['message' => 'User not found.']);
+		}
+
+		// remove them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			}
+			$group = GroupQuery::create()->findOneById($entry['id']);
+			$user->removeGroup($group);
+		}
+
+		if (count($errors) > 0) {
+			return new NotValid(['errors' => $errors]);
+		}
+
+		$rows = $user->save();
+
+		if ($rows > 0) {
+			return Updated(['model' => $user]);
+		}
+
+		return NotUpdated(['model' => $user]);
 	}
 
 	/**
@@ -121,10 +202,11 @@ trait UserDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$user = UserQuery::create()->findOneById($id);
+		$user = $this->get($id);
 
 		if ($user === null) {
 			return new NotFound(['message' => 'User not found.']);
@@ -152,12 +234,72 @@ trait UserDomainTrait {
 	}
 
 	/**
+	 * Updates Group on User
+	 * 
+	 * @param mixed $id
+	 * @param mixed $data
+	 * @return PayloadInterface
+	 */
+	public function updateGroup($id, $data) {
+		// find
+		$user = $this->get($id);
+
+		if ($user === null) {
+			return new NotFound(['message' => 'User not found.']);
+		}
+
+		// remove all relationships before
+		UserGroupQuery::create()->filterByUser($user)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			}
+			$group = GroupQuery::create()->findOneById($entry['id']);
+			$user->addGroup($group);
+		}
+
+		if (count($errors) > 0) {
+			return new NotValid(['errors' => $errors]);
+		}
+
+		$rows = $user->save();
+
+		if ($rows > 0) {
+			return Updated(['model' => $user]);
+		}
+
+		return NotUpdated(['model' => $user]);
+	}
+
+	/**
 	 * Implement this functionality at keeko\core\domain\UserDomain
 	 * 
 	 * @param UserQuery $query
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(UserQuery $query, $filter);
+
+	/**
+	 * Returns one User with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return User|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$user = UserQuery::create()->findOneById($id);
+		$this->pool->set($id, $user);
+
+		return $user;
+	}
 
 	/**
 	 * Returns the service container

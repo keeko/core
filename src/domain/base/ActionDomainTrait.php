@@ -4,6 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\model\Action;
 use keeko\core\model\ActionQuery;
 use keeko\framework\service\ServiceContainer;
+use keeko\framework\domain\payload\PayloadInterface;
+use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use Tobscure\JsonApi\Parameters;
@@ -14,15 +16,56 @@ use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
+use keeko\core\model\GroupQuery;
+use keeko\core\model\GroupActionQuery;
 
 /**
  */
 trait ActionDomainTrait {
 
 	/**
+	 * Adds Group to Action
+	 * 
+	 * @param mixed $id
+	 * @param mixed $data
+	 * @return PayloadInterface
+	 */
+	public function addGroup($id, $data) {
+		// find
+		$action = $this->get($id);
+
+		if ($action === null) {
+			return new NotFound(['message' => 'Action not found.']);
+		}
+		 
+		// update
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			}
+			$group = GroupQuery::create()->findOneById($entry['id']);
+			$action->addGroup($group);
+		}
+
+		if (count($errors) > 0) {
+			return new NotValid(['errors' => $errors]);
+		}
+
+		$rows = $action->save();
+
+		if ($rows > 0) {
+			return Updated(['model' => $action]);
+		}
+
+		return NotUpdated(['model' => $action]);
+	}
+
+	/**
 	 * Creates a new Action with the provided data
 	 * 
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function create($data) {
 		// hydrate
@@ -44,10 +87,11 @@ trait ActionDomainTrait {
 	 * Deletes a Action with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function delete($id) {
 		// find
-		$action = ActionQuery::create()->findOneById($id);
+		$action = $this->get($id);
 
 		if ($action === null) {
 			return new NotFound(['message' => 'Action not found.']);
@@ -67,6 +111,7 @@ trait ActionDomainTrait {
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
+	 * @return PayloadInterface
 	 */
 	public function paginate(Parameters $params) {
 		$sysPrefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
@@ -100,20 +145,81 @@ trait ActionDomainTrait {
 	 * Returns one Action with the given id
 	 * 
 	 * @param mixed $id
+	 * @return PayloadInterface
 	 */
 	public function read($id) {
 		// read
-		$action = ActionQuery::create()->findOneById($id);
+		$action = $this->get($id);
 
 		// check existence
 		if ($action === null) {
-			$payload = new NotFound(['message' => 'Action not found.']);
-		} else {
-			$payload = new Found(['model' => $action]);
+			return new NotFound(['message' => 'Action not found.']);
 		}
 
-		// run response
-		return $payload;
+		return new Found(['model' => $action]);
+	}
+
+	/**
+	 * Removes Group from Action
+	 * 
+	 * @param mixed $id
+	 * @param mixed $data
+	 * @return PayloadInterface
+	 */
+	public function removeGroup($id, $data) {
+		// find
+		$action = $this->get($id);
+
+		if ($action === null) {
+			return new NotFound(['message' => 'Action not found.']);
+		}
+
+		// remove them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			}
+			$group = GroupQuery::create()->findOneById($entry['id']);
+			$action->removeGroup($group);
+		}
+
+		if (count($errors) > 0) {
+			return new NotValid(['errors' => $errors]);
+		}
+
+		$rows = $action->save();
+
+		if ($rows > 0) {
+			return Updated(['model' => $action]);
+		}
+
+		return NotUpdated(['model' => $action]);
+	}
+
+	/**
+	 * Sets the Module id
+	 * 
+	 * @param mixed $id
+	 * @param mixed $moduleId
+	 * @return PayloadInterface
+	 */
+	public function setModuleId($id, $moduleId) {
+		// find
+		$action = $this->get($id);
+
+		if ($action === null) {
+			return new NotFound(['message' => 'Action not found.']);
+		}
+
+		// update
+		if ($action->getModuleId() !== $moduleId) {
+			$action->setModuleId($moduleId);
+			$action->save();
+			return Updated(['model' => $action]);
+		}
+
+		return NotUpdated(['model' => $action]);
 	}
 
 	/**
@@ -121,10 +227,11 @@ trait ActionDomainTrait {
 	 * 
 	 * @param mixed $id
 	 * @param mixed $data
+	 * @return PayloadInterface
 	 */
 	public function update($id, $data) {
 		// find
-		$action = ActionQuery::create()->findOneById($id);
+		$action = $this->get($id);
 
 		if ($action === null) {
 			return new NotFound(['message' => 'Action not found.']);
@@ -152,12 +259,72 @@ trait ActionDomainTrait {
 	}
 
 	/**
+	 * Updates Group on Action
+	 * 
+	 * @param mixed $id
+	 * @param mixed $data
+	 * @return PayloadInterface
+	 */
+	public function updateGroup($id, $data) {
+		// find
+		$action = $this->get($id);
+
+		if ($action === null) {
+			return new NotFound(['message' => 'Action not found.']);
+		}
+
+		// remove all relationships before
+		GroupActionQuery::create()->filterByAction($action)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			}
+			$group = GroupQuery::create()->findOneById($entry['id']);
+			$action->addGroup($group);
+		}
+
+		if (count($errors) > 0) {
+			return new NotValid(['errors' => $errors]);
+		}
+
+		$rows = $action->save();
+
+		if ($rows > 0) {
+			return Updated(['model' => $action]);
+		}
+
+		return NotUpdated(['model' => $action]);
+	}
+
+	/**
 	 * Implement this functionality at keeko\core\domain\ActionDomain
 	 * 
 	 * @param ActionQuery $query
 	 * @param mixed $filter
 	 */
 	abstract protected function applyFilter(ActionQuery $query, $filter);
+
+	/**
+	 * Returns one Action with the given id from cache
+	 * 
+	 * @param mixed $id
+	 * @return Action|null
+	 */
+	protected function get($id) {
+		if ($this->pool === null) {
+			$this->pool = new Map();
+		} else if ($this->pool->has($id)) {
+			return $this->pool->get($id);
+		}
+
+		$action = ActionQuery::create()->findOneById($id);
+		$this->pool->set($id, $action);
+
+		return $action;
+	}
 
 	/**
 	 * Returns the service container

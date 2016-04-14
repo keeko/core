@@ -4,26 +4,11 @@ namespace keeko\core\serializer\base;
 use keeko\framework\utils\HydrateUtils;
 use Tobscure\JsonApi\Relationship;
 use keeko\core\model\Group;
-use keeko\core\model\GroupQuery;
 use Tobscure\JsonApi\Collection;
-use keeko\core\model\UserGroupQuery;
 
 /**
  */
 trait UserSerializerTrait {
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function addGroups($model, $data) {
-		foreach ($data as $item) {
-			$group = GroupQuery::create()->findOneById($item['id']);
-			if ($group !== null) {
-				$model->addGroup($group);
-			}
-		}
-	}
 
 	/**
 	 * @param mixed $model
@@ -79,11 +64,10 @@ trait UserSerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 * @param mixed $related
 	 */
-	public function group($model, $related) {
+	public function group($model) {
 		$relationship = new Relationship(new Collection($model->getGroups(), Group::getSerializer()));
-		return $this->addRelationshipSelfLink($relationship, $model, $related);
+		return $this->addRelationshipSelfLink($relationship, $model, 'group');
 	}
 
 	/**
@@ -102,27 +86,5 @@ trait UserSerializerTrait {
 		$this->hydrateRelationships($model, $data);
 
 		return $model;
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function removeGroups($model, $data) {
-		foreach ($data as $item) {
-			$group = GroupQuery::create()->findOneById($item['id']);
-			if ($group !== null) {
-				$model->removeGroup($group);
-			}
-		}
-	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 */
-	public function setGroups($model, $data) {
-		UserGroupQuery::create()->filterByGroup($model)->delete();
-		$this->addGroups($model, $data);
 	}
 }

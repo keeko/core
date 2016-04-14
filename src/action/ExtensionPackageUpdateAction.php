@@ -5,10 +5,9 @@ use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\framework\exceptions\ValidationException;
-use Tobscure\JsonApi\Exception\InvalidParameterException;
 use phootwork\json\Json;
-use keeko\core\model\ExtensionQuery;
+use Tobscure\JsonApi\Exception\InvalidParameterException;
+use keeko\core\domain\ExtensionDomain;
 
 /**
  */
@@ -33,21 +32,9 @@ class ExtensionPackageUpdateAction extends AbstractAction {
 			throw new InvalidParameterException();
 		}
 		$data = $body['data'];
-
-		if (!isset($data['id'])) {
-			throw new InvalidParameterException();
-		}
-
 		$id = $this->getParam('id');
-		$extension = ExtensionQuery::create()->findOneById($id);
-		$extension->setPackageId($data['id']);
-
-		// validate
-		if (!$extension->validate()) {
-			throw new ValidationException($extension->getValidationFailures());
-		} else {
-			$extension->save();
-			return $this->response->run($request, $extension);
-		}
+		$domain = new ExtensionDomain($this->getServiceContainer());
+		$payload = $domain->setPackage($id, $data);
+		return $this->responder->run($request, $payload);
 	}
 }

@@ -19,14 +19,14 @@ use Tobscure\JsonApi\Parameters;
  * 
  * @author gossi
  */
-class JsonResponderUpdateJsonResponder extends AbstractPayloadResponder {
+class ActionUpdateJsonResponder extends AbstractPayloadResponder {
 
 	/**
 	 * @param Request $request
 	 * @param PayloadInterface $payload
 	 */
 	public function notFound(Request $request, PayloadInterface $payload) {
-		throw new ResourceNotFoundException($payload->get('message'));
+		throw new ResourceNotFoundException($payload->getMessage());
 	}
 
 	/**
@@ -42,7 +42,7 @@ class JsonResponderUpdateJsonResponder extends AbstractPayloadResponder {
 	 * @param PayloadInterface $payload
 	 */
 	public function notValid(Request $request, PayloadInterface $payload) {
-		new ValidationException($payload->get('errors'));
+		throw new ValidationException($payload->getViolations());
 	}
 
 	/**
@@ -52,7 +52,7 @@ class JsonResponderUpdateJsonResponder extends AbstractPayloadResponder {
 	public function updated(Request $request, PayloadInterface $payload) {
 		$params = new Parameters($request->query->all());
 		$serializer = Action::getSerializer();
-		$resource = new Resource($payload->get('model'), $serializer);
+		$resource = new Resource($payload->getModel(), $serializer);
 		$resource = $resource->with($params->getInclude(['module', 'groups']));
 		$resource = $resource->fields($params->getFields([
 			'action' => Action::getSerializer()->getFields(),

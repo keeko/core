@@ -8,11 +8,11 @@ use keeko\framework\foundation\AbstractPayloadResponder;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
- * Automatically generated JsonResponder for Deletes an application-uri
+ * Automatically generated JsonResponder for Deletes an action
  * 
  * @author gossi
  */
-class ApplicationUriDeleteJsonResponder extends AbstractPayloadResponder {
+class ActionDeleteJsonResponder extends AbstractPayloadResponder {
 
 	/**
 	 * @param Request $request
@@ -27,7 +27,7 @@ class ApplicationUriDeleteJsonResponder extends AbstractPayloadResponder {
 	 * @param PayloadInterface $payload
 	 */
 	public function notDeleted(Request $request, PayloadInterface $payload) {
-		return new \Exception($payload->get('message'));
+		return new \Exception($payload->getMessage());
 	}
 
 	/**
@@ -35,7 +35,7 @@ class ApplicationUriDeleteJsonResponder extends AbstractPayloadResponder {
 	 * @param PayloadInterface $payload
 	 */
 	public function notFound(Request $request, PayloadInterface $payload) {
-		throw new ResourceNotFoundException($payload->get('message'));
+		throw new ResourceNotFoundException($payload->getMessage());
 	}
 
 	/**

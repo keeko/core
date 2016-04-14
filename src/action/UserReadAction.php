@@ -31,6 +31,6 @@ class UserReadAction extends AbstractAction {
 		$id = $this->getParam('id');
 		$domain = new UserDomain($this->getServiceContainer());
 		$payload = $domain->read($id);
-		return $this->response->run($request, $payload);
+		return $this->responder->run($request, $payload);
 	}
 }
