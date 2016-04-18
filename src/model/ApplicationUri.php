@@ -19,6 +19,7 @@ class ApplicationUri extends BaseApplicationUri implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return ApplicationUriSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

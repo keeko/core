@@ -19,6 +19,7 @@ class Module extends BaseModule implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return ModuleSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

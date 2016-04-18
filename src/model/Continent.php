@@ -19,6 +19,7 @@ class Continent extends BaseContinent implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return ContinentSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

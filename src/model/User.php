@@ -20,6 +20,7 @@ class User extends BaseUser implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return UserSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

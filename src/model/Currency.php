@@ -19,6 +19,7 @@ class Currency extends BaseCurrency implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return CurrencySerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

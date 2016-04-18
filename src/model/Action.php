@@ -19,6 +19,7 @@ class Action extends BaseAction implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return ActionSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

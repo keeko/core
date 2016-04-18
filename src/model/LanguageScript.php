@@ -19,6 +19,7 @@ class LanguageScript extends BaseLanguageScript implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return LanguageScriptSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

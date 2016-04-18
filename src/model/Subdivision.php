@@ -19,6 +19,7 @@ class Subdivision extends BaseSubdivision implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return SubdivisionSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

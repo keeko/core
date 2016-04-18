@@ -19,6 +19,7 @@ class LanguageScope extends BaseLanguageScope implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return LanguageScopeSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

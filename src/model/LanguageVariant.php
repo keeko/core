@@ -19,6 +19,7 @@ class LanguageVariant extends BaseLanguageVariant implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return LanguageVariantSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

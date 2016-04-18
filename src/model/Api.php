@@ -19,6 +19,7 @@ class Api extends BaseApi implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return ApiSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

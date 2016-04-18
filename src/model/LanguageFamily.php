@@ -19,6 +19,7 @@ class LanguageFamily extends BaseLanguageFamily implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return LanguageFamilySerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

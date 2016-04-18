@@ -19,6 +19,7 @@ class Country extends BaseCountry implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return CountrySerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

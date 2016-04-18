@@ -19,6 +19,7 @@ class Application extends BaseApplication implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return ApplicationSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

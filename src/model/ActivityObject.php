@@ -19,6 +19,7 @@ class ActivityObject extends BaseActivityObject implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return ActivityObjectSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

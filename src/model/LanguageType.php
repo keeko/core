@@ -19,6 +19,7 @@ class LanguageType extends BaseLanguageType implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return LanguageTypeSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

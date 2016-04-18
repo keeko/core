@@ -19,6 +19,7 @@ class Preference extends BasePreference implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return PreferenceSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

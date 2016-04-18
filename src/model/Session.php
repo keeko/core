@@ -19,6 +19,7 @@ class Session extends BaseSession implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return SessionSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

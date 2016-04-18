@@ -19,6 +19,7 @@ class Package extends BasePackage implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return PackageSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

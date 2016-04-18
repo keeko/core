@@ -19,6 +19,7 @@ class RegionType extends BaseRegionType implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return RegionTypeSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

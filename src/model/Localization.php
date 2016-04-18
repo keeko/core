@@ -19,6 +19,7 @@ class Localization extends BaseLocalization implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return LocalizationSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

@@ -19,6 +19,7 @@ class RegionArea extends BaseRegionArea implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return RegionAreaSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

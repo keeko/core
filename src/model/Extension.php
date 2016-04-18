@@ -19,6 +19,7 @@ class Extension extends BaseExtension implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return ExtensionSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {

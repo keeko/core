@@ -19,6 +19,7 @@ class Group extends BaseGroup implements ApiModelInterface {
 	private static $serializer;
 
 	/**
+	 * @return GroupSerializer
 	 */
 	public static function getSerializer() {
 		if (self::$serializer === null) {
