@@ -1,17 +1,20 @@
 <?php
 namespace keeko\core\responder;
 
-use keeko\framework\domain\payload\PayloadInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use keeko\framework\foundation\AbstractPayloadResponder;
+use keeko\framework\domain\payload\NotFound;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use keeko\framework\domain\payload\NotValid;
 use keeko\framework\exceptions\ValidationException;
 use keeko\core\model\Session;
 use keeko\core\model\User;
+use keeko\framework\domain\payload\Updated;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Parameters;
+use keeko\framework\domain\payload\NotUpdated;
 
 /**
  * Automatically generated JsonResponder for Updates a session
@@ -22,33 +25,33 @@ class SessionUpdateJsonResponder extends AbstractPayloadResponder {
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param NotFound $payload
 	 */
-	public function notFound(Request $request, PayloadInterface $payload) {
+	public function notFound(Request $request, NotFound $payload) {
 		throw new ResourceNotFoundException($payload->getMessage());
 	}
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param NotUpdated $payload
 	 */
-	public function notUpdated(Request $request, PayloadInterface $payload) {
+	public function notUpdated(Request $request, NotUpdated $payload) {
 		return new JsonResponse(null, 204);
 	}
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param NotValid $payload
 	 */
-	public function notValid(Request $request, PayloadInterface $payload) {
+	public function notValid(Request $request, NotValid $payload) {
 		throw new ValidationException($payload->getViolations());
 	}
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param Updated $payload
 	 */
-	public function updated(Request $request, PayloadInterface $payload) {
+	public function updated(Request $request, Updated $payload) {
 		$params = new Parameters($request->query->all());
 		$serializer = Session::getSerializer();
 		$resource = new Resource($payload->getModel(), $serializer);

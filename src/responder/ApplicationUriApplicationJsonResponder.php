@@ -1,12 +1,14 @@
 <?php
 namespace keeko\core\responder;
 
-use keeko\framework\domain\payload\PayloadInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use keeko\framework\foundation\AbstractPayloadResponder;
+use keeko\framework\domain\payload\NotFound;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use keeko\framework\domain\payload\Found;
 use keeko\core\model\ApplicationUri;
+use keeko\framework\domain\payload\NotUpdated;
 
 /**
  * Automatically generated JsonResponder for Reads the relationship of application_uri to application
@@ -17,25 +19,25 @@ class ApplicationUriApplicationJsonResponder extends AbstractPayloadResponder {
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param NotFound $payload
 	 */
-	public function notFound(Request $request, PayloadInterface $payload) {
+	public function notFound(Request $request, NotFound $payload) {
 		throw new ResourceNotFoundException($payload->getMessage());
 	}
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param NotUpdated $payload
 	 */
-	public function notUpdated(Request $request, PayloadInterface $payload) {
+	public function notUpdated(Request $request, NotUpdated $payload) {
 		return new JsonResponse(null, 204);
 	}
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param Found $payload
 	 */
-	public function read(Request $request, PayloadInterface $payload) {
+	public function read(Request $request, Found $payload) {
 		$serializer = ApplicationUri::getSerializer();
 		$relationship = $serializer->application($payload->getModel());
 

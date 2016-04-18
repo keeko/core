@@ -1,11 +1,12 @@
 <?php
 namespace keeko\core\responder;
 
-use keeko\framework\domain\payload\PayloadInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use keeko\framework\foundation\AbstractPayloadResponder;
+use keeko\framework\domain\payload\NotValid;
 use keeko\framework\exceptions\ValidationException;
+use keeko\framework\domain\payload\Created;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Resource;
 use keeko\core\model\ActivityObject;
@@ -19,9 +20,9 @@ class ActivityObjectCreateJsonResponder extends AbstractPayloadResponder {
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param Created $payload
 	 */
-	public function created(Request $request, PayloadInterface $payload) {
+	public function created(Request $request, Created $payload) {
 		$serializer = ActivityObject::getSerializer();
 		$resource = new Resource($payload->getModel(), $serializer);
 		$document = new Document($resource);
@@ -31,9 +32,9 @@ class ActivityObjectCreateJsonResponder extends AbstractPayloadResponder {
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param NotValid $payload
 	 */
-	public function notValid(Request $request, PayloadInterface $payload) {
+	public function notValid(Request $request, NotValid $payload) {
 		throw new ValidationException($payload->getViolations());
 	}
 

@@ -1,14 +1,15 @@
 <?php
 namespace keeko\core\responder;
 
-use keeko\framework\domain\payload\PayloadInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use keeko\framework\foundation\AbstractPayloadResponder;
+use keeko\framework\domain\payload\NotFound;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use keeko\core\model\ApplicationUri;
 use keeko\core\model\Application;
 use keeko\core\model\Localization;
+use keeko\framework\domain\payload\Found;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Parameters;
@@ -22,9 +23,9 @@ class ApplicationUriReadJsonResponder extends AbstractPayloadResponder {
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param Found $payload
 	 */
-	public function found(Request $request, PayloadInterface $payload) {
+	public function found(Request $request, Found $payload) {
 		$params = new Parameters($request->query->all());
 		$serializer = ApplicationUri::getSerializer();
 		$resource = new Resource($payload->getModel(), $serializer);
@@ -41,9 +42,9 @@ class ApplicationUriReadJsonResponder extends AbstractPayloadResponder {
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param NotFound $payload
 	 */
-	public function notFound(Request $request, PayloadInterface $payload) {
+	public function notFound(Request $request, NotFound $payload) {
 		throw new ResourceNotFoundException($payload->getMessage());
 	}
 

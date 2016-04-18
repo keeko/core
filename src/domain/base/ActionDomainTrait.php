@@ -25,7 +25,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Adds Group to Action
-	 * 
+	 *
 	 * @param mixed $id
 	 * @param mixed $data
 	 * @return PayloadInterface
@@ -63,7 +63,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Creates a new Action with the provided data
-	 * 
+	 *
 	 * @param mixed $data
 	 * @return PayloadInterface
 	 */
@@ -85,7 +85,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Deletes a Action with the given id
-	 * 
+	 *
 	 * @param mixed $id
 	 * @return PayloadInterface
 	 */
@@ -109,7 +109,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Returns a paginated result
-	 * 
+	 *
 	 * @param Parameters $params
 	 * @return PayloadInterface
 	 */
@@ -143,7 +143,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Returns one Action with the given id
-	 * 
+	 *
 	 * @param mixed $id
 	 * @return PayloadInterface
 	 */
@@ -161,7 +161,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Removes Group from Action
-	 * 
+	 *
 	 * @param mixed $id
 	 * @param mixed $data
 	 * @return PayloadInterface
@@ -199,7 +199,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Sets the Module id
-	 * 
+	 *
 	 * @param mixed $id
 	 * @param mixed $moduleId
 	 * @return PayloadInterface
@@ -224,7 +224,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Updates a Action with the given idand the provided data
-	 * 
+	 *
 	 * @param mixed $id
 	 * @param mixed $data
 	 * @return PayloadInterface
@@ -260,7 +260,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Updates Group on Action
-	 * 
+	 *
 	 * @param mixed $id
 	 * @param mixed $data
 	 * @return PayloadInterface
@@ -301,7 +301,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Implement this functionality at keeko\core\domain\ActionDomain
-	 * 
+	 *
 	 * @param ActionQuery $query
 	 * @param mixed $filter
 	 */
@@ -309,7 +309,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Returns one Action with the given id from cache
-	 * 
+	 *
 	 * @param mixed $id
 	 * @return Action|null
 	 */
@@ -328,7 +328,7 @@ trait ActionDomainTrait {
 
 	/**
 	 * Returns the service container
-	 * 
+	 *
 	 * @return ServiceContainer
 	 */
 	abstract protected function getServiceContainer();

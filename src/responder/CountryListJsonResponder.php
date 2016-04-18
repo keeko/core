@@ -1,7 +1,6 @@
 <?php
 namespace keeko\core\responder;
 
-use keeko\framework\domain\payload\PayloadInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use keeko\framework\foundation\AbstractPayloadResponder;
@@ -9,6 +8,7 @@ use keeko\core\model\Country;
 use keeko\core\model\Continent;
 use keeko\core\model\Currency;
 use keeko\core\model\RegionType;
+use keeko\framework\domain\payload\Found;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Collection;
 use Tobscure\JsonApi\Parameters;
@@ -22,9 +22,9 @@ class CountryListJsonResponder extends AbstractPayloadResponder {
 
 	/**
 	 * @param Request $request
-	 * @param PayloadInterface $payload
+	 * @param Found $payload
 	 */
-	public function found(Request $request, PayloadInterface $payload) {
+	public function found(Request $request, Found $payload) {
 		$params = new Parameters($request->query->all());
 		$data = $payload->Model();
 		$serializer = Country::getSerializer();
