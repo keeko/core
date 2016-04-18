@@ -593,6 +593,21 @@
 			}
 		},
 		"/localizations": {
+			"get": {
+				"description": "List all localizations",
+				"operationId": "localization-list",
+				"responses": {
+					"200": {
+						"description": "Array of localizations",
+						"schema": {
+							"$ref": "#/definitions/PagedLocalizations"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates a localization",
 				"operationId": "localization-create",
@@ -610,21 +625,6 @@
 				"responses": {
 					"201": {
 						"description": "localization created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all localizations",
-				"operationId": "localization-list",
-				"responses": {
-					"200": {
-						"description": "Array of localizations",
-						"schema": {
-							"$ref": "#/definitions/PagedLocalizations"
-						}
 					}
 				},
 				"tags": [
@@ -896,9 +896,9 @@
 					"core"
 				]
 			},
-			"patch": {
-				"description": "Updates the relationship of localization to language_variant",
-				"operationId": "localization-to-language_variant-relationship-update",
+			"post": {
+				"description": "Adds language_variant as relationship to localization",
+				"operationId": "localization-to-language_variant-relationship-add",
 				"parameters": [
 					{
 						"name": "id",
@@ -920,9 +920,9 @@
 					"core"
 				]
 			},
-			"post": {
-				"description": "Adds language_variant as relationship to localization",
-				"operationId": "localization-to-language_variant-relationship-add",
+			"patch": {
+				"description": "Updates the relationship of localization to language_variant",
+				"operationId": "localization-to-language_variant-relationship-update",
 				"parameters": [
 					{
 						"name": "id",
@@ -970,6 +970,21 @@
 			}
 		},
 		"/packages": {
+			"get": {
+				"description": "List all packages",
+				"operationId": "package-list",
+				"responses": {
+					"200": {
+						"description": "Array of packages",
+						"schema": {
+							"$ref": "#/definitions/PagedPackages"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates a package",
 				"operationId": "package-create",
@@ -987,21 +1002,6 @@
 				"responses": {
 					"201": {
 						"description": "package created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all packages",
-				"operationId": "package-list",
-				"responses": {
-					"200": {
-						"description": "Array of packages",
-						"schema": {
-							"$ref": "#/definitions/PagedPackages"
-						}
 					}
 				},
 				"tags": [
@@ -1099,6 +1099,21 @@
 			}
 		},
 		"/applications": {
+			"get": {
+				"description": "List all applications",
+				"operationId": "application-list",
+				"responses": {
+					"200": {
+						"description": "Array of applications",
+						"schema": {
+							"$ref": "#/definitions/PagedApplications"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates an application",
 				"operationId": "application-create",
@@ -1116,21 +1131,6 @@
 				"responses": {
 					"201": {
 						"description": "application created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all applications",
-				"operationId": "application-list",
-				"responses": {
-					"200": {
-						"description": "Array of applications",
-						"schema": {
-							"$ref": "#/definitions/PagedApplications"
-						}
 					}
 				},
 				"tags": [
@@ -1278,6 +1278,21 @@
 			}
 		},
 		"/application_uris": {
+			"get": {
+				"description": "List all application-uris",
+				"operationId": "application_uri-list",
+				"responses": {
+					"200": {
+						"description": "Array of application_uris",
+						"schema": {
+							"$ref": "#/definitions/PagedApplicationUris"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates an application-uri",
 				"operationId": "application_uri-create",
@@ -1295,21 +1310,6 @@
 				"responses": {
 					"201": {
 						"description": "application_uri created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all application-uris",
-				"operationId": "application_uri-list",
-				"responses": {
-					"200": {
-						"description": "Array of application_uris",
-						"schema": {
-							"$ref": "#/definitions/PagedApplicationUris"
-						}
 					}
 				},
 				"tags": [
@@ -1507,6 +1507,21 @@
 			}
 		},
 		"/modules": {
+			"get": {
+				"description": "List all modules",
+				"operationId": "module-list",
+				"responses": {
+					"200": {
+						"description": "Array of modules",
+						"schema": {
+							"$ref": "#/definitions/PagedModules"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates a module",
 				"operationId": "module-create",
@@ -1524,21 +1539,6 @@
 				"responses": {
 					"201": {
 						"description": "module created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all modules",
-				"operationId": "module-list",
-				"responses": {
-					"200": {
-						"description": "Array of modules",
-						"schema": {
-							"$ref": "#/definitions/PagedModules"
-						}
 					}
 				},
 				"tags": [
@@ -1686,6 +1686,21 @@
 			}
 		},
 		"/actions": {
+			"get": {
+				"description": "List all actions",
+				"operationId": "action-list",
+				"responses": {
+					"200": {
+						"description": "Array of actions",
+						"schema": {
+							"$ref": "#/definitions/PagedActions"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates an action",
 				"operationId": "action-create",
@@ -1703,21 +1718,6 @@
 				"responses": {
 					"201": {
 						"description": "action created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all actions",
-				"operationId": "action-list",
-				"responses": {
-					"200": {
-						"description": "Array of actions",
-						"schema": {
-							"$ref": "#/definitions/PagedActions"
-						}
 					}
 				},
 				"tags": [
@@ -1889,9 +1889,9 @@
 					"core"
 				]
 			},
-			"patch": {
-				"description": "Updates the relationship of action to group",
-				"operationId": "action-to-group-relationship-update",
+			"post": {
+				"description": "Adds group as relationship to action",
+				"operationId": "action-to-group-relationship-add",
 				"parameters": [
 					{
 						"name": "id",
@@ -1913,9 +1913,9 @@
 					"core"
 				]
 			},
-			"post": {
-				"description": "Adds group as relationship to action",
-				"operationId": "action-to-group-relationship-add",
+			"patch": {
+				"description": "Updates the relationship of action to group",
+				"operationId": "action-to-group-relationship-update",
 				"parameters": [
 					{
 						"name": "id",
@@ -1963,6 +1963,21 @@
 			}
 		},
 		"/extensions": {
+			"get": {
+				"description": "List all extensions",
+				"operationId": "extension-list",
+				"responses": {
+					"200": {
+						"description": "Array of extensions",
+						"schema": {
+							"$ref": "#/definitions/PagedExtensions"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates an extension",
 				"operationId": "extension-create",
@@ -1980,21 +1995,6 @@
 				"responses": {
 					"201": {
 						"description": "extension created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all extensions",
-				"operationId": "extension-list",
-				"responses": {
-					"200": {
-						"description": "Array of extensions",
-						"schema": {
-							"$ref": "#/definitions/PagedExtensions"
-						}
 					}
 				},
 				"tags": [
@@ -2142,6 +2142,21 @@
 			}
 		},
 		"/preferences": {
+			"get": {
+				"description": "List all preferences",
+				"operationId": "preference-list",
+				"responses": {
+					"200": {
+						"description": "Array of preferences",
+						"schema": {
+							"$ref": "#/definitions/PagedPreferences"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates a preference",
 				"operationId": "preference-create",
@@ -2159,21 +2174,6 @@
 				"responses": {
 					"201": {
 						"description": "preference created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all preferences",
-				"operationId": "preference-list",
-				"responses": {
-					"200": {
-						"description": "Array of preferences",
-						"schema": {
-							"$ref": "#/definitions/PagedPreferences"
-						}
 					}
 				},
 				"tags": [
@@ -2271,6 +2271,21 @@
 			}
 		},
 		"/apis": {
+			"get": {
+				"description": "List all apis",
+				"operationId": "api-list",
+				"responses": {
+					"200": {
+						"description": "Array of apis",
+						"schema": {
+							"$ref": "#/definitions/PagedApis"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates an api",
 				"operationId": "api-create",
@@ -2288,21 +2303,6 @@
 				"responses": {
 					"201": {
 						"description": "api created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all apis",
-				"operationId": "api-list",
-				"responses": {
-					"200": {
-						"description": "Array of apis",
-						"schema": {
-							"$ref": "#/definitions/PagedApis"
-						}
 					}
 				},
 				"tags": [
@@ -2450,6 +2450,21 @@
 			}
 		},
 		"/sessions": {
+			"get": {
+				"description": "List all sessions",
+				"operationId": "session-list",
+				"responses": {
+					"200": {
+						"description": "Array of sessions",
+						"schema": {
+							"$ref": "#/definitions/PagedSessions"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates a session",
 				"operationId": "session-create",
@@ -2467,21 +2482,6 @@
 				"responses": {
 					"201": {
 						"description": "session created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all sessions",
-				"operationId": "session-list",
-				"responses": {
-					"200": {
-						"description": "Array of sessions",
-						"schema": {
-							"$ref": "#/definitions/PagedSessions"
-						}
 					}
 				},
 				"tags": [
@@ -2629,6 +2629,21 @@
 			}
 		},
 		"/users": {
+			"get": {
+				"description": "List all users",
+				"operationId": "user-list",
+				"responses": {
+					"200": {
+						"description": "Array of users",
+						"schema": {
+							"$ref": "#/definitions/PagedUsers"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates an user",
 				"operationId": "user-create",
@@ -2646,21 +2661,6 @@
 				"responses": {
 					"201": {
 						"description": "user created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all users",
-				"operationId": "user-list",
-				"responses": {
-					"200": {
-						"description": "Array of users",
-						"schema": {
-							"$ref": "#/definitions/PagedUsers"
-						}
 					}
 				},
 				"tags": [
@@ -2782,9 +2782,9 @@
 					"core"
 				]
 			},
-			"patch": {
-				"description": "Updates the relationship of user to group",
-				"operationId": "user-to-group-relationship-update",
+			"post": {
+				"description": "Adds group as relationship to user",
+				"operationId": "user-to-group-relationship-add",
 				"parameters": [
 					{
 						"name": "id",
@@ -2806,9 +2806,9 @@
 					"core"
 				]
 			},
-			"post": {
-				"description": "Adds group as relationship to user",
-				"operationId": "user-to-group-relationship-add",
+			"patch": {
+				"description": "Updates the relationship of user to group",
+				"operationId": "user-to-group-relationship-update",
 				"parameters": [
 					{
 						"name": "id",
@@ -2856,6 +2856,21 @@
 			}
 		},
 		"/groups": {
+			"get": {
+				"description": "List all groups",
+				"operationId": "group-list",
+				"responses": {
+					"200": {
+						"description": "Array of groups",
+						"schema": {
+							"$ref": "#/definitions/PagedGroups"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates a group",
 				"operationId": "group-create",
@@ -2873,21 +2888,6 @@
 				"responses": {
 					"201": {
 						"description": "group created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all groups",
-				"operationId": "group-list",
-				"responses": {
-					"200": {
-						"description": "Array of groups",
-						"schema": {
-							"$ref": "#/definitions/PagedGroups"
-						}
 					}
 				},
 				"tags": [
@@ -3009,9 +3009,9 @@
 					"core"
 				]
 			},
-			"patch": {
-				"description": "Updates the relationship of group to user",
-				"operationId": "group-to-user-relationship-update",
+			"post": {
+				"description": "Adds user as relationship to group",
+				"operationId": "group-to-user-relationship-add",
 				"parameters": [
 					{
 						"name": "id",
@@ -3033,9 +3033,9 @@
 					"core"
 				]
 			},
-			"post": {
-				"description": "Adds user as relationship to group",
-				"operationId": "group-to-user-relationship-add",
+			"patch": {
+				"description": "Updates the relationship of group to user",
+				"operationId": "group-to-user-relationship-update",
 				"parameters": [
 					{
 						"name": "id",
@@ -3083,6 +3083,21 @@
 			}
 		},
 		"/activities": {
+			"get": {
+				"description": "List all activities",
+				"operationId": "activity-list",
+				"responses": {
+					"200": {
+						"description": "Array of activities",
+						"schema": {
+							"$ref": "#/definitions/PagedActivities"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates an activity",
 				"operationId": "activity-create",
@@ -3100,21 +3115,6 @@
 				"responses": {
 					"201": {
 						"description": "activity created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all activities",
-				"operationId": "activity-list",
-				"responses": {
-					"200": {
-						"description": "Array of activities",
-						"schema": {
-							"$ref": "#/definitions/PagedActivities"
-						}
 					}
 				},
 				"tags": [
@@ -3312,6 +3312,21 @@
 			}
 		},
 		"/activity_objects": {
+			"get": {
+				"description": "List all activity-objects",
+				"operationId": "activity_object-list",
+				"responses": {
+					"200": {
+						"description": "Array of activity_objects",
+						"schema": {
+							"$ref": "#/definitions/PagedActivityObjects"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
 			"post": {
 				"description": "Creates an activity-object",
 				"operationId": "activity_object-create",
@@ -3329,21 +3344,6 @@
 				"responses": {
 					"201": {
 						"description": "activity_object created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"get": {
-				"description": "List all activity-objects",
-				"operationId": "activity_object-list",
-				"responses": {
-					"200": {
-						"description": "Array of activity_objects",
-						"schema": {
-							"$ref": "#/definitions/PagedActivityObjects"
-						}
 					}
 				},
 				"tags": [

@@ -2,9 +2,6 @@
 namespace keeko\core\serializer\base;
 
 use keeko\framework\utils\HydrateUtils;
-use Tobscure\JsonApi\Relationship;
-use keeko\core\model\Package;
-use Tobscure\JsonApi\Resource;
 
 /**
  */
@@ -46,7 +43,6 @@ trait ModuleSerializerTrait {
 	 */
 	public function getRelationships() {
 		return [
-			'package' => Package::getSerializer()->getType(null)
 		];
 	}
 
@@ -77,17 +73,5 @@ trait ModuleSerializerTrait {
 		$this->hydrateRelationships($model, $data);
 
 		return $model;
-	}
-
-	/**
-	 * @param mixed $model
-	 */
-	public function package($model) {
-		$serializer = Package::getSerializer();
-		$relationship = new Relationship(new Resource($model->getPackage(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'package');
 	}
 }

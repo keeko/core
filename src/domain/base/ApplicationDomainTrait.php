@@ -120,31 +120,6 @@ trait ApplicationDomainTrait {
 	}
 
 	/**
-	 * Sets the Package id
-	 * 
-	 * @param mixed $id
-	 * @param mixed $id
-	 * @return PayloadInterface
-	 */
-	public function setPackageId($id, $id) {
-		// find
-		$application = $this->get($id);
-
-		if ($application === null) {
-			return new NotFound(['message' => 'Application not found.']);
-		}
-
-		// update
-		if ($application->getId() !== $id) {
-			$application->setId($id);
-			$application->save();
-			return Updated(['model' => $application]);
-		}
-
-		return NotUpdated(['model' => $application]);
-	}
-
-	/**
 	 * Updates a Application with the given idand the provided data
 	 * 
 	 * @param mixed $id

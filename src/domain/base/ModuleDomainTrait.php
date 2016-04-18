@@ -120,31 +120,6 @@ trait ModuleDomainTrait {
 	}
 
 	/**
-	 * Sets the Package id
-	 * 
-	 * @param mixed $id
-	 * @param mixed $id
-	 * @return PayloadInterface
-	 */
-	public function setPackageId($id, $id) {
-		// find
-		$module = $this->get($id);
-
-		if ($module === null) {
-			return new NotFound(['message' => 'Module not found.']);
-		}
-
-		// update
-		if ($module->getId() !== $id) {
-			$module->setId($id);
-			$module->save();
-			return Updated(['model' => $module]);
-		}
-
-		return NotUpdated(['model' => $module]);
-	}
-
-	/**
 	 * Updates a Module with the given idand the provided data
 	 * 
 	 * @param mixed $id

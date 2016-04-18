@@ -201,10 +201,10 @@ trait LocalizationDomainTrait {
 	 * Sets the Language id
 	 * 
 	 * @param mixed $id
-	 * @param mixed $extLanguageId
+	 * @param mixed $extLangId
 	 * @return PayloadInterface
 	 */
-	public function setExtLangId($id, $extLanguageId) {
+	public function setExtLangId($id, $extLangId) {
 		// find
 		$localization = $this->get($id);
 
@@ -213,8 +213,8 @@ trait LocalizationDomainTrait {
 		}
 
 		// update
-		if ($localization->getExtLanguageId() !== $extLanguageId) {
-			$localization->setExtLanguageId($extLanguageId);
+		if ($localization->getExtLanguageId() !== $extLangId) {
+			$localization->setExtLanguageId($extLangId);
 			$localization->save();
 			return Updated(['model' => $localization]);
 		}
