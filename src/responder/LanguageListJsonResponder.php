@@ -27,7 +27,7 @@ class LanguageListJsonResponder extends AbstractPayloadResponder {
 	 */
 	public function found(Request $request, Found $payload) {
 		$params = new Parameters($request->query->all());
-		$data = $payload->Model();
+		$data = $payload->getModel();
 		$serializer = Language::getSerializer();
 		$resource = new Collection($data, $serializer);
 		$resource = $resource->with($params->getInclude(['language', 'language-scope', 'language-type', 'language-script', 'language-family']));

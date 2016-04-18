@@ -25,7 +25,7 @@ class SubdivisionListJsonResponder extends AbstractPayloadResponder {
 	 */
 	public function found(Request $request, Found $payload) {
 		$params = new Parameters($request->query->all());
-		$data = $payload->Model();
+		$data = $payload->getModel();
 		$serializer = Subdivision::getSerializer();
 		$resource = new Collection($data, $serializer);
 		$resource = $resource->with($params->getInclude(['country', 'region-type']));

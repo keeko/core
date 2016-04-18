@@ -26,7 +26,7 @@ class CountryListJsonResponder extends AbstractPayloadResponder {
 	 */
 	public function found(Request $request, Found $payload) {
 		$params = new Parameters($request->query->all());
-		$data = $payload->Model();
+		$data = $payload->getModel();
 		$serializer = Country::getSerializer();
 		$resource = new Collection($data, $serializer);
 		$resource = $resource->with($params->getInclude(['continent', 'currency', 'region-type', 'region-type', 'country']));

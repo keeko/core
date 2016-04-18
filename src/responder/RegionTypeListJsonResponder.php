@@ -24,7 +24,7 @@ class RegionTypeListJsonResponder extends AbstractPayloadResponder {
 	 */
 	public function found(Request $request, Found $payload) {
 		$params = new Parameters($request->query->all());
-		$data = $payload->Model();
+		$data = $payload->getModel();
 		$serializer = RegionType::getSerializer();
 		$resource = new Collection($data, $serializer);
 		$resource = $resource->with($params->getInclude(['region-area']));

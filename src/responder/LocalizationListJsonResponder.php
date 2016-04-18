@@ -26,7 +26,7 @@ class LocalizationListJsonResponder extends AbstractPayloadResponder {
 	 */
 	public function found(Request $request, Found $payload) {
 		$params = new Parameters($request->query->all());
-		$data = $payload->Model();
+		$data = $payload->getModel();
 		$serializer = Localization::getSerializer();
 		$resource = new Collection($data, $serializer);
 		$resource = $resource->with($params->getInclude(['localization', 'language', 'language', 'language-script', 'language-variants']));
