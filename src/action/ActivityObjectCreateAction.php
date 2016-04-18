@@ -9,9 +9,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\ActivityObjectDomain;
 
 /**
- * Action Class for activity_object-create
+ * Creates an activity-object
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ActivityObjectCreateAction extends AbstractAction {
 

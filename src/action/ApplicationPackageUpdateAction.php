@@ -34,7 +34,7 @@ class ApplicationPackageUpdateAction extends AbstractAction {
 		$data = $body['data'];
 		$id = $this->getParam('id');
 		$domain = new ApplicationDomain($this->getServiceContainer());
-		$payload = $domain->setPackage($id, $data);
+		$payload = $domain->setId($id, $data);
 		return $this->responder->run($request, $payload);
 	}
 }

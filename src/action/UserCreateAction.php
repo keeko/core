@@ -9,9 +9,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\UserDomain;
 
 /**
- * Action Class for user-create
+ * Creates an user
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class UserCreateAction extends AbstractAction {
 

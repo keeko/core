@@ -9,9 +9,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\ApplicationDomain;
 
 /**
- * Action Class for application-create
+ * Creates an application
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ApplicationCreateAction extends AbstractAction {
 

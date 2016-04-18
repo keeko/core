@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\PackageDomain;
 
 /**
- * Action Class for package-delete
+ * Deletes a package
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class PackageDeleteAction extends AbstractAction {
 

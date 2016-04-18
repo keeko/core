@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\CountryDomain;
 
 /**
- * Action Class for country-list
+ * List all countries
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class CountryListAction extends AbstractAction {
 

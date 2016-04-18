@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\LanguageTypeDomain;
 
 /**
- * Action Class for language_type-list
+ * List all language-types
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LanguageTypeListAction extends AbstractAction {
 

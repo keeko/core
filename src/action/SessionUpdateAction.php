@@ -10,9 +10,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\SessionDomain;
 
 /**
- * Action Class for session-update
+ * Updates a session
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class SessionUpdateAction extends AbstractAction {
 

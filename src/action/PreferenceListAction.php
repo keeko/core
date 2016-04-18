@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\PreferenceDomain;
 
 /**
- * Action Class for preference-list
+ * List all preferences
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class PreferenceListAction extends AbstractAction {
 

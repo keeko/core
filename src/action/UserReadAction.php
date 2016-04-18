@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\UserDomain;
 
 /**
- * Action Class for user-read
+ * Reads an user
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class UserReadAction extends AbstractAction {
 

@@ -10,9 +10,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\ExtensionDomain;
 
 /**
- * Action Class for extension-update
+ * Updates an extension
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ExtensionUpdateAction extends AbstractAction {
 

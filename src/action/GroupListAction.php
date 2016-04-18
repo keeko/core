@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\GroupDomain;
 
 /**
- * Action Class for group-list
+ * List all groups
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class GroupListAction extends AbstractAction {
 

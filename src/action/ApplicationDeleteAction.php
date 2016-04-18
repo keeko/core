@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\ApplicationDomain;
 
 /**
- * Action Class for application-delete
+ * Deletes an application
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ApplicationDeleteAction extends AbstractAction {
 

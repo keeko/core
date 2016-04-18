@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\ModuleDomain;
 
 /**
- * Action Class for module-delete
+ * Deletes a module
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ModuleDeleteAction extends AbstractAction {
 

@@ -34,7 +34,7 @@ class ApplicationUriApplicationUpdateAction extends AbstractAction {
 		$data = $body['data'];
 		$id = $this->getParam('id');
 		$domain = new ApplicationUriDomain($this->getServiceContainer());
-		$payload = $domain->setApplication($id, $data);
+		$payload = $domain->setApplicationId($id, $data);
 		return $this->responder->run($request, $payload);
 	}
 }

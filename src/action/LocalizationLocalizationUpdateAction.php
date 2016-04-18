@@ -34,7 +34,7 @@ class LocalizationLocalizationUpdateAction extends AbstractAction {
 		$data = $body['data'];
 		$id = $this->getParam('id');
 		$domain = new LocalizationDomain($this->getServiceContainer());
-		$payload = $domain->setParent($id, $data);
+		$payload = $domain->setParentId($id, $data);
 		return $this->responder->run($request, $payload);
 	}
 }

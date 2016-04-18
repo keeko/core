@@ -10,9 +10,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\LocalizationDomain;
 
 /**
- * Action Class for localization-update
+ * Updates a localization
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LocalizationUpdateAction extends AbstractAction {
 

@@ -34,7 +34,7 @@ class LocalizationLanguageScriptUpdateAction extends AbstractAction {
 		$data = $body['data'];
 		$id = $this->getParam('id');
 		$domain = new LocalizationDomain($this->getServiceContainer());
-		$payload = $domain->setScript($id, $data);
+		$payload = $domain->setScriptId($id, $data);
 		return $this->responder->run($request, $payload);
 	}
 }

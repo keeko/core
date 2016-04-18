@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\ExtensionDomain;
 
 /**
- * Action Class for extension-list
+ * List all extensions
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ExtensionListAction extends AbstractAction {
 

@@ -34,7 +34,7 @@ class ActivityActivityObjectUpdateAction extends AbstractAction {
 		$data = $body['data'];
 		$id = $this->getParam('id');
 		$domain = new ActivityDomain($this->getServiceContainer());
-		$payload = $domain->setTarget($id, $data);
+		$payload = $domain->setTargetId($id, $data);
 		return $this->responder->run($request, $payload);
 	}
 }

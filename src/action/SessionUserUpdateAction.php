@@ -34,7 +34,7 @@ class SessionUserUpdateAction extends AbstractAction {
 		$data = $body['data'];
 		$id = $this->getParam('id');
 		$domain = new SessionDomain($this->getServiceContainer());
-		$payload = $domain->setUser($id, $data);
+		$payload = $domain->setUserId($id, $data);
 		return $this->responder->run($request, $payload);
 	}
 }

@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\LanguageFamilyDomain;
 
 /**
- * Action Class for language_family-read
+ * Reads a language-family
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LanguageFamilyReadAction extends AbstractAction {
 

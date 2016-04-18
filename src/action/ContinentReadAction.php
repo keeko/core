@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\ContinentDomain;
 
 /**
- * Action Class for continent-read
+ * Reads a continent
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ContinentReadAction extends AbstractAction {
 

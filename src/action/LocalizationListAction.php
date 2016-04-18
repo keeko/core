@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\LocalizationDomain;
 
 /**
- * Action Class for localization-list
+ * List all localizations
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LocalizationListAction extends AbstractAction {
 

@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\SubdivisionDomain;
 
 /**
- * Action Class for subdivision-read
+ * Reads a subdivision
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class SubdivisionReadAction extends AbstractAction {
 

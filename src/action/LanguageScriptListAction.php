@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\LanguageScriptDomain;
 
 /**
- * Action Class for language_script-list
+ * List all language-scripts
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LanguageScriptListAction extends AbstractAction {
 

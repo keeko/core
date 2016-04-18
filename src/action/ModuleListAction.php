@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\ModuleDomain;
 
 /**
- * Action Class for module-list
+ * List all modules
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ModuleListAction extends AbstractAction {
 

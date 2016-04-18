@@ -9,9 +9,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\PreferenceDomain;
 
 /**
- * Action Class for preference-create
+ * Creates a preference
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class PreferenceCreateAction extends AbstractAction {
 

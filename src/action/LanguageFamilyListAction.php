@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\LanguageFamilyDomain;
 
 /**
- * Action Class for language_family-list
+ * List all language-families
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LanguageFamilyListAction extends AbstractAction {
 

@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\SubdivisionDomain;
 
 /**
- * Action Class for subdivision-list
+ * List all subdivisions
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class SubdivisionListAction extends AbstractAction {
 

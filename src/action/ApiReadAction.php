@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\ApiDomain;
 
 /**
- * Action Class for api-read
+ * Reads an api
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ApiReadAction extends AbstractAction {
 

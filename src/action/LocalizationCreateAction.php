@@ -9,9 +9,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\LocalizationDomain;
 
 /**
- * Action Class for localization-create
+ * Creates a localization
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LocalizationCreateAction extends AbstractAction {
 

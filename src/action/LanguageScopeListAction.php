@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\LanguageScopeDomain;
 
 /**
- * Action Class for language_scope-list
+ * List all language-scopes
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LanguageScopeListAction extends AbstractAction {
 

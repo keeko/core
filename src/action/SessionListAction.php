@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\SessionDomain;
 
 /**
- * Action Class for session-list
+ * List all sessions
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class SessionListAction extends AbstractAction {
 

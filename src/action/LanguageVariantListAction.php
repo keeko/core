@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\LanguageVariantDomain;
 
 /**
- * Action Class for language_variant-list
+ * List all language-variants
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LanguageVariantListAction extends AbstractAction {
 

@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\SessionDomain;
 
 /**
- * Action Class for session-delete
+ * Deletes a session
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class SessionDeleteAction extends AbstractAction {
 

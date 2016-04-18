@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\GroupDomain;
 
 /**
- * Action Class for group-read
+ * Reads a group
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class GroupReadAction extends AbstractAction {
 

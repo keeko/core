@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\ExtensionDomain;
 
 /**
- * Action Class for extension-delete
+ * Deletes an extension
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ExtensionDeleteAction extends AbstractAction {
 

@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\LanguageVariantDomain;
 
 /**
- * Action Class for language_variant-read
+ * Reads a language-variant
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LanguageVariantReadAction extends AbstractAction {
 

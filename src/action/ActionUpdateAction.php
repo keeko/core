@@ -10,9 +10,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\ActionDomain;
 
 /**
- * Action Class for action-update
+ * Updates an action
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ActionUpdateAction extends AbstractAction {
 

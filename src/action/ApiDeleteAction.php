@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\ApiDomain;
 
 /**
- * Action Class for api-delete
+ * Deletes an api
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ApiDeleteAction extends AbstractAction {
 

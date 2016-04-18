@@ -34,7 +34,7 @@ class ApiActionUpdateAction extends AbstractAction {
 		$data = $body['data'];
 		$id = $this->getParam('id');
 		$domain = new ApiDomain($this->getServiceContainer());
-		$payload = $domain->setAction($id, $data);
+		$payload = $domain->setActionId($id, $data);
 		return $this->responder->run($request, $payload);
 	}
 }

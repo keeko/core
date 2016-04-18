@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\ActivityObjectDomain;
 
 /**
- * Action Class for activity_object-list
+ * List all activity-objects
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ActivityObjectListAction extends AbstractAction {
 

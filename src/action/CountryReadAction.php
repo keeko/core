@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\CountryDomain;
 
 /**
- * Action Class for country-read
+ * Reads a country
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class CountryReadAction extends AbstractAction {
 

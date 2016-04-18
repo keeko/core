@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\ApplicationDomain;
 
 /**
- * Action Class for application-list
+ * List all applications
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ApplicationListAction extends AbstractAction {
 

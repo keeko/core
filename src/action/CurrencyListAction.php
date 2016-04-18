@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\CurrencyDomain;
 
 /**
- * Action Class for currency-list
+ * List all currencies
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class CurrencyListAction extends AbstractAction {
 

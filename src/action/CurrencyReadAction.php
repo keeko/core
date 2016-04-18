@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\CurrencyDomain;
 
 /**
- * Action Class for currency-read
+ * Reads a currency
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class CurrencyReadAction extends AbstractAction {
 

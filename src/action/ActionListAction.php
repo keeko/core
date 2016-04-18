@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\ActionDomain;
 
 /**
- * Action Class for action-list
+ * List all actions
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ActionListAction extends AbstractAction {
 

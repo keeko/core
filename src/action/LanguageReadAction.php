@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\LanguageDomain;
 
 /**
- * Action Class for language-read
+ * Reads a language
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LanguageReadAction extends AbstractAction {
 

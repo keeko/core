@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\RegionTypeDomain;
 
 /**
- * Action Class for region_type-read
+ * Reads a region-type
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class RegionTypeReadAction extends AbstractAction {
 

@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\LanguageScriptDomain;
 
 /**
- * Action Class for language_script-read
+ * Reads a language-script
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class LanguageScriptReadAction extends AbstractAction {
 

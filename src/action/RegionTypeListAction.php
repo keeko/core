@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\RegionTypeDomain;
 
 /**
- * Action Class for region_type-list
+ * List all region-types
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class RegionTypeListAction extends AbstractAction {
 

@@ -34,7 +34,7 @@ class ApplicationUriLocalizationUpdateAction extends AbstractAction {
 		$data = $body['data'];
 		$id = $this->getParam('id');
 		$domain = new ApplicationUriDomain($this->getServiceContainer());
-		$payload = $domain->setLocalization($id, $data);
+		$payload = $domain->setLocalizationId($id, $data);
 		return $this->responder->run($request, $payload);
 	}
 }

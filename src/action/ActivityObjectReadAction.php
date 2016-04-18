@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\ActivityObjectDomain;
 
 /**
- * Action Class for activity_object-read
+ * Reads an activity-object
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ActivityObjectReadAction extends AbstractAction {
 

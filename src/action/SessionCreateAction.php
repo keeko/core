@@ -9,9 +9,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\SessionDomain;
 
 /**
- * Action Class for session-create
+ * Creates a session
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class SessionCreateAction extends AbstractAction {
 

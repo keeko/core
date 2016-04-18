@@ -10,9 +10,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\GroupDomain;
 
 /**
- * Action Class for group-update
+ * Updates a group
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class GroupUpdateAction extends AbstractAction {
 

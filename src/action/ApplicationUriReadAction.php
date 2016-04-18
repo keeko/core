@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\ApplicationUriDomain;
 
 /**
- * Action Class for application_uri-read
+ * Reads an application-uri
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ApplicationUriReadAction extends AbstractAction {
 

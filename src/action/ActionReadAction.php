@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\ActionDomain;
 
 /**
- * Action Class for action-read
+ * Reads an action
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ActionReadAction extends AbstractAction {
 

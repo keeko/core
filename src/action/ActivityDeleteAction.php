@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\ActivityDomain;
 
 /**
- * Action Class for activity-delete
+ * Deletes an activity
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ActivityDeleteAction extends AbstractAction {
 

@@ -34,7 +34,7 @@ class LocalizationLanguageUpdateAction extends AbstractAction {
 		$data = $body['data'];
 		$id = $this->getParam('id');
 		$domain = new LocalizationDomain($this->getServiceContainer());
-		$payload = $domain->setExtLang($id, $data);
+		$payload = $domain->setExtLanguageId($id, $data);
 		return $this->responder->run($request, $payload);
 	}
 }

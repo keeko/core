@@ -10,9 +10,11 @@ use Tobscure\JsonApi\Exception\InvalidParameterException;
 use keeko\core\domain\ApplicationUriDomain;
 
 /**
- * Action Class for application_uri-update
+ * Updates an application-uri
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ApplicationUriUpdateAction extends AbstractAction {
 

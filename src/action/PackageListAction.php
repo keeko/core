@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\PackageDomain;
 
 /**
- * Action Class for package-list
+ * List all packages
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class PackageListAction extends AbstractAction {
 

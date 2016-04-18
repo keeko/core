@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\PreferenceDomain;
 
 /**
- * Action Class for preference-delete
+ * Deletes a preference
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class PreferenceDeleteAction extends AbstractAction {
 

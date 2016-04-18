@@ -8,9 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use keeko\core\domain\ApplicationUriDomain;
 
 /**
- * Action Class for application_uri-delete
+ * Deletes an application-uri
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ApplicationUriDeleteAction extends AbstractAction {
 

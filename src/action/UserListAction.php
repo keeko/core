@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\UserDomain;
 
 /**
- * Action Class for user-list
+ * List all users
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class UserListAction extends AbstractAction {
 

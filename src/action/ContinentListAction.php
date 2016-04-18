@@ -8,9 +8,11 @@ use Tobscure\JsonApi\Parameters;
 use keeko\core\domain\ContinentDomain;
 
 /**
- * Action Class for continent-list
+ * List all continents
  * 
  * This code is automatically created. Modifications will probably be overwritten.
+ * 
+ * @author gossi
  */
 class ContinentListAction extends AbstractAction {
 

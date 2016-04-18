@@ -34,7 +34,7 @@ class ActionModuleUpdateAction extends AbstractAction {
 		$data = $body['data'];
 		$id = $this->getParam('id');
 		$domain = new ActionDomain($this->getServiceContainer());
-		$payload = $domain->setModule($id, $data);
+		$payload = $domain->setModuleId($id, $data);
 		return $this->responder->run($request, $payload);
 	}
 }

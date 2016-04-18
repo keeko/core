@@ -34,7 +34,7 @@ class ActivityUserUpdateAction extends AbstractAction {
 		$data = $body['data'];
 		$id = $this->getParam('id');
 		$domain = new ActivityDomain($this->getServiceContainer());
-		$payload = $domain->setActor($id, $data);
+		$payload = $domain->setActorId($id, $data);
 		return $this->responder->run($request, $payload);
 	}
 }
