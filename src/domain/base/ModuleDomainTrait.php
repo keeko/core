@@ -8,7 +8,7 @@ use keeko\framework\domain\payload\PayloadInterface;
 use phootwork\collection\Map;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
-use Tobscure\JsonApi\Parameters;
+use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;

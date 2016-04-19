@@ -4,7 +4,7 @@ namespace keeko\core\action;
 use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tobscure\JsonApi\Parameters;
+use keeko\framework\utils\Parameters;
 use keeko\core\domain\LocalizationDomain;
 
 /**
