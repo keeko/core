@@ -5,6 +5,7 @@ use keeko\framework\utils\HydrateUtils;
 use Tobscure\JsonApi\Relationship;
 use keeko\core\model\User;
 use Tobscure\JsonApi\Collection;
+use keeko\core\model\Action;
 
 /**
  */
@@ -12,17 +13,26 @@ trait GroupSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
+	 */
+	public function actions($model) {
+		$relationship = new Relationship(new Collection($model->getActions(), Action::getSerializer()));
+		return $this->addRelationshipSelfLink($relationship, $model, 'actions');
+	}
+
+	/**
+	 * @param mixed $model
 	 * @param array $fields
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'owner_id' => $model->OwnerId(),
-			'name' => $model->Name(),
-			'is_guest' => $model->IsGuest(),
-			'is_default' => $model->IsDefault(),
-			'is_active' => $model->IsActive(),
-			'is_system' => $model->IsSystem(),
+			'id' => $model->getId(),
+			'owner_id' => $model->getOwnerId(),
+			'name' => $model->getName(),
+			'is_guest' => $model->getIsGuest(),
+			'is_default' => $model->getIsDefault(),
+			'is_active' => $model->getIsActive(),
+			'is_system' => $model->getIsSystem(),
 		];
 	}
 
@@ -34,6 +44,7 @@ trait GroupSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -43,7 +54,8 @@ trait GroupSerializerTrait {
 	 */
 	public function getRelationships() {
 		return [
-			'user' => User::getSerializer()->getType(null)
+			'users' => User::getSerializer()->getType(null),
+			'actions' => Action::getSerializer()->getType(null)
 		];
 	}
 
@@ -55,6 +67,7 @@ trait GroupSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/group';
@@ -63,6 +76,7 @@ trait GroupSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -78,9 +92,16 @@ trait GroupSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
-	public function user($model) {
+	public function users($model) {
 		$relationship = new Relationship(new Collection($model->getUsers(), User::getSerializer()));
-		return $this->addRelationshipSelfLink($relationship, $model, 'user');
+		return $this->addRelationshipSelfLink($relationship, $model, 'users');
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

@@ -11,11 +11,11 @@ trait LanguageVariantSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'name' => $model->Name(),
-			'subtag' => $model->Subtag(),
-			'prefixes' => $model->Prefixes(),
-			'comment' => $model->Comment(),
+			'id' => $model->getId(),
+			'name' => $model->getName(),
+			'subtag' => $model->getSubtag(),
+			'prefixes' => $model->getPrefixes(),
+			'comment' => $model->getComment(),
 		];
 	}
 
@@ -27,6 +27,7 @@ trait LanguageVariantSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -40,6 +41,7 @@ trait LanguageVariantSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/language-variant';
@@ -48,6 +50,7 @@ trait LanguageVariantSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// this model is read-only!

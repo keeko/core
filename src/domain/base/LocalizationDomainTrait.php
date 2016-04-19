@@ -24,6 +24,10 @@ use keeko\core\model\LocalizationVariantQuery;
 trait LocalizationDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Adds LanguageVariant to Localization
 	 * 
 	 * @param mixed $id
@@ -215,31 +219,6 @@ trait LocalizationDomainTrait {
 		// update
 		if ($localization->getExtLanguageId() !== $extLangId) {
 			$localization->setExtLanguageId($extLangId);
-			$localization->save();
-			return Updated(['model' => $localization]);
-		}
-
-		return NotUpdated(['model' => $localization]);
-	}
-
-	/**
-	 * Sets the Language id
-	 * 
-	 * @param mixed $id
-	 * @param mixed $languageId
-	 * @return PayloadInterface
-	 */
-	public function setLanguageId($id, $languageId) {
-		// find
-		$localization = $this->get($id);
-
-		if ($localization === null) {
-			return new NotFound(['message' => 'Localization not found.']);
-		}
-
-		// update
-		if ($localization->getLanguageId() !== $languageId) {
-			$localization->setLanguageId($languageId);
 			$localization->save();
 			return Updated(['model' => $localization]);
 		}

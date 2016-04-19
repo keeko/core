@@ -11,29 +11,29 @@ trait CountrySerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'numeric' => $model->Numeric(),
-			'alpha_2' => $model->Alpha2(),
-			'alpha_3' => $model->Alpha3(),
-			'short_name' => $model->ShortName(),
-			'ioc' => $model->Ioc(),
-			'tld' => $model->Tld(),
-			'phone' => $model->Phone(),
-			'capital' => $model->Capital(),
-			'postal_code_format' => $model->PostalCodeFormat(),
-			'postal_code_regex' => $model->PostalCodeRegex(),
-			'continent_id' => $model->ContinentId(),
-			'currency_id' => $model->CurrencyId(),
-			'type_id' => $model->TypeId(),
-			'subtype_id' => $model->SubtypeId(),
-			'sovereignity_id' => $model->SovereignityId(),
-			'formal_name' => $model->FormalName(),
-			'formal_native_name' => $model->FormalNativeName(),
-			'short_native_name' => $model->ShortNativeName(),
-			'bbox_sw_lat' => $model->BboxSwLat(),
-			'bbox_sw_lng' => $model->BboxSwLng(),
-			'bbox_ne_lat' => $model->BboxNeLat(),
-			'bbox_ne_lng' => $model->BboxNeLng(),
+			'id' => $model->getId(),
+			'numeric' => $model->getNumeric(),
+			'alpha_2' => $model->getAlpha2(),
+			'alpha_3' => $model->getAlpha3(),
+			'short_name' => $model->getShortName(),
+			'ioc' => $model->getIoc(),
+			'tld' => $model->getTld(),
+			'phone' => $model->getPhone(),
+			'capital' => $model->getCapital(),
+			'postal_code_format' => $model->getPostalCodeFormat(),
+			'postal_code_regex' => $model->getPostalCodeRegex(),
+			'continent_id' => $model->getContinentId(),
+			'currency_id' => $model->getCurrencyId(),
+			'type_id' => $model->getTypeId(),
+			'subtype_id' => $model->getSubtypeId(),
+			'sovereignity_id' => $model->getSovereignityId(),
+			'formal_name' => $model->getFormalName(),
+			'formal_native_name' => $model->getFormalNativeName(),
+			'short_native_name' => $model->getShortNativeName(),
+			'bbox_sw_lat' => $model->getBboxSwLat(),
+			'bbox_sw_lng' => $model->getBboxSwLng(),
+			'bbox_ne_lat' => $model->getBboxNeLat(),
+			'bbox_ne_lng' => $model->getBboxNeLng(),
 		];
 	}
 
@@ -45,6 +45,7 @@ trait CountrySerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -58,6 +59,7 @@ trait CountrySerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/country';
@@ -66,6 +68,7 @@ trait CountrySerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// this model is read-only!

@@ -5,6 +5,7 @@ use keeko\core\model\Base\User as BaseUser;
 use keeko\core\serializer\UserSerializer;
 use keeko\framework\model\ApiModelInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use keeko\framework\model\ActivityObjectInterface;
 
 /**
  * Skeleton subclass for representing a row from the 'kk_user' table.
@@ -36,8 +37,9 @@ class User extends BaseUser implements ApiModelInterface {
 	public function newActivity(array $activity) {
 		$resolver = new OptionsResolver();
 		$resolver->setRequired(array('verb', 'object'));
-		$resolver->setOptional(array('target'));
-		$resolver->setAllowedTypes(array('target' => array('keeko\\framework\\model\\ActivityObjectInterface', 'keeko\\core\\model\\ActivityObject'), 'object' => array('keeko\\framework\\model\\ActivityObjectInterface', 'keeko\\core\\model\\ActivityObject')));
+		$resolver->setDefined(array('target'));
+		$resolver->setAllowedTypes('target', array('keeko\\framework\\model\\ActivityObjectInterface', 'keeko\\core\\model\\ActivityObject'));
+		$resolver->setAllowedTypes('object', array('keeko\\framework\\model\\ActivityObjectInterface', 'keeko\\core\\model\\ActivityObject'));
 		$options = $resolver->resolve($activity);
 		$obj = new Activity();
 		$obj->setActor($this);
@@ -51,6 +53,7 @@ class User extends BaseUser implements ApiModelInterface {
 
 	/**
 	 * @param ActivityObject $ao
+	 * @return ActivityObject
 	 */
 	private function findActivityObject(ActivityObject $ao) {
 		$q = ActivityObjectQuery::create()->filterByClassName($ao->getClassName())->filterByType($ao->getType())->filterByReferenceId($ao->getId());
@@ -70,6 +73,7 @@ class User extends BaseUser implements ApiModelInterface {
 
 	/**
 	 * @param mixed $obj
+	 * @return ActivityObject
 	 */
 	private function getActivityObject($obj) {
 		if ($obj instanceof ActivityObject) {

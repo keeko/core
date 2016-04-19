@@ -22,6 +22,10 @@ use keeko\framework\domain\payload\NotDeleted;
 trait ModuleDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Creates a new Module with the provided data
 	 * 
 	 * @param mixed $data

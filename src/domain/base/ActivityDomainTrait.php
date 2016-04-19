@@ -22,6 +22,10 @@ use keeko\framework\domain\payload\NotDeleted;
 trait ActivityDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Creates a new Activity with the provided data
 	 * 
 	 * @param mixed $data
@@ -137,31 +141,6 @@ trait ActivityDomainTrait {
 		// update
 		if ($activity->getActorId() !== $actorId) {
 			$activity->setActorId($actorId);
-			$activity->save();
-			return Updated(['model' => $activity]);
-		}
-
-		return NotUpdated(['model' => $activity]);
-	}
-
-	/**
-	 * Sets the ActivityObject id
-	 * 
-	 * @param mixed $id
-	 * @param mixed $objectId
-	 * @return PayloadInterface
-	 */
-	public function setObjectId($id, $objectId) {
-		// find
-		$activity = $this->get($id);
-
-		if ($activity === null) {
-			return new NotFound(['message' => 'Activity not found.']);
-		}
-
-		// update
-		if ($activity->getObjectId() !== $objectId) {
-			$activity->setObjectId($objectId);
 			$activity->save();
 			return Updated(['model' => $activity]);
 		}

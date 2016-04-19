@@ -11,10 +11,10 @@ trait ContinentSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'parent_id' => $model->ParentId(),
-			'numeric' => $model->Numeric(),
-			'name' => $model->Name(),
+			'id' => $model->getId(),
+			'parent_id' => $model->getParentId(),
+			'numeric' => $model->getNumeric(),
+			'name' => $model->getName(),
 		];
 	}
 
@@ -26,6 +26,7 @@ trait ContinentSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -39,6 +40,7 @@ trait ContinentSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/continent';
@@ -47,6 +49,7 @@ trait ContinentSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// this model is read-only!

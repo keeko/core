@@ -12,6 +12,7 @@ trait ApiSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
 	public function action($model) {
 		$serializer = Action::getSerializer();
@@ -28,11 +29,11 @@ trait ApiSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'route' => $model->Route(),
-			'method' => $model->Method(),
-			'action_id' => $model->ActionId(),
-			'required_params' => $model->RequiredParams(),
+			'id' => $model->getId(),
+			'route' => $model->getRoute(),
+			'method' => $model->getMethod(),
+			'action_id' => $model->getActionId(),
+			'required_params' => $model->getRequiredParams(),
 		];
 	}
 
@@ -44,6 +45,7 @@ trait ApiSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -65,6 +67,7 @@ trait ApiSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/api';
@@ -73,6 +76,7 @@ trait ApiSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -85,4 +89,10 @@ trait ApiSerializerTrait {
 
 		return $model;
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

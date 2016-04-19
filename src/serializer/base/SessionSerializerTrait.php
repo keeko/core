@@ -16,8 +16,8 @@ trait SessionSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'token' => $model->Token(),
-			'user_id' => $model->UserId(),
+			'token' => $model->getToken(),
+			'user_id' => $model->getUserId(),
 		];
 	}
 
@@ -29,6 +29,7 @@ trait SessionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -50,6 +51,7 @@ trait SessionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/session';
@@ -58,6 +60,7 @@ trait SessionSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -73,6 +76,7 @@ trait SessionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
 	public function user($model) {
 		$serializer = User::getSerializer();
@@ -82,4 +86,10 @@ trait SessionSerializerTrait {
 		]);
 		return $this->addRelationshipSelfLink($relationship, $model, 'user');
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

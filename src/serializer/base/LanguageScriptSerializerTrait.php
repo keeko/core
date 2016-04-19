@@ -11,12 +11,12 @@ trait LanguageScriptSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'alpha_4' => $model->Alpha4(),
-			'numeric' => $model->Numeric(),
-			'name' => $model->Name(),
-			'alias' => $model->Alias(),
-			'direction' => $model->Direction(),
+			'id' => $model->getId(),
+			'alpha_4' => $model->getAlpha4(),
+			'numeric' => $model->getNumeric(),
+			'name' => $model->getName(),
+			'alias' => $model->getAlias(),
+			'direction' => $model->getDirection(),
 		];
 	}
 
@@ -28,6 +28,7 @@ trait LanguageScriptSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -41,6 +42,7 @@ trait LanguageScriptSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/language-script';
@@ -49,6 +51,7 @@ trait LanguageScriptSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// this model is read-only!

@@ -18,10 +18,54 @@ use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 use keeko\core\model\UserQuery;
 use keeko\core\model\UserGroupQuery;
+use keeko\core\model\ActionQuery;
+use keeko\core\model\GroupActionQuery;
 
 /**
  */
 trait GroupDomainTrait {
+
+	/**
+	 */
+	protected $pool;
+
+	/**
+	 * Adds Action to Group
+	 * 
+	 * @param mixed $id
+	 * @param mixed $data
+	 * @return PayloadInterface
+	 */
+	public function addAction($id, $data) {
+		// find
+		$group = $this->get($id);
+
+		if ($group === null) {
+			return new NotFound(['message' => 'Group not found.']);
+		}
+		 
+		// update
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Action';
+			}
+			$action = ActionQuery::create()->findOneById($entry['id']);
+			$group->addAction($action);
+		}
+
+		if (count($errors) > 0) {
+			return new NotValid(['errors' => $errors]);
+		}
+
+		$rows = $group->save();
+
+		if ($rows > 0) {
+			return Updated(['model' => $group]);
+		}
+
+		return NotUpdated(['model' => $group]);
+	}
 
 	/**
 	 * Adds User to Group
@@ -160,6 +204,44 @@ trait GroupDomainTrait {
 	}
 
 	/**
+	 * Removes Action from Group
+	 * 
+	 * @param mixed $id
+	 * @param mixed $data
+	 * @return PayloadInterface
+	 */
+	public function removeAction($id, $data) {
+		// find
+		$group = $this->get($id);
+
+		if ($group === null) {
+			return new NotFound(['message' => 'Group not found.']);
+		}
+
+		// remove them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Action';
+			}
+			$action = ActionQuery::create()->findOneById($entry['id']);
+			$group->removeAction($action);
+		}
+
+		if (count($errors) > 0) {
+			return new NotValid(['errors' => $errors]);
+		}
+
+		$rows = $group->save();
+
+		if ($rows > 0) {
+			return Updated(['model' => $group]);
+		}
+
+		return NotUpdated(['model' => $group]);
+	}
+
+	/**
 	 * Removes User from Group
 	 * 
 	 * @param mixed $id
@@ -231,6 +313,47 @@ trait GroupDomainTrait {
 		}
 
 		return new Updated($payload);
+	}
+
+	/**
+	 * Updates Action on Group
+	 * 
+	 * @param mixed $id
+	 * @param mixed $data
+	 * @return PayloadInterface
+	 */
+	public function updateAction($id, $data) {
+		// find
+		$group = $this->get($id);
+
+		if ($group === null) {
+			return new NotFound(['message' => 'Group not found.']);
+		}
+
+		// remove all relationships before
+		GroupActionQuery::create()->filterByGroup($group)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Action';
+			}
+			$action = ActionQuery::create()->findOneById($entry['id']);
+			$group->addAction($action);
+		}
+
+		if (count($errors) > 0) {
+			return new NotValid(['errors' => $errors]);
+		}
+
+		$rows = $group->save();
+
+		if ($rows > 0) {
+			return Updated(['model' => $group]);
+		}
+
+		return NotUpdated(['model' => $group]);
 	}
 
 	/**

@@ -13,6 +13,7 @@ trait ActivitySerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
 	public function actor($model) {
 		$serializer = User::getSerializer();
@@ -29,11 +30,11 @@ trait ActivitySerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'actor_id' => $model->ActorId(),
-			'verb' => $model->Verb(),
-			'object_id' => $model->ObjectId(),
-			'target_id' => $model->TargetId(),
+			'id' => $model->getId(),
+			'actor_id' => $model->getActorId(),
+			'verb' => $model->getVerb(),
+			'object_id' => $model->getObjectId(),
+			'target_id' => $model->getTargetId(),
 		];
 	}
 
@@ -45,6 +46,7 @@ trait ActivitySerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -55,7 +57,6 @@ trait ActivitySerializerTrait {
 	public function getRelationships() {
 		return [
 			'actor' => User::getSerializer()->getType(null),
-			'object' => ActivityObject::getSerializer()->getType(null),
 			'target' => ActivityObject::getSerializer()->getType(null)
 		];
 	}
@@ -68,6 +69,7 @@ trait ActivitySerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/activity';
@@ -76,6 +78,7 @@ trait ActivitySerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -91,18 +94,7 @@ trait ActivitySerializerTrait {
 
 	/**
 	 * @param mixed $model
-	 */
-	public function object($model) {
-		$serializer = ActivityObject::getSerializer();
-		$relationship = new Relationship(new Resource($model->getObject(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'object');
-	}
-
-	/**
-	 * @param mixed $model
+	 * @return Relationship
 	 */
 	public function target($model) {
 		$serializer = ActivityObject::getSerializer();
@@ -112,4 +104,10 @@ trait ActivitySerializerTrait {
 		]);
 		return $this->addRelationshipSelfLink($relationship, $model, 'target');
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

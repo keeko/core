@@ -22,6 +22,10 @@ use keeko\framework\domain\payload\NotDeleted;
 trait SessionDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Creates a new Session with the provided data
 	 * 
 	 * @param mixed $data

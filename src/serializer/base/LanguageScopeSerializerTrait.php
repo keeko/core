@@ -11,8 +11,8 @@ trait LanguageScopeSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'name' => $model->Name(),
+			'id' => $model->getId(),
+			'name' => $model->getName(),
 		];
 	}
 
@@ -24,6 +24,7 @@ trait LanguageScopeSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -37,6 +38,7 @@ trait LanguageScopeSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/language-scope';
@@ -45,6 +47,7 @@ trait LanguageScopeSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// this model is read-only!

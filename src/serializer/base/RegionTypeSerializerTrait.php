@@ -11,9 +11,9 @@ trait RegionTypeSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'name' => $model->Name(),
-			'area_id' => $model->AreaId(),
+			'id' => $model->getId(),
+			'name' => $model->getName(),
+			'area_id' => $model->getAreaId(),
 		];
 	}
 
@@ -25,6 +25,7 @@ trait RegionTypeSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -38,6 +39,7 @@ trait RegionTypeSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/region-type';
@@ -46,6 +48,7 @@ trait RegionTypeSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// this model is read-only!

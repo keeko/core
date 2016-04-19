@@ -13,16 +13,16 @@ trait ModuleSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'class_name' => $model->ClassName(),
-			'activated_version' => $model->ActivatedVersion(),
-			'default_action' => $model->DefaultAction(),
-			'slug' => $model->Slug(),
-			'has_api' => $model->Api(),
-			'id' => $model->Id(),
-			'name' => $model->Name(),
-			'title' => $model->Title(),
-			'description' => $model->Description(),
-			'installed_version' => $model->InstalledVersion(),
+			'class_name' => $model->getClassName(),
+			'activated_version' => $model->getActivatedVersion(),
+			'default_action' => $model->getDefaultAction(),
+			'slug' => $model->getSlug(),
+			'has_api' => $model->getApi(),
+			'id' => $model->getId(),
+			'name' => $model->getName(),
+			'title' => $model->getTitle(),
+			'description' => $model->getDescription(),
+			'installed_version' => $model->getInstalledVersion(),
 		];
 	}
 
@@ -34,6 +34,7 @@ trait ModuleSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -54,6 +55,7 @@ trait ModuleSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/module';
@@ -62,6 +64,7 @@ trait ModuleSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -74,4 +77,10 @@ trait ModuleSerializerTrait {
 
 		return $model;
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

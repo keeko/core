@@ -22,6 +22,10 @@ use keeko\framework\domain\payload\NotDeleted;
 trait ActivityObjectDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Creates a new ActivityObject with the provided data
 	 * 
 	 * @param mixed $data

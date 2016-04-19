@@ -24,6 +24,10 @@ use keeko\core\model\UserGroupQuery;
 trait UserDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Adds Group to User
 	 * 
 	 * @param mixed $id

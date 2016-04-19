@@ -16,6 +16,10 @@ use keeko\framework\utils\NameUtils;
 trait ContinentDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params

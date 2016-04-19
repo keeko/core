@@ -11,16 +11,16 @@ trait CurrencySerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'numeric' => $model->Numeric(),
-			'alpha_3' => $model->Alpha3(),
-			'name' => $model->Name(),
-			'symbol_left' => $model->SymbolLeft(),
-			'symbol_right' => $model->SymbolRight(),
-			'decimal_digits' => $model->DecimalDigits(),
-			'sub_divisor' => $model->SubDivisor(),
-			'sub_symbol_left' => $model->SubSymbolLeft(),
-			'sub_symbol_right' => $model->SubSymbolRight(),
+			'id' => $model->getId(),
+			'numeric' => $model->getNumeric(),
+			'alpha_3' => $model->getAlpha3(),
+			'name' => $model->getName(),
+			'symbol_left' => $model->getSymbolLeft(),
+			'symbol_right' => $model->getSymbolRight(),
+			'decimal_digits' => $model->getDecimalDigits(),
+			'sub_divisor' => $model->getSubDivisor(),
+			'sub_symbol_left' => $model->getSubSymbolLeft(),
+			'sub_symbol_right' => $model->getSubSymbolRight(),
 		];
 	}
 
@@ -32,6 +32,7 @@ trait CurrencySerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -45,6 +46,7 @@ trait CurrencySerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/currency';
@@ -53,6 +55,7 @@ trait CurrencySerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// this model is read-only!

@@ -16,15 +16,15 @@ trait UserSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'login_name' => $model->LoginName(),
-			'password' => $model->Password(),
-			'given_name' => $model->GivenName(),
-			'family_name' => $model->FamilyName(),
-			'display_name' => $model->DisplayName(),
-			'email' => $model->Email(),
-			'birthday' => $model->Birthday(\DateTime::ISO8601),
-			'sex' => $model->Sex(),
+			'id' => $model->getId(),
+			'login_name' => $model->getLoginName(),
+			'password' => $model->getPassword(),
+			'given_name' => $model->getGivenName(),
+			'family_name' => $model->getFamilyName(),
+			'display_name' => $model->getDisplayName(),
+			'email' => $model->getEmail(),
+			'birthday' => $model->getBirthday(\DateTime::ISO8601),
+			'sex' => $model->getSex(),
 		];
 	}
 
@@ -36,6 +36,7 @@ trait UserSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -45,7 +46,7 @@ trait UserSerializerTrait {
 	 */
 	public function getRelationships() {
 		return [
-			'group' => Group::getSerializer()->getType(null)
+			'groups' => Group::getSerializer()->getType(null)
 		];
 	}
 
@@ -57,6 +58,7 @@ trait UserSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/user';
@@ -64,15 +66,17 @@ trait UserSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
-	public function group($model) {
+	public function groups($model) {
 		$relationship = new Relationship(new Collection($model->getGroups(), Group::getSerializer()));
-		return $this->addRelationshipSelfLink($relationship, $model, 'group');
+		return $this->addRelationshipSelfLink($relationship, $model, 'groups');
 	}
 
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -87,4 +91,10 @@ trait UserSerializerTrait {
 
 		return $model;
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

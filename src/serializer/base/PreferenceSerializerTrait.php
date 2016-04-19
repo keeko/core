@@ -13,9 +13,9 @@ trait PreferenceSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'key' => $model->Key(),
-			'value' => $model->Value(),
-			'module_id' => $model->ModuleId(),
+			'key' => $model->getKey(),
+			'value' => $model->getValue(),
+			'module_id' => $model->getModuleId(),
 		];
 	}
 
@@ -27,6 +27,7 @@ trait PreferenceSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -47,6 +48,7 @@ trait PreferenceSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/preference';
@@ -55,6 +57,7 @@ trait PreferenceSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -67,4 +70,10 @@ trait PreferenceSerializerTrait {
 
 		return $model;
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

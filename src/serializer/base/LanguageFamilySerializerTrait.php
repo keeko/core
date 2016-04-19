@@ -11,10 +11,10 @@ trait LanguageFamilySerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'parent_id' => $model->ParentId(),
-			'alpha_3' => $model->Alpha3(),
-			'name' => $model->Name(),
+			'id' => $model->getId(),
+			'parent_id' => $model->getParentId(),
+			'alpha_3' => $model->getAlpha3(),
+			'name' => $model->getName(),
 		];
 	}
 
@@ -26,6 +26,7 @@ trait LanguageFamilySerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -39,6 +40,7 @@ trait LanguageFamilySerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/language-family';
@@ -47,6 +49,7 @@ trait LanguageFamilySerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// this model is read-only!

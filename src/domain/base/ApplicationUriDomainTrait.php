@@ -22,6 +22,10 @@ use keeko\framework\domain\payload\NotDeleted;
 trait ApplicationUriDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Creates a new ApplicationUri with the provided data
 	 * 
 	 * @param mixed $data

@@ -22,6 +22,10 @@ use keeko\framework\domain\payload\NotDeleted;
 trait ApplicationDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Creates a new Application with the provided data
 	 * 
 	 * @param mixed $data

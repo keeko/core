@@ -16,10 +16,10 @@ trait ExtensionSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'key' => $model->Key(),
-			'data' => $model->Data(),
-			'package_id' => $model->PackageId(),
+			'id' => $model->getId(),
+			'key' => $model->getKey(),
+			'data' => $model->getData(),
+			'package_id' => $model->getPackageId(),
 		];
 	}
 
@@ -31,6 +31,7 @@ trait ExtensionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -52,6 +53,7 @@ trait ExtensionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/extension';
@@ -60,6 +62,7 @@ trait ExtensionSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -75,6 +78,7 @@ trait ExtensionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
 	public function package($model) {
 		$serializer = Package::getSerializer();
@@ -84,4 +88,10 @@ trait ExtensionSerializerTrait {
 		]);
 		return $this->addRelationshipSelfLink($relationship, $model, 'package');
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

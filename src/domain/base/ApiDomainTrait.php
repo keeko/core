@@ -22,6 +22,10 @@ use keeko\framework\domain\payload\NotDeleted;
 trait ApiDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Creates a new Api with the provided data
 	 * 
 	 * @param mixed $data

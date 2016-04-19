@@ -11,14 +11,14 @@ trait SubdivisionSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'code' => $model->Code(),
-			'name' => $model->Name(),
-			'native_name' => $model->NativeName(),
-			'alt_names' => $model->AltNames(),
-			'parent_id' => $model->ParentId(),
-			'country_id' => $model->CountryId(),
-			'type_id' => $model->TypeId(),
+			'id' => $model->getId(),
+			'code' => $model->getCode(),
+			'name' => $model->getName(),
+			'native_name' => $model->getNativeName(),
+			'alt_names' => $model->getAltNames(),
+			'parent_id' => $model->getParentId(),
+			'country_id' => $model->getCountryId(),
+			'type_id' => $model->getTypeId(),
 		];
 	}
 
@@ -30,6 +30,7 @@ trait SubdivisionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -43,6 +44,7 @@ trait SubdivisionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/subdivision';
@@ -51,6 +53,7 @@ trait SubdivisionSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// this model is read-only!

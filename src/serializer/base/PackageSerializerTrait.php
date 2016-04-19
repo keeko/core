@@ -13,12 +13,12 @@ trait PackageSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'name' => $model->Name(),
-			'title' => $model->Title(),
-			'description' => $model->Description(),
-			'installed_version' => $model->InstalledVersion(),
-			'descendant_class' => $model->DescendantClass(),
+			'id' => $model->getId(),
+			'name' => $model->getName(),
+			'title' => $model->getTitle(),
+			'description' => $model->getDescription(),
+			'installed_version' => $model->getInstalledVersion(),
+			'descendant_class' => $model->getDescendantClass(),
 		];
 	}
 
@@ -30,6 +30,7 @@ trait PackageSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -50,6 +51,7 @@ trait PackageSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/package';
@@ -58,6 +60,7 @@ trait PackageSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -70,4 +73,10 @@ trait PackageSerializerTrait {
 
 		return $model;
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

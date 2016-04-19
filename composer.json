@@ -1337,6 +1337,50 @@
 							"json": "keeko\\core\\responder\\GroupUserJsonResponder"
 						}
 					},
+					"group-to-action-relationship-read": {
+						"title": "Reads the relationship of group to action",
+						"description": "",
+						"class": "keeko\\core\\action\\GroupActionReadAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupActionJsonResponder"
+						}
+					},
+					"group-to-action-relationship-update": {
+						"title": "Updates the relationship of group to action",
+						"description": "",
+						"class": "keeko\\core\\action\\GroupActionUpdateAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupActionJsonResponder"
+						}
+					},
+					"group-to-action-relationship-add": {
+						"title": "Adds action as relationship to group",
+						"description": "",
+						"class": "keeko\\core\\action\\GroupActionAddAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupActionJsonResponder"
+						}
+					},
+					"group-to-action-relationship-remove": {
+						"title": "Removes action as relationship of group",
+						"description": "",
+						"class": "keeko\\core\\action\\GroupActionRemoveAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupActionJsonResponder"
+						}
+					},
 					"activity-create": {
 						"title": "Creates an activity",
 						"description": "",

@@ -18,12 +18,12 @@ trait ActionSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'name' => $model->Name(),
-			'title' => $model->Title(),
-			'description' => $model->Description(),
-			'class_name' => $model->ClassName(),
-			'module_id' => $model->ModuleId(),
+			'id' => $model->getId(),
+			'name' => $model->getName(),
+			'title' => $model->getTitle(),
+			'description' => $model->getDescription(),
+			'class_name' => $model->getClassName(),
+			'module_id' => $model->getModuleId(),
 		];
 	}
 
@@ -35,6 +35,7 @@ trait ActionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -45,7 +46,7 @@ trait ActionSerializerTrait {
 	public function getRelationships() {
 		return [
 			'module' => Module::getSerializer()->getType(null),
-			'group' => Group::getSerializer()->getType(null)
+			'groups' => Group::getSerializer()->getType(null)
 		];
 	}
 
@@ -57,6 +58,7 @@ trait ActionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/action';
@@ -64,15 +66,17 @@ trait ActionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
-	public function group($model) {
+	public function groups($model) {
 		$relationship = new Relationship(new Collection($model->getGroups(), Group::getSerializer()));
-		return $this->addRelationshipSelfLink($relationship, $model, 'group');
+		return $this->addRelationshipSelfLink($relationship, $model, 'groups');
 	}
 
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -88,6 +92,7 @@ trait ActionSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
 	public function module($model) {
 		$serializer = Module::getSerializer();
@@ -97,4 +102,10 @@ trait ActionSerializerTrait {
 		]);
 		return $this->addRelationshipSelfLink($relationship, $model, 'module');
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

@@ -16,6 +16,7 @@ trait LocalizationSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
 	public function extLang($model) {
 		$serializer = Language::getSerializer();
@@ -32,15 +33,15 @@ trait LocalizationSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'parent_id' => $model->ParentId(),
-			'name' => $model->Name(),
-			'locale' => $model->Locale(),
-			'language_id' => $model->LanguageId(),
-			'ext_language_id' => $model->ExtLanguageId(),
-			'region' => $model->Region(),
-			'script_id' => $model->ScriptId(),
-			'is_default' => $model->IsDefault(),
+			'id' => $model->getId(),
+			'parent_id' => $model->getParentId(),
+			'name' => $model->getName(),
+			'locale' => $model->getLocale(),
+			'language_id' => $model->getLanguageId(),
+			'ext_language_id' => $model->getExtLanguageId(),
+			'region' => $model->getRegion(),
+			'script_id' => $model->getScriptId(),
+			'is_default' => $model->getIsDefault(),
 		];
 	}
 
@@ -52,6 +53,7 @@ trait LocalizationSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -62,10 +64,9 @@ trait LocalizationSerializerTrait {
 	public function getRelationships() {
 		return [
 			'parent' => Localization::getSerializer()->getType(null),
-			'language' => Language::getSerializer()->getType(null),
 			'ext-lang' => Language::getSerializer()->getType(null),
 			'script' => LanguageScript::getSerializer()->getType(null),
-			'language-variant' => LanguageVariant::getSerializer()->getType(null)
+			'language-variants' => LanguageVariant::getSerializer()->getType(null)
 		];
 	}
 
@@ -77,6 +78,7 @@ trait LocalizationSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/localization';
@@ -85,6 +87,7 @@ trait LocalizationSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -100,26 +103,16 @@ trait LocalizationSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
-	public function language($model) {
-		$serializer = Language::getSerializer();
-		$relationship = new Relationship(new Resource($model->getLanguage(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'language');
-	}
-
-	/**
-	 * @param mixed $model
-	 */
-	public function languageVariant($model) {
+	public function languageVariants($model) {
 		$relationship = new Relationship(new Collection($model->getLanguageVariants(), LanguageVariant::getSerializer()));
-		return $this->addRelationshipSelfLink($relationship, $model, 'language-variant');
+		return $this->addRelationshipSelfLink($relationship, $model, 'language-variants');
 	}
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
 	public function parent($model) {
 		$serializer = Localization::getSerializer();
@@ -132,6 +125,7 @@ trait LocalizationSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
 	public function script($model) {
 		$serializer = LanguageScript::getSerializer();
@@ -141,4 +135,10 @@ trait LocalizationSerializerTrait {
 		]);
 		return $this->addRelationshipSelfLink($relationship, $model, 'script');
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

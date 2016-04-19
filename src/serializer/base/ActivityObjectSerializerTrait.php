@@ -13,14 +13,14 @@ trait ActivityObjectSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'class_name' => $model->ClassName(),
-			'type' => $model->Type(),
-			'display_name' => $model->DisplayName(),
-			'url' => $model->Url(),
-			'reference_id' => $model->ReferenceId(),
-			'version' => $model->Version(),
-			'extra' => $model->Extra(),
+			'id' => $model->getId(),
+			'class_name' => $model->getClassName(),
+			'type' => $model->getType(),
+			'display_name' => $model->getDisplayName(),
+			'url' => $model->getUrl(),
+			'reference_id' => $model->getReferenceId(),
+			'version' => $model->getVersion(),
+			'extra' => $model->getExtra(),
 		];
 	}
 
@@ -32,6 +32,7 @@ trait ActivityObjectSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -52,6 +53,7 @@ trait ActivityObjectSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/activity-object';
@@ -60,6 +62,7 @@ trait ActivityObjectSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -72,4 +75,10 @@ trait ActivityObjectSerializerTrait {
 
 		return $model;
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }

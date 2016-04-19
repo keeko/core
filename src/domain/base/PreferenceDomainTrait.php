@@ -22,6 +22,10 @@ use keeko\framework\domain\payload\NotDeleted;
 trait PreferenceDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Creates a new Preference with the provided data
 	 * 
 	 * @param mixed $data

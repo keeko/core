@@ -16,6 +16,10 @@ use keeko\framework\utils\NameUtils;
 trait SubdivisionDomainTrait {
 
 	/**
+	 */
+	protected $pool;
+
+	/**
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params

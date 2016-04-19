@@ -13,6 +13,7 @@ trait ApplicationUriSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
 	public function application($model) {
 		$serializer = Application::getSerializer();
@@ -29,12 +30,12 @@ trait ApplicationUriSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->Id(),
-			'httphost' => $model->Httphost(),
-			'basepath' => $model->Basepath(),
-			'secure' => $model->Secure(),
-			'application_id' => $model->ApplicationId(),
-			'localization_id' => $model->LocalizationId(),
+			'id' => $model->getId(),
+			'httphost' => $model->getHttphost(),
+			'basepath' => $model->getBasepath(),
+			'secure' => $model->getSecure(),
+			'application_id' => $model->getApplicationId(),
+			'localization_id' => $model->getLocalizationId(),
 		];
 	}
 
@@ -46,6 +47,7 @@ trait ApplicationUriSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getId($model) {
 		return $model->getId();
@@ -68,6 +70,7 @@ trait ApplicationUriSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return string
 	 */
 	public function getType($model) {
 		return 'core/application-uri';
@@ -76,6 +79,7 @@ trait ApplicationUriSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return mixed The model
 	 */
 	public function hydrate($model, $data) {
 		// attributes
@@ -91,6 +95,7 @@ trait ApplicationUriSerializerTrait {
 
 	/**
 	 * @param mixed $model
+	 * @return Relationship
 	 */
 	public function localization($model) {
 		$serializer = Localization::getSerializer();
@@ -100,4 +105,10 @@ trait ApplicationUriSerializerTrait {
 		]);
 		return $this->addRelationshipSelfLink($relationship, $model, 'localization');
 	}
+
+	/**
+	 * @param mixed $model
+	 * @param mixed $data
+	 */
+	abstract protected function hydrateRelationships($model, $data);
 }
