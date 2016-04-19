@@ -214,6 +214,7 @@ trait ActivityDomainTrait {
 	 * 
 	 * @param ActivityQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(ActivityQuery $query, $filter);
 

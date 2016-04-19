@@ -189,6 +189,7 @@ trait ExtensionDomainTrait {
 	 * 
 	 * @param ExtensionQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(ExtensionQuery $query, $filter);
 

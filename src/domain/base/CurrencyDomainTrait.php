@@ -76,6 +76,7 @@ trait CurrencyDomainTrait {
 	 * 
 	 * @param CurrencyQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(CurrencyQuery $query, $filter);
 

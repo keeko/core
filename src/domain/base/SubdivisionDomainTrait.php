@@ -76,6 +76,7 @@ trait SubdivisionDomainTrait {
 	 * 
 	 * @param SubdivisionQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(SubdivisionQuery $query, $filter);
 

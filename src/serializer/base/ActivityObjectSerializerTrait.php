@@ -79,6 +79,7 @@ trait ActivityObjectSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return void
 	 */
 	abstract protected function hydrateRelationships($model, $data);
 }

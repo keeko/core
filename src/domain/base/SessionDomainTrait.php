@@ -189,6 +189,7 @@ trait SessionDomainTrait {
 	 * 
 	 * @param SessionQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(SessionQuery $query, $filter);
 

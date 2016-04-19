@@ -402,6 +402,7 @@ trait GroupDomainTrait {
 	 * 
 	 * @param GroupQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(GroupQuery $query, $filter);
 

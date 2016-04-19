@@ -74,6 +74,7 @@ trait PreferenceSerializerTrait {
 	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return void
 	 */
 	abstract protected function hydrateRelationships($model, $data);
 }

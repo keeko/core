@@ -76,6 +76,7 @@ trait LanguageScopeDomainTrait {
 	 * 
 	 * @param LanguageScopeQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(LanguageScopeQuery $query, $filter);
 

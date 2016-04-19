@@ -164,6 +164,7 @@ trait ModuleDomainTrait {
 	 * 
 	 * @param ModuleQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(ModuleQuery $query, $filter);
 

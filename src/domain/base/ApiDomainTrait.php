@@ -189,6 +189,7 @@ trait ApiDomainTrait {
 	 * 
 	 * @param ApiQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(ApiQuery $query, $filter);
 

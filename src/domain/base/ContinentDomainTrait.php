@@ -76,6 +76,7 @@ trait ContinentDomainTrait {
 	 * 
 	 * @param ContinentQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(ContinentQuery $query, $filter);
 

@@ -164,6 +164,7 @@ trait PackageDomainTrait {
 	 * 
 	 * @param PackageQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(PackageQuery $query, $filter);
 

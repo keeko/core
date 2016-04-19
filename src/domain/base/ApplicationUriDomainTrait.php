@@ -214,6 +214,7 @@ trait ApplicationUriDomainTrait {
 	 * 
 	 * @param ApplicationUriQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(ApplicationUriQuery $query, $filter);
 

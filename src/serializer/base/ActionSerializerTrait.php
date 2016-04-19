@@ -104,8 +104,17 @@ trait ActionSerializerTrait {
 	}
 
 	/**
+	 * @param Relationship $relationship
+	 * @param mixed $model
+	 * @param string $related
+	 * @return Relationship
+	 */
+	abstract protected function addRelationshipSelfLink(Relationship $relationship, $model, $related);
+
+	/**
 	 * @param mixed $model
 	 * @param mixed $data
+	 * @return void
 	 */
 	abstract protected function hydrateRelationships($model, $data);
 }

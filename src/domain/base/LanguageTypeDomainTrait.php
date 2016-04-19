@@ -76,6 +76,7 @@ trait LanguageTypeDomainTrait {
 	 * 
 	 * @param LanguageTypeQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(LanguageTypeQuery $query, $filter);
 

@@ -164,6 +164,7 @@ trait ApplicationDomainTrait {
 	 * 
 	 * @param ApplicationQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(ApplicationQuery $query, $filter);
 

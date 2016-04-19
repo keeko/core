@@ -76,6 +76,7 @@ trait RegionAreaDomainTrait {
 	 * 
 	 * @param RegionAreaQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(RegionAreaQuery $query, $filter);
 

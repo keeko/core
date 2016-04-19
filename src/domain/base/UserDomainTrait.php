@@ -283,6 +283,7 @@ trait UserDomainTrait {
 	 * 
 	 * @param UserQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(UserQuery $query, $filter);
 

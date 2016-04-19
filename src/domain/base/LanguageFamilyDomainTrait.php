@@ -76,6 +76,7 @@ trait LanguageFamilyDomainTrait {
 	 * 
 	 * @param LanguageFamilyQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(LanguageFamilyQuery $query, $filter);
 

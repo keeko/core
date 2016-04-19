@@ -358,6 +358,7 @@ trait LocalizationDomainTrait {
 	 * 
 	 * @param LocalizationQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(LocalizationQuery $query, $filter);
 

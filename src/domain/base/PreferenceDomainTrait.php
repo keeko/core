@@ -164,6 +164,7 @@ trait PreferenceDomainTrait {
 	 * 
 	 * @param PreferenceQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(PreferenceQuery $query, $filter);
 

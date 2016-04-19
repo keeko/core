@@ -76,6 +76,7 @@ trait LanguageScriptDomainTrait {
 	 * 
 	 * @param LanguageScriptQuery $query
 	 * @param mixed $filter
+	 * @return void
 	 */
 	abstract protected function applyFilter(LanguageScriptQuery $query, $filter);
 
