@@ -64,5 +64,6 @@
 		"activity_object": {
 			"tags": "user"
 		}
-	}
+	},
+	"excluded": ["session"]
 }
