@@ -117,7 +117,7 @@ abstract class Subdivision implements ActiveRecordInterface
     /**
      * @var        ChildRegionType
      */
-    protected $aRegionType;
+    protected $aType;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -585,8 +585,8 @@ abstract class Subdivision implements ActiveRecordInterface
             $this->modifiedColumns[SubdivisionTableMap::COL_TYPE_ID] = true;
         }
 
-        if ($this->aRegionType !== null && $this->aRegionType->getId() !== $v) {
-            $this->aRegionType = null;
+        if ($this->aType !== null && $this->aType->getId() !== $v) {
+            $this->aType = null;
         }
 
         return $this;
@@ -684,8 +684,8 @@ abstract class Subdivision implements ActiveRecordInterface
         if ($this->aCountry !== null && $this->country_id !== $this->aCountry->getId()) {
             $this->aCountry = null;
         }
-        if ($this->aRegionType !== null && $this->type_id !== $this->aRegionType->getId()) {
-            $this->aRegionType = null;
+        if ($this->aType !== null && $this->type_id !== $this->aType->getId()) {
+            $this->aType = null;
         }
     } // ensureConsistency
 
@@ -801,7 +801,7 @@ abstract class Subdivision implements ActiveRecordInterface
 
                 $result[$key] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aRegionType) {
+            if (null !== $this->aType) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -814,7 +814,7 @@ abstract class Subdivision implements ActiveRecordInterface
                         $key = 'RegionType';
                 }
 
-                $result[$key] = $this->aRegionType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1033,7 +1033,7 @@ abstract class Subdivision implements ActiveRecordInterface
      * @return $this|\keeko\core\model\Subdivision The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setRegionType(ChildRegionType $v = null)
+    public function setType(ChildRegionType $v = null)
     {
         if ($v === null) {
             $this->setTypeId(NULL);
@@ -1041,7 +1041,7 @@ abstract class Subdivision implements ActiveRecordInterface
             $this->setTypeId($v->getId());
         }
 
-        $this->aRegionType = $v;
+        $this->aType = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildRegionType object, it will not be re-added.
@@ -1061,20 +1061,20 @@ abstract class Subdivision implements ActiveRecordInterface
      * @return ChildRegionType The associated ChildRegionType object.
      * @throws PropelException
      */
-    public function getRegionType(ConnectionInterface $con = null)
+    public function getType(ConnectionInterface $con = null)
     {
-        if ($this->aRegionType === null && ($this->type_id !== null)) {
-            $this->aRegionType = ChildRegionTypeQuery::create()->findPk($this->type_id, $con);
+        if ($this->aType === null && ($this->type_id !== null)) {
+            $this->aType = ChildRegionTypeQuery::create()->findPk($this->type_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aRegionType->addSubdivisions($this);
+                $this->aType->addSubdivisions($this);
              */
         }
 
-        return $this->aRegionType;
+        return $this->aType;
     }
 
     /**
@@ -1087,8 +1087,8 @@ abstract class Subdivision implements ActiveRecordInterface
         if (null !== $this->aCountry) {
             $this->aCountry->removeSubdivision($this);
         }
-        if (null !== $this->aRegionType) {
-            $this->aRegionType->removeSubdivision($this);
+        if (null !== $this->aType) {
+            $this->aType->removeSubdivision($this);
         }
         $this->id = null;
         $this->code = null;
@@ -1119,7 +1119,7 @@ abstract class Subdivision implements ActiveRecordInterface
         } // if ($deep)
 
         $this->aCountry = null;
-        $this->aRegionType = null;
+        $this->aType = null;
     }
 
     /**

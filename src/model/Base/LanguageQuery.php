@@ -58,9 +58,9 @@ use keeko\core\model\Map\LanguageTableMap;
  * @method     ChildLanguageQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildLanguageQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildLanguageQuery leftJoinLanguageRelatedByParentId($relationAlias = null) Adds a LEFT JOIN clause to the query using the LanguageRelatedByParentId relation
- * @method     ChildLanguageQuery rightJoinLanguageRelatedByParentId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the LanguageRelatedByParentId relation
- * @method     ChildLanguageQuery innerJoinLanguageRelatedByParentId($relationAlias = null) Adds a INNER JOIN clause to the query using the LanguageRelatedByParentId relation
+ * @method     ChildLanguageQuery leftJoinParent($relationAlias = null) Adds a LEFT JOIN clause to the query using the Parent relation
+ * @method     ChildLanguageQuery rightJoinParent($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Parent relation
+ * @method     ChildLanguageQuery innerJoinParent($relationAlias = null) Adds a INNER JOIN clause to the query using the Parent relation
  *
  * @method     ChildLanguageQuery leftJoinScope($relationAlias = null) Adds a LEFT JOIN clause to the query using the Scope relation
  * @method     ChildLanguageQuery rightJoinScope($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Scope relation
@@ -498,7 +498,7 @@ abstract class LanguageQuery extends ModelCriteria
      * $query->filterByParentId(array('min' => 12)); // WHERE parent_id > 12
      * </code>
      *
-     * @see       filterByLanguageRelatedByParentId()
+     * @see       filterByParent()
      *
      * @param     mixed $parentId The value to use as filter.
      *              Use scalar values for equality.
@@ -887,7 +887,7 @@ abstract class LanguageQuery extends ModelCriteria
      *
      * @return ChildLanguageQuery The current query, for fluid interface
      */
-    public function filterByLanguageRelatedByParentId($language, $comparison = null)
+    public function filterByParent($language, $comparison = null)
     {
         if ($language instanceof \keeko\core\model\Language) {
             return $this
@@ -900,22 +900,22 @@ abstract class LanguageQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(LanguageTableMap::COL_PARENT_ID, $language->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByLanguageRelatedByParentId() only accepts arguments of type \keeko\core\model\Language or Collection');
+            throw new PropelException('filterByParent() only accepts arguments of type \keeko\core\model\Language or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the LanguageRelatedByParentId relation
+     * Adds a JOIN clause to the query using the Parent relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildLanguageQuery The current query, for fluid interface
      */
-    public function joinLanguageRelatedByParentId($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinParent($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('LanguageRelatedByParentId');
+        $relationMap = $tableMap->getRelation('Parent');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -930,14 +930,14 @@ abstract class LanguageQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'LanguageRelatedByParentId');
+            $this->addJoinObject($join, 'Parent');
         }
 
         return $this;
     }
 
     /**
-     * Use the LanguageRelatedByParentId relation Language object
+     * Use the Parent relation Language object
      *
      * @see useQuery()
      *
@@ -947,11 +947,11 @@ abstract class LanguageQuery extends ModelCriteria
      *
      * @return \keeko\core\model\LanguageQuery A secondary query class using the current class as primary query
      */
-    public function useLanguageRelatedByParentIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useParentQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinLanguageRelatedByParentId($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'LanguageRelatedByParentId', '\keeko\core\model\LanguageQuery');
+            ->joinParent($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Parent', '\keeko\core\model\LanguageQuery');
     }
 
     /**

@@ -146,7 +146,7 @@ class RegionTypeTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('RegionArea', '\\keeko\\core\\model\\RegionArea', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Area', '\\keeko\\core\\model\\RegionArea', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':area_id',

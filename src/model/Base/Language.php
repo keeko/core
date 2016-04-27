@@ -168,7 +168,7 @@ abstract class Language implements ActiveRecordInterface
     /**
      * @var        ChildLanguage
      */
-    protected $aLanguageRelatedByParentId;
+    protected $aParent;
 
     /**
      * @var        ChildLanguageScope
@@ -728,8 +728,8 @@ abstract class Language implements ActiveRecordInterface
             $this->modifiedColumns[LanguageTableMap::COL_PARENT_ID] = true;
         }
 
-        if ($this->aLanguageRelatedByParentId !== null && $this->aLanguageRelatedByParentId->getId() !== $v) {
-            $this->aLanguageRelatedByParentId = null;
+        if ($this->aParent !== null && $this->aParent->getId() !== $v) {
+            $this->aParent = null;
         }
 
         return $this;
@@ -1064,8 +1064,8 @@ abstract class Language implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aLanguageRelatedByParentId !== null && $this->parent_id !== $this->aLanguageRelatedByParentId->getId()) {
-            $this->aLanguageRelatedByParentId = null;
+        if ($this->aParent !== null && $this->parent_id !== $this->aParent->getId()) {
+            $this->aParent = null;
         }
         if ($this->aScope !== null && $this->scope_id !== $this->aScope->getId()) {
             $this->aScope = null;
@@ -1210,7 +1210,7 @@ abstract class Language implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aLanguageRelatedByParentId) {
+            if (null !== $this->aParent) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1223,7 +1223,7 @@ abstract class Language implements ActiveRecordInterface
                         $key = 'Language';
                 }
 
-                $result[$key] = $this->aLanguageRelatedByParentId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aParent->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aScope) {
 
@@ -1554,7 +1554,7 @@ abstract class Language implements ActiveRecordInterface
      * @return $this|\keeko\core\model\Language The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setLanguageRelatedByParentId(ChildLanguage $v = null)
+    public function setParent(ChildLanguage $v = null)
     {
         if ($v === null) {
             $this->setParentId(NULL);
@@ -1562,7 +1562,7 @@ abstract class Language implements ActiveRecordInterface
             $this->setParentId($v->getId());
         }
 
-        $this->aLanguageRelatedByParentId = $v;
+        $this->aParent = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildLanguage object, it will not be re-added.
@@ -1582,20 +1582,20 @@ abstract class Language implements ActiveRecordInterface
      * @return ChildLanguage The associated ChildLanguage object.
      * @throws PropelException
      */
-    public function getLanguageRelatedByParentId(ConnectionInterface $con = null)
+    public function getParent(ConnectionInterface $con = null)
     {
-        if ($this->aLanguageRelatedByParentId === null && ($this->parent_id !== null)) {
-            $this->aLanguageRelatedByParentId = ChildLanguageQuery::create()->findPk($this->parent_id, $con);
+        if ($this->aParent === null && ($this->parent_id !== null)) {
+            $this->aParent = ChildLanguageQuery::create()->findPk($this->parent_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aLanguageRelatedByParentId->addSublanguages($this);
+                $this->aParent->addSublanguages($this);
              */
         }
 
-        return $this->aLanguageRelatedByParentId;
+        return $this->aParent;
     }
 
     /**
@@ -1890,7 +1890,7 @@ abstract class Language implements ActiveRecordInterface
                 $this->initSublanguages();
             } else {
                 $collSublanguages = ChildLanguageQuery::create(null, $criteria)
-                    ->filterByLanguageRelatedByParentId($this)
+                    ->filterByParent($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -1944,7 +1944,7 @@ abstract class Language implements ActiveRecordInterface
         $this->sublanguagesScheduledForDeletion = $sublanguagesToDelete;
 
         foreach ($sublanguagesToDelete as $sublanguageRemoved) {
-            $sublanguageRemoved->setLanguageRelatedByParentId(null);
+            $sublanguageRemoved->setParent(null);
         }
 
         $this->collSublanguages = null;
@@ -1985,7 +1985,7 @@ abstract class Language implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByLanguageRelatedByParentId($this)
+                ->filterByParent($this)
                 ->count($con);
         }
 
@@ -2019,7 +2019,7 @@ abstract class Language implements ActiveRecordInterface
     protected function doAddSublanguage(ChildLanguage $sublanguage)
     {
         $this->collSublanguages[]= $sublanguage;
-        $sublanguage->setLanguageRelatedByParentId($this);
+        $sublanguage->setParent($this);
     }
 
     /**
@@ -2036,7 +2036,7 @@ abstract class Language implements ActiveRecordInterface
                 $this->sublanguagesScheduledForDeletion->clear();
             }
             $this->sublanguagesScheduledForDeletion[]= $sublanguage;
-            $sublanguage->setLanguageRelatedByParentId(null);
+            $sublanguage->setParent(null);
         }
 
         return $this;
@@ -2377,10 +2377,10 @@ abstract class Language implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
      */
-    public function getLocalizationsRelatedByLanguageIdJoinLocalizationRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getLocalizationsRelatedByLanguageIdJoinParent(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildLocalizationQuery::create(null, $criteria);
-        $query->joinWith('LocalizationRelatedByParentId', $joinBehavior);
+        $query->joinWith('Parent', $joinBehavior);
 
         return $this->getLocalizationsRelatedByLanguageId($query, $con);
     }
@@ -2645,10 +2645,10 @@ abstract class Language implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildLocalization[] List of ChildLocalization objects
      */
-    public function getLocalizationsRelatedByExtLanguageIdJoinLocalizationRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getLocalizationsRelatedByExtLanguageIdJoinParent(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildLocalizationQuery::create(null, $criteria);
-        $query->joinWith('LocalizationRelatedByParentId', $joinBehavior);
+        $query->joinWith('Parent', $joinBehavior);
 
         return $this->getLocalizationsRelatedByExtLanguageId($query, $con);
     }
@@ -2685,8 +2685,8 @@ abstract class Language implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aLanguageRelatedByParentId) {
-            $this->aLanguageRelatedByParentId->removeSublanguage($this);
+        if (null !== $this->aParent) {
+            $this->aParent->removeSublanguage($this);
         }
         if (null !== $this->aScope) {
             $this->aScope->removeLanguage($this);
@@ -2754,7 +2754,7 @@ abstract class Language implements ActiveRecordInterface
         $this->collSublanguages = null;
         $this->collLocalizationsRelatedByLanguageId = null;
         $this->collLocalizationsRelatedByExtLanguageId = null;
-        $this->aLanguageRelatedByParentId = null;
+        $this->aParent = null;
         $this->aScope = null;
         $this->aType = null;
         $this->aScript = null;

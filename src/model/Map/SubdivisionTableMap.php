@@ -183,7 +183,7 @@ class SubdivisionTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('RegionType', '\\keeko\\core\\model\\RegionType', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Type', '\\keeko\\core\\model\\RegionType', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':type_id',

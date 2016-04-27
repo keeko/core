@@ -128,7 +128,7 @@ abstract class Localization implements ActiveRecordInterface
     /**
      * @var        ChildLocalization
      */
-    protected $aLocalizationRelatedByParentId;
+    protected $aParent;
 
     /**
      * @var        ChildLanguage
@@ -559,8 +559,8 @@ abstract class Localization implements ActiveRecordInterface
             $this->modifiedColumns[LocalizationTableMap::COL_PARENT_ID] = true;
         }
 
-        if ($this->aLocalizationRelatedByParentId !== null && $this->aLocalizationRelatedByParentId->getId() !== $v) {
-            $this->aLocalizationRelatedByParentId = null;
+        if ($this->aParent !== null && $this->aParent->getId() !== $v) {
+            $this->aParent = null;
         }
 
         return $this;
@@ -818,8 +818,8 @@ abstract class Localization implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aLocalizationRelatedByParentId !== null && $this->parent_id !== $this->aLocalizationRelatedByParentId->getId()) {
-            $this->aLocalizationRelatedByParentId = null;
+        if ($this->aParent !== null && $this->parent_id !== $this->aParent->getId()) {
+            $this->aParent = null;
         }
         if ($this->aLanguage !== null && $this->language_id !== $this->aLanguage->getId()) {
             $this->aLanguage = null;
@@ -869,7 +869,7 @@ abstract class Localization implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aLocalizationRelatedByParentId = null;
+            $this->aParent = null;
             $this->aLanguage = null;
             $this->aExtLang = null;
             $this->aScript = null;
@@ -984,11 +984,11 @@ abstract class Localization implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aLocalizationRelatedByParentId !== null) {
-                if ($this->aLocalizationRelatedByParentId->isModified() || $this->aLocalizationRelatedByParentId->isNew()) {
-                    $affectedRows += $this->aLocalizationRelatedByParentId->save($con);
+            if ($this->aParent !== null) {
+                if ($this->aParent->isModified() || $this->aParent->isNew()) {
+                    $affectedRows += $this->aParent->save($con);
                 }
-                $this->setLocalizationRelatedByParentId($this->aLocalizationRelatedByParentId);
+                $this->setParent($this->aParent);
             }
 
             if ($this->aLanguage !== null) {
@@ -1330,7 +1330,7 @@ abstract class Localization implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aLocalizationRelatedByParentId) {
+            if (null !== $this->aParent) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1343,7 +1343,7 @@ abstract class Localization implements ActiveRecordInterface
                         $key = 'Localization';
                 }
 
-                $result[$key] = $this->aLocalizationRelatedByParentId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aParent->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aLanguage) {
 
@@ -1772,7 +1772,7 @@ abstract class Localization implements ActiveRecordInterface
      * @return $this|\keeko\core\model\Localization The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setLocalizationRelatedByParentId(ChildLocalization $v = null)
+    public function setParent(ChildLocalization $v = null)
     {
         if ($v === null) {
             $this->setParentId(NULL);
@@ -1780,7 +1780,7 @@ abstract class Localization implements ActiveRecordInterface
             $this->setParentId($v->getId());
         }
 
-        $this->aLocalizationRelatedByParentId = $v;
+        $this->aParent = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildLocalization object, it will not be re-added.
@@ -1800,20 +1800,20 @@ abstract class Localization implements ActiveRecordInterface
      * @return ChildLocalization The associated ChildLocalization object.
      * @throws PropelException
      */
-    public function getLocalizationRelatedByParentId(ConnectionInterface $con = null)
+    public function getParent(ConnectionInterface $con = null)
     {
-        if ($this->aLocalizationRelatedByParentId === null && ($this->parent_id !== null)) {
-            $this->aLocalizationRelatedByParentId = ChildLocalizationQuery::create()->findPk($this->parent_id, $con);
+        if ($this->aParent === null && ($this->parent_id !== null)) {
+            $this->aParent = ChildLocalizationQuery::create()->findPk($this->parent_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aLocalizationRelatedByParentId->addLocalizationsRelatedById($this);
+                $this->aParent->addLocalizationsRelatedById($this);
              */
         }
 
-        return $this->aLocalizationRelatedByParentId;
+        return $this->aParent;
     }
 
     /**
@@ -2057,7 +2057,7 @@ abstract class Localization implements ActiveRecordInterface
                 $this->initLocalizationsRelatedById();
             } else {
                 $collLocalizationsRelatedById = ChildLocalizationQuery::create(null, $criteria)
-                    ->filterByLocalizationRelatedByParentId($this)
+                    ->filterByParent($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -2111,7 +2111,7 @@ abstract class Localization implements ActiveRecordInterface
         $this->localizationsRelatedByIdScheduledForDeletion = $localizationsRelatedByIdToDelete;
 
         foreach ($localizationsRelatedByIdToDelete as $localizationRelatedByIdRemoved) {
-            $localizationRelatedByIdRemoved->setLocalizationRelatedByParentId(null);
+            $localizationRelatedByIdRemoved->setParent(null);
         }
 
         $this->collLocalizationsRelatedById = null;
@@ -2152,7 +2152,7 @@ abstract class Localization implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByLocalizationRelatedByParentId($this)
+                ->filterByParent($this)
                 ->count($con);
         }
 
@@ -2186,7 +2186,7 @@ abstract class Localization implements ActiveRecordInterface
     protected function doAddLocalizationRelatedById(ChildLocalization $localizationRelatedById)
     {
         $this->collLocalizationsRelatedById[]= $localizationRelatedById;
-        $localizationRelatedById->setLocalizationRelatedByParentId($this);
+        $localizationRelatedById->setParent($this);
     }
 
     /**
@@ -2203,7 +2203,7 @@ abstract class Localization implements ActiveRecordInterface
                 $this->localizationsRelatedByIdScheduledForDeletion->clear();
             }
             $this->localizationsRelatedByIdScheduledForDeletion[]= $localizationRelatedById;
-            $localizationRelatedById->setLocalizationRelatedByParentId(null);
+            $localizationRelatedById->setParent(null);
         }
 
         return $this;
@@ -3022,8 +3022,8 @@ abstract class Localization implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aLocalizationRelatedByParentId) {
-            $this->aLocalizationRelatedByParentId->removeLocalizationRelatedById($this);
+        if (null !== $this->aParent) {
+            $this->aParent->removeLocalizationRelatedById($this);
         }
         if (null !== $this->aLanguage) {
             $this->aLanguage->removeLocalizationRelatedByLanguageId($this);
@@ -3087,7 +3087,7 @@ abstract class Localization implements ActiveRecordInterface
         $this->collLocalizationVariants = null;
         $this->collApplicationUris = null;
         $this->collLanguageVariants = null;
-        $this->aLocalizationRelatedByParentId = null;
+        $this->aParent = null;
         $this->aLanguage = null;
         $this->aExtLang = null;
         $this->aScript = null;

@@ -33,6 +33,8 @@ trait GroupSerializerTrait {
 			'is_default' => $model->getIsDefault(),
 			'is_active' => $model->getIsActive(),
 			'is_system' => $model->getIsSystem(),
+			'created_at' => $model->getCreatedAt(\DateTime::ISO8601),
+			'updated_at' => $model->getUpdatedAt(\DateTime::ISO8601),
 		];
 	}
 
@@ -62,7 +64,7 @@ trait GroupSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'owner_id', 'name', 'is_guest', 'is_default', 'is_active', 'is_system'];
+		return ['id', 'owner_id', 'name', 'is_guest', 'is_default', 'is_active', 'is_system', 'created_at', 'updated_at'];
 	}
 
 	/**

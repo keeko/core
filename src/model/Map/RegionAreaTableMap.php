@@ -140,13 +140,13 @@ class RegionAreaTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('RegionType', '\\keeko\\core\\model\\RegionType', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('Type', '\\keeko\\core\\model\\RegionType', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':area_id',
     1 => ':id',
   ),
-), null, null, 'RegionTypes', false);
+), null, null, 'Types', false);
     } // buildRelations()
 
     /**

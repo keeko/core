@@ -59,7 +59,7 @@ class SessionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 9;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class SessionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 9;
 
     /**
      * the column name for the token field
@@ -80,6 +80,31 @@ class SessionTableMap extends TableMap
      * the column name for the user_id field
      */
     const COL_USER_ID = 'kk_session.user_id';
+
+    /**
+     * the column name for the user_agent field
+     */
+    const COL_USER_AGENT = 'kk_session.user_agent';
+
+    /**
+     * the column name for the browser field
+     */
+    const COL_BROWSER = 'kk_session.browser';
+
+    /**
+     * the column name for the device field
+     */
+    const COL_DEVICE = 'kk_session.device';
+
+    /**
+     * the column name for the os field
+     */
+    const COL_OS = 'kk_session.os';
+
+    /**
+     * the column name for the location field
+     */
+    const COL_LOCATION = 'kk_session.location';
 
     /**
      * the column name for the created_at field
@@ -103,11 +128,11 @@ class SessionTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Token', 'UserId', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('token', 'userId', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(SessionTableMap::COL_TOKEN, SessionTableMap::COL_USER_ID, SessionTableMap::COL_CREATED_AT, SessionTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('token', 'user_id', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Token', 'UserId', 'UserAgent', 'Browser', 'Device', 'Os', 'Location', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('token', 'userId', 'userAgent', 'browser', 'device', 'os', 'location', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(SessionTableMap::COL_TOKEN, SessionTableMap::COL_USER_ID, SessionTableMap::COL_USER_AGENT, SessionTableMap::COL_BROWSER, SessionTableMap::COL_DEVICE, SessionTableMap::COL_OS, SessionTableMap::COL_LOCATION, SessionTableMap::COL_CREATED_AT, SessionTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('token', 'user_id', 'user_agent', 'browser', 'device', 'os', 'location', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -117,11 +142,11 @@ class SessionTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Token' => 0, 'UserId' => 1, 'CreatedAt' => 2, 'UpdatedAt' => 3, ),
-        self::TYPE_CAMELNAME     => array('token' => 0, 'userId' => 1, 'createdAt' => 2, 'updatedAt' => 3, ),
-        self::TYPE_COLNAME       => array(SessionTableMap::COL_TOKEN => 0, SessionTableMap::COL_USER_ID => 1, SessionTableMap::COL_CREATED_AT => 2, SessionTableMap::COL_UPDATED_AT => 3, ),
-        self::TYPE_FIELDNAME     => array('token' => 0, 'user_id' => 1, 'created_at' => 2, 'updated_at' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Token' => 0, 'UserId' => 1, 'UserAgent' => 2, 'Browser' => 3, 'Device' => 4, 'Os' => 5, 'Location' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, ),
+        self::TYPE_CAMELNAME     => array('token' => 0, 'userId' => 1, 'userAgent' => 2, 'browser' => 3, 'device' => 4, 'os' => 5, 'location' => 6, 'createdAt' => 7, 'updatedAt' => 8, ),
+        self::TYPE_COLNAME       => array(SessionTableMap::COL_TOKEN => 0, SessionTableMap::COL_USER_ID => 1, SessionTableMap::COL_USER_AGENT => 2, SessionTableMap::COL_BROWSER => 3, SessionTableMap::COL_DEVICE => 4, SessionTableMap::COL_OS => 5, SessionTableMap::COL_LOCATION => 6, SessionTableMap::COL_CREATED_AT => 7, SessionTableMap::COL_UPDATED_AT => 8, ),
+        self::TYPE_FIELDNAME     => array('token' => 0, 'user_id' => 1, 'user_agent' => 2, 'browser' => 3, 'device' => 4, 'os' => 5, 'location' => 6, 'created_at' => 7, 'updated_at' => 8, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -143,6 +168,11 @@ class SessionTableMap extends TableMap
         // columns
         $this->addPrimaryKey('token', 'Token', 'VARCHAR', true, 32, null);
         $this->addForeignKey('user_id', 'UserId', 'INTEGER', 'kk_user', 'id', true, 10, null);
+        $this->addColumn('user_agent', 'UserAgent', 'VARCHAR', false, 512, null);
+        $this->addColumn('browser', 'Browser', 'VARCHAR', false, 512, null);
+        $this->addColumn('device', 'Device', 'VARCHAR', false, 512, null);
+        $this->addColumn('os', 'Os', 'VARCHAR', false, 512, null);
+        $this->addColumn('location', 'Location', 'VARCHAR', false, 512, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -317,11 +347,21 @@ class SessionTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(SessionTableMap::COL_TOKEN);
             $criteria->addSelectColumn(SessionTableMap::COL_USER_ID);
+            $criteria->addSelectColumn(SessionTableMap::COL_USER_AGENT);
+            $criteria->addSelectColumn(SessionTableMap::COL_BROWSER);
+            $criteria->addSelectColumn(SessionTableMap::COL_DEVICE);
+            $criteria->addSelectColumn(SessionTableMap::COL_OS);
+            $criteria->addSelectColumn(SessionTableMap::COL_LOCATION);
             $criteria->addSelectColumn(SessionTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(SessionTableMap::COL_UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.token');
             $criteria->addSelectColumn($alias . '.user_id');
+            $criteria->addSelectColumn($alias . '.user_agent');
+            $criteria->addSelectColumn($alias . '.browser');
+            $criteria->addSelectColumn($alias . '.device');
+            $criteria->addSelectColumn($alias . '.os');
+            $criteria->addSelectColumn($alias . '.location');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
         }

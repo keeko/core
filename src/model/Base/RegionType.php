@@ -86,7 +86,7 @@ abstract class RegionType implements ActiveRecordInterface
     /**
      * @var        ChildRegionArea
      */
-    protected $aRegionArea;
+    protected $aArea;
 
     /**
      * @var        ObjectCollection|ChildCountry[] Collection to store aggregation of ChildCountry objects.
@@ -436,8 +436,8 @@ abstract class RegionType implements ActiveRecordInterface
             $this->modifiedColumns[RegionTypeTableMap::COL_AREA_ID] = true;
         }
 
-        if ($this->aRegionArea !== null && $this->aRegionArea->getId() !== $v) {
-            $this->aRegionArea = null;
+        if ($this->aArea !== null && $this->aArea->getId() !== $v) {
+            $this->aArea = null;
         }
 
         return $this;
@@ -517,8 +517,8 @@ abstract class RegionType implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aRegionArea !== null && $this->area_id !== $this->aRegionArea->getId()) {
-            $this->aRegionArea = null;
+        if ($this->aArea !== null && $this->area_id !== $this->aArea->getId()) {
+            $this->aArea = null;
         }
     } // ensureConsistency
 
@@ -599,7 +599,7 @@ abstract class RegionType implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aRegionArea) {
+            if (null !== $this->aArea) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -612,7 +612,7 @@ abstract class RegionType implements ActiveRecordInterface
                         $key = 'RegionArea';
                 }
 
-                $result[$key] = $this->aRegionArea->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aArea->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collCountriesRelatedByTypeId) {
 
@@ -831,7 +831,7 @@ abstract class RegionType implements ActiveRecordInterface
      * @return $this|\keeko\core\model\RegionType The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setRegionArea(ChildRegionArea $v = null)
+    public function setArea(ChildRegionArea $v = null)
     {
         if ($v === null) {
             $this->setAreaId(NULL);
@@ -839,12 +839,12 @@ abstract class RegionType implements ActiveRecordInterface
             $this->setAreaId($v->getId());
         }
 
-        $this->aRegionArea = $v;
+        $this->aArea = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildRegionArea object, it will not be re-added.
         if ($v !== null) {
-            $v->addRegionType($this);
+            $v->addType($this);
         }
 
 
@@ -859,20 +859,20 @@ abstract class RegionType implements ActiveRecordInterface
      * @return ChildRegionArea The associated ChildRegionArea object.
      * @throws PropelException
      */
-    public function getRegionArea(ConnectionInterface $con = null)
+    public function getArea(ConnectionInterface $con = null)
     {
-        if ($this->aRegionArea === null && ($this->area_id !== null)) {
-            $this->aRegionArea = ChildRegionAreaQuery::create()->findPk($this->area_id, $con);
+        if ($this->aArea === null && ($this->area_id !== null)) {
+            $this->aArea = ChildRegionAreaQuery::create()->findPk($this->area_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aRegionArea->addRegionTypes($this);
+                $this->aArea->addTypes($this);
              */
         }
 
-        return $this->aRegionArea;
+        return $this->aArea;
     }
 
 
@@ -1549,7 +1549,7 @@ abstract class RegionType implements ActiveRecordInterface
                 $this->initSubdivisions();
             } else {
                 $collSubdivisions = ChildSubdivisionQuery::create(null, $criteria)
-                    ->filterByRegionType($this)
+                    ->filterByType($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -1603,7 +1603,7 @@ abstract class RegionType implements ActiveRecordInterface
         $this->subdivisionsScheduledForDeletion = $subdivisionsToDelete;
 
         foreach ($subdivisionsToDelete as $subdivisionRemoved) {
-            $subdivisionRemoved->setRegionType(null);
+            $subdivisionRemoved->setType(null);
         }
 
         $this->collSubdivisions = null;
@@ -1644,7 +1644,7 @@ abstract class RegionType implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByRegionType($this)
+                ->filterByType($this)
                 ->count($con);
         }
 
@@ -1678,7 +1678,7 @@ abstract class RegionType implements ActiveRecordInterface
     protected function doAddSubdivision(ChildSubdivision $subdivision)
     {
         $this->collSubdivisions[]= $subdivision;
-        $subdivision->setRegionType($this);
+        $subdivision->setType($this);
     }
 
     /**
@@ -1695,7 +1695,7 @@ abstract class RegionType implements ActiveRecordInterface
                 $this->subdivisionsScheduledForDeletion->clear();
             }
             $this->subdivisionsScheduledForDeletion[]= clone $subdivision;
-            $subdivision->setRegionType(null);
+            $subdivision->setType(null);
         }
 
         return $this;
@@ -1733,8 +1733,8 @@ abstract class RegionType implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aRegionArea) {
-            $this->aRegionArea->removeRegionType($this);
+        if (null !== $this->aArea) {
+            $this->aArea->removeType($this);
         }
         $this->id = null;
         $this->name = null;
@@ -1777,7 +1777,7 @@ abstract class RegionType implements ActiveRecordInterface
         $this->collCountriesRelatedByTypeId = null;
         $this->collCountriesRelatedBySubtypeId = null;
         $this->collSubdivisions = null;
-        $this->aRegionArea = null;
+        $this->aArea = null;
     }
 
     /**

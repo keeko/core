@@ -1025,10 +1025,10 @@ abstract class LanguageFamily implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildLanguage[] List of ChildLanguage objects
      */
-    public function getLanguagesJoinLanguageRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getLanguagesJoinParent(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildLanguageQuery::create(null, $criteria);
-        $query->joinWith('LanguageRelatedByParentId', $joinBehavior);
+        $query->joinWith('Parent', $joinBehavior);
 
         return $this->getLanguages($query, $con);
     }

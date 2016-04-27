@@ -224,7 +224,7 @@ class LanguageTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('LanguageRelatedByParentId', '\\keeko\\core\\model\\Language', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Parent', '\\keeko\\core\\model\\Language', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':parent_id',

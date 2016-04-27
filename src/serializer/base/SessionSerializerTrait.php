@@ -18,13 +18,20 @@ trait SessionSerializerTrait {
 		return [
 			'token' => $model->getToken(),
 			'user_id' => $model->getUserId(),
+			'user_agent' => $model->getUserAgent(),
+			'browser' => $model->getBrowser(),
+			'device' => $model->getDevice(),
+			'os' => $model->getOs(),
+			'location' => $model->getLocation(),
+			'created_at' => $model->getCreatedAt(\DateTime::ISO8601),
+			'updated_at' => $model->getUpdatedAt(\DateTime::ISO8601),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['token', 'user_id', 'created_at', 'updated_at'];
+		return ['token', 'user_id', 'user_agent', 'browser', 'device', 'os', 'location', 'created_at', 'updated_at'];
 	}
 
 	/**
@@ -46,7 +53,7 @@ trait SessionSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['token', 'user_id'];
+		return ['token', 'user_id', 'user_agent', 'browser', 'device', 'os', 'location', 'created_at', 'updated_at'];
 	}
 
 	/**
@@ -66,7 +73,7 @@ trait SessionSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['token', 'user_id']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['token', 'user_id', 'user_agent', 'browser', 'device', 'os', 'location']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

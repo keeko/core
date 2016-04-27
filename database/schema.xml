@@ -335,6 +335,11 @@
 		<!-- Fields -->
 		<column name="token" type="VARCHAR" primaryKey="true" required="true" size="32"/>
 		<column name="user_id" type="INTEGER" size="10" required="true" />
+		<column name="user_agent" type="VARCHAR" size="512" />
+		<column name="browser" type="VARCHAR" size="512" />
+		<column name="device" type="VARCHAR" size="512" />
+		<column name="os" type="VARCHAR" size="512" />
+		<column name="location" type="VARCHAR" size="512" />
 
 		<!-- Behaviors -->
 		<behavior name="timestampable"></behavior>

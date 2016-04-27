@@ -77,6 +77,36 @@ abstract class Session implements ActiveRecordInterface
     protected $user_id;
 
     /**
+     * The value for the user_agent field.
+     * @var        string
+     */
+    protected $user_agent;
+
+    /**
+     * The value for the browser field.
+     * @var        string
+     */
+    protected $browser;
+
+    /**
+     * The value for the device field.
+     * @var        string
+     */
+    protected $device;
+
+    /**
+     * The value for the os field.
+     * @var        string
+     */
+    protected $os;
+
+    /**
+     * The value for the location field.
+     * @var        string
+     */
+    protected $location;
+
+    /**
      * The value for the created_at field.
      * @var        \DateTime
      */
@@ -339,6 +369,56 @@ abstract class Session implements ActiveRecordInterface
     }
 
     /**
+     * Get the [user_agent] column value.
+     *
+     * @return string
+     */
+    public function getUserAgent()
+    {
+        return $this->user_agent;
+    }
+
+    /**
+     * Get the [browser] column value.
+     *
+     * @return string
+     */
+    public function getBrowser()
+    {
+        return $this->browser;
+    }
+
+    /**
+     * Get the [device] column value.
+     *
+     * @return string
+     */
+    public function getDevice()
+    {
+        return $this->device;
+    }
+
+    /**
+     * Get the [os] column value.
+     *
+     * @return string
+     */
+    public function getOs()
+    {
+        return $this->os;
+    }
+
+    /**
+     * Get the [location] column value.
+     *
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
@@ -423,6 +503,106 @@ abstract class Session implements ActiveRecordInterface
     } // setUserId()
 
     /**
+     * Set the value of [user_agent] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Session The current object (for fluent API support)
+     */
+    public function setUserAgent($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->user_agent !== $v) {
+            $this->user_agent = $v;
+            $this->modifiedColumns[SessionTableMap::COL_USER_AGENT] = true;
+        }
+
+        return $this;
+    } // setUserAgent()
+
+    /**
+     * Set the value of [browser] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Session The current object (for fluent API support)
+     */
+    public function setBrowser($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->browser !== $v) {
+            $this->browser = $v;
+            $this->modifiedColumns[SessionTableMap::COL_BROWSER] = true;
+        }
+
+        return $this;
+    } // setBrowser()
+
+    /**
+     * Set the value of [device] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Session The current object (for fluent API support)
+     */
+    public function setDevice($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->device !== $v) {
+            $this->device = $v;
+            $this->modifiedColumns[SessionTableMap::COL_DEVICE] = true;
+        }
+
+        return $this;
+    } // setDevice()
+
+    /**
+     * Set the value of [os] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Session The current object (for fluent API support)
+     */
+    public function setOs($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->os !== $v) {
+            $this->os = $v;
+            $this->modifiedColumns[SessionTableMap::COL_OS] = true;
+        }
+
+        return $this;
+    } // setOs()
+
+    /**
+     * Set the value of [location] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Session The current object (for fluent API support)
+     */
+    public function setLocation($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->location !== $v) {
+            $this->location = $v;
+            $this->modifiedColumns[SessionTableMap::COL_LOCATION] = true;
+        }
+
+        return $this;
+    } // setLocation()
+
+    /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
@@ -504,13 +684,28 @@ abstract class Session implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SessionTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SessionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SessionTableMap::translateFieldName('UserAgent', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->user_agent = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SessionTableMap::translateFieldName('Browser', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->browser = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SessionTableMap::translateFieldName('Device', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->device = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SessionTableMap::translateFieldName('Os', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->os = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SessionTableMap::translateFieldName('Location', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->location = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SessionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SessionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SessionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -523,7 +718,7 @@ abstract class Session implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = SessionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = SessionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Session'), 0, $e);
@@ -750,6 +945,21 @@ abstract class Session implements ActiveRecordInterface
         if ($this->isColumnModified(SessionTableMap::COL_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = '`user_id`';
         }
+        if ($this->isColumnModified(SessionTableMap::COL_USER_AGENT)) {
+            $modifiedColumns[':p' . $index++]  = '`user_agent`';
+        }
+        if ($this->isColumnModified(SessionTableMap::COL_BROWSER)) {
+            $modifiedColumns[':p' . $index++]  = '`browser`';
+        }
+        if ($this->isColumnModified(SessionTableMap::COL_DEVICE)) {
+            $modifiedColumns[':p' . $index++]  = '`device`';
+        }
+        if ($this->isColumnModified(SessionTableMap::COL_OS)) {
+            $modifiedColumns[':p' . $index++]  = '`os`';
+        }
+        if ($this->isColumnModified(SessionTableMap::COL_LOCATION)) {
+            $modifiedColumns[':p' . $index++]  = '`location`';
+        }
         if ($this->isColumnModified(SessionTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = '`created_at`';
         }
@@ -772,6 +982,21 @@ abstract class Session implements ActiveRecordInterface
                         break;
                     case '`user_id`':
                         $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
+                        break;
+                    case '`user_agent`':
+                        $stmt->bindValue($identifier, $this->user_agent, PDO::PARAM_STR);
+                        break;
+                    case '`browser`':
+                        $stmt->bindValue($identifier, $this->browser, PDO::PARAM_STR);
+                        break;
+                    case '`device`':
+                        $stmt->bindValue($identifier, $this->device, PDO::PARAM_STR);
+                        break;
+                    case '`os`':
+                        $stmt->bindValue($identifier, $this->os, PDO::PARAM_STR);
+                        break;
+                    case '`location`':
+                        $stmt->bindValue($identifier, $this->location, PDO::PARAM_STR);
                         break;
                     case '`created_at`':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -841,9 +1066,24 @@ abstract class Session implements ActiveRecordInterface
                 return $this->getUserId();
                 break;
             case 2:
-                return $this->getCreatedAt();
+                return $this->getUserAgent();
                 break;
             case 3:
+                return $this->getBrowser();
+                break;
+            case 4:
+                return $this->getDevice();
+                break;
+            case 5:
+                return $this->getOs();
+                break;
+            case 6:
+                return $this->getLocation();
+                break;
+            case 7:
+                return $this->getCreatedAt();
+                break;
+            case 8:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -878,21 +1118,26 @@ abstract class Session implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getToken(),
             $keys[1] => $this->getUserId(),
-            $keys[2] => $this->getCreatedAt(),
-            $keys[3] => $this->getUpdatedAt(),
+            $keys[2] => $this->getUserAgent(),
+            $keys[3] => $this->getBrowser(),
+            $keys[4] => $this->getDevice(),
+            $keys[5] => $this->getOs(),
+            $keys[6] => $this->getLocation(),
+            $keys[7] => $this->getCreatedAt(),
+            $keys[8] => $this->getUpdatedAt(),
         );
 
         $utc = new \DateTimeZone('utc');
-        if ($result[$keys[2]] instanceof \DateTime) {
+        if ($result[$keys[7]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[2]];
-            $result[$keys[2]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+            $dateTime = clone $result[$keys[7]];
+            $result[$keys[7]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
-        if ($result[$keys[3]] instanceof \DateTime) {
+        if ($result[$keys[8]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[3]];
-            $result[$keys[3]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+            $dateTime = clone $result[$keys[8]];
+            $result[$keys[8]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -957,9 +1202,24 @@ abstract class Session implements ActiveRecordInterface
                 $this->setUserId($value);
                 break;
             case 2:
-                $this->setCreatedAt($value);
+                $this->setUserAgent($value);
                 break;
             case 3:
+                $this->setBrowser($value);
+                break;
+            case 4:
+                $this->setDevice($value);
+                break;
+            case 5:
+                $this->setOs($value);
+                break;
+            case 6:
+                $this->setLocation($value);
+                break;
+            case 7:
+                $this->setCreatedAt($value);
+                break;
+            case 8:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -995,10 +1255,25 @@ abstract class Session implements ActiveRecordInterface
             $this->setUserId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setCreatedAt($arr[$keys[2]]);
+            $this->setUserAgent($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setUpdatedAt($arr[$keys[3]]);
+            $this->setBrowser($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setDevice($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setOs($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setLocation($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setCreatedAt($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setUpdatedAt($arr[$keys[8]]);
         }
     }
 
@@ -1046,6 +1321,21 @@ abstract class Session implements ActiveRecordInterface
         }
         if ($this->isColumnModified(SessionTableMap::COL_USER_ID)) {
             $criteria->add(SessionTableMap::COL_USER_ID, $this->user_id);
+        }
+        if ($this->isColumnModified(SessionTableMap::COL_USER_AGENT)) {
+            $criteria->add(SessionTableMap::COL_USER_AGENT, $this->user_agent);
+        }
+        if ($this->isColumnModified(SessionTableMap::COL_BROWSER)) {
+            $criteria->add(SessionTableMap::COL_BROWSER, $this->browser);
+        }
+        if ($this->isColumnModified(SessionTableMap::COL_DEVICE)) {
+            $criteria->add(SessionTableMap::COL_DEVICE, $this->device);
+        }
+        if ($this->isColumnModified(SessionTableMap::COL_OS)) {
+            $criteria->add(SessionTableMap::COL_OS, $this->os);
+        }
+        if ($this->isColumnModified(SessionTableMap::COL_LOCATION)) {
+            $criteria->add(SessionTableMap::COL_LOCATION, $this->location);
         }
         if ($this->isColumnModified(SessionTableMap::COL_CREATED_AT)) {
             $criteria->add(SessionTableMap::COL_CREATED_AT, $this->created_at);
@@ -1141,6 +1431,11 @@ abstract class Session implements ActiveRecordInterface
     {
         $copyObj->setToken($this->getToken());
         $copyObj->setUserId($this->getUserId());
+        $copyObj->setUserAgent($this->getUserAgent());
+        $copyObj->setBrowser($this->getBrowser());
+        $copyObj->setDevice($this->getDevice());
+        $copyObj->setOs($this->getOs());
+        $copyObj->setLocation($this->getLocation());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         if ($makeNew) {
@@ -1233,6 +1528,11 @@ abstract class Session implements ActiveRecordInterface
         }
         $this->token = null;
         $this->user_id = null;
+        $this->user_agent = null;
+        $this->browser = null;
+        $this->device = null;
+        $this->os = null;
+        $this->location = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;

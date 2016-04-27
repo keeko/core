@@ -22,11 +22,21 @@ use keeko\core\model\Map\SessionTableMap;
  *
  * @method     ChildSessionQuery orderByToken($order = Criteria::ASC) Order by the token column
  * @method     ChildSessionQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
+ * @method     ChildSessionQuery orderByUserAgent($order = Criteria::ASC) Order by the user_agent column
+ * @method     ChildSessionQuery orderByBrowser($order = Criteria::ASC) Order by the browser column
+ * @method     ChildSessionQuery orderByDevice($order = Criteria::ASC) Order by the device column
+ * @method     ChildSessionQuery orderByOs($order = Criteria::ASC) Order by the os column
+ * @method     ChildSessionQuery orderByLocation($order = Criteria::ASC) Order by the location column
  * @method     ChildSessionQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildSessionQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method     ChildSessionQuery groupByToken() Group by the token column
  * @method     ChildSessionQuery groupByUserId() Group by the user_id column
+ * @method     ChildSessionQuery groupByUserAgent() Group by the user_agent column
+ * @method     ChildSessionQuery groupByBrowser() Group by the browser column
+ * @method     ChildSessionQuery groupByDevice() Group by the device column
+ * @method     ChildSessionQuery groupByOs() Group by the os column
+ * @method     ChildSessionQuery groupByLocation() Group by the location column
  * @method     ChildSessionQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildSessionQuery groupByUpdatedAt() Group by the updated_at column
  *
@@ -45,6 +55,11 @@ use keeko\core\model\Map\SessionTableMap;
  *
  * @method     ChildSession findOneByToken(string $token) Return the first ChildSession filtered by the token column
  * @method     ChildSession findOneByUserId(int $user_id) Return the first ChildSession filtered by the user_id column
+ * @method     ChildSession findOneByUserAgent(string $user_agent) Return the first ChildSession filtered by the user_agent column
+ * @method     ChildSession findOneByBrowser(string $browser) Return the first ChildSession filtered by the browser column
+ * @method     ChildSession findOneByDevice(string $device) Return the first ChildSession filtered by the device column
+ * @method     ChildSession findOneByOs(string $os) Return the first ChildSession filtered by the os column
+ * @method     ChildSession findOneByLocation(string $location) Return the first ChildSession filtered by the location column
  * @method     ChildSession findOneByCreatedAt(string $created_at) Return the first ChildSession filtered by the created_at column
  * @method     ChildSession findOneByUpdatedAt(string $updated_at) Return the first ChildSession filtered by the updated_at column *
 
@@ -53,12 +68,22 @@ use keeko\core\model\Map\SessionTableMap;
  *
  * @method     ChildSession requireOneByToken(string $token) Return the first ChildSession filtered by the token column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSession requireOneByUserId(int $user_id) Return the first ChildSession filtered by the user_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSession requireOneByUserAgent(string $user_agent) Return the first ChildSession filtered by the user_agent column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSession requireOneByBrowser(string $browser) Return the first ChildSession filtered by the browser column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSession requireOneByDevice(string $device) Return the first ChildSession filtered by the device column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSession requireOneByOs(string $os) Return the first ChildSession filtered by the os column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSession requireOneByLocation(string $location) Return the first ChildSession filtered by the location column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSession requireOneByCreatedAt(string $created_at) Return the first ChildSession filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSession requireOneByUpdatedAt(string $updated_at) Return the first ChildSession filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSession[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSession objects based on current ModelCriteria
  * @method     ChildSession[]|ObjectCollection findByToken(string $token) Return ChildSession objects filtered by the token column
  * @method     ChildSession[]|ObjectCollection findByUserId(int $user_id) Return ChildSession objects filtered by the user_id column
+ * @method     ChildSession[]|ObjectCollection findByUserAgent(string $user_agent) Return ChildSession objects filtered by the user_agent column
+ * @method     ChildSession[]|ObjectCollection findByBrowser(string $browser) Return ChildSession objects filtered by the browser column
+ * @method     ChildSession[]|ObjectCollection findByDevice(string $device) Return ChildSession objects filtered by the device column
+ * @method     ChildSession[]|ObjectCollection findByOs(string $os) Return ChildSession objects filtered by the os column
+ * @method     ChildSession[]|ObjectCollection findByLocation(string $location) Return ChildSession objects filtered by the location column
  * @method     ChildSession[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildSession objects filtered by the created_at column
  * @method     ChildSession[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildSession objects filtered by the updated_at column
  * @method     ChildSession[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -153,7 +178,7 @@ abstract class SessionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `token`, `user_id`, `created_at`, `updated_at` FROM `kk_session` WHERE `token` = :p0';
+        $sql = 'SELECT `token`, `user_id`, `user_agent`, `browser`, `device`, `os`, `location`, `created_at`, `updated_at` FROM `kk_session` WHERE `token` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_STR);
@@ -313,6 +338,151 @@ abstract class SessionQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(SessionTableMap::COL_USER_ID, $userId, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_agent column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserAgent('fooValue');   // WHERE user_agent = 'fooValue'
+     * $query->filterByUserAgent('%fooValue%'); // WHERE user_agent LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $userAgent The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildSessionQuery The current query, for fluid interface
+     */
+    public function filterByUserAgent($userAgent = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($userAgent)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $userAgent)) {
+                $userAgent = str_replace('*', '%', $userAgent);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(SessionTableMap::COL_USER_AGENT, $userAgent, $comparison);
+    }
+
+    /**
+     * Filter the query on the browser column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByBrowser('fooValue');   // WHERE browser = 'fooValue'
+     * $query->filterByBrowser('%fooValue%'); // WHERE browser LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $browser The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildSessionQuery The current query, for fluid interface
+     */
+    public function filterByBrowser($browser = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($browser)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $browser)) {
+                $browser = str_replace('*', '%', $browser);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(SessionTableMap::COL_BROWSER, $browser, $comparison);
+    }
+
+    /**
+     * Filter the query on the device column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDevice('fooValue');   // WHERE device = 'fooValue'
+     * $query->filterByDevice('%fooValue%'); // WHERE device LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $device The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildSessionQuery The current query, for fluid interface
+     */
+    public function filterByDevice($device = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($device)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $device)) {
+                $device = str_replace('*', '%', $device);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(SessionTableMap::COL_DEVICE, $device, $comparison);
+    }
+
+    /**
+     * Filter the query on the os column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByOs('fooValue');   // WHERE os = 'fooValue'
+     * $query->filterByOs('%fooValue%'); // WHERE os LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $os The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildSessionQuery The current query, for fluid interface
+     */
+    public function filterByOs($os = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($os)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $os)) {
+                $os = str_replace('*', '%', $os);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(SessionTableMap::COL_OS, $os, $comparison);
+    }
+
+    /**
+     * Filter the query on the location column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByLocation('fooValue');   // WHERE location = 'fooValue'
+     * $query->filterByLocation('%fooValue%'); // WHERE location LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $location The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildSessionQuery The current query, for fluid interface
+     */
+    public function filterByLocation($location = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($location)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $location)) {
+                $location = str_replace('*', '%', $location);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(SessionTableMap::COL_LOCATION, $location, $comparison);
     }
 
     /**

@@ -498,20 +498,25 @@ CREATE TABLE `kk_api`
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- kk_auth
+-- kk_session
 -- ---------------------------------------------------------------------
 
-DROP TABLE IF EXISTS `kk_auth`;
+DROP TABLE IF EXISTS `kk_session`;
 
-CREATE TABLE `kk_auth`
+CREATE TABLE `kk_session`
 (
     `token` VARCHAR(32) NOT NULL,
     `user_id` INTEGER(10) NOT NULL,
+    `user_agent` VARCHAR(512),
+    `browser` VARCHAR(512),
+    `device` VARCHAR(512),
+    `os` VARCHAR(512),
+    `location` VARCHAR(512),
     `created_at` DATETIME,
     `updated_at` DATETIME,
     PRIMARY KEY (`token`),
-    INDEX `auth_fi_user` (`user_id`),
-    CONSTRAINT `auth_fk_user`
+    INDEX `session_fi_user` (`user_id`),
+    CONSTRAINT `session_fk_user`
         FOREIGN KEY (`user_id`)
         REFERENCES `kk_user` (`id`)
 ) ENGINE=InnoDB;
@@ -532,7 +537,7 @@ CREATE TABLE `kk_user`
     `display_name` VARCHAR(100),
     `email` VARCHAR(255),
     `birthday` DATE,
-    `sex` TINYINT,
+    `sex` TINYINT COMMENT '1 = male; 0 = female',
     `password_recover_code` VARCHAR(32),
     `password_recover_time` DATETIME,
     `created_at` DATETIME,

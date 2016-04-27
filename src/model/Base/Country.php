@@ -2668,10 +2668,10 @@ abstract class Country implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildSubdivision[] List of ChildSubdivision objects
      */
-    public function getSubdivisionsJoinRegionType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getSubdivisionsJoinType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildSubdivisionQuery::create(null, $criteria);
-        $query->joinWith('RegionType', $joinBehavior);
+        $query->joinWith('Type', $joinBehavior);
 
         return $this->getSubdivisions($query, $con);
     }

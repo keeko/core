@@ -44,9 +44,9 @@ use keeko\core\model\Map\LocalizationTableMap;
  * @method     ChildLocalizationQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildLocalizationQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildLocalizationQuery leftJoinLocalizationRelatedByParentId($relationAlias = null) Adds a LEFT JOIN clause to the query using the LocalizationRelatedByParentId relation
- * @method     ChildLocalizationQuery rightJoinLocalizationRelatedByParentId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the LocalizationRelatedByParentId relation
- * @method     ChildLocalizationQuery innerJoinLocalizationRelatedByParentId($relationAlias = null) Adds a INNER JOIN clause to the query using the LocalizationRelatedByParentId relation
+ * @method     ChildLocalizationQuery leftJoinParent($relationAlias = null) Adds a LEFT JOIN clause to the query using the Parent relation
+ * @method     ChildLocalizationQuery rightJoinParent($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Parent relation
+ * @method     ChildLocalizationQuery innerJoinParent($relationAlias = null) Adds a INNER JOIN clause to the query using the Parent relation
  *
  * @method     ChildLocalizationQuery leftJoinLanguage($relationAlias = null) Adds a LEFT JOIN clause to the query using the Language relation
  * @method     ChildLocalizationQuery rightJoinLanguage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Language relation
@@ -343,7 +343,7 @@ abstract class LocalizationQuery extends ModelCriteria
      * $query->filterByParentId(array('min' => 12)); // WHERE parent_id > 12
      * </code>
      *
-     * @see       filterByLocalizationRelatedByParentId()
+     * @see       filterByParent()
      *
      * @param     mixed $parentId The value to use as filter.
      *              Use scalar values for equality.
@@ -629,7 +629,7 @@ abstract class LocalizationQuery extends ModelCriteria
      *
      * @return ChildLocalizationQuery The current query, for fluid interface
      */
-    public function filterByLocalizationRelatedByParentId($localization, $comparison = null)
+    public function filterByParent($localization, $comparison = null)
     {
         if ($localization instanceof \keeko\core\model\Localization) {
             return $this
@@ -642,22 +642,22 @@ abstract class LocalizationQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(LocalizationTableMap::COL_PARENT_ID, $localization->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByLocalizationRelatedByParentId() only accepts arguments of type \keeko\core\model\Localization or Collection');
+            throw new PropelException('filterByParent() only accepts arguments of type \keeko\core\model\Localization or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the LocalizationRelatedByParentId relation
+     * Adds a JOIN clause to the query using the Parent relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildLocalizationQuery The current query, for fluid interface
      */
-    public function joinLocalizationRelatedByParentId($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinParent($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('LocalizationRelatedByParentId');
+        $relationMap = $tableMap->getRelation('Parent');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -672,14 +672,14 @@ abstract class LocalizationQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'LocalizationRelatedByParentId');
+            $this->addJoinObject($join, 'Parent');
         }
 
         return $this;
     }
 
     /**
-     * Use the LocalizationRelatedByParentId relation Localization object
+     * Use the Parent relation Localization object
      *
      * @see useQuery()
      *
@@ -689,11 +689,11 @@ abstract class LocalizationQuery extends ModelCriteria
      *
      * @return \keeko\core\model\LocalizationQuery A secondary query class using the current class as primary query
      */
-    public function useLocalizationRelatedByParentIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useParentQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinLocalizationRelatedByParentId($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'LocalizationRelatedByParentId', '\keeko\core\model\LocalizationQuery');
+            ->joinParent($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Parent', '\keeko\core\model\LocalizationQuery');
     }
 
     /**

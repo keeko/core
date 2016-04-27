@@ -30,9 +30,9 @@ use keeko\core\model\Map\RegionAreaTableMap;
  * @method     ChildRegionAreaQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildRegionAreaQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildRegionAreaQuery leftJoinRegionType($relationAlias = null) Adds a LEFT JOIN clause to the query using the RegionType relation
- * @method     ChildRegionAreaQuery rightJoinRegionType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the RegionType relation
- * @method     ChildRegionAreaQuery innerJoinRegionType($relationAlias = null) Adds a INNER JOIN clause to the query using the RegionType relation
+ * @method     ChildRegionAreaQuery leftJoinType($relationAlias = null) Adds a LEFT JOIN clause to the query using the Type relation
+ * @method     ChildRegionAreaQuery rightJoinType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Type relation
+ * @method     ChildRegionAreaQuery innerJoinType($relationAlias = null) Adds a INNER JOIN clause to the query using the Type relation
  *
  * @method     \keeko\core\model\RegionTypeQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
@@ -311,33 +311,33 @@ abstract class RegionAreaQuery extends ModelCriteria
      *
      * @return ChildRegionAreaQuery The current query, for fluid interface
      */
-    public function filterByRegionType($regionType, $comparison = null)
+    public function filterByType($regionType, $comparison = null)
     {
         if ($regionType instanceof \keeko\core\model\RegionType) {
             return $this
                 ->addUsingAlias(RegionAreaTableMap::COL_ID, $regionType->getAreaId(), $comparison);
         } elseif ($regionType instanceof ObjectCollection) {
             return $this
-                ->useRegionTypeQuery()
+                ->useTypeQuery()
                 ->filterByPrimaryKeys($regionType->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByRegionType() only accepts arguments of type \keeko\core\model\RegionType or Collection');
+            throw new PropelException('filterByType() only accepts arguments of type \keeko\core\model\RegionType or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the RegionType relation
+     * Adds a JOIN clause to the query using the Type relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildRegionAreaQuery The current query, for fluid interface
      */
-    public function joinRegionType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('RegionType');
+        $relationMap = $tableMap->getRelation('Type');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -352,14 +352,14 @@ abstract class RegionAreaQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'RegionType');
+            $this->addJoinObject($join, 'Type');
         }
 
         return $this;
     }
 
     /**
-     * Use the RegionType relation RegionType object
+     * Use the Type relation RegionType object
      *
      * @see useQuery()
      *
@@ -369,11 +369,11 @@ abstract class RegionAreaQuery extends ModelCriteria
      *
      * @return \keeko\core\model\RegionTypeQuery A secondary query class using the current class as primary query
      */
-    public function useRegionTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinRegionType($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'RegionType', '\keeko\core\model\RegionTypeQuery');
+            ->joinType($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Type', '\keeko\core\model\RegionTypeQuery');
     }
 
     /**

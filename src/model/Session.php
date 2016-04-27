@@ -28,4 +28,10 @@ class Session extends BaseSession implements ApiModelInterface {
 
 		return self::$serializer;
 	}
+
+	/**
+	 */
+	public function getId() {
+		return $this->getToken();
+	}
 }

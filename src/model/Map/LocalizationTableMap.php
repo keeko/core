@@ -182,7 +182,7 @@ class LocalizationTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('LocalizationRelatedByParentId', '\\keeko\\core\\model\\Localization', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Parent', '\\keeko\\core\\model\\Localization', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':parent_id',

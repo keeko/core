@@ -18,13 +18,14 @@ trait UserSerializerTrait {
 		return [
 			'id' => $model->getId(),
 			'login_name' => $model->getLoginName(),
-			'password' => $model->getPassword(),
 			'given_name' => $model->getGivenName(),
 			'family_name' => $model->getFamilyName(),
 			'display_name' => $model->getDisplayName(),
 			'email' => $model->getEmail(),
 			'birthday' => $model->getBirthday(\DateTime::ISO8601),
 			'sex' => $model->getSex(),
+			'created_at' => $model->getCreatedAt(\DateTime::ISO8601),
+			'updated_at' => $model->getUpdatedAt(\DateTime::ISO8601),
 		];
 	}
 
@@ -53,7 +54,7 @@ trait UserSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'login_name', 'password', 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex'];
+		return ['id', 'login_name', 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex', 'created_at', 'updated_at'];
 	}
 
 	/**

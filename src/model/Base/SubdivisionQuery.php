@@ -46,9 +46,9 @@ use keeko\core\model\Map\SubdivisionTableMap;
  * @method     ChildSubdivisionQuery rightJoinCountry($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Country relation
  * @method     ChildSubdivisionQuery innerJoinCountry($relationAlias = null) Adds a INNER JOIN clause to the query using the Country relation
  *
- * @method     ChildSubdivisionQuery leftJoinRegionType($relationAlias = null) Adds a LEFT JOIN clause to the query using the RegionType relation
- * @method     ChildSubdivisionQuery rightJoinRegionType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the RegionType relation
- * @method     ChildSubdivisionQuery innerJoinRegionType($relationAlias = null) Adds a INNER JOIN clause to the query using the RegionType relation
+ * @method     ChildSubdivisionQuery leftJoinType($relationAlias = null) Adds a LEFT JOIN clause to the query using the Type relation
+ * @method     ChildSubdivisionQuery rightJoinType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Type relation
+ * @method     ChildSubdivisionQuery innerJoinType($relationAlias = null) Adds a INNER JOIN clause to the query using the Type relation
  *
  * @method     \keeko\core\model\CountryQuery|\keeko\core\model\RegionTypeQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
@@ -518,7 +518,7 @@ abstract class SubdivisionQuery extends ModelCriteria
      * $query->filterByTypeId(array('min' => 12)); // WHERE type_id > 12
      * </code>
      *
-     * @see       filterByRegionType()
+     * @see       filterByType()
      *
      * @param     mixed $typeId The value to use as filter.
      *              Use scalar values for equality.
@@ -638,7 +638,7 @@ abstract class SubdivisionQuery extends ModelCriteria
      *
      * @return ChildSubdivisionQuery The current query, for fluid interface
      */
-    public function filterByRegionType($regionType, $comparison = null)
+    public function filterByType($regionType, $comparison = null)
     {
         if ($regionType instanceof \keeko\core\model\RegionType) {
             return $this
@@ -651,22 +651,22 @@ abstract class SubdivisionQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(SubdivisionTableMap::COL_TYPE_ID, $regionType->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByRegionType() only accepts arguments of type \keeko\core\model\RegionType or Collection');
+            throw new PropelException('filterByType() only accepts arguments of type \keeko\core\model\RegionType or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the RegionType relation
+     * Adds a JOIN clause to the query using the Type relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildSubdivisionQuery The current query, for fluid interface
      */
-    public function joinRegionType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('RegionType');
+        $relationMap = $tableMap->getRelation('Type');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -681,14 +681,14 @@ abstract class SubdivisionQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'RegionType');
+            $this->addJoinObject($join, 'Type');
         }
 
         return $this;
     }
 
     /**
-     * Use the RegionType relation RegionType object
+     * Use the Type relation RegionType object
      *
      * @see useQuery()
      *
@@ -698,11 +698,11 @@ abstract class SubdivisionQuery extends ModelCriteria
      *
      * @return \keeko\core\model\RegionTypeQuery A secondary query class using the current class as primary query
      */
-    public function useRegionTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinRegionType($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'RegionType', '\keeko\core\model\RegionTypeQuery');
+            ->joinType($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Type', '\keeko\core\model\RegionTypeQuery');
     }
 
     /**

@@ -76,8 +76,8 @@ abstract class RegionArea implements ActiveRecordInterface
     /**
      * @var        ObjectCollection|ChildRegionType[] Collection to store aggregation of ChildRegionType objects.
      */
-    protected $collRegionTypes;
-    protected $collRegionTypesPartial;
+    protected $collTypes;
+    protected $collTypesPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -91,7 +91,7 @@ abstract class RegionArea implements ActiveRecordInterface
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildRegionType[]
      */
-    protected $regionTypesScheduledForDeletion = null;
+    protected $typesScheduledForDeletion = null;
 
     /**
      * Initializes internal state of keeko\core\model\Base\RegionArea object.
@@ -516,7 +516,7 @@ abstract class RegionArea implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collRegionTypes) {
+            if (null !== $this->collTypes) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -529,7 +529,7 @@ abstract class RegionArea implements ActiveRecordInterface
                         $key = 'RegionTypes';
                 }
 
-                $result[$key] = $this->collRegionTypes->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collTypes->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -644,9 +644,9 @@ abstract class RegionArea implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getRegionTypes() as $relObj) {
+            foreach ($this->getTypes() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addRegionType($relObj->copy($deepCopy));
+                    $copyObj->addType($relObj->copy($deepCopy));
                 }
             }
 
@@ -691,37 +691,37 @@ abstract class RegionArea implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('RegionType' == $relationName) {
-            return $this->initRegionTypes();
+        if ('Type' == $relationName) {
+            return $this->initTypes();
         }
     }
 
     /**
-     * Clears out the collRegionTypes collection
+     * Clears out the collTypes collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addRegionTypes()
+     * @see        addTypes()
      */
-    public function clearRegionTypes()
+    public function clearTypes()
     {
-        $this->collRegionTypes = null; // important to set this to NULL since that means it is uninitialized
+        $this->collTypes = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collRegionTypes collection loaded partially.
+     * Reset is the collTypes collection loaded partially.
      */
-    public function resetPartialRegionTypes($v = true)
+    public function resetPartialTypes($v = true)
     {
-        $this->collRegionTypesPartial = $v;
+        $this->collTypesPartial = $v;
     }
 
     /**
-     * Initializes the collRegionTypes collection.
+     * Initializes the collTypes collection.
      *
-     * By default this just sets the collRegionTypes collection to an empty array (like clearcollRegionTypes());
+     * By default this just sets the collTypes collection to an empty array (like clearcollTypes());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -730,13 +730,13 @@ abstract class RegionArea implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initRegionTypes($overrideExisting = true)
+    public function initTypes($overrideExisting = true)
     {
-        if (null !== $this->collRegionTypes && !$overrideExisting) {
+        if (null !== $this->collTypes && !$overrideExisting) {
             return;
         }
-        $this->collRegionTypes = new ObjectCollection();
-        $this->collRegionTypes->setModel('\keeko\core\model\RegionType');
+        $this->collTypes = new ObjectCollection();
+        $this->collTypes->setModel('\keeko\core\model\RegionType');
     }
 
     /**
@@ -753,48 +753,48 @@ abstract class RegionArea implements ActiveRecordInterface
      * @return ObjectCollection|ChildRegionType[] List of ChildRegionType objects
      * @throws PropelException
      */
-    public function getRegionTypes(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getTypes(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collRegionTypesPartial && !$this->isNew();
-        if (null === $this->collRegionTypes || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collRegionTypes) {
+        $partial = $this->collTypesPartial && !$this->isNew();
+        if (null === $this->collTypes || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collTypes) {
                 // return empty collection
-                $this->initRegionTypes();
+                $this->initTypes();
             } else {
-                $collRegionTypes = ChildRegionTypeQuery::create(null, $criteria)
-                    ->filterByRegionArea($this)
+                $collTypes = ChildRegionTypeQuery::create(null, $criteria)
+                    ->filterByArea($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collRegionTypesPartial && count($collRegionTypes)) {
-                        $this->initRegionTypes(false);
+                    if (false !== $this->collTypesPartial && count($collTypes)) {
+                        $this->initTypes(false);
 
-                        foreach ($collRegionTypes as $obj) {
-                            if (false == $this->collRegionTypes->contains($obj)) {
-                                $this->collRegionTypes->append($obj);
+                        foreach ($collTypes as $obj) {
+                            if (false == $this->collTypes->contains($obj)) {
+                                $this->collTypes->append($obj);
                             }
                         }
 
-                        $this->collRegionTypesPartial = true;
+                        $this->collTypesPartial = true;
                     }
 
-                    return $collRegionTypes;
+                    return $collTypes;
                 }
 
-                if ($partial && $this->collRegionTypes) {
-                    foreach ($this->collRegionTypes as $obj) {
+                if ($partial && $this->collTypes) {
+                    foreach ($this->collTypes as $obj) {
                         if ($obj->isNew()) {
-                            $collRegionTypes[] = $obj;
+                            $collTypes[] = $obj;
                         }
                     }
                 }
 
-                $this->collRegionTypes = $collRegionTypes;
-                $this->collRegionTypesPartial = false;
+                $this->collTypes = $collTypes;
+                $this->collTypesPartial = false;
             }
         }
 
-        return $this->collRegionTypes;
+        return $this->collTypes;
     }
 
     /**
@@ -803,29 +803,29 @@ abstract class RegionArea implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $regionTypes A Propel collection.
+     * @param      Collection $types A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildRegionArea The current object (for fluent API support)
      */
-    public function setRegionTypes(Collection $regionTypes, ConnectionInterface $con = null)
+    public function setTypes(Collection $types, ConnectionInterface $con = null)
     {
-        /** @var ChildRegionType[] $regionTypesToDelete */
-        $regionTypesToDelete = $this->getRegionTypes(new Criteria(), $con)->diff($regionTypes);
+        /** @var ChildRegionType[] $typesToDelete */
+        $typesToDelete = $this->getTypes(new Criteria(), $con)->diff($types);
 
 
-        $this->regionTypesScheduledForDeletion = $regionTypesToDelete;
+        $this->typesScheduledForDeletion = $typesToDelete;
 
-        foreach ($regionTypesToDelete as $regionTypeRemoved) {
-            $regionTypeRemoved->setRegionArea(null);
+        foreach ($typesToDelete as $typeRemoved) {
+            $typeRemoved->setArea(null);
         }
 
-        $this->collRegionTypes = null;
-        foreach ($regionTypes as $regionType) {
-            $this->addRegionType($regionType);
+        $this->collTypes = null;
+        foreach ($types as $type) {
+            $this->addType($type);
         }
 
-        $this->collRegionTypes = $regionTypes;
-        $this->collRegionTypesPartial = false;
+        $this->collTypes = $types;
+        $this->collTypesPartial = false;
 
         return $this;
     }
@@ -839,16 +839,16 @@ abstract class RegionArea implements ActiveRecordInterface
      * @return int             Count of related RegionType objects.
      * @throws PropelException
      */
-    public function countRegionTypes(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countTypes(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collRegionTypesPartial && !$this->isNew();
-        if (null === $this->collRegionTypes || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collRegionTypes) {
+        $partial = $this->collTypesPartial && !$this->isNew();
+        if (null === $this->collTypes || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collTypes) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getRegionTypes());
+                return count($this->getTypes());
             }
 
             $query = ChildRegionTypeQuery::create(null, $criteria);
@@ -857,11 +857,11 @@ abstract class RegionArea implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByRegionArea($this)
+                ->filterByArea($this)
                 ->count($con);
         }
 
-        return count($this->collRegionTypes);
+        return count($this->collTypes);
     }
 
     /**
@@ -871,44 +871,44 @@ abstract class RegionArea implements ActiveRecordInterface
      * @param  ChildRegionType $l ChildRegionType
      * @return $this|\keeko\core\model\RegionArea The current object (for fluent API support)
      */
-    public function addRegionType(ChildRegionType $l)
+    public function addType(ChildRegionType $l)
     {
-        if ($this->collRegionTypes === null) {
-            $this->initRegionTypes();
-            $this->collRegionTypesPartial = true;
+        if ($this->collTypes === null) {
+            $this->initTypes();
+            $this->collTypesPartial = true;
         }
 
-        if (!$this->collRegionTypes->contains($l)) {
-            $this->doAddRegionType($l);
+        if (!$this->collTypes->contains($l)) {
+            $this->doAddType($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildRegionType $regionType The ChildRegionType object to add.
+     * @param ChildRegionType $type The ChildRegionType object to add.
      */
-    protected function doAddRegionType(ChildRegionType $regionType)
+    protected function doAddType(ChildRegionType $type)
     {
-        $this->collRegionTypes[]= $regionType;
-        $regionType->setRegionArea($this);
+        $this->collTypes[]= $type;
+        $type->setArea($this);
     }
 
     /**
-     * @param  ChildRegionType $regionType The ChildRegionType object to remove.
+     * @param  ChildRegionType $type The ChildRegionType object to remove.
      * @return $this|ChildRegionArea The current object (for fluent API support)
      */
-    public function removeRegionType(ChildRegionType $regionType)
+    public function removeType(ChildRegionType $type)
     {
-        if ($this->getRegionTypes()->contains($regionType)) {
-            $pos = $this->collRegionTypes->search($regionType);
-            $this->collRegionTypes->remove($pos);
-            if (null === $this->regionTypesScheduledForDeletion) {
-                $this->regionTypesScheduledForDeletion = clone $this->collRegionTypes;
-                $this->regionTypesScheduledForDeletion->clear();
+        if ($this->getTypes()->contains($type)) {
+            $pos = $this->collTypes->search($type);
+            $this->collTypes->remove($pos);
+            if (null === $this->typesScheduledForDeletion) {
+                $this->typesScheduledForDeletion = clone $this->collTypes;
+                $this->typesScheduledForDeletion->clear();
             }
-            $this->regionTypesScheduledForDeletion[]= clone $regionType;
-            $regionType->setRegionArea(null);
+            $this->typesScheduledForDeletion[]= clone $type;
+            $type->setArea(null);
         }
 
         return $this;
@@ -941,14 +941,14 @@ abstract class RegionArea implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collRegionTypes) {
-                foreach ($this->collRegionTypes as $o) {
+            if ($this->collTypes) {
+                foreach ($this->collTypes as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collRegionTypes = null;
+        $this->collTypes = null;
     }
 
     /**
