@@ -59,7 +59,7 @@ class UserTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 13;
+    const NUM_COLUMNS = 15;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class UserTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 13;
+    const NUM_HYDRATE_COLUMNS = 15;
 
     /**
      * the column name for the id field
@@ -77,9 +77,9 @@ class UserTableMap extends TableMap
     const COL_ID = 'kk_user.id';
 
     /**
-     * the column name for the login_name field
+     * the column name for the user_name field
      */
-    const COL_LOGIN_NAME = 'kk_user.login_name';
+    const COL_USER_NAME = 'kk_user.user_name';
 
     /**
      * the column name for the password field
@@ -95,6 +95,11 @@ class UserTableMap extends TableMap
      * the column name for the family_name field
      */
     const COL_FAMILY_NAME = 'kk_user.family_name';
+
+    /**
+     * the column name for the nick_name field
+     */
+    const COL_NICK_NAME = 'kk_user.nick_name';
 
     /**
      * the column name for the display_name field
@@ -115,6 +120,11 @@ class UserTableMap extends TableMap
      * the column name for the sex field
      */
     const COL_SEX = 'kk_user.sex';
+
+    /**
+     * the column name for the slug field
+     */
+    const COL_SLUG = 'kk_user.slug';
 
     /**
      * the column name for the password_recover_code field
@@ -148,11 +158,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'LoginName', 'Password', 'GivenName', 'FamilyName', 'DisplayName', 'Email', 'Birthday', 'Sex', 'PasswordRecoverCode', 'PasswordRecoverTime', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'loginName', 'password', 'givenName', 'familyName', 'displayName', 'email', 'birthday', 'sex', 'passwordRecoverCode', 'passwordRecoverTime', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_LOGIN_NAME, UserTableMap::COL_PASSWORD, UserTableMap::COL_GIVEN_NAME, UserTableMap::COL_FAMILY_NAME, UserTableMap::COL_DISPLAY_NAME, UserTableMap::COL_EMAIL, UserTableMap::COL_BIRTHDAY, UserTableMap::COL_SEX, UserTableMap::COL_PASSWORD_RECOVER_CODE, UserTableMap::COL_PASSWORD_RECOVER_TIME, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'login_name', 'password', 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex', 'password_recover_code', 'password_recover_time', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        self::TYPE_PHPNAME       => array('Id', 'UserName', 'Password', 'GivenName', 'FamilyName', 'NickName', 'DisplayName', 'Email', 'Birthday', 'Sex', 'Slug', 'PasswordRecoverCode', 'PasswordRecoverTime', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('id', 'userName', 'password', 'givenName', 'familyName', 'nickName', 'displayName', 'email', 'birthday', 'sex', 'slug', 'passwordRecoverCode', 'passwordRecoverTime', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_USER_NAME, UserTableMap::COL_PASSWORD, UserTableMap::COL_GIVEN_NAME, UserTableMap::COL_FAMILY_NAME, UserTableMap::COL_NICK_NAME, UserTableMap::COL_DISPLAY_NAME, UserTableMap::COL_EMAIL, UserTableMap::COL_BIRTHDAY, UserTableMap::COL_SEX, UserTableMap::COL_SLUG, UserTableMap::COL_PASSWORD_RECOVER_CODE, UserTableMap::COL_PASSWORD_RECOVER_TIME, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('id', 'user_name', 'password', 'given_name', 'family_name', 'nick_name', 'display_name', 'email', 'birthday', 'sex', 'slug', 'password_recover_code', 'password_recover_time', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -162,11 +172,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'LoginName' => 1, 'Password' => 2, 'GivenName' => 3, 'FamilyName' => 4, 'DisplayName' => 5, 'Email' => 6, 'Birthday' => 7, 'Sex' => 8, 'PasswordRecoverCode' => 9, 'PasswordRecoverTime' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'loginName' => 1, 'password' => 2, 'givenName' => 3, 'familyName' => 4, 'displayName' => 5, 'email' => 6, 'birthday' => 7, 'sex' => 8, 'passwordRecoverCode' => 9, 'passwordRecoverTime' => 10, 'createdAt' => 11, 'updatedAt' => 12, ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_LOGIN_NAME => 1, UserTableMap::COL_PASSWORD => 2, UserTableMap::COL_GIVEN_NAME => 3, UserTableMap::COL_FAMILY_NAME => 4, UserTableMap::COL_DISPLAY_NAME => 5, UserTableMap::COL_EMAIL => 6, UserTableMap::COL_BIRTHDAY => 7, UserTableMap::COL_SEX => 8, UserTableMap::COL_PASSWORD_RECOVER_CODE => 9, UserTableMap::COL_PASSWORD_RECOVER_TIME => 10, UserTableMap::COL_CREATED_AT => 11, UserTableMap::COL_UPDATED_AT => 12, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'login_name' => 1, 'password' => 2, 'given_name' => 3, 'family_name' => 4, 'display_name' => 5, 'email' => 6, 'birthday' => 7, 'sex' => 8, 'password_recover_code' => 9, 'password_recover_time' => 10, 'created_at' => 11, 'updated_at' => 12, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'UserName' => 1, 'Password' => 2, 'GivenName' => 3, 'FamilyName' => 4, 'NickName' => 5, 'DisplayName' => 6, 'Email' => 7, 'Birthday' => 8, 'Sex' => 9, 'Slug' => 10, 'PasswordRecoverCode' => 11, 'PasswordRecoverTime' => 12, 'CreatedAt' => 13, 'UpdatedAt' => 14, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'userName' => 1, 'password' => 2, 'givenName' => 3, 'familyName' => 4, 'nickName' => 5, 'displayName' => 6, 'email' => 7, 'birthday' => 8, 'sex' => 9, 'slug' => 10, 'passwordRecoverCode' => 11, 'passwordRecoverTime' => 12, 'createdAt' => 13, 'updatedAt' => 14, ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_USER_NAME => 1, UserTableMap::COL_PASSWORD => 2, UserTableMap::COL_GIVEN_NAME => 3, UserTableMap::COL_FAMILY_NAME => 4, UserTableMap::COL_NICK_NAME => 5, UserTableMap::COL_DISPLAY_NAME => 6, UserTableMap::COL_EMAIL => 7, UserTableMap::COL_BIRTHDAY => 8, UserTableMap::COL_SEX => 9, UserTableMap::COL_SLUG => 10, UserTableMap::COL_PASSWORD_RECOVER_CODE => 11, UserTableMap::COL_PASSWORD_RECOVER_TIME => 12, UserTableMap::COL_CREATED_AT => 13, UserTableMap::COL_UPDATED_AT => 14, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'user_name' => 1, 'password' => 2, 'given_name' => 3, 'family_name' => 4, 'nick_name' => 5, 'display_name' => 6, 'email' => 7, 'birthday' => 8, 'sex' => 9, 'slug' => 10, 'password_recover_code' => 11, 'password_recover_time' => 12, 'created_at' => 13, 'updated_at' => 14, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -187,14 +197,16 @@ class UserTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 10, null);
-        $this->addColumn('login_name', 'LoginName', 'VARCHAR', false, 100, null);
+        $this->addColumn('user_name', 'UserName', 'VARCHAR', false, 100, null);
         $this->addColumn('password', 'Password', 'VARCHAR', false, 100, null);
         $this->addColumn('given_name', 'GivenName', 'VARCHAR', false, 100, null);
         $this->addColumn('family_name', 'FamilyName', 'VARCHAR', false, 100, null);
+        $this->addColumn('nick_name', 'NickName', 'VARCHAR', false, 100, null);
         $this->addColumn('display_name', 'DisplayName', 'VARCHAR', false, 100, null);
         $this->addColumn('email', 'Email', 'VARCHAR', false, 255, null);
         $this->addColumn('birthday', 'Birthday', 'DATE', false, null, null);
-        $this->addColumn('sex', 'Sex', 'TINYINT', false, null, null);
+        $this->addColumn('sex', 'Sex', 'TINYINT', false, null, -1);
+        $this->addColumn('slug', 'Slug', 'VARCHAR', false, 100, null);
         $this->addColumn('password_recover_code', 'PasswordRecoverCode', 'VARCHAR', false, 32, null);
         $this->addColumn('password_recover_time', 'PasswordRecoverTime', 'TIMESTAMP', false, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
@@ -240,7 +252,7 @@ class UserTableMap extends TableMap
     {
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
-            'validate' => array('rule1' => array ('column' => 'email','validator' => 'NotNull',), 'rule2' => array ('column' => 'email','validator' => 'Email',), 'rule3' => array ('column' => 'password','validator' => 'NotNull',), ),
+            'validate' => array('rule1' => array ('column' => 'email','validator' => 'NotNull',), 'rule2' => array ('column' => 'email','validator' => 'Email',), ),
         );
     } // getBehaviors()
 
@@ -386,28 +398,32 @@ class UserTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(UserTableMap::COL_ID);
-            $criteria->addSelectColumn(UserTableMap::COL_LOGIN_NAME);
+            $criteria->addSelectColumn(UserTableMap::COL_USER_NAME);
             $criteria->addSelectColumn(UserTableMap::COL_PASSWORD);
             $criteria->addSelectColumn(UserTableMap::COL_GIVEN_NAME);
             $criteria->addSelectColumn(UserTableMap::COL_FAMILY_NAME);
+            $criteria->addSelectColumn(UserTableMap::COL_NICK_NAME);
             $criteria->addSelectColumn(UserTableMap::COL_DISPLAY_NAME);
             $criteria->addSelectColumn(UserTableMap::COL_EMAIL);
             $criteria->addSelectColumn(UserTableMap::COL_BIRTHDAY);
             $criteria->addSelectColumn(UserTableMap::COL_SEX);
+            $criteria->addSelectColumn(UserTableMap::COL_SLUG);
             $criteria->addSelectColumn(UserTableMap::COL_PASSWORD_RECOVER_CODE);
             $criteria->addSelectColumn(UserTableMap::COL_PASSWORD_RECOVER_TIME);
             $criteria->addSelectColumn(UserTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(UserTableMap::COL_UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.login_name');
+            $criteria->addSelectColumn($alias . '.user_name');
             $criteria->addSelectColumn($alias . '.password');
             $criteria->addSelectColumn($alias . '.given_name');
             $criteria->addSelectColumn($alias . '.family_name');
+            $criteria->addSelectColumn($alias . '.nick_name');
             $criteria->addSelectColumn($alias . '.display_name');
             $criteria->addSelectColumn($alias . '.email');
             $criteria->addSelectColumn($alias . '.birthday');
             $criteria->addSelectColumn($alias . '.sex');
+            $criteria->addSelectColumn($alias . '.slug');
             $criteria->addSelectColumn($alias . '.password_recover_code');
             $criteria->addSelectColumn($alias . '.password_recover_time');
             $criteria->addSelectColumn($alias . '.created_at');

@@ -9,7 +9,7 @@ use keeko\framework\model\ActivityObjectInterface;
 
 /**
  * Skeleton subclass for representing a row from the 'kk_user' table.
- *
+ * 
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
@@ -29,6 +29,15 @@ class User extends BaseUser implements ApiModelInterface {
 		}
 
 		return self::$serializer;
+	}
+
+	/**
+	 * Returns whether this user is a guest
+	 * 
+	 * @return boolean
+	 */
+	public function isGuest() {
+		return $this->getId() == -1;
 	}
 
 	/**
@@ -82,14 +91,5 @@ class User extends BaseUser implements ApiModelInterface {
 		if ($obj instanceof ActivityObjectInterface) {
 		    return $this->findActivityObject($obj->toActivityObject());
 		}
-	}
-	
-	/**
-	 * Returns whether this user is a guest
-	 *
-	 * @return boolean
-	 */
-	public function isGuest() {
-		return $this->getId() == -1;
 	}
 }

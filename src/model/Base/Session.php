@@ -77,6 +77,12 @@ abstract class Session implements ActiveRecordInterface
     protected $user_id;
 
     /**
+     * The value for the ip field.
+     * @var        string
+     */
+    protected $ip;
+
+    /**
      * The value for the user_agent field.
      * @var        string
      */
@@ -369,6 +375,16 @@ abstract class Session implements ActiveRecordInterface
     }
 
     /**
+     * Get the [ip] column value.
+     *
+     * @return string
+     */
+    public function getIp()
+    {
+        return $this->ip;
+    }
+
+    /**
      * Get the [user_agent] column value.
      *
      * @return string
@@ -501,6 +517,26 @@ abstract class Session implements ActiveRecordInterface
 
         return $this;
     } // setUserId()
+
+    /**
+     * Set the value of [ip] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\Session The current object (for fluent API support)
+     */
+    public function setIp($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->ip !== $v) {
+            $this->ip = $v;
+            $this->modifiedColumns[SessionTableMap::COL_IP] = true;
+        }
+
+        return $this;
+    } // setIp()
 
     /**
      * Set the value of [user_agent] column.
@@ -684,28 +720,31 @@ abstract class Session implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SessionTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SessionTableMap::translateFieldName('UserAgent', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SessionTableMap::translateFieldName('Ip', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->ip = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SessionTableMap::translateFieldName('UserAgent', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_agent = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SessionTableMap::translateFieldName('Browser', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SessionTableMap::translateFieldName('Browser', TableMap::TYPE_PHPNAME, $indexType)];
             $this->browser = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SessionTableMap::translateFieldName('Device', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SessionTableMap::translateFieldName('Device', TableMap::TYPE_PHPNAME, $indexType)];
             $this->device = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SessionTableMap::translateFieldName('Os', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SessionTableMap::translateFieldName('Os', TableMap::TYPE_PHPNAME, $indexType)];
             $this->os = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SessionTableMap::translateFieldName('Location', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SessionTableMap::translateFieldName('Location', TableMap::TYPE_PHPNAME, $indexType)];
             $this->location = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SessionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SessionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SessionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : SessionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -718,7 +757,7 @@ abstract class Session implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 9; // 9 = SessionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = SessionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\Session'), 0, $e);
@@ -945,6 +984,9 @@ abstract class Session implements ActiveRecordInterface
         if ($this->isColumnModified(SessionTableMap::COL_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = '`user_id`';
         }
+        if ($this->isColumnModified(SessionTableMap::COL_IP)) {
+            $modifiedColumns[':p' . $index++]  = '`ip`';
+        }
         if ($this->isColumnModified(SessionTableMap::COL_USER_AGENT)) {
             $modifiedColumns[':p' . $index++]  = '`user_agent`';
         }
@@ -982,6 +1024,9 @@ abstract class Session implements ActiveRecordInterface
                         break;
                     case '`user_id`':
                         $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
+                        break;
+                    case '`ip`':
+                        $stmt->bindValue($identifier, $this->ip, PDO::PARAM_STR);
                         break;
                     case '`user_agent`':
                         $stmt->bindValue($identifier, $this->user_agent, PDO::PARAM_STR);
@@ -1066,24 +1111,27 @@ abstract class Session implements ActiveRecordInterface
                 return $this->getUserId();
                 break;
             case 2:
-                return $this->getUserAgent();
+                return $this->getIp();
                 break;
             case 3:
-                return $this->getBrowser();
+                return $this->getUserAgent();
                 break;
             case 4:
-                return $this->getDevice();
+                return $this->getBrowser();
                 break;
             case 5:
-                return $this->getOs();
+                return $this->getDevice();
                 break;
             case 6:
-                return $this->getLocation();
+                return $this->getOs();
                 break;
             case 7:
-                return $this->getCreatedAt();
+                return $this->getLocation();
                 break;
             case 8:
+                return $this->getCreatedAt();
+                break;
+            case 9:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1118,26 +1166,27 @@ abstract class Session implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getToken(),
             $keys[1] => $this->getUserId(),
-            $keys[2] => $this->getUserAgent(),
-            $keys[3] => $this->getBrowser(),
-            $keys[4] => $this->getDevice(),
-            $keys[5] => $this->getOs(),
-            $keys[6] => $this->getLocation(),
-            $keys[7] => $this->getCreatedAt(),
-            $keys[8] => $this->getUpdatedAt(),
+            $keys[2] => $this->getIp(),
+            $keys[3] => $this->getUserAgent(),
+            $keys[4] => $this->getBrowser(),
+            $keys[5] => $this->getDevice(),
+            $keys[6] => $this->getOs(),
+            $keys[7] => $this->getLocation(),
+            $keys[8] => $this->getCreatedAt(),
+            $keys[9] => $this->getUpdatedAt(),
         );
 
         $utc = new \DateTimeZone('utc');
-        if ($result[$keys[7]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[7]];
-            $result[$keys[7]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
         if ($result[$keys[8]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
             $dateTime = clone $result[$keys[8]];
             $result[$keys[8]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[9]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[9]];
+            $result[$keys[9]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1202,24 +1251,27 @@ abstract class Session implements ActiveRecordInterface
                 $this->setUserId($value);
                 break;
             case 2:
-                $this->setUserAgent($value);
+                $this->setIp($value);
                 break;
             case 3:
-                $this->setBrowser($value);
+                $this->setUserAgent($value);
                 break;
             case 4:
-                $this->setDevice($value);
+                $this->setBrowser($value);
                 break;
             case 5:
-                $this->setOs($value);
+                $this->setDevice($value);
                 break;
             case 6:
-                $this->setLocation($value);
+                $this->setOs($value);
                 break;
             case 7:
-                $this->setCreatedAt($value);
+                $this->setLocation($value);
                 break;
             case 8:
+                $this->setCreatedAt($value);
+                break;
+            case 9:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1255,25 +1307,28 @@ abstract class Session implements ActiveRecordInterface
             $this->setUserId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setUserAgent($arr[$keys[2]]);
+            $this->setIp($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setBrowser($arr[$keys[3]]);
+            $this->setUserAgent($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setDevice($arr[$keys[4]]);
+            $this->setBrowser($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setOs($arr[$keys[5]]);
+            $this->setDevice($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setLocation($arr[$keys[6]]);
+            $this->setOs($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setCreatedAt($arr[$keys[7]]);
+            $this->setLocation($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setUpdatedAt($arr[$keys[8]]);
+            $this->setCreatedAt($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setUpdatedAt($arr[$keys[9]]);
         }
     }
 
@@ -1321,6 +1376,9 @@ abstract class Session implements ActiveRecordInterface
         }
         if ($this->isColumnModified(SessionTableMap::COL_USER_ID)) {
             $criteria->add(SessionTableMap::COL_USER_ID, $this->user_id);
+        }
+        if ($this->isColumnModified(SessionTableMap::COL_IP)) {
+            $criteria->add(SessionTableMap::COL_IP, $this->ip);
         }
         if ($this->isColumnModified(SessionTableMap::COL_USER_AGENT)) {
             $criteria->add(SessionTableMap::COL_USER_AGENT, $this->user_agent);
@@ -1431,6 +1489,7 @@ abstract class Session implements ActiveRecordInterface
     {
         $copyObj->setToken($this->getToken());
         $copyObj->setUserId($this->getUserId());
+        $copyObj->setIp($this->getIp());
         $copyObj->setUserAgent($this->getUserAgent());
         $copyObj->setBrowser($this->getBrowser());
         $copyObj->setDevice($this->getDevice());
@@ -1528,6 +1587,7 @@ abstract class Session implements ActiveRecordInterface
         }
         $this->token = null;
         $this->user_id = null;
+        $this->ip = null;
         $this->user_agent = null;
         $this->browser = null;
         $this->device = null;

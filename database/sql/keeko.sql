@@ -507,6 +507,7 @@ CREATE TABLE `kk_session`
 (
     `token` VARCHAR(32) NOT NULL,
     `user_id` INTEGER(10) NOT NULL,
+    `ip` VARCHAR(128),
     `user_agent` VARCHAR(512),
     `browser` VARCHAR(512),
     `device` VARCHAR(512),
@@ -530,14 +531,16 @@ DROP TABLE IF EXISTS `kk_user`;
 CREATE TABLE `kk_user`
 (
     `id` INTEGER(10) NOT NULL AUTO_INCREMENT,
-    `login_name` VARCHAR(100),
+    `user_name` VARCHAR(100),
     `password` VARCHAR(100),
     `given_name` VARCHAR(100),
     `family_name` VARCHAR(100),
+    `nick_name` VARCHAR(100),
     `display_name` VARCHAR(100),
     `email` VARCHAR(255),
     `birthday` DATE,
-    `sex` TINYINT COMMENT '1 = male; 0 = female',
+    `sex` TINYINT DEFAULT -1 COMMENT '1 = male; 0 = female',
+    `slug` VARCHAR(100),
     `password_recover_code` VARCHAR(32),
     `password_recover_time` DATETIME,
     `created_at` DATETIME,

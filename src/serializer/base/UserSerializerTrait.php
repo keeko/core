@@ -17,13 +17,15 @@ trait UserSerializerTrait {
 	public function getAttributes($model, array $fields = null) {
 		return [
 			'id' => $model->getId(),
-			'login_name' => $model->getLoginName(),
+			'user_name' => $model->getUserName(),
 			'given_name' => $model->getGivenName(),
 			'family_name' => $model->getFamilyName(),
+			'nick_name' => $model->getNickName(),
 			'display_name' => $model->getDisplayName(),
 			'email' => $model->getEmail(),
 			'birthday' => $model->getBirthday(\DateTime::ISO8601),
 			'sex' => $model->getSex(),
+			'slug' => $model->getSlug(),
 			'created_at' => $model->getCreatedAt(\DateTime::ISO8601),
 			'updated_at' => $model->getUpdatedAt(\DateTime::ISO8601),
 		];
@@ -32,7 +34,7 @@ trait UserSerializerTrait {
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'login_name', 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex', 'created_at', 'updated_at'];
+		return ['id', 'user_name', 'given_name', 'family_name', 'nick_name', 'display_name', 'email', 'birthday', 'sex', 'slug', 'created_at', 'updated_at'];
 	}
 
 	/**
@@ -54,7 +56,7 @@ trait UserSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'login_name', 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex', 'created_at', 'updated_at'];
+		return ['id', 'user_name', 'given_name', 'family_name', 'nick_name', 'display_name', 'email', 'birthday', 'sex', 'slug', 'created_at', 'updated_at'];
 	}
 
 	/**
@@ -83,9 +85,9 @@ trait UserSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'login_name', 'password' => function($v) {
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'user_name', 'password' => function($v) {
 			return password_hash($v, PASSWORD_BCRYPT);
-		}, 'given_name', 'family_name', 'display_name', 'email', 'birthday', 'sex']);
+		}, 'given_name', 'family_name', 'nick_name', 'display_name', 'email', 'birthday', 'sex', 'slug']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

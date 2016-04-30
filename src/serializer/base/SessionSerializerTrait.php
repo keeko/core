@@ -18,6 +18,7 @@ trait SessionSerializerTrait {
 		return [
 			'token' => $model->getToken(),
 			'user_id' => $model->getUserId(),
+			'ip' => $model->getIp(),
 			'user_agent' => $model->getUserAgent(),
 			'browser' => $model->getBrowser(),
 			'device' => $model->getDevice(),
@@ -31,7 +32,7 @@ trait SessionSerializerTrait {
 	/**
 	 */
 	public function getFields() {
-		return ['token', 'user_id', 'user_agent', 'browser', 'device', 'os', 'location', 'created_at', 'updated_at'];
+		return ['token', 'user_id', 'ip', 'user_agent', 'browser', 'device', 'os', 'location', 'created_at', 'updated_at'];
 	}
 
 	/**
@@ -53,7 +54,7 @@ trait SessionSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['token', 'user_id', 'user_agent', 'browser', 'device', 'os', 'location', 'created_at', 'updated_at'];
+		return ['token', 'user_id', 'ip', 'user_agent', 'browser', 'device', 'os', 'location', 'created_at', 'updated_at'];
 	}
 
 	/**
@@ -73,7 +74,7 @@ trait SessionSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['token', 'user_id', 'user_agent', 'browser', 'device', 'os', 'location']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['token', 'user_id', 'ip', 'user_agent', 'browser', 'device', 'os', 'location']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

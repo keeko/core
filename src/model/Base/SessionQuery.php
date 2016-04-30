@@ -22,6 +22,7 @@ use keeko\core\model\Map\SessionTableMap;
  *
  * @method     ChildSessionQuery orderByToken($order = Criteria::ASC) Order by the token column
  * @method     ChildSessionQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
+ * @method     ChildSessionQuery orderByIp($order = Criteria::ASC) Order by the ip column
  * @method     ChildSessionQuery orderByUserAgent($order = Criteria::ASC) Order by the user_agent column
  * @method     ChildSessionQuery orderByBrowser($order = Criteria::ASC) Order by the browser column
  * @method     ChildSessionQuery orderByDevice($order = Criteria::ASC) Order by the device column
@@ -32,6 +33,7 @@ use keeko\core\model\Map\SessionTableMap;
  *
  * @method     ChildSessionQuery groupByToken() Group by the token column
  * @method     ChildSessionQuery groupByUserId() Group by the user_id column
+ * @method     ChildSessionQuery groupByIp() Group by the ip column
  * @method     ChildSessionQuery groupByUserAgent() Group by the user_agent column
  * @method     ChildSessionQuery groupByBrowser() Group by the browser column
  * @method     ChildSessionQuery groupByDevice() Group by the device column
@@ -55,6 +57,7 @@ use keeko\core\model\Map\SessionTableMap;
  *
  * @method     ChildSession findOneByToken(string $token) Return the first ChildSession filtered by the token column
  * @method     ChildSession findOneByUserId(int $user_id) Return the first ChildSession filtered by the user_id column
+ * @method     ChildSession findOneByIp(string $ip) Return the first ChildSession filtered by the ip column
  * @method     ChildSession findOneByUserAgent(string $user_agent) Return the first ChildSession filtered by the user_agent column
  * @method     ChildSession findOneByBrowser(string $browser) Return the first ChildSession filtered by the browser column
  * @method     ChildSession findOneByDevice(string $device) Return the first ChildSession filtered by the device column
@@ -68,6 +71,7 @@ use keeko\core\model\Map\SessionTableMap;
  *
  * @method     ChildSession requireOneByToken(string $token) Return the first ChildSession filtered by the token column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSession requireOneByUserId(int $user_id) Return the first ChildSession filtered by the user_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSession requireOneByIp(string $ip) Return the first ChildSession filtered by the ip column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSession requireOneByUserAgent(string $user_agent) Return the first ChildSession filtered by the user_agent column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSession requireOneByBrowser(string $browser) Return the first ChildSession filtered by the browser column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSession requireOneByDevice(string $device) Return the first ChildSession filtered by the device column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -79,6 +83,7 @@ use keeko\core\model\Map\SessionTableMap;
  * @method     ChildSession[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSession objects based on current ModelCriteria
  * @method     ChildSession[]|ObjectCollection findByToken(string $token) Return ChildSession objects filtered by the token column
  * @method     ChildSession[]|ObjectCollection findByUserId(int $user_id) Return ChildSession objects filtered by the user_id column
+ * @method     ChildSession[]|ObjectCollection findByIp(string $ip) Return ChildSession objects filtered by the ip column
  * @method     ChildSession[]|ObjectCollection findByUserAgent(string $user_agent) Return ChildSession objects filtered by the user_agent column
  * @method     ChildSession[]|ObjectCollection findByBrowser(string $browser) Return ChildSession objects filtered by the browser column
  * @method     ChildSession[]|ObjectCollection findByDevice(string $device) Return ChildSession objects filtered by the device column
@@ -178,7 +183,7 @@ abstract class SessionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `token`, `user_id`, `user_agent`, `browser`, `device`, `os`, `location`, `created_at`, `updated_at` FROM `kk_session` WHERE `token` = :p0';
+        $sql = 'SELECT `token`, `user_id`, `ip`, `user_agent`, `browser`, `device`, `os`, `location`, `created_at`, `updated_at` FROM `kk_session` WHERE `token` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_STR);
@@ -338,6 +343,35 @@ abstract class SessionQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(SessionTableMap::COL_USER_ID, $userId, $comparison);
+    }
+
+    /**
+     * Filter the query on the ip column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIp('fooValue');   // WHERE ip = 'fooValue'
+     * $query->filterByIp('%fooValue%'); // WHERE ip LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $ip The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildSessionQuery The current query, for fluid interface
+     */
+    public function filterByIp($ip = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($ip)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $ip)) {
+                $ip = str_replace('*', '%', $ip);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(SessionTableMap::COL_IP, $ip, $comparison);
     }
 
     /**
