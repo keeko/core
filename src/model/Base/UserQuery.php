@@ -31,7 +31,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery orderByBirthday($order = Criteria::ASC) Order by the birthday column
  * @method     ChildUserQuery orderBySex($order = Criteria::ASC) Order by the sex column
  * @method     ChildUserQuery orderBySlug($order = Criteria::ASC) Order by the slug column
- * @method     ChildUserQuery orderByPasswordRecoverCode($order = Criteria::ASC) Order by the password_recover_code column
+ * @method     ChildUserQuery orderByPasswordRecoverToken($order = Criteria::ASC) Order by the password_recover_token column
  * @method     ChildUserQuery orderByPasswordRecoverTime($order = Criteria::ASC) Order by the password_recover_time column
  * @method     ChildUserQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildUserQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
@@ -47,7 +47,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery groupByBirthday() Group by the birthday column
  * @method     ChildUserQuery groupBySex() Group by the sex column
  * @method     ChildUserQuery groupBySlug() Group by the slug column
- * @method     ChildUserQuery groupByPasswordRecoverCode() Group by the password_recover_code column
+ * @method     ChildUserQuery groupByPasswordRecoverToken() Group by the password_recover_token column
  * @method     ChildUserQuery groupByPasswordRecoverTime() Group by the password_recover_time column
  * @method     ChildUserQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildUserQuery groupByUpdatedAt() Group by the updated_at column
@@ -84,7 +84,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser findOneByBirthday(string $birthday) Return the first ChildUser filtered by the birthday column
  * @method     ChildUser findOneBySex(int $sex) Return the first ChildUser filtered by the sex column
  * @method     ChildUser findOneBySlug(string $slug) Return the first ChildUser filtered by the slug column
- * @method     ChildUser findOneByPasswordRecoverCode(string $password_recover_code) Return the first ChildUser filtered by the password_recover_code column
+ * @method     ChildUser findOneByPasswordRecoverToken(string $password_recover_token) Return the first ChildUser filtered by the password_recover_token column
  * @method     ChildUser findOneByPasswordRecoverTime(string $password_recover_time) Return the first ChildUser filtered by the password_recover_time column
  * @method     ChildUser findOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column
  * @method     ChildUser findOneByUpdatedAt(string $updated_at) Return the first ChildUser filtered by the updated_at column *
@@ -103,7 +103,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser requireOneByBirthday(string $birthday) Return the first ChildUser filtered by the birthday column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneBySex(int $sex) Return the first ChildUser filtered by the sex column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneBySlug(string $slug) Return the first ChildUser filtered by the slug column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUser requireOneByPasswordRecoverCode(string $password_recover_code) Return the first ChildUser filtered by the password_recover_code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByPasswordRecoverToken(string $password_recover_token) Return the first ChildUser filtered by the password_recover_token column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByPasswordRecoverTime(string $password_recover_time) Return the first ChildUser filtered by the password_recover_time column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUpdatedAt(string $updated_at) Return the first ChildUser filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -120,7 +120,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser[]|ObjectCollection findByBirthday(string $birthday) Return ChildUser objects filtered by the birthday column
  * @method     ChildUser[]|ObjectCollection findBySex(int $sex) Return ChildUser objects filtered by the sex column
  * @method     ChildUser[]|ObjectCollection findBySlug(string $slug) Return ChildUser objects filtered by the slug column
- * @method     ChildUser[]|ObjectCollection findByPasswordRecoverCode(string $password_recover_code) Return ChildUser objects filtered by the password_recover_code column
+ * @method     ChildUser[]|ObjectCollection findByPasswordRecoverToken(string $password_recover_token) Return ChildUser objects filtered by the password_recover_token column
  * @method     ChildUser[]|ObjectCollection findByPasswordRecoverTime(string $password_recover_time) Return ChildUser objects filtered by the password_recover_time column
  * @method     ChildUser[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildUser objects filtered by the created_at column
  * @method     ChildUser[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildUser objects filtered by the updated_at column
@@ -216,7 +216,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `id`, `user_name`, `password`, `given_name`, `family_name`, `nick_name`, `display_name`, `email`, `birthday`, `sex`, `slug`, `password_recover_code`, `password_recover_time`, `created_at`, `updated_at` FROM `kk_user` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `user_name`, `password`, `given_name`, `family_name`, `nick_name`, `display_name`, `email`, `birthday`, `sex`, `slug`, `password_recover_token`, `password_recover_time`, `created_at`, `updated_at` FROM `kk_user` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -664,32 +664,32 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the password_recover_code column
+     * Filter the query on the password_recover_token column
      *
      * Example usage:
      * <code>
-     * $query->filterByPasswordRecoverCode('fooValue');   // WHERE password_recover_code = 'fooValue'
-     * $query->filterByPasswordRecoverCode('%fooValue%'); // WHERE password_recover_code LIKE '%fooValue%'
+     * $query->filterByPasswordRecoverToken('fooValue');   // WHERE password_recover_token = 'fooValue'
+     * $query->filterByPasswordRecoverToken('%fooValue%'); // WHERE password_recover_token LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $passwordRecoverCode The value to use as filter.
+     * @param     string $passwordRecoverToken The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
-    public function filterByPasswordRecoverCode($passwordRecoverCode = null, $comparison = null)
+    public function filterByPasswordRecoverToken($passwordRecoverToken = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($passwordRecoverCode)) {
+            if (is_array($passwordRecoverToken)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $passwordRecoverCode)) {
-                $passwordRecoverCode = str_replace('*', '%', $passwordRecoverCode);
+            } elseif (preg_match('/[\%\*]/', $passwordRecoverToken)) {
+                $passwordRecoverToken = str_replace('*', '%', $passwordRecoverToken);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(UserTableMap::COL_PASSWORD_RECOVER_CODE, $passwordRecoverCode, $comparison);
+        return $this->addUsingAlias(UserTableMap::COL_PASSWORD_RECOVER_TOKEN, $passwordRecoverToken, $comparison);
     }
 
     /**

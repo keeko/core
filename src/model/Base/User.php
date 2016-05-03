@@ -150,10 +150,10 @@ abstract class User implements ActiveRecordInterface
     protected $slug;
 
     /**
-     * The value for the password_recover_code field.
+     * The value for the password_recover_token field.
      * @var        string
      */
-    protected $password_recover_code;
+    protected $password_recover_token;
 
     /**
      * The value for the password_recover_time field.
@@ -601,13 +601,13 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Get the [password_recover_code] column value.
+     * Get the [password_recover_token] column value.
      *
      * @return string
      */
-    public function getPasswordRecoverCode()
+    public function getPasswordRecoverToken()
     {
-        return $this->password_recover_code;
+        return $this->password_recover_token;
     }
 
     /**
@@ -891,24 +891,24 @@ abstract class User implements ActiveRecordInterface
     } // setSlug()
 
     /**
-     * Set the value of [password_recover_code] column.
+     * Set the value of [password_recover_token] column.
      *
      * @param string $v new value
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
-    public function setPasswordRecoverCode($v)
+    public function setPasswordRecoverToken($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->password_recover_code !== $v) {
-            $this->password_recover_code = $v;
-            $this->modifiedColumns[UserTableMap::COL_PASSWORD_RECOVER_CODE] = true;
+        if ($this->password_recover_token !== $v) {
+            $this->password_recover_token = $v;
+            $this->modifiedColumns[UserTableMap::COL_PASSWORD_RECOVER_TOKEN] = true;
         }
 
         return $this;
-    } // setPasswordRecoverCode()
+    } // setPasswordRecoverToken()
 
     /**
      * Sets the value of [password_recover_time] column to a normalized version of the date/time value specified.
@@ -1046,8 +1046,8 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('Slug', TableMap::TYPE_PHPNAME, $indexType)];
             $this->slug = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('PasswordRecoverCode', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->password_recover_code = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('PasswordRecoverToken', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->password_recover_token = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('PasswordRecoverTime', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
@@ -1403,8 +1403,8 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_SLUG)) {
             $modifiedColumns[':p' . $index++]  = '`slug`';
         }
-        if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_CODE)) {
-            $modifiedColumns[':p' . $index++]  = '`password_recover_code`';
+        if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_TOKEN)) {
+            $modifiedColumns[':p' . $index++]  = '`password_recover_token`';
         }
         if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_TIME)) {
             $modifiedColumns[':p' . $index++]  = '`password_recover_time`';
@@ -1459,8 +1459,8 @@ abstract class User implements ActiveRecordInterface
                     case '`slug`':
                         $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
-                    case '`password_recover_code`':
-                        $stmt->bindValue($identifier, $this->password_recover_code, PDO::PARAM_STR);
+                    case '`password_recover_token`':
+                        $stmt->bindValue($identifier, $this->password_recover_token, PDO::PARAM_STR);
                         break;
                     case '`password_recover_time`':
                         $stmt->bindValue($identifier, $this->password_recover_time ? $this->password_recover_time->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -1567,7 +1567,7 @@ abstract class User implements ActiveRecordInterface
                 return $this->getSlug();
                 break;
             case 11:
-                return $this->getPasswordRecoverCode();
+                return $this->getPasswordRecoverToken();
                 break;
             case 12:
                 return $this->getPasswordRecoverTime();
@@ -1619,7 +1619,7 @@ abstract class User implements ActiveRecordInterface
             $keys[8] => $this->getBirthday(),
             $keys[9] => $this->getSex(),
             $keys[10] => $this->getSlug(),
-            $keys[11] => $this->getPasswordRecoverCode(),
+            $keys[11] => $this->getPasswordRecoverToken(),
             $keys[12] => $this->getPasswordRecoverTime(),
             $keys[13] => $this->getCreatedAt(),
             $keys[14] => $this->getUpdatedAt(),
@@ -1769,7 +1769,7 @@ abstract class User implements ActiveRecordInterface
                 $this->setSlug($value);
                 break;
             case 11:
-                $this->setPasswordRecoverCode($value);
+                $this->setPasswordRecoverToken($value);
                 break;
             case 12:
                 $this->setPasswordRecoverTime($value);
@@ -1840,7 +1840,7 @@ abstract class User implements ActiveRecordInterface
             $this->setSlug($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setPasswordRecoverCode($arr[$keys[11]]);
+            $this->setPasswordRecoverToken($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
             $this->setPasswordRecoverTime($arr[$keys[12]]);
@@ -1925,8 +1925,8 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_SLUG)) {
             $criteria->add(UserTableMap::COL_SLUG, $this->slug);
         }
-        if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_CODE)) {
-            $criteria->add(UserTableMap::COL_PASSWORD_RECOVER_CODE, $this->password_recover_code);
+        if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_TOKEN)) {
+            $criteria->add(UserTableMap::COL_PASSWORD_RECOVER_TOKEN, $this->password_recover_token);
         }
         if ($this->isColumnModified(UserTableMap::COL_PASSWORD_RECOVER_TIME)) {
             $criteria->add(UserTableMap::COL_PASSWORD_RECOVER_TIME, $this->password_recover_time);
@@ -2033,7 +2033,7 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setBirthday($this->getBirthday());
         $copyObj->setSex($this->getSex());
         $copyObj->setSlug($this->getSlug());
-        $copyObj->setPasswordRecoverCode($this->getPasswordRecoverCode());
+        $copyObj->setPasswordRecoverToken($this->getPasswordRecoverToken());
         $copyObj->setPasswordRecoverTime($this->getPasswordRecoverTime());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
@@ -3105,7 +3105,7 @@ abstract class User implements ActiveRecordInterface
         $this->birthday = null;
         $this->sex = null;
         $this->slug = null;
-        $this->password_recover_code = null;
+        $this->password_recover_token = null;
         $this->password_recover_time = null;
         $this->created_at = null;
         $this->updated_at = null;

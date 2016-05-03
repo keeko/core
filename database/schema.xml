@@ -365,7 +365,7 @@
 		<column name="birthday" type="DATE" />
 		<column name="sex" type="TINYINT" description="1 = male; 0 = female" default="-1"/>
 		<column name="slug" type="VARCHAR" size="100" />
-		<column name="password_recover_code" type="VARCHAR" size="32" />
+		<column name="password_recover_token" type="VARCHAR" size="32" />
 		<column name="password_recover_time" type="TIMESTAMP" />
 
 		<!-- Behaviors -->
