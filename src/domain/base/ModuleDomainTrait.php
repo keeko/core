@@ -10,10 +10,10 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\ModuleEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 
@@ -36,14 +36,14 @@ trait ModuleDomainTrait {
 		$serializer = Module::getSerializer();
 		$module = $serializer->hydrate(new Module(), $data);
 
-		// validate
-		if (!$module->validate()) {
-			return new NotValid([
-				'errors' => $module->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ModuleEvent($module);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ModuleEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
 		$module->save();
+		$dispatcher->dispatch(ModuleEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
 		return new Created(['model' => $module]);
 	}
 
@@ -62,9 +62,13 @@ trait ModuleDomainTrait {
 		}
 
 		// delete
+		$event = new ModuleEvent($module);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ModuleEvent::PRE_DELETE, $event);
 		$module->delete();
 
 		if ($module->isDeleted()) {
+			$dispatcher->dispatch(ModuleEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $module]);
 		}
 
@@ -142,14 +146,15 @@ trait ModuleDomainTrait {
 		$serializer = Module::getSerializer();
 		$module = $serializer->hydrate($module, $data);
 
-		// validate
-		if (!$module->validate()) {
-			return new NotValid([
-				'errors' => $module->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ModuleEvent($module);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ModuleEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
 		$rows = $module->save();
+		$dispatcher->dispatch(ModuleEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $module];
 
 		if ($rows === 0) {

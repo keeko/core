@@ -10,12 +10,13 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\LocalizationEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
+use keeko\framework\domain\payload\NotValid;
 use keeko\core\model\LanguageVariantQuery;
 use keeko\core\model\LocalizationVariantQuery;
 
@@ -56,7 +57,13 @@ trait LocalizationDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+		$event = new LocalizationEvent($localization);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANT_ADD, $event);
+		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $localization->save();
+		$dispatcher->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANT_ADD, $event);
+		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $localization]);
@@ -76,14 +83,14 @@ trait LocalizationDomainTrait {
 		$serializer = Localization::getSerializer();
 		$localization = $serializer->hydrate(new Localization(), $data);
 
-		// validate
-		if (!$localization->validate()) {
-			return new NotValid([
-				'errors' => $localization->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new LocalizationEvent($localization);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(LocalizationEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$localization->save();
+		$dispatcher->dispatch(LocalizationEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
 		return new Created(['model' => $localization]);
 	}
 
@@ -102,9 +109,13 @@ trait LocalizationDomainTrait {
 		}
 
 		// delete
+		$event = new LocalizationEvent($localization);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(LocalizationEvent::PRE_DELETE, $event);
 		$localization->delete();
 
 		if ($localization->isDeleted()) {
+			$dispatcher->dispatch(LocalizationEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $localization]);
 		}
 
@@ -192,7 +203,13 @@ trait LocalizationDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+		$event = new LocalizationEvent($localization);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANT_REMOVE, $event);
+		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $localization->save();
+		$dispatcher->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANT_REMOVE, $event);
+		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $localization]);
@@ -219,7 +236,15 @@ trait LocalizationDomainTrait {
 		// update
 		if ($localization->getExtLanguageId() !== $extLangId) {
 			$localization->setExtLanguageId($extLangId);
+
+			$event = new LocalizationEvent($localization);
+			$dispatcher = $this->getServiceContainer()->getDispatcher();
+			$dispatcher->dispatch(LocalizationEvent::PRE_EXT_LANG_UPDATE, $event);
+			$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
 			$localization->save();
+			$dispatcher->dispatch(LocalizationEvent::POST_EXT_LANG_UPDATE, $event);
+			$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+			
 			return Updated(['model' => $localization]);
 		}
 
@@ -244,7 +269,15 @@ trait LocalizationDomainTrait {
 		// update
 		if ($localization->getParentId() !== $parentId) {
 			$localization->setParentId($parentId);
+
+			$event = new LocalizationEvent($localization);
+			$dispatcher = $this->getServiceContainer()->getDispatcher();
+			$dispatcher->dispatch(LocalizationEvent::PRE_PARENT_UPDATE, $event);
+			$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
 			$localization->save();
+			$dispatcher->dispatch(LocalizationEvent::POST_PARENT_UPDATE, $event);
+			$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+			
 			return Updated(['model' => $localization]);
 		}
 
@@ -269,7 +302,15 @@ trait LocalizationDomainTrait {
 		// update
 		if ($localization->getScriptId() !== $scriptId) {
 			$localization->setScriptId($scriptId);
+
+			$event = new LocalizationEvent($localization);
+			$dispatcher = $this->getServiceContainer()->getDispatcher();
+			$dispatcher->dispatch(LocalizationEvent::PRE_SCRIPT_UPDATE, $event);
+			$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
 			$localization->save();
+			$dispatcher->dispatch(LocalizationEvent::POST_SCRIPT_UPDATE, $event);
+			$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+			
 			return Updated(['model' => $localization]);
 		}
 
@@ -295,14 +336,15 @@ trait LocalizationDomainTrait {
 		$serializer = Localization::getSerializer();
 		$localization = $serializer->hydrate($localization, $data);
 
-		// validate
-		if (!$localization->validate()) {
-			return new NotValid([
-				'errors' => $localization->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new LocalizationEvent($localization);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(LocalizationEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $localization->save();
+		$dispatcher->dispatch(LocalizationEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $localization];
 
 		if ($rows === 0) {
@@ -344,7 +386,14 @@ trait LocalizationDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+
+		$event = new LocalizationEvent($localization);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANT_UPDATE, $event);
+		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $localization->save();
+		$dispatcher->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANT_UPDATE, $event);
+		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $localization]);

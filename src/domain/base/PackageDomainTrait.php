@@ -10,10 +10,10 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\PackageEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 
@@ -36,14 +36,14 @@ trait PackageDomainTrait {
 		$serializer = Package::getSerializer();
 		$package = $serializer->hydrate(new Package(), $data);
 
-		// validate
-		if (!$package->validate()) {
-			return new NotValid([
-				'errors' => $package->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new PackageEvent($package);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(PackageEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(PackageEvent::PRE_SAVE, $event);
 		$package->save();
+		$dispatcher->dispatch(PackageEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(PackageEvent::POST_SAVE, $event);
 		return new Created(['model' => $package]);
 	}
 
@@ -62,9 +62,13 @@ trait PackageDomainTrait {
 		}
 
 		// delete
+		$event = new PackageEvent($package);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(PackageEvent::PRE_DELETE, $event);
 		$package->delete();
 
 		if ($package->isDeleted()) {
+			$dispatcher->dispatch(PackageEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $package]);
 		}
 
@@ -142,14 +146,15 @@ trait PackageDomainTrait {
 		$serializer = Package::getSerializer();
 		$package = $serializer->hydrate($package, $data);
 
-		// validate
-		if (!$package->validate()) {
-			return new NotValid([
-				'errors' => $package->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new PackageEvent($package);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(PackageEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(PackageEvent::PRE_SAVE, $event);
 		$rows = $package->save();
+		$dispatcher->dispatch(PackageEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(PackageEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $package];
 
 		if ($rows === 0) {

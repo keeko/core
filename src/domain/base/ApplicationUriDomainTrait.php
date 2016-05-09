@@ -10,10 +10,10 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\ApplicationUriEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 
@@ -36,14 +36,14 @@ trait ApplicationUriDomainTrait {
 		$serializer = ApplicationUri::getSerializer();
 		$applicationUri = $serializer->hydrate(new ApplicationUri(), $data);
 
-		// validate
-		if (!$applicationUri->validate()) {
-			return new NotValid([
-				'errors' => $applicationUri->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ApplicationUriEvent($applicationUri);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ApplicationUriEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
 		$applicationUri->save();
+		$dispatcher->dispatch(ApplicationUriEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
 		return new Created(['model' => $applicationUri]);
 	}
 
@@ -62,9 +62,13 @@ trait ApplicationUriDomainTrait {
 		}
 
 		// delete
+		$event = new ApplicationUriEvent($applicationUri);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ApplicationUriEvent::PRE_DELETE, $event);
 		$applicationUri->delete();
 
 		if ($applicationUri->isDeleted()) {
+			$dispatcher->dispatch(ApplicationUriEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $applicationUri]);
 		}
 
@@ -141,7 +145,15 @@ trait ApplicationUriDomainTrait {
 		// update
 		if ($applicationUri->getApplicationId() !== $applicationId) {
 			$applicationUri->setApplicationId($applicationId);
+
+			$event = new ApplicationUriEvent($applicationUri);
+			$dispatcher = $this->getServiceContainer()->getDispatcher();
+			$dispatcher->dispatch(ApplicationUriEvent::PRE_APPLICATION_UPDATE, $event);
+			$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
 			$applicationUri->save();
+			$dispatcher->dispatch(ApplicationUriEvent::POST_APPLICATION_UPDATE, $event);
+			$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
+			
 			return Updated(['model' => $applicationUri]);
 		}
 
@@ -166,7 +178,15 @@ trait ApplicationUriDomainTrait {
 		// update
 		if ($applicationUri->getLocalizationId() !== $localizationId) {
 			$applicationUri->setLocalizationId($localizationId);
+
+			$event = new ApplicationUriEvent($applicationUri);
+			$dispatcher = $this->getServiceContainer()->getDispatcher();
+			$dispatcher->dispatch(ApplicationUriEvent::PRE_LOCALIZATION_UPDATE, $event);
+			$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
 			$applicationUri->save();
+			$dispatcher->dispatch(ApplicationUriEvent::POST_LOCALIZATION_UPDATE, $event);
+			$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
+			
 			return Updated(['model' => $applicationUri]);
 		}
 
@@ -192,14 +212,15 @@ trait ApplicationUriDomainTrait {
 		$serializer = ApplicationUri::getSerializer();
 		$applicationUri = $serializer->hydrate($applicationUri, $data);
 
-		// validate
-		if (!$applicationUri->validate()) {
-			return new NotValid([
-				'errors' => $applicationUri->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ApplicationUriEvent($applicationUri);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ApplicationUriEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
 		$rows = $applicationUri->save();
+		$dispatcher->dispatch(ApplicationUriEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $applicationUri];
 
 		if ($rows === 0) {

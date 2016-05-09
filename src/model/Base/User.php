@@ -18,17 +18,6 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
-use Symfony\Component\Validator\ConstraintValidatorFactory;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\DefaultTranslator;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Context\ExecutionContextFactory;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
-use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
-use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
-use Symfony\Component\Validator\Validator\LegacyValidator;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use keeko\core\model\Activity as ChildActivity;
 use keeko\core\model\ActivityQuery as ChildActivityQuery;
 use keeko\core\model\Group as ChildGroup;
@@ -131,10 +120,10 @@ abstract class User implements ActiveRecordInterface
     protected $email;
 
     /**
-     * The value for the birthday field.
+     * The value for the birth field.
      * @var        \DateTime
      */
-    protected $birthday;
+    protected $birth;
 
     /**
      * The value for the sex field.
@@ -208,23 +197,6 @@ abstract class User implements ActiveRecordInterface
      * @var boolean
      */
     protected $alreadyInSave = false;
-
-    // validate behavior
-
-    /**
-     * Flag to prevent endless validation loop, if this object is referenced
-     * by another object which falls in this transaction.
-     * @var        boolean
-     */
-    protected $alreadyInValidation = false;
-
-    /**
-     * ConstraintViolationList object
-     *
-     * @see     http://api.symfony.com/2.0/Symfony/Component/Validator/ConstraintViolationList.html
-     * @var     ConstraintViolationList
-     */
-    protected $validationFailures;
 
     /**
      * An array of objects scheduled for deletion.
@@ -561,7 +533,7 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [birthday] column value.
+     * Get the [optionally formatted] temporal [birth] column value.
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -571,12 +543,12 @@ abstract class User implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getBirthday($format = NULL)
+    public function getBirth($format = NULL)
     {
         if ($format === null) {
-            return $this->birthday;
+            return $this->birth;
         } else {
-            return $this->birthday instanceof \DateTime ? $this->birthday->format($format) : null;
+            return $this->birth instanceof \DateTime ? $this->birth->format($format) : null;
         }
     }
 
@@ -831,24 +803,24 @@ abstract class User implements ActiveRecordInterface
     } // setEmail()
 
     /**
-     * Sets the value of [birthday] column to a normalized version of the date/time value specified.
+     * Sets the value of [birth] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
      * @return $this|\keeko\core\model\User The current object (for fluent API support)
      */
-    public function setBirthday($v)
+    public function setBirth($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->birthday !== null || $dt !== null) {
-            if ($this->birthday === null || $dt === null || $dt->format("Y-m-d") !== $this->birthday->format("Y-m-d")) {
-                $this->birthday = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[UserTableMap::COL_BIRTHDAY] = true;
+        if ($this->birth !== null || $dt !== null) {
+            if ($this->birth === null || $dt === null || $dt->format("Y-m-d") !== $this->birth->format("Y-m-d")) {
+                $this->birth = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[UserTableMap::COL_BIRTH] = true;
             }
         } // if either are not null
 
         return $this;
-    } // setBirthday()
+    } // setBirth()
 
     /**
      * Set the value of [sex] column.
@@ -1034,11 +1006,11 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
             $this->email = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('Birthday', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('Birth', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
-            $this->birthday = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->birth = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('Sex', TableMap::TYPE_PHPNAME, $indexType)];
             $this->sex = (null !== $col) ? (int) $col : null;
@@ -1394,8 +1366,8 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_EMAIL)) {
             $modifiedColumns[':p' . $index++]  = '`email`';
         }
-        if ($this->isColumnModified(UserTableMap::COL_BIRTHDAY)) {
-            $modifiedColumns[':p' . $index++]  = '`birthday`';
+        if ($this->isColumnModified(UserTableMap::COL_BIRTH)) {
+            $modifiedColumns[':p' . $index++]  = '`birth`';
         }
         if ($this->isColumnModified(UserTableMap::COL_SEX)) {
             $modifiedColumns[':p' . $index++]  = '`sex`';
@@ -1450,8 +1422,8 @@ abstract class User implements ActiveRecordInterface
                     case '`email`':
                         $stmt->bindValue($identifier, $this->email, PDO::PARAM_STR);
                         break;
-                    case '`birthday`':
-                        $stmt->bindValue($identifier, $this->birthday ? $this->birthday->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case '`birth`':
+                        $stmt->bindValue($identifier, $this->birth ? $this->birth->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                     case '`sex`':
                         $stmt->bindValue($identifier, $this->sex, PDO::PARAM_INT);
@@ -1558,7 +1530,7 @@ abstract class User implements ActiveRecordInterface
                 return $this->getEmail();
                 break;
             case 8:
-                return $this->getBirthday();
+                return $this->getBirth();
                 break;
             case 9:
                 return $this->getSex();
@@ -1616,7 +1588,7 @@ abstract class User implements ActiveRecordInterface
             $keys[5] => $this->getNickName(),
             $keys[6] => $this->getDisplayName(),
             $keys[7] => $this->getEmail(),
-            $keys[8] => $this->getBirthday(),
+            $keys[8] => $this->getBirth(),
             $keys[9] => $this->getSex(),
             $keys[10] => $this->getSlug(),
             $keys[11] => $this->getPasswordRecoverToken(),
@@ -1760,7 +1732,7 @@ abstract class User implements ActiveRecordInterface
                 $this->setEmail($value);
                 break;
             case 8:
-                $this->setBirthday($value);
+                $this->setBirth($value);
                 break;
             case 9:
                 $this->setSex($value);
@@ -1831,7 +1803,7 @@ abstract class User implements ActiveRecordInterface
             $this->setEmail($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setBirthday($arr[$keys[8]]);
+            $this->setBirth($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
             $this->setSex($arr[$keys[9]]);
@@ -1916,8 +1888,8 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_EMAIL)) {
             $criteria->add(UserTableMap::COL_EMAIL, $this->email);
         }
-        if ($this->isColumnModified(UserTableMap::COL_BIRTHDAY)) {
-            $criteria->add(UserTableMap::COL_BIRTHDAY, $this->birthday);
+        if ($this->isColumnModified(UserTableMap::COL_BIRTH)) {
+            $criteria->add(UserTableMap::COL_BIRTH, $this->birth);
         }
         if ($this->isColumnModified(UserTableMap::COL_SEX)) {
             $criteria->add(UserTableMap::COL_SEX, $this->sex);
@@ -2030,7 +2002,7 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setNickName($this->getNickName());
         $copyObj->setDisplayName($this->getDisplayName());
         $copyObj->setEmail($this->getEmail());
-        $copyObj->setBirthday($this->getBirthday());
+        $copyObj->setBirth($this->getBirth());
         $copyObj->setSex($this->getSex());
         $copyObj->setSlug($this->getSlug());
         $copyObj->setPasswordRecoverToken($this->getPasswordRecoverToken());
@@ -3102,7 +3074,7 @@ abstract class User implements ActiveRecordInterface
         $this->nick_name = null;
         $this->display_name = null;
         $this->email = null;
-        $this->birthday = null;
+        $this->birth = null;
         $this->sex = null;
         $this->slug = null;
         $this->password_recover_token = null;
@@ -3178,106 +3150,6 @@ abstract class User implements ActiveRecordInterface
         $this->modifiedColumns[UserTableMap::COL_UPDATED_AT] = true;
 
         return $this;
-    }
-
-    // validate behavior
-
-    /**
-     * Configure validators constraints. The Validator object uses this method
-     * to perform object validation.
-     *
-     * @param ClassMetadata $metadata
-     */
-    static public function loadValidatorMetadata(ClassMetadata $metadata)
-    {
-        $metadata->addPropertyConstraint('email', new NotNull());
-        $metadata->addPropertyConstraint('email', new Email());
-    }
-
-    /**
-     * Validates the object and all objects related to this table.
-     *
-     * @see        getValidationFailures()
-     * @param      object $validator A Validator class instance
-     * @return     boolean Whether all objects pass validation.
-     */
-    public function validate(ValidatorInterface $validator = null)
-    {
-        if (null === $validator) {
-            if(class_exists('Symfony\\Component\\Validator\\Validator\\LegacyValidator')){
-                $validator = new LegacyValidator(
-                            new ExecutionContextFactory(new DefaultTranslator()),
-                            new ClassMetaDataFactory(new StaticMethodLoader()),
-                            new ConstraintValidatorFactory()
-                );
-            }else{
-                $validator = new Validator(
-                            new ClassMetadataFactory(new StaticMethodLoader()),
-                            new ConstraintValidatorFactory(),
-                            new DefaultTranslator()
-                );
-            }
-        }
-
-        $failureMap = new ConstraintViolationList();
-
-        if (!$this->alreadyInValidation) {
-            $this->alreadyInValidation = true;
-            $retval = null;
-
-
-            $retval = $validator->validate($this);
-            if (count($retval) > 0) {
-                $failureMap->addAll($retval);
-            }
-
-            if (null !== $this->collSessions) {
-                foreach ($this->collSessions as $referrerFK) {
-                    if (method_exists($referrerFK, 'validate')) {
-                        if (!$referrerFK->validate($validator)) {
-                            $failureMap->addAll($referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-            }
-            if (null !== $this->collUserGroups) {
-                foreach ($this->collUserGroups as $referrerFK) {
-                    if (method_exists($referrerFK, 'validate')) {
-                        if (!$referrerFK->validate($validator)) {
-                            $failureMap->addAll($referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-            }
-            if (null !== $this->collActivities) {
-                foreach ($this->collActivities as $referrerFK) {
-                    if (method_exists($referrerFK, 'validate')) {
-                        if (!$referrerFK->validate($validator)) {
-                            $failureMap->addAll($referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-            }
-
-            $this->alreadyInValidation = false;
-        }
-
-        $this->validationFailures = $failureMap;
-
-        return (Boolean) (!(count($this->validationFailures) > 0));
-
-    }
-
-    /**
-     * Gets any ConstraintViolation objects that resulted from last call to validate().
-     *
-     *
-     * @return     object ConstraintViolationList
-     * @see        validate()
-     */
-    public function getValidationFailures()
-    {
-        return $this->validationFailures;
     }
 
     /**

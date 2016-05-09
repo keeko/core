@@ -10,10 +10,10 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\ApiEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 
@@ -36,14 +36,14 @@ trait ApiDomainTrait {
 		$serializer = Api::getSerializer();
 		$api = $serializer->hydrate(new Api(), $data);
 
-		// validate
-		if (!$api->validate()) {
-			return new NotValid([
-				'errors' => $api->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ApiEvent($api);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ApiEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(ApiEvent::PRE_SAVE, $event);
 		$api->save();
+		$dispatcher->dispatch(ApiEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(ApiEvent::POST_SAVE, $event);
 		return new Created(['model' => $api]);
 	}
 
@@ -62,9 +62,13 @@ trait ApiDomainTrait {
 		}
 
 		// delete
+		$event = new ApiEvent($api);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ApiEvent::PRE_DELETE, $event);
 		$api->delete();
 
 		if ($api->isDeleted()) {
+			$dispatcher->dispatch(ApiEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $api]);
 		}
 
@@ -141,7 +145,15 @@ trait ApiDomainTrait {
 		// update
 		if ($api->getActionId() !== $actionId) {
 			$api->setActionId($actionId);
+
+			$event = new ApiEvent($api);
+			$dispatcher = $this->getServiceContainer()->getDispatcher();
+			$dispatcher->dispatch(ApiEvent::PRE_ACTION_UPDATE, $event);
+			$dispatcher->dispatch(ApiEvent::PRE_SAVE, $event);
 			$api->save();
+			$dispatcher->dispatch(ApiEvent::POST_ACTION_UPDATE, $event);
+			$dispatcher->dispatch(ApiEvent::POST_SAVE, $event);
+			
 			return Updated(['model' => $api]);
 		}
 
@@ -167,14 +179,15 @@ trait ApiDomainTrait {
 		$serializer = Api::getSerializer();
 		$api = $serializer->hydrate($api, $data);
 
-		// validate
-		if (!$api->validate()) {
-			return new NotValid([
-				'errors' => $api->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ApiEvent($api);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ApiEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(ApiEvent::PRE_SAVE, $event);
 		$rows = $api->save();
+		$dispatcher->dispatch(ApiEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(ApiEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $api];
 
 		if ($rows === 0) {

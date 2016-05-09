@@ -538,7 +538,7 @@ CREATE TABLE `kk_user`
     `nick_name` VARCHAR(100),
     `display_name` VARCHAR(100),
     `email` VARCHAR(255),
-    `birthday` DATE,
+    `birth` DATE,
     `sex` TINYINT DEFAULT -1 COMMENT '1 = male; 0 = female',
     `slug` VARCHAR(100),
     `password_recover_token` VARCHAR(32),

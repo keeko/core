@@ -10,10 +10,10 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\ActivityEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 
@@ -36,14 +36,14 @@ trait ActivityDomainTrait {
 		$serializer = Activity::getSerializer();
 		$activity = $serializer->hydrate(new Activity(), $data);
 
-		// validate
-		if (!$activity->validate()) {
-			return new NotValid([
-				'errors' => $activity->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ActivityEvent($activity);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActivityEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
 		$activity->save();
+		$dispatcher->dispatch(ActivityEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
 		return new Created(['model' => $activity]);
 	}
 
@@ -62,9 +62,13 @@ trait ActivityDomainTrait {
 		}
 
 		// delete
+		$event = new ActivityEvent($activity);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActivityEvent::PRE_DELETE, $event);
 		$activity->delete();
 
 		if ($activity->isDeleted()) {
+			$dispatcher->dispatch(ActivityEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $activity]);
 		}
 
@@ -141,7 +145,15 @@ trait ActivityDomainTrait {
 		// update
 		if ($activity->getActorId() !== $actorId) {
 			$activity->setActorId($actorId);
+
+			$event = new ActivityEvent($activity);
+			$dispatcher = $this->getServiceContainer()->getDispatcher();
+			$dispatcher->dispatch(ActivityEvent::PRE_ACTOR_UPDATE, $event);
+			$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
 			$activity->save();
+			$dispatcher->dispatch(ActivityEvent::POST_ACTOR_UPDATE, $event);
+			$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
+			
 			return Updated(['model' => $activity]);
 		}
 
@@ -166,7 +178,15 @@ trait ActivityDomainTrait {
 		// update
 		if ($activity->getTargetId() !== $targetId) {
 			$activity->setTargetId($targetId);
+
+			$event = new ActivityEvent($activity);
+			$dispatcher = $this->getServiceContainer()->getDispatcher();
+			$dispatcher->dispatch(ActivityEvent::PRE_TARGET_UPDATE, $event);
+			$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
 			$activity->save();
+			$dispatcher->dispatch(ActivityEvent::POST_TARGET_UPDATE, $event);
+			$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
+			
 			return Updated(['model' => $activity]);
 		}
 
@@ -192,14 +212,15 @@ trait ActivityDomainTrait {
 		$serializer = Activity::getSerializer();
 		$activity = $serializer->hydrate($activity, $data);
 
-		// validate
-		if (!$activity->validate()) {
-			return new NotValid([
-				'errors' => $activity->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ActivityEvent($activity);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActivityEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
 		$rows = $activity->save();
+		$dispatcher->dispatch(ActivityEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $activity];
 
 		if ($rows === 0) {

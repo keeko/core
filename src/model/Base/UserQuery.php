@@ -28,7 +28,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery orderByNickName($order = Criteria::ASC) Order by the nick_name column
  * @method     ChildUserQuery orderByDisplayName($order = Criteria::ASC) Order by the display_name column
  * @method     ChildUserQuery orderByEmail($order = Criteria::ASC) Order by the email column
- * @method     ChildUserQuery orderByBirthday($order = Criteria::ASC) Order by the birthday column
+ * @method     ChildUserQuery orderByBirth($order = Criteria::ASC) Order by the birth column
  * @method     ChildUserQuery orderBySex($order = Criteria::ASC) Order by the sex column
  * @method     ChildUserQuery orderBySlug($order = Criteria::ASC) Order by the slug column
  * @method     ChildUserQuery orderByPasswordRecoverToken($order = Criteria::ASC) Order by the password_recover_token column
@@ -44,7 +44,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery groupByNickName() Group by the nick_name column
  * @method     ChildUserQuery groupByDisplayName() Group by the display_name column
  * @method     ChildUserQuery groupByEmail() Group by the email column
- * @method     ChildUserQuery groupByBirthday() Group by the birthday column
+ * @method     ChildUserQuery groupByBirth() Group by the birth column
  * @method     ChildUserQuery groupBySex() Group by the sex column
  * @method     ChildUserQuery groupBySlug() Group by the slug column
  * @method     ChildUserQuery groupByPasswordRecoverToken() Group by the password_recover_token column
@@ -81,7 +81,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser findOneByNickName(string $nick_name) Return the first ChildUser filtered by the nick_name column
  * @method     ChildUser findOneByDisplayName(string $display_name) Return the first ChildUser filtered by the display_name column
  * @method     ChildUser findOneByEmail(string $email) Return the first ChildUser filtered by the email column
- * @method     ChildUser findOneByBirthday(string $birthday) Return the first ChildUser filtered by the birthday column
+ * @method     ChildUser findOneByBirth(string $birth) Return the first ChildUser filtered by the birth column
  * @method     ChildUser findOneBySex(int $sex) Return the first ChildUser filtered by the sex column
  * @method     ChildUser findOneBySlug(string $slug) Return the first ChildUser filtered by the slug column
  * @method     ChildUser findOneByPasswordRecoverToken(string $password_recover_token) Return the first ChildUser filtered by the password_recover_token column
@@ -100,7 +100,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser requireOneByNickName(string $nick_name) Return the first ChildUser filtered by the nick_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByDisplayName(string $display_name) Return the first ChildUser filtered by the display_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByEmail(string $email) Return the first ChildUser filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUser requireOneByBirthday(string $birthday) Return the first ChildUser filtered by the birthday column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByBirth(string $birth) Return the first ChildUser filtered by the birth column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneBySex(int $sex) Return the first ChildUser filtered by the sex column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneBySlug(string $slug) Return the first ChildUser filtered by the slug column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByPasswordRecoverToken(string $password_recover_token) Return the first ChildUser filtered by the password_recover_token column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -117,7 +117,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser[]|ObjectCollection findByNickName(string $nick_name) Return ChildUser objects filtered by the nick_name column
  * @method     ChildUser[]|ObjectCollection findByDisplayName(string $display_name) Return ChildUser objects filtered by the display_name column
  * @method     ChildUser[]|ObjectCollection findByEmail(string $email) Return ChildUser objects filtered by the email column
- * @method     ChildUser[]|ObjectCollection findByBirthday(string $birthday) Return ChildUser objects filtered by the birthday column
+ * @method     ChildUser[]|ObjectCollection findByBirth(string $birth) Return ChildUser objects filtered by the birth column
  * @method     ChildUser[]|ObjectCollection findBySex(int $sex) Return ChildUser objects filtered by the sex column
  * @method     ChildUser[]|ObjectCollection findBySlug(string $slug) Return ChildUser objects filtered by the slug column
  * @method     ChildUser[]|ObjectCollection findByPasswordRecoverToken(string $password_recover_token) Return ChildUser objects filtered by the password_recover_token column
@@ -216,7 +216,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `id`, `user_name`, `password`, `given_name`, `family_name`, `nick_name`, `display_name`, `email`, `birthday`, `sex`, `slug`, `password_recover_token`, `password_recover_time`, `created_at`, `updated_at` FROM `kk_user` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `user_name`, `password`, `given_name`, `family_name`, `nick_name`, `display_name`, `email`, `birth`, `sex`, `slug`, `password_recover_token`, `password_recover_time`, `created_at`, `updated_at` FROM `kk_user` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -551,16 +551,16 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the birthday column
+     * Filter the query on the birth column
      *
      * Example usage:
      * <code>
-     * $query->filterByBirthday('2011-03-14'); // WHERE birthday = '2011-03-14'
-     * $query->filterByBirthday('now'); // WHERE birthday = '2011-03-14'
-     * $query->filterByBirthday(array('max' => 'yesterday')); // WHERE birthday > '2011-03-13'
+     * $query->filterByBirth('2011-03-14'); // WHERE birth = '2011-03-14'
+     * $query->filterByBirth('now'); // WHERE birth = '2011-03-14'
+     * $query->filterByBirth(array('max' => 'yesterday')); // WHERE birth > '2011-03-13'
      * </code>
      *
-     * @param     mixed $birthday The value to use as filter.
+     * @param     mixed $birth The value to use as filter.
      *              Values can be integers (unix timestamps), DateTime objects, or strings.
      *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
@@ -570,16 +570,16 @@ abstract class UserQuery extends ModelCriteria
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
-    public function filterByBirthday($birthday = null, $comparison = null)
+    public function filterByBirth($birth = null, $comparison = null)
     {
-        if (is_array($birthday)) {
+        if (is_array($birth)) {
             $useMinMax = false;
-            if (isset($birthday['min'])) {
-                $this->addUsingAlias(UserTableMap::COL_BIRTHDAY, $birthday['min'], Criteria::GREATER_EQUAL);
+            if (isset($birth['min'])) {
+                $this->addUsingAlias(UserTableMap::COL_BIRTH, $birth['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($birthday['max'])) {
-                $this->addUsingAlias(UserTableMap::COL_BIRTHDAY, $birthday['max'], Criteria::LESS_EQUAL);
+            if (isset($birth['max'])) {
+                $this->addUsingAlias(UserTableMap::COL_BIRTH, $birth['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -590,7 +590,7 @@ abstract class UserQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(UserTableMap::COL_BIRTHDAY, $birthday, $comparison);
+        return $this->addUsingAlias(UserTableMap::COL_BIRTH, $birth, $comparison);
     }
 
     /**

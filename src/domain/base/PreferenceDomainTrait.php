@@ -10,10 +10,10 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\PreferenceEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 
@@ -36,14 +36,14 @@ trait PreferenceDomainTrait {
 		$serializer = Preference::getSerializer();
 		$preference = $serializer->hydrate(new Preference(), $data);
 
-		// validate
-		if (!$preference->validate()) {
-			return new NotValid([
-				'errors' => $preference->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new PreferenceEvent($preference);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(PreferenceEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(PreferenceEvent::PRE_SAVE, $event);
 		$preference->save();
+		$dispatcher->dispatch(PreferenceEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(PreferenceEvent::POST_SAVE, $event);
 		return new Created(['model' => $preference]);
 	}
 
@@ -62,9 +62,13 @@ trait PreferenceDomainTrait {
 		}
 
 		// delete
+		$event = new PreferenceEvent($preference);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(PreferenceEvent::PRE_DELETE, $event);
 		$preference->delete();
 
 		if ($preference->isDeleted()) {
+			$dispatcher->dispatch(PreferenceEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $preference]);
 		}
 
@@ -142,14 +146,15 @@ trait PreferenceDomainTrait {
 		$serializer = Preference::getSerializer();
 		$preference = $serializer->hydrate($preference, $data);
 
-		// validate
-		if (!$preference->validate()) {
-			return new NotValid([
-				'errors' => $preference->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new PreferenceEvent($preference);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(PreferenceEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(PreferenceEvent::PRE_SAVE, $event);
 		$rows = $preference->save();
+		$dispatcher->dispatch(PreferenceEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(PreferenceEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $preference];
 
 		if ($rows === 0) {

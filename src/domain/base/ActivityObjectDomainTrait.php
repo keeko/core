@@ -10,10 +10,10 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\ActivityObjectEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 
@@ -36,14 +36,14 @@ trait ActivityObjectDomainTrait {
 		$serializer = ActivityObject::getSerializer();
 		$activityObject = $serializer->hydrate(new ActivityObject(), $data);
 
-		// validate
-		if (!$activityObject->validate()) {
-			return new NotValid([
-				'errors' => $activityObject->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ActivityObjectEvent($activityObject);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActivityObjectEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
 		$activityObject->save();
+		$dispatcher->dispatch(ActivityObjectEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
 		return new Created(['model' => $activityObject]);
 	}
 
@@ -62,9 +62,13 @@ trait ActivityObjectDomainTrait {
 		}
 
 		// delete
+		$event = new ActivityObjectEvent($activityObject);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActivityObjectEvent::PRE_DELETE, $event);
 		$activityObject->delete();
 
 		if ($activityObject->isDeleted()) {
+			$dispatcher->dispatch(ActivityObjectEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $activityObject]);
 		}
 
@@ -142,14 +146,15 @@ trait ActivityObjectDomainTrait {
 		$serializer = ActivityObject::getSerializer();
 		$activityObject = $serializer->hydrate($activityObject, $data);
 
-		// validate
-		if (!$activityObject->validate()) {
-			return new NotValid([
-				'errors' => $activityObject->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ActivityObjectEvent($activityObject);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActivityObjectEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
 		$rows = $activityObject->save();
+		$dispatcher->dispatch(ActivityObjectEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $activityObject];
 
 		if ($rows === 0) {

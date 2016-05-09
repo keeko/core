@@ -10,10 +10,10 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\ExtensionEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 
@@ -36,14 +36,14 @@ trait ExtensionDomainTrait {
 		$serializer = Extension::getSerializer();
 		$extension = $serializer->hydrate(new Extension(), $data);
 
-		// validate
-		if (!$extension->validate()) {
-			return new NotValid([
-				'errors' => $extension->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ExtensionEvent($extension);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ExtensionEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(ExtensionEvent::PRE_SAVE, $event);
 		$extension->save();
+		$dispatcher->dispatch(ExtensionEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(ExtensionEvent::POST_SAVE, $event);
 		return new Created(['model' => $extension]);
 	}
 
@@ -62,9 +62,13 @@ trait ExtensionDomainTrait {
 		}
 
 		// delete
+		$event = new ExtensionEvent($extension);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ExtensionEvent::PRE_DELETE, $event);
 		$extension->delete();
 
 		if ($extension->isDeleted()) {
+			$dispatcher->dispatch(ExtensionEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $extension]);
 		}
 
@@ -141,7 +145,15 @@ trait ExtensionDomainTrait {
 		// update
 		if ($extension->getPackageId() !== $packageId) {
 			$extension->setPackageId($packageId);
+
+			$event = new ExtensionEvent($extension);
+			$dispatcher = $this->getServiceContainer()->getDispatcher();
+			$dispatcher->dispatch(ExtensionEvent::PRE_PACKAGE_UPDATE, $event);
+			$dispatcher->dispatch(ExtensionEvent::PRE_SAVE, $event);
 			$extension->save();
+			$dispatcher->dispatch(ExtensionEvent::POST_PACKAGE_UPDATE, $event);
+			$dispatcher->dispatch(ExtensionEvent::POST_SAVE, $event);
+			
 			return Updated(['model' => $extension]);
 		}
 
@@ -167,14 +179,15 @@ trait ExtensionDomainTrait {
 		$serializer = Extension::getSerializer();
 		$extension = $serializer->hydrate($extension, $data);
 
-		// validate
-		if (!$extension->validate()) {
-			return new NotValid([
-				'errors' => $extension->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ExtensionEvent($extension);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ExtensionEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(ExtensionEvent::PRE_SAVE, $event);
 		$rows = $extension->save();
+		$dispatcher->dispatch(ExtensionEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(ExtensionEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $extension];
 
 		if ($rows === 0) {

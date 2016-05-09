@@ -10,12 +10,13 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\UserEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
+use keeko\framework\domain\payload\NotValid;
 use keeko\core\model\GroupQuery;
 use keeko\core\model\UserGroupQuery;
 
@@ -56,7 +57,13 @@ trait UserDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+		$event = new UserEvent($user);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(UserEvent::PRE_GROUP_ADD, $event);
+		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $user->save();
+		$dispatcher->dispatch(UserEvent::POST_GROUP_ADD, $event);
+		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $user]);
@@ -76,14 +83,14 @@ trait UserDomainTrait {
 		$serializer = User::getSerializer();
 		$user = $serializer->hydrate(new User(), $data);
 
-		// validate
-		if (!$user->validate()) {
-			return new NotValid([
-				'errors' => $user->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new UserEvent($user);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(UserEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
 		$user->save();
+		$dispatcher->dispatch(UserEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 		return new Created(['model' => $user]);
 	}
 
@@ -102,9 +109,13 @@ trait UserDomainTrait {
 		}
 
 		// delete
+		$event = new UserEvent($user);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(UserEvent::PRE_DELETE, $event);
 		$user->delete();
 
 		if ($user->isDeleted()) {
+			$dispatcher->dispatch(UserEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $user]);
 		}
 
@@ -192,7 +203,13 @@ trait UserDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+		$event = new UserEvent($user);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(UserEvent::PRE_GROUP_REMOVE, $event);
+		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $user->save();
+		$dispatcher->dispatch(UserEvent::POST_GROUP_REMOVE, $event);
+		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $user]);
@@ -220,14 +237,15 @@ trait UserDomainTrait {
 		$serializer = User::getSerializer();
 		$user = $serializer->hydrate($user, $data);
 
-		// validate
-		if (!$user->validate()) {
-			return new NotValid([
-				'errors' => $user->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new UserEvent($user);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(UserEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $user->save();
+		$dispatcher->dispatch(UserEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $user];
 
 		if ($rows === 0) {
@@ -269,7 +287,14 @@ trait UserDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+
+		$event = new UserEvent($user);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(UserEvent::PRE_GROUP_UPDATE, $event);
+		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $user->save();
+		$dispatcher->dispatch(UserEvent::POST_GROUP_UPDATE, $event);
+		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $user]);

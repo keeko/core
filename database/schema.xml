@@ -362,7 +362,7 @@
 		<column name="nick_name" type="VARCHAR" size="100" />
 		<column name="display_name" type="VARCHAR" size="100" />
 		<column name="email" type="VARCHAR" size="255"/>
-		<column name="birthday" type="DATE" />
+		<column name="birth" type="DATE" />
 		<column name="sex" type="TINYINT" description="1 = male; 0 = female" default="-1"/>
 		<column name="slug" type="VARCHAR" size="100" />
 		<column name="password_recover_token" type="VARCHAR" size="32" />
@@ -370,13 +370,6 @@
 
 		<!-- Behaviors -->
 		<behavior name="timestampable"></behavior>
-
-		<!-- Validation -->
-		<behavior name="validate">
-			<parameter name="rule1" value="{column: email, validator: NotNull}" />
-			<parameter name="rule2" value="{column: email, validator: Email}" />
-			<!-- <parameter name="rule4" value="{column: login_name, validator: NotNull}" /> -->
-		</behavior>
 
 		<!-- <unique name="login_name_UNIQUE">
 			<unique-column name="login_name" />

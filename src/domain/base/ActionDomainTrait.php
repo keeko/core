@@ -10,12 +10,13 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\ActionEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
+use keeko\framework\domain\payload\NotValid;
 use keeko\core\model\GroupQuery;
 use keeko\core\model\GroupActionQuery;
 
@@ -56,7 +57,13 @@ trait ActionDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+		$event = new ActionEvent($action);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActionEvent::PRE_GROUP_ADD, $event);
+		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
 		$rows = $action->save();
+		$dispatcher->dispatch(ActionEvent::POST_GROUP_ADD, $event);
+		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $action]);
@@ -76,14 +83,14 @@ trait ActionDomainTrait {
 		$serializer = Action::getSerializer();
 		$action = $serializer->hydrate(new Action(), $data);
 
-		// validate
-		if (!$action->validate()) {
-			return new NotValid([
-				'errors' => $action->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ActionEvent($action);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActionEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
 		$action->save();
+		$dispatcher->dispatch(ActionEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
 		return new Created(['model' => $action]);
 	}
 
@@ -102,9 +109,13 @@ trait ActionDomainTrait {
 		}
 
 		// delete
+		$event = new ActionEvent($action);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActionEvent::PRE_DELETE, $event);
 		$action->delete();
 
 		if ($action->isDeleted()) {
+			$dispatcher->dispatch(ActionEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $action]);
 		}
 
@@ -192,7 +203,13 @@ trait ActionDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+		$event = new ActionEvent($action);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActionEvent::PRE_GROUP_REMOVE, $event);
+		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
 		$rows = $action->save();
+		$dispatcher->dispatch(ActionEvent::POST_GROUP_REMOVE, $event);
+		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $action]);
@@ -219,7 +236,15 @@ trait ActionDomainTrait {
 		// update
 		if ($action->getModuleId() !== $moduleId) {
 			$action->setModuleId($moduleId);
+
+			$event = new ActionEvent($action);
+			$dispatcher = $this->getServiceContainer()->getDispatcher();
+			$dispatcher->dispatch(ActionEvent::PRE_MODULE_UPDATE, $event);
+			$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
 			$action->save();
+			$dispatcher->dispatch(ActionEvent::POST_MODULE_UPDATE, $event);
+			$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
+			
 			return Updated(['model' => $action]);
 		}
 
@@ -245,14 +270,15 @@ trait ActionDomainTrait {
 		$serializer = Action::getSerializer();
 		$action = $serializer->hydrate($action, $data);
 
-		// validate
-		if (!$action->validate()) {
-			return new NotValid([
-				'errors' => $action->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ActionEvent($action);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActionEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
 		$rows = $action->save();
+		$dispatcher->dispatch(ActionEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $action];
 
 		if ($rows === 0) {
@@ -294,7 +320,14 @@ trait ActionDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+
+		$event = new ActionEvent($action);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ActionEvent::PRE_GROUP_UPDATE, $event);
+		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
 		$rows = $action->save();
+		$dispatcher->dispatch(ActionEvent::POST_GROUP_UPDATE, $event);
+		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $action]);

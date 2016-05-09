@@ -10,10 +10,10 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\ApplicationEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 
@@ -36,14 +36,14 @@ trait ApplicationDomainTrait {
 		$serializer = Application::getSerializer();
 		$application = $serializer->hydrate(new Application(), $data);
 
-		// validate
-		if (!$application->validate()) {
-			return new NotValid([
-				'errors' => $application->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ApplicationEvent($application);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ApplicationEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
 		$application->save();
+		$dispatcher->dispatch(ApplicationEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
 		return new Created(['model' => $application]);
 	}
 
@@ -62,9 +62,13 @@ trait ApplicationDomainTrait {
 		}
 
 		// delete
+		$event = new ApplicationEvent($application);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ApplicationEvent::PRE_DELETE, $event);
 		$application->delete();
 
 		if ($application->isDeleted()) {
+			$dispatcher->dispatch(ApplicationEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $application]);
 		}
 
@@ -142,14 +146,15 @@ trait ApplicationDomainTrait {
 		$serializer = Application::getSerializer();
 		$application = $serializer->hydrate($application, $data);
 
-		// validate
-		if (!$application->validate()) {
-			return new NotValid([
-				'errors' => $application->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new ApplicationEvent($application);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(ApplicationEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
 		$rows = $application->save();
+		$dispatcher->dispatch(ApplicationEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $application];
 
 		if ($rows === 0) {

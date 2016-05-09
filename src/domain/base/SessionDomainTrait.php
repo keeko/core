@@ -10,10 +10,10 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\SessionEvent;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 
@@ -36,14 +36,14 @@ trait SessionDomainTrait {
 		$serializer = Session::getSerializer();
 		$session = $serializer->hydrate(new Session(), $data);
 
-		// validate
-		if (!$session->validate()) {
-			return new NotValid([
-				'errors' => $session->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new SessionEvent($session);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(SessionEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(SessionEvent::PRE_SAVE, $event);
 		$session->save();
+		$dispatcher->dispatch(SessionEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(SessionEvent::POST_SAVE, $event);
 		return new Created(['model' => $session]);
 	}
 
@@ -62,9 +62,13 @@ trait SessionDomainTrait {
 		}
 
 		// delete
+		$event = new SessionEvent($session);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(SessionEvent::PRE_DELETE, $event);
 		$session->delete();
 
 		if ($session->isDeleted()) {
+			$dispatcher->dispatch(SessionEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $session]);
 		}
 
@@ -141,7 +145,15 @@ trait SessionDomainTrait {
 		// update
 		if ($session->getUserId() !== $userId) {
 			$session->setUserId($userId);
+
+			$event = new SessionEvent($session);
+			$dispatcher = $this->getServiceContainer()->getDispatcher();
+			$dispatcher->dispatch(SessionEvent::PRE_USER_UPDATE, $event);
+			$dispatcher->dispatch(SessionEvent::PRE_SAVE, $event);
 			$session->save();
+			$dispatcher->dispatch(SessionEvent::POST_USER_UPDATE, $event);
+			$dispatcher->dispatch(SessionEvent::POST_SAVE, $event);
+			
 			return Updated(['model' => $session]);
 		}
 
@@ -167,14 +179,15 @@ trait SessionDomainTrait {
 		$serializer = Session::getSerializer();
 		$session = $serializer->hydrate($session, $data);
 
-		// validate
-		if (!$session->validate()) {
-			return new NotValid([
-				'errors' => $session->getValidationFailures()
-			]);
-		}
-
+		// dispatch
+		$event = new SessionEvent($session);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(SessionEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(SessionEvent::PRE_SAVE, $event);
 		$rows = $session->save();
+		$dispatcher->dispatch(SessionEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(SessionEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $session];
 
 		if ($rows === 0) {

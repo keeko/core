@@ -10,10 +10,11 @@ use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotFound;
 use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
+use keeko\core\event\GroupEvent;
 use keeko\framework\domain\payload\Created;
+use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
-use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
 use keeko\core\model\UserQuery;
@@ -58,7 +59,13 @@ trait GroupDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+		$event = new GroupEvent($group);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(GroupEvent::PRE_ACTION_ADD, $event);
+		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $group->save();
+		$dispatcher->dispatch(GroupEvent::POST_ACTION_ADD, $event);
+		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $group]);
@@ -96,7 +103,13 @@ trait GroupDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+		$event = new GroupEvent($group);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(GroupEvent::PRE_USER_ADD, $event);
+		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $group->save();
+		$dispatcher->dispatch(GroupEvent::POST_USER_ADD, $event);
+		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $group]);
@@ -123,7 +136,14 @@ trait GroupDomainTrait {
 			]);
 		}
 
+		// dispatch
+		$event = new GroupEvent($group);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(GroupEvent::PRE_CREATE, $event);
+		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
 		$group->save();
+		$dispatcher->dispatch(GroupEvent::POST_CREATE, $event);
+		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 		return new Created(['model' => $group]);
 	}
 
@@ -142,9 +162,13 @@ trait GroupDomainTrait {
 		}
 
 		// delete
+		$event = new GroupEvent($group);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(GroupEvent::PRE_DELETE, $event);
 		$group->delete();
 
 		if ($group->isDeleted()) {
+			$dispatcher->dispatch(GroupEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $group]);
 		}
 
@@ -232,7 +256,13 @@ trait GroupDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+		$event = new GroupEvent($group);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(GroupEvent::PRE_ACTION_REMOVE, $event);
+		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $group->save();
+		$dispatcher->dispatch(GroupEvent::POST_ACTION_REMOVE, $event);
+		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $group]);
@@ -270,7 +300,13 @@ trait GroupDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+		$event = new GroupEvent($group);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(GroupEvent::PRE_USER_REMOVE, $event);
+		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $group->save();
+		$dispatcher->dispatch(GroupEvent::POST_USER_REMOVE, $event);
+		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $group]);
@@ -305,7 +341,16 @@ trait GroupDomainTrait {
 			]);
 		}
 
+
+		// dispatch
+		$event = new GroupEvent($group);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(GroupEvent::PRE_UPDATE, $event);
+		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $group->save();
+		$dispatcher->dispatch(GroupEvent::POST_UPDATE, $event);
+		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
+
 		$payload = ['model' => $group];
 
 		if ($rows === 0) {
@@ -347,7 +392,14 @@ trait GroupDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+
+		$event = new GroupEvent($group);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(GroupEvent::PRE_ACTION_UPDATE, $event);
+		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $group->save();
+		$dispatcher->dispatch(GroupEvent::POST_ACTION_UPDATE, $event);
+		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $group]);
@@ -388,7 +440,14 @@ trait GroupDomainTrait {
 			return new NotValid(['errors' => $errors]);
 		}
 
+
+		$event = new GroupEvent($group);
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch(GroupEvent::PRE_USER_UPDATE, $event);
+		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $group->save();
+		$dispatcher->dispatch(GroupEvent::POST_USER_UPDATE, $event);
+		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $group]);
