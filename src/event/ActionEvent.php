@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\Action;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class ActionEvent {
+class ActionEvent extends Event {
 
 	/**
 	 */
@@ -80,7 +81,7 @@ class ActionEvent {
 	 * @param Action $action
 	 */
 	public function __construct(Action $action) {
-		$this->action = action;
+		$this->action = $action;
 	}
 
 	/**

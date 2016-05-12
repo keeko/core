@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\Package;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class PackageEvent {
+class PackageEvent extends Event {
 
 	/**
 	 */
@@ -48,7 +49,7 @@ class PackageEvent {
 	 * @param Package $package
 	 */
 	public function __construct(Package $package) {
-		$this->package = package;
+		$this->package = $package;
 	}
 
 	/**

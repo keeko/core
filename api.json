@@ -6419,6 +6419,15 @@
 								},
 								"slug": {
 									"type": "string"
+								},
+								"display_name_user_select": {
+									"type": "string"
+								},
+								"birth": {
+									"type": "string"
+								},
+								"password_recover_token": {
+									"type": "string"
 								}
 							}
 						},
@@ -6499,6 +6508,15 @@
 									"type": "string"
 								},
 								"slug": {
+									"type": "string"
+								},
+								"display_name_user_select": {
+									"type": "string"
+								},
+								"birth": {
+									"type": "string"
+								},
+								"password_recover_token": {
 									"type": "string"
 								}
 							}

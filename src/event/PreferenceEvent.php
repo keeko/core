@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\Preference;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class PreferenceEvent {
+class PreferenceEvent extends Event {
 
 	/**
 	 */
@@ -48,7 +49,7 @@ class PreferenceEvent {
 	 * @param Preference $preference
 	 */
 	public function __construct(Preference $preference) {
-		$this->preference = preference;
+		$this->preference = $preference;
 	}
 
 	/**

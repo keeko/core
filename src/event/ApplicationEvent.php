@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\Application;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class ApplicationEvent {
+class ApplicationEvent extends Event {
 
 	/**
 	 */
@@ -48,7 +49,7 @@ class ApplicationEvent {
 	 * @param Application $application
 	 */
 	public function __construct(Application $application) {
-		$this->application = application;
+		$this->application = $application;
 	}
 
 	/**

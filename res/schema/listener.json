@@ -1,0 +1,26 @@
+{
+	"title": "Keeko listener",
+	"type": "array",
+	"items": {
+    	"type": "object",
+    	"description": "Listeners must either be a subscriber or class, method and event must be given.",
+    	"properties": {
+    	    "subscriber": {
+    	    	"type": "string",
+    	    	"description": "A subscriber class. Needs to implement keeko\framework\events\KeekoEventSubscriberInterface"
+    	    },
+    	    "class": {
+    	    	"type": "string",
+    	    	"description": "Fully-qualified listener class name. Needs to implement keeko\framework\events\KeekoEventListenerInterface"
+    	    },
+    	    "method": {
+    	        "type": "string",
+    	    	"description": "The method"
+    	    },
+    	    "event": {
+    	    	"type": "string",
+    	    	"description": "The event on which this listener will be triggered"
+    	    }
+    	}
+    }
+}

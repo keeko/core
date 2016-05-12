@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\Group;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class GroupEvent {
+class GroupEvent extends Event {
 
 	/**
 	 */
@@ -96,7 +97,7 @@ class GroupEvent {
 	 * @param Group $group
 	 */
 	public function __construct(Group $group) {
-		$this->group = group;
+		$this->group = $group;
 	}
 
 	/**

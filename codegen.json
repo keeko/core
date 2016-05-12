@@ -7,14 +7,16 @@
 					"password" : "password_hash($v, PASSWORD_BCRYPT)"
 				},
 				"filter" : [
-					"password_recover_code",
+				    "display_name",
+					"password_recover_token",
 					"password_recover_time"
 				]
 			},
 			"read" : {
 				"filter" : [
+				    "display_name_user_select",
 					"password",
-					"password_recover_code",
+					"password_recover_token",
 					"password_recover_time"
 				]
 			}
@@ -27,9 +29,6 @@
 		},
 		"group_action": {
 			"tags": "security"
-		},
-		"auth": {
-			"tags": "auth"
 		},
 		"package": {
 			"tags": "foundation"
@@ -54,9 +53,6 @@
 		},
 		"api": {
 			"tags": "foundation"
-		},
-		"session": {
-			"tags": "security"
 		},
 		"activity": {
 			"tags": "user"

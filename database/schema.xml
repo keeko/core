@@ -360,7 +360,8 @@
 		<column name="given_name" type="VARCHAR" size="100" />
 		<column name="family_name" type="VARCHAR" size="100" />
 		<column name="nick_name" type="VARCHAR" size="100" />
-		<column name="display_name" type="VARCHAR" size="100" />
+		<column name="display_name" type="VARCHAR" size="200" />
+		<column name="display_name_user_select" type="VARCHAR" size="50" />
 		<column name="email" type="VARCHAR" size="255"/>
 		<column name="birth" type="DATE" />
 		<column name="sex" type="TINYINT" description="1 = male; 0 = female" default="-1"/>

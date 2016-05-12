@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\Module;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class ModuleEvent {
+class ModuleEvent extends Event {
 
 	/**
 	 */
@@ -48,7 +49,7 @@ class ModuleEvent {
 	 * @param Module $module
 	 */
 	public function __construct(Module $module) {
-		$this->module = module;
+		$this->module = $module;
 	}
 
 	/**

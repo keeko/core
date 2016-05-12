@@ -114,6 +114,12 @@ abstract class User implements ActiveRecordInterface
     protected $display_name;
 
     /**
+     * The value for the display_name_user_select field.
+     * @var        string
+     */
+    protected $display_name_user_select;
+
+    /**
      * The value for the email field.
      * @var        string
      */
@@ -523,6 +529,16 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Get the [display_name_user_select] column value.
+     *
+     * @return string
+     */
+    public function getDisplayNameUserSelect()
+    {
+        return $this->display_name_user_select;
+    }
+
+    /**
      * Get the [email] column value.
      *
      * @return string
@@ -783,6 +799,26 @@ abstract class User implements ActiveRecordInterface
     } // setDisplayName()
 
     /**
+     * Set the value of [display_name_user_select] column.
+     *
+     * @param string $v new value
+     * @return $this|\keeko\core\model\User The current object (for fluent API support)
+     */
+    public function setDisplayNameUserSelect($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->display_name_user_select !== $v) {
+            $this->display_name_user_select = $v;
+            $this->modifiedColumns[UserTableMap::COL_DISPLAY_NAME_USER_SELECT] = true;
+        }
+
+        return $this;
+    } // setDisplayNameUserSelect()
+
+    /**
      * Set the value of [email] column.
      *
      * @param string $v new value
@@ -1003,37 +1039,40 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserTableMap::translateFieldName('DisplayName', TableMap::TYPE_PHPNAME, $indexType)];
             $this->display_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('DisplayNameUserSelect', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->display_name_user_select = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
             $this->email = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('Birth', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('Birth', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
             $this->birth = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('Sex', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('Sex', TableMap::TYPE_PHPNAME, $indexType)];
             $this->sex = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('Slug', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('Slug', TableMap::TYPE_PHPNAME, $indexType)];
             $this->slug = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('PasswordRecoverToken', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('PasswordRecoverToken', TableMap::TYPE_PHPNAME, $indexType)];
             $this->password_recover_token = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('PasswordRecoverTime', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('PasswordRecoverTime', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->password_recover_time = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -1046,7 +1085,7 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 15; // 15 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 16; // 16 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\keeko\\core\\model\\User'), 0, $e);
@@ -1363,6 +1402,9 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_DISPLAY_NAME)) {
             $modifiedColumns[':p' . $index++]  = '`display_name`';
         }
+        if ($this->isColumnModified(UserTableMap::COL_DISPLAY_NAME_USER_SELECT)) {
+            $modifiedColumns[':p' . $index++]  = '`display_name_user_select`';
+        }
         if ($this->isColumnModified(UserTableMap::COL_EMAIL)) {
             $modifiedColumns[':p' . $index++]  = '`email`';
         }
@@ -1418,6 +1460,9 @@ abstract class User implements ActiveRecordInterface
                         break;
                     case '`display_name`':
                         $stmt->bindValue($identifier, $this->display_name, PDO::PARAM_STR);
+                        break;
+                    case '`display_name_user_select`':
+                        $stmt->bindValue($identifier, $this->display_name_user_select, PDO::PARAM_STR);
                         break;
                     case '`email`':
                         $stmt->bindValue($identifier, $this->email, PDO::PARAM_STR);
@@ -1527,27 +1572,30 @@ abstract class User implements ActiveRecordInterface
                 return $this->getDisplayName();
                 break;
             case 7:
-                return $this->getEmail();
+                return $this->getDisplayNameUserSelect();
                 break;
             case 8:
-                return $this->getBirth();
+                return $this->getEmail();
                 break;
             case 9:
-                return $this->getSex();
+                return $this->getBirth();
                 break;
             case 10:
-                return $this->getSlug();
+                return $this->getSex();
                 break;
             case 11:
-                return $this->getPasswordRecoverToken();
+                return $this->getSlug();
                 break;
             case 12:
-                return $this->getPasswordRecoverTime();
+                return $this->getPasswordRecoverToken();
                 break;
             case 13:
-                return $this->getCreatedAt();
+                return $this->getPasswordRecoverTime();
                 break;
             case 14:
+                return $this->getCreatedAt();
+                break;
+            case 15:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1587,27 +1635,22 @@ abstract class User implements ActiveRecordInterface
             $keys[4] => $this->getFamilyName(),
             $keys[5] => $this->getNickName(),
             $keys[6] => $this->getDisplayName(),
-            $keys[7] => $this->getEmail(),
-            $keys[8] => $this->getBirth(),
-            $keys[9] => $this->getSex(),
-            $keys[10] => $this->getSlug(),
-            $keys[11] => $this->getPasswordRecoverToken(),
-            $keys[12] => $this->getPasswordRecoverTime(),
-            $keys[13] => $this->getCreatedAt(),
-            $keys[14] => $this->getUpdatedAt(),
+            $keys[7] => $this->getDisplayNameUserSelect(),
+            $keys[8] => $this->getEmail(),
+            $keys[9] => $this->getBirth(),
+            $keys[10] => $this->getSex(),
+            $keys[11] => $this->getSlug(),
+            $keys[12] => $this->getPasswordRecoverToken(),
+            $keys[13] => $this->getPasswordRecoverTime(),
+            $keys[14] => $this->getCreatedAt(),
+            $keys[15] => $this->getUpdatedAt(),
         );
 
         $utc = new \DateTimeZone('utc');
-        if ($result[$keys[8]] instanceof \DateTime) {
+        if ($result[$keys[9]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[8]];
-            $result[$keys[8]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
-        if ($result[$keys[12]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[12]];
-            $result[$keys[12]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+            $dateTime = clone $result[$keys[9]];
+            $result[$keys[9]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         if ($result[$keys[13]] instanceof \DateTime) {
@@ -1620,6 +1663,12 @@ abstract class User implements ActiveRecordInterface
             // When changing timezone we don't want to change existing instances
             $dateTime = clone $result[$keys[14]];
             $result[$keys[14]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[15]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[15]];
+            $result[$keys[15]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1729,27 +1778,30 @@ abstract class User implements ActiveRecordInterface
                 $this->setDisplayName($value);
                 break;
             case 7:
-                $this->setEmail($value);
+                $this->setDisplayNameUserSelect($value);
                 break;
             case 8:
-                $this->setBirth($value);
+                $this->setEmail($value);
                 break;
             case 9:
-                $this->setSex($value);
+                $this->setBirth($value);
                 break;
             case 10:
-                $this->setSlug($value);
+                $this->setSex($value);
                 break;
             case 11:
-                $this->setPasswordRecoverToken($value);
+                $this->setSlug($value);
                 break;
             case 12:
-                $this->setPasswordRecoverTime($value);
+                $this->setPasswordRecoverToken($value);
                 break;
             case 13:
-                $this->setCreatedAt($value);
+                $this->setPasswordRecoverTime($value);
                 break;
             case 14:
+                $this->setCreatedAt($value);
+                break;
+            case 15:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1800,28 +1852,31 @@ abstract class User implements ActiveRecordInterface
             $this->setDisplayName($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setEmail($arr[$keys[7]]);
+            $this->setDisplayNameUserSelect($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setBirth($arr[$keys[8]]);
+            $this->setEmail($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setSex($arr[$keys[9]]);
+            $this->setBirth($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setSlug($arr[$keys[10]]);
+            $this->setSex($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setPasswordRecoverToken($arr[$keys[11]]);
+            $this->setSlug($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setPasswordRecoverTime($arr[$keys[12]]);
+            $this->setPasswordRecoverToken($arr[$keys[12]]);
         }
         if (array_key_exists($keys[13], $arr)) {
-            $this->setCreatedAt($arr[$keys[13]]);
+            $this->setPasswordRecoverTime($arr[$keys[13]]);
         }
         if (array_key_exists($keys[14], $arr)) {
-            $this->setUpdatedAt($arr[$keys[14]]);
+            $this->setCreatedAt($arr[$keys[14]]);
+        }
+        if (array_key_exists($keys[15], $arr)) {
+            $this->setUpdatedAt($arr[$keys[15]]);
         }
     }
 
@@ -1884,6 +1939,9 @@ abstract class User implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UserTableMap::COL_DISPLAY_NAME)) {
             $criteria->add(UserTableMap::COL_DISPLAY_NAME, $this->display_name);
+        }
+        if ($this->isColumnModified(UserTableMap::COL_DISPLAY_NAME_USER_SELECT)) {
+            $criteria->add(UserTableMap::COL_DISPLAY_NAME_USER_SELECT, $this->display_name_user_select);
         }
         if ($this->isColumnModified(UserTableMap::COL_EMAIL)) {
             $criteria->add(UserTableMap::COL_EMAIL, $this->email);
@@ -2001,6 +2059,7 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setFamilyName($this->getFamilyName());
         $copyObj->setNickName($this->getNickName());
         $copyObj->setDisplayName($this->getDisplayName());
+        $copyObj->setDisplayNameUserSelect($this->getDisplayNameUserSelect());
         $copyObj->setEmail($this->getEmail());
         $copyObj->setBirth($this->getBirth());
         $copyObj->setSex($this->getSex());
@@ -3073,6 +3132,7 @@ abstract class User implements ActiveRecordInterface
         $this->family_name = null;
         $this->nick_name = null;
         $this->display_name = null;
+        $this->display_name_user_select = null;
         $this->email = null;
         $this->birth = null;
         $this->sex = null;

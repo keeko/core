@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\Localization;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class LocalizationEvent {
+class LocalizationEvent extends Event {
 
 	/**
 	 */
@@ -96,7 +97,7 @@ class LocalizationEvent {
 	 * @param Localization $localization
 	 */
 	public function __construct(Localization $localization) {
-		$this->localization = localization;
+		$this->localization = $localization;
 	}
 
 	/**

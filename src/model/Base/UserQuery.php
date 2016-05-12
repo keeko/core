@@ -27,6 +27,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery orderByFamilyName($order = Criteria::ASC) Order by the family_name column
  * @method     ChildUserQuery orderByNickName($order = Criteria::ASC) Order by the nick_name column
  * @method     ChildUserQuery orderByDisplayName($order = Criteria::ASC) Order by the display_name column
+ * @method     ChildUserQuery orderByDisplayNameUserSelect($order = Criteria::ASC) Order by the display_name_user_select column
  * @method     ChildUserQuery orderByEmail($order = Criteria::ASC) Order by the email column
  * @method     ChildUserQuery orderByBirth($order = Criteria::ASC) Order by the birth column
  * @method     ChildUserQuery orderBySex($order = Criteria::ASC) Order by the sex column
@@ -43,6 +44,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUserQuery groupByFamilyName() Group by the family_name column
  * @method     ChildUserQuery groupByNickName() Group by the nick_name column
  * @method     ChildUserQuery groupByDisplayName() Group by the display_name column
+ * @method     ChildUserQuery groupByDisplayNameUserSelect() Group by the display_name_user_select column
  * @method     ChildUserQuery groupByEmail() Group by the email column
  * @method     ChildUserQuery groupByBirth() Group by the birth column
  * @method     ChildUserQuery groupBySex() Group by the sex column
@@ -80,6 +82,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser findOneByFamilyName(string $family_name) Return the first ChildUser filtered by the family_name column
  * @method     ChildUser findOneByNickName(string $nick_name) Return the first ChildUser filtered by the nick_name column
  * @method     ChildUser findOneByDisplayName(string $display_name) Return the first ChildUser filtered by the display_name column
+ * @method     ChildUser findOneByDisplayNameUserSelect(string $display_name_user_select) Return the first ChildUser filtered by the display_name_user_select column
  * @method     ChildUser findOneByEmail(string $email) Return the first ChildUser filtered by the email column
  * @method     ChildUser findOneByBirth(string $birth) Return the first ChildUser filtered by the birth column
  * @method     ChildUser findOneBySex(int $sex) Return the first ChildUser filtered by the sex column
@@ -99,6 +102,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser requireOneByFamilyName(string $family_name) Return the first ChildUser filtered by the family_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByNickName(string $nick_name) Return the first ChildUser filtered by the nick_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByDisplayName(string $display_name) Return the first ChildUser filtered by the display_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByDisplayNameUserSelect(string $display_name_user_select) Return the first ChildUser filtered by the display_name_user_select column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByEmail(string $email) Return the first ChildUser filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByBirth(string $birth) Return the first ChildUser filtered by the birth column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneBySex(int $sex) Return the first ChildUser filtered by the sex column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -116,6 +120,7 @@ use keeko\core\model\Map\UserTableMap;
  * @method     ChildUser[]|ObjectCollection findByFamilyName(string $family_name) Return ChildUser objects filtered by the family_name column
  * @method     ChildUser[]|ObjectCollection findByNickName(string $nick_name) Return ChildUser objects filtered by the nick_name column
  * @method     ChildUser[]|ObjectCollection findByDisplayName(string $display_name) Return ChildUser objects filtered by the display_name column
+ * @method     ChildUser[]|ObjectCollection findByDisplayNameUserSelect(string $display_name_user_select) Return ChildUser objects filtered by the display_name_user_select column
  * @method     ChildUser[]|ObjectCollection findByEmail(string $email) Return ChildUser objects filtered by the email column
  * @method     ChildUser[]|ObjectCollection findByBirth(string $birth) Return ChildUser objects filtered by the birth column
  * @method     ChildUser[]|ObjectCollection findBySex(int $sex) Return ChildUser objects filtered by the sex column
@@ -216,7 +221,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `id`, `user_name`, `password`, `given_name`, `family_name`, `nick_name`, `display_name`, `email`, `birth`, `sex`, `slug`, `password_recover_token`, `password_recover_time`, `created_at`, `updated_at` FROM `kk_user` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `user_name`, `password`, `given_name`, `family_name`, `nick_name`, `display_name`, `display_name_user_select`, `email`, `birth`, `sex`, `slug`, `password_recover_token`, `password_recover_time`, `created_at`, `updated_at` FROM `kk_user` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -519,6 +524,35 @@ abstract class UserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserTableMap::COL_DISPLAY_NAME, $displayName, $comparison);
+    }
+
+    /**
+     * Filter the query on the display_name_user_select column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDisplayNameUserSelect('fooValue');   // WHERE display_name_user_select = 'fooValue'
+     * $query->filterByDisplayNameUserSelect('%fooValue%'); // WHERE display_name_user_select LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $displayNameUserSelect The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByDisplayNameUserSelect($displayNameUserSelect = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($displayNameUserSelect)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $displayNameUserSelect)) {
+                $displayNameUserSelect = str_replace('*', '%', $displayNameUserSelect);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_DISPLAY_NAME_USER_SELECT, $displayNameUserSelect, $comparison);
     }
 
     /**

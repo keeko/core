@@ -26,7 +26,6 @@ trait UserSerializerTrait {
 			'birth' => $model->getBirth(\DateTime::ISO8601),
 			'sex' => $model->getSex(),
 			'slug' => $model->getSlug(),
-			'password_recover_token' => $model->getPasswordRecoverToken(),
 			'created_at' => $model->getCreatedAt(\DateTime::ISO8601),
 			'updated_at' => $model->getUpdatedAt(\DateTime::ISO8601),
 		];
@@ -35,7 +34,7 @@ trait UserSerializerTrait {
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'user_name', 'given_name', 'family_name', 'nick_name', 'display_name', 'email', 'birth', 'sex', 'slug', 'password_recover_token', 'created_at', 'updated_at'];
+		return ['id', 'user_name', 'given_name', 'family_name', 'nick_name', 'display_name', 'email', 'birth', 'sex', 'slug', 'created_at', 'updated_at'];
 	}
 
 	/**
@@ -57,7 +56,7 @@ trait UserSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'user_name', 'given_name', 'family_name', 'nick_name', 'display_name', 'email', 'birth', 'sex', 'slug', 'password_recover_token', 'created_at', 'updated_at'];
+		return ['id', 'user_name', 'given_name', 'family_name', 'nick_name', 'display_name', 'email', 'birth', 'sex', 'slug', 'created_at', 'updated_at'];
 	}
 
 	/**
@@ -88,7 +87,7 @@ trait UserSerializerTrait {
 
 		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'user_name', 'password' => function($v) {
 			return password_hash($v, PASSWORD_BCRYPT);
-		}, 'given_name', 'family_name', 'nick_name', 'display_name', 'email', 'birth', 'sex', 'slug', 'password_recover_token']);
+		}, 'given_name', 'family_name', 'nick_name', 'display_name_user_select', 'email', 'birth', 'sex', 'slug']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

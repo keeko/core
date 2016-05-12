@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\Session;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class SessionEvent {
+class SessionEvent extends Event {
 
 	/**
 	 */
@@ -56,7 +57,7 @@ class SessionEvent {
 	 * @param Session $session
 	 */
 	public function __construct(Session $session) {
-		$this->session = session;
+		$this->session = $session;
 	}
 
 	/**

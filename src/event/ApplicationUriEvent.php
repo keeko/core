@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\ApplicationUri;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class ApplicationUriEvent {
+class ApplicationUriEvent extends Event {
 
 	/**
 	 */
@@ -64,7 +65,7 @@ class ApplicationUriEvent {
 	 * @param ApplicationUri $applicationUri
 	 */
 	public function __construct(ApplicationUri $applicationUri) {
-		$this->applicationUri = applicationUri;
+		$this->applicationUri = $applicationUri;
 	}
 
 	/**

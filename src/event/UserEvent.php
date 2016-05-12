@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\User;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class UserEvent {
+class UserEvent extends Event {
 
 	/**
 	 */
@@ -72,7 +73,7 @@ class UserEvent {
 	 * @param User $user
 	 */
 	public function __construct(User $user) {
-		$this->user = user;
+		$this->user = $user;
 	}
 
 	/**

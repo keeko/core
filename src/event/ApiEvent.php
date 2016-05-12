@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\Api;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class ApiEvent {
+class ApiEvent extends Event {
 
 	/**
 	 */
@@ -56,7 +57,7 @@ class ApiEvent {
 	 * @param Api $api
 	 */
 	public function __construct(Api $api) {
-		$this->api = api;
+		$this->api = $api;
 	}
 
 	/**

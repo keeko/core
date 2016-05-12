@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\ActivityObject;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class ActivityObjectEvent {
+class ActivityObjectEvent extends Event {
 
 	/**
 	 */
@@ -48,7 +49,7 @@ class ActivityObjectEvent {
 	 * @param ActivityObject $activityObject
 	 */
 	public function __construct(ActivityObject $activityObject) {
-		$this->activityObject = activityObject;
+		$this->activityObject = $activityObject;
 	}
 
 	/**

@@ -8,6 +8,12 @@ use keeko\framework\foundation\AbstractModule;
  * @author gossi
  */
 class CoreModule extends AbstractModule {
+	
+	const EXT_LISTENER = 'keeko.core.listener';
+	
+	protected function initialize() {
+		
+	}
 
 	/**
 	 */

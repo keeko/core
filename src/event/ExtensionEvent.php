@@ -2,10 +2,11 @@
 namespace keeko\core\event;
 
 use keeko\core\model\Extension;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  */
-class ExtensionEvent {
+class ExtensionEvent extends Event {
 
 	/**
 	 */
@@ -56,7 +57,7 @@ class ExtensionEvent {
 	 * @param Extension $extension
 	 */
 	public function __construct(Extension $extension) {
-		$this->extension = extension;
+		$this->extension = $extension;
 	}
 
 	/**
