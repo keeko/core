@@ -12,6 +12,7 @@ use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
 use keeko\core\event\PackageEvent;
 use keeko\framework\domain\payload\Created;
+use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\Deleted;
@@ -35,6 +36,14 @@ trait PackageDomainTrait {
 		// hydrate
 		$serializer = Package::getSerializer();
 		$package = $serializer->hydrate(new Package(), $data);
+
+		// validate
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($package)) {
+			return new NotValid([
+				'errors' => $validator->getValidationFailures()
+			]);
+		}
 
 		// dispatch
 		$event = new PackageEvent($package);
@@ -145,6 +154,14 @@ trait PackageDomainTrait {
 		// hydrate
 		$serializer = Package::getSerializer();
 		$package = $serializer->hydrate($package, $data);
+
+		// validate
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($package)) {
+			return new NotValid([
+				'errors' => $validator->getValidationFailures()
+			]);
+		}
 
 		// dispatch
 		$event = new PackageEvent($package);

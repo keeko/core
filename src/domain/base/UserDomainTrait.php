@@ -12,11 +12,11 @@ use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
 use keeko\core\event\UserEvent;
 use keeko\framework\domain\payload\Created;
+use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
-use keeko\framework\domain\payload\NotValid;
 use keeko\core\model\GroupQuery;
 use keeko\core\model\UserGroupQuery;
 
@@ -82,6 +82,14 @@ trait UserDomainTrait {
 		// hydrate
 		$serializer = User::getSerializer();
 		$user = $serializer->hydrate(new User(), $data);
+
+		// validate
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($user)) {
+			return new NotValid([
+				'errors' => $validator->getValidationFailures()
+			]);
+		}
 
 		// dispatch
 		$event = new UserEvent($user);
@@ -236,6 +244,14 @@ trait UserDomainTrait {
 		// hydrate
 		$serializer = User::getSerializer();
 		$user = $serializer->hydrate($user, $data);
+
+		// validate
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($user)) {
+			return new NotValid([
+				'errors' => $validator->getValidationFailures()
+			]);
+		}
 
 		// dispatch
 		$event = new UserEvent($user);

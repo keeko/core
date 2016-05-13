@@ -12,11 +12,11 @@ use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
 use keeko\core\event\LocalizationEvent;
 use keeko\framework\domain\payload\Created;
+use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
-use keeko\framework\domain\payload\NotValid;
 use keeko\core\model\LanguageVariantQuery;
 use keeko\core\model\LocalizationVariantQuery;
 
@@ -82,6 +82,14 @@ trait LocalizationDomainTrait {
 		// hydrate
 		$serializer = Localization::getSerializer();
 		$localization = $serializer->hydrate(new Localization(), $data);
+
+		// validate
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($localization)) {
+			return new NotValid([
+				'errors' => $validator->getValidationFailures()
+			]);
+		}
 
 		// dispatch
 		$event = new LocalizationEvent($localization);
@@ -335,6 +343,14 @@ trait LocalizationDomainTrait {
 		// hydrate
 		$serializer = Localization::getSerializer();
 		$localization = $serializer->hydrate($localization, $data);
+
+		// validate
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($localization)) {
+			return new NotValid([
+				'errors' => $validator->getValidationFailures()
+			]);
+		}
 
 		// dispatch
 		$event = new LocalizationEvent($localization);

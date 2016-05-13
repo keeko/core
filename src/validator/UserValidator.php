@@ -12,46 +12,39 @@ class UserValidator extends ModelValidator {
 		$validations = [];
 		
 		if ($prefs->getUserLogin() != SystemPreferences::LOGIN_EMAIL) {
-			$validations[] = [
-				'constraint' => 'notnull',
-				'column' => 'user_name'
+			$validations['user_name'] = [
+				['constraint' => 'notnull'],
+				['constraint' => 'unique-username']
 			];
 		}
 		
 		if ($prefs->getUserEmail() || $prefs->getUserLogin() != SystemPreferences::LOGIN_USERNAME) {
-			$validations[] = [
-				'constraint' => 'email',
-				'column' => 'email'
-			];
+			$validations['email'] = [['constraint' => 'email']];
+			if ($prefs->getUserLogin() != SystemPreferences::LOGIN_USERNAME) {
+				$validations['email'][] = ['constraint' => 'unique-email'];
+			}
 		}
 
-		if ($prefs->getUserNames()) {
-			$validations[] = [
-				'constraint' => 'notnull',
-				'column' => 'given_name'
-			];
-			
-			$validations[] = [
-				'constraint' => 'notnull',
-				'column' => 'family_name'
-			];
+		if ($prefs->getUserNames() == SystemPreferences::VALUE_REQUIRED) {
+			$validations['given_name'] = [['constraint' => 'notnull']];
+			$validations['family_name'] = [['constraint' => 'notnull']];
 		}
 		
-		if ($prefs->getUserBirth()) {
-			$validations[] = [
-				'constraint' => 'required',
-				'column' => 'birth'
-			];
+		if ($prefs->getUserBirth() == SystemPreferences::VALUE_REQUIRED) {
+			$validations['birth'] = [['constraint' => 'required']];
 		}
 		
-		if ($prefs->getUserSex()) {
-			$validations[] = [
-				'constraint' => 'choice',
-				'column' => 'sex',
-				'choices' => [0, 1]
-			];
+		if ($prefs->getUserSex() == SystemPreferences::VALUE_REQUIRED) {
+			$validations['sex'] = [['constraint' => 'choice', 'choices' => [0, 1]]];
 		}
 		
 		return $validations;
+	}
+	
+	protected function getCustomConstraints() {
+		return [
+			'unique-username' => 'keeko\core\validator\constraints\UniqueUsername',
+			'unique-email' => 'keeko\core\validator\constraints\UniqueEmail'
+		];
 	}
 }

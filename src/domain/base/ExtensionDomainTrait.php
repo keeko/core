@@ -12,6 +12,7 @@ use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
 use keeko\core\event\ExtensionEvent;
 use keeko\framework\domain\payload\Created;
+use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\Deleted;
@@ -35,6 +36,14 @@ trait ExtensionDomainTrait {
 		// hydrate
 		$serializer = Extension::getSerializer();
 		$extension = $serializer->hydrate(new Extension(), $data);
+
+		// validate
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($extension)) {
+			return new NotValid([
+				'errors' => $validator->getValidationFailures()
+			]);
+		}
 
 		// dispatch
 		$event = new ExtensionEvent($extension);
@@ -178,6 +187,14 @@ trait ExtensionDomainTrait {
 		// hydrate
 		$serializer = Extension::getSerializer();
 		$extension = $serializer->hydrate($extension, $data);
+
+		// validate
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($extension)) {
+			return new NotValid([
+				'errors' => $validator->getValidationFailures()
+			]);
+		}
 
 		// dispatch
 		$event = new ExtensionEvent($extension);

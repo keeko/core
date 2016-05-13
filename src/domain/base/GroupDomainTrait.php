@@ -130,9 +130,10 @@ trait GroupDomainTrait {
 		$group = $serializer->hydrate(new Group(), $data);
 
 		// validate
-		if (!$group->validate()) {
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($group)) {
 			return new NotValid([
-				'errors' => $group->getValidationFailures()
+				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
@@ -335,12 +336,12 @@ trait GroupDomainTrait {
 		$group = $serializer->hydrate($group, $data);
 
 		// validate
-		if (!$group->validate()) {
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($group)) {
 			return new NotValid([
-				'errors' => $group->getValidationFailures()
+				'errors' => $validator->getValidationFailures()
 			]);
 		}
-
 
 		// dispatch
 		$event = new GroupEvent($group);

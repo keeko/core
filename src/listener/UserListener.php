@@ -15,6 +15,46 @@ class UserListener implements KeekoEventListenerInterface {
 		$this->service = $service;
 	}
 	
+	public function normalizeNames(UserEvent $event) {
+		$prefs = $this->service->getPreferenceLoader()->getSystemPreferences();
+		$user = $event->getUser();
+		
+		$user->setGivenName($this->normalizeName($user->getGivenName(), $prefs->getUserNormalizeGivenName()));
+		$user->setFamilyName($this->normalizeName($user->getFamilyName(), $prefs->getUserNormalizeFamilyName()));
+	}
+	
+	private function normalizeName($name, $how) {
+		$name = trim($name);
+		switch ($how) {
+			case SystemPreferences::VALUE_NONE:
+				return $name;
+				
+			case SystemPreferences::NORMALIZE_TITLECASE:
+				$words = [];
+				$ws = [];
+				preg_match_all('/[^.\s-]+/', $name, $words);
+				preg_match_all('/[.\s-]+/', $name, $ws);
+				
+				$len = count($words[0]) - 1;
+				$result = '';
+				foreach ($words[0] as $i => $word) {
+					$result .= ucwords(strtolower($word));
+
+					if ($i < $len) {
+						$result .= $ws[0][$i];
+					}
+				}
+
+				return $result;
+
+			case SystemPreferences::NORMALIZE_UPPERCASE:
+				return strtoupper($name);
+				
+			case SystemPreferences::NORMALIZE_LOWERCASE:
+				return strtolower($name);
+		}
+	}
+	
 	public function updateDisplayName(UserEvent $event) {
 		$prefs = $this->service->getPreferenceLoader()->getSystemPreferences();
 		$user = $event->getUser();

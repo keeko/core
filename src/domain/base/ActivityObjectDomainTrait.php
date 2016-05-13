@@ -12,6 +12,7 @@ use keeko\framework\utils\Parameters;
 use keeko\framework\utils\NameUtils;
 use keeko\core\event\ActivityObjectEvent;
 use keeko\framework\domain\payload\Created;
+use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\Updated;
 use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\Deleted;
@@ -35,6 +36,14 @@ trait ActivityObjectDomainTrait {
 		// hydrate
 		$serializer = ActivityObject::getSerializer();
 		$activityObject = $serializer->hydrate(new ActivityObject(), $data);
+
+		// validate
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($activityObject)) {
+			return new NotValid([
+				'errors' => $validator->getValidationFailures()
+			]);
+		}
 
 		// dispatch
 		$event = new ActivityObjectEvent($activityObject);
@@ -145,6 +154,14 @@ trait ActivityObjectDomainTrait {
 		// hydrate
 		$serializer = ActivityObject::getSerializer();
 		$activityObject = $serializer->hydrate($activityObject, $data);
+
+		// validate
+		$validator = $this->getValidator();
+		if ($validator !== null && !$validator->validate($activityObject)) {
+			return new NotValid([
+				'errors' => $validator->getValidationFailures()
+			]);
+		}
 
 		// dispatch
 		$event = new ActivityObjectEvent($activityObject);

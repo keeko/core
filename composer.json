@@ -43,6 +43,10 @@
 				"extensions" : {
 					"keeko.core.listener" : [{
 							"class" : "keeko\\core\\listener\\UserListener",
+							"method" : "normalizeNames",
+							"event" : "core.user.pre_save"
+						}, {
+							"class" : "keeko\\core\\listener\\UserListener",
 							"method" : "updateDisplayName",
 							"event" : "core.user.pre_save"
 						}
