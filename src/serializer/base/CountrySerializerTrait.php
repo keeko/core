@@ -13,34 +13,34 @@ trait CountrySerializerTrait {
 		return [
 			'id' => $model->getId(),
 			'numeric' => $model->getNumeric(),
-			'alpha_2' => $model->getAlpha2(),
-			'alpha_3' => $model->getAlpha3(),
-			'short_name' => $model->getShortName(),
+			'alpha-2' => $model->getAlpha2(),
+			'alpha-3' => $model->getAlpha3(),
+			'short-name' => $model->getShortName(),
 			'ioc' => $model->getIoc(),
 			'tld' => $model->getTld(),
 			'phone' => $model->getPhone(),
 			'capital' => $model->getCapital(),
-			'postal_code_format' => $model->getPostalCodeFormat(),
-			'postal_code_regex' => $model->getPostalCodeRegex(),
-			'continent_id' => $model->getContinentId(),
-			'currency_id' => $model->getCurrencyId(),
-			'type_id' => $model->getTypeId(),
-			'subtype_id' => $model->getSubtypeId(),
-			'sovereignity_id' => $model->getSovereignityId(),
-			'formal_name' => $model->getFormalName(),
-			'formal_native_name' => $model->getFormalNativeName(),
-			'short_native_name' => $model->getShortNativeName(),
-			'bbox_sw_lat' => $model->getBboxSwLat(),
-			'bbox_sw_lng' => $model->getBboxSwLng(),
-			'bbox_ne_lat' => $model->getBboxNeLat(),
-			'bbox_ne_lng' => $model->getBboxNeLng(),
+			'postal-code-format' => $model->getPostalCodeFormat(),
+			'postal-code-regex' => $model->getPostalCodeRegex(),
+			'continent-id' => $model->getContinentId(),
+			'currency-id' => $model->getCurrencyId(),
+			'type-id' => $model->getTypeId(),
+			'subtype-id' => $model->getSubtypeId(),
+			'sovereignity-id' => $model->getSovereignityId(),
+			'formal-name' => $model->getFormalName(),
+			'formal-native-name' => $model->getFormalNativeName(),
+			'short-native-name' => $model->getShortNativeName(),
+			'bbox-sw-lat' => $model->getBboxSwLat(),
+			'bbox-sw-lng' => $model->getBboxSwLng(),
+			'bbox-ne-lat' => $model->getBboxNeLat(),
+			'bbox-ne-lng' => $model->getBboxNeLng(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'numeric', 'alpha_2', 'alpha_3', 'short_name', 'ioc', 'tld', 'phone', 'capital', 'postal_code_format', 'postal_code_regex', 'continent_id', 'currency_id', 'type_id', 'subtype_id', 'sovereignity_id', 'formal_name', 'formal_native_name', 'short_native_name', 'bbox_sw_lat', 'bbox_sw_lng', 'bbox_ne_lat', 'bbox_ne_lng'];
+		return ['id', 'numeric', 'alpha-2', 'alpha-3', 'short-name', 'ioc', 'tld', 'phone', 'capital', 'postal-code-format', 'postal-code-regex', 'continent-id', 'currency-id', 'type-id', 'subtype-id', 'sovereignity-id', 'formal-name', 'formal-native-name', 'short-native-name', 'bbox-sw-lat', 'bbox-sw-lng', 'bbox-ne-lat', 'bbox-ne-lng'];
 	}
 
 	/**
@@ -54,7 +54,7 @@ trait CountrySerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'numeric', 'alpha_2', 'alpha_3', 'short_name', 'ioc', 'tld', 'phone', 'capital', 'postal_code_format', 'postal_code_regex', 'continent_id', 'currency_id', 'type_id', 'subtype_id', 'sovereignity_id', 'formal_name', 'formal_native_name', 'short_native_name', 'bbox_sw_lat', 'bbox_sw_lng', 'bbox_ne_lat', 'bbox_ne_lng'];
+		return ['id', 'numeric', 'alpha-2', 'alpha-3', 'short-name', 'ioc', 'tld', 'phone', 'capital', 'postal-code-format', 'postal-code-regex', 'continent-id', 'currency-id', 'type-id', 'subtype-id', 'sovereignity-id', 'formal-name', 'formal-native-name', 'short-native-name', 'bbox-sw-lat', 'bbox-sw-lng', 'bbox-ne-lat', 'bbox-ne-lng'];
 	}
 
 	/**

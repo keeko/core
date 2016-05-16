@@ -27,21 +27,21 @@ trait GroupSerializerTrait {
 	public function getAttributes($model, array $fields = null) {
 		return [
 			'id' => $model->getId(),
-			'owner_id' => $model->getOwnerId(),
+			'owner-id' => $model->getOwnerId(),
 			'name' => $model->getName(),
-			'is_guest' => $model->getIsGuest(),
-			'is_default' => $model->getIsDefault(),
-			'is_active' => $model->getIsActive(),
-			'is_system' => $model->getIsSystem(),
-			'created_at' => $model->getCreatedAt(\DateTime::ISO8601),
-			'updated_at' => $model->getUpdatedAt(\DateTime::ISO8601),
+			'is-guest' => $model->getIsGuest(),
+			'is-default' => $model->getIsDefault(),
+			'is-active' => $model->getIsActive(),
+			'is-system' => $model->getIsSystem(),
+			'created-at' => $model->getCreatedAt(\DateTime::ISO8601),
+			'updated-at' => $model->getUpdatedAt(\DateTime::ISO8601),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'owner_id', 'name', 'is_guest', 'is_default', 'is_active', 'is_system', 'created_at', 'updated_at'];
+		return ['id', 'owner-id', 'name', 'is-guest', 'is-default', 'is-active', 'is-system', 'created-at', 'updated-at'];
 	}
 
 	/**
@@ -64,7 +64,7 @@ trait GroupSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'owner_id', 'name', 'is_guest', 'is_default', 'is_active', 'is_system', 'created_at', 'updated_at'];
+		return ['id', 'owner-id', 'name', 'is-guest', 'is-default', 'is-active', 'is-system', 'created-at', 'updated-at'];
 	}
 
 	/**
@@ -84,7 +84,7 @@ trait GroupSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'owner_id', 'name', 'is_guest', 'is_default', 'is_active', 'is_system']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'owner-id', 'name', 'is-guest', 'is-default', 'is-active', 'is-system']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

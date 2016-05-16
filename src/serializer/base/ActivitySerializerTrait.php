@@ -31,17 +31,17 @@ trait ActivitySerializerTrait {
 	public function getAttributes($model, array $fields = null) {
 		return [
 			'id' => $model->getId(),
-			'actor_id' => $model->getActorId(),
+			'actor-id' => $model->getActorId(),
 			'verb' => $model->getVerb(),
-			'object_id' => $model->getObjectId(),
-			'target_id' => $model->getTargetId(),
+			'object-id' => $model->getObjectId(),
+			'target-id' => $model->getTargetId(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'actor_id', 'verb', 'object_id', 'target_id'];
+		return ['id', 'actor-id', 'verb', 'object-id', 'target-id'];
 	}
 
 	/**
@@ -64,7 +64,7 @@ trait ActivitySerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'actor_id', 'verb', 'object_id', 'target_id'];
+		return ['id', 'actor-id', 'verb', 'object-id', 'target-id'];
 	}
 
 	/**
@@ -84,7 +84,7 @@ trait ActivitySerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'actor_id', 'verb', 'object_id', 'target_id']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'actor-id', 'verb', 'object-id', 'target-id']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

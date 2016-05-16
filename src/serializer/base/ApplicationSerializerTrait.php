@@ -13,19 +13,19 @@ trait ApplicationSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'class_name' => $model->getClassName(),
+			'class-name' => $model->getClassName(),
 			'id' => $model->getId(),
 			'name' => $model->getName(),
 			'title' => $model->getTitle(),
 			'description' => $model->getDescription(),
-			'installed_version' => $model->getInstalledVersion(),
+			'installed-version' => $model->getInstalledVersion(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['class_name', 'id', 'name', 'title', 'description', 'installed_version'];
+		return ['class-name', 'id', 'name', 'title', 'description', 'installed-version'];
 	}
 
 	/**
@@ -46,7 +46,7 @@ trait ApplicationSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['class_name', 'id', 'name', 'title', 'description', 'installed_version'];
+		return ['class-name', 'id', 'name', 'title', 'description', 'installed-version'];
 	}
 
 	/**
@@ -66,7 +66,7 @@ trait ApplicationSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['class_name', 'id', 'name', 'title', 'description', 'installed_version']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['class-name', 'id', 'name', 'title', 'description', 'installed-version']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

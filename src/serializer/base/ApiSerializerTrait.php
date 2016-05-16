@@ -32,15 +32,15 @@ trait ApiSerializerTrait {
 			'id' => $model->getId(),
 			'route' => $model->getRoute(),
 			'method' => $model->getMethod(),
-			'action_id' => $model->getActionId(),
-			'required_params' => $model->getRequiredParams(),
+			'action-id' => $model->getActionId(),
+			'required-params' => $model->getRequiredParams(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'route', 'method', 'action_id', 'required_params'];
+		return ['id', 'route', 'method', 'action-id', 'required-params'];
 	}
 
 	/**
@@ -62,7 +62,7 @@ trait ApiSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'route', 'method', 'action_id', 'required_params'];
+		return ['id', 'route', 'method', 'action-id', 'required-params'];
 	}
 
 	/**
@@ -82,7 +82,7 @@ trait ApiSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'route', 'method', 'action_id', 'required_params']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'route', 'method', 'action-id', 'required-params']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

@@ -17,15 +17,15 @@ trait PackageSerializerTrait {
 			'name' => $model->getName(),
 			'title' => $model->getTitle(),
 			'description' => $model->getDescription(),
-			'installed_version' => $model->getInstalledVersion(),
-			'descendant_class' => $model->getDescendantClass(),
+			'installed-version' => $model->getInstalledVersion(),
+			'descendant-class' => $model->getDescendantClass(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'name', 'title', 'description', 'installed_version', 'descendant_class'];
+		return ['id', 'name', 'title', 'description', 'installed-version', 'descendant-class'];
 	}
 
 	/**
@@ -46,7 +46,7 @@ trait PackageSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'name', 'title', 'description', 'installed_version', 'descendant_class'];
+		return ['id', 'name', 'title', 'description', 'installed-version', 'descendant-class'];
 	}
 
 	/**
@@ -66,7 +66,7 @@ trait PackageSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'name', 'title', 'description', 'installed_version', 'descendant_class']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'name', 'title', 'description', 'installed-version', 'descendant-class']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

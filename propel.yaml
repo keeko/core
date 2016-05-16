@@ -4,7 +4,7 @@ propel:
 
   paths:
     projectDir: .
-    schemaDir: %projectDir%/database
+    schemaDir: %projectDir%/res/database
     outputDir: %projectDir%
     phpDir: %outputDir%/src/model
     phpConfDir: %schemaDir%/generated-conf

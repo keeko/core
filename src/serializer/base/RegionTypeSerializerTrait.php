@@ -13,14 +13,14 @@ trait RegionTypeSerializerTrait {
 		return [
 			'id' => $model->getId(),
 			'name' => $model->getName(),
-			'area_id' => $model->getAreaId(),
+			'area-id' => $model->getAreaId(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'name', 'area_id'];
+		return ['id', 'name', 'area-id'];
 	}
 
 	/**
@@ -34,7 +34,7 @@ trait RegionTypeSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'name', 'area_id'];
+		return ['id', 'name', 'area-id'];
 	}
 
 	/**

@@ -35,7 +35,7 @@
 	"extra" : {
 		"keeko" : {
 			"module" : {
-				"title" : "Keeko core module",
+				"title" : "Keeko core",
 				"class" : "keeko\\core\\CoreModule",
 				"extension-points" : {
 					"keeko.core.listener" : "schema/listener.json"

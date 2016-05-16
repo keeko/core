@@ -12,8 +12,8 @@ trait LanguageFamilySerializerTrait {
 	public function getAttributes($model, array $fields = null) {
 		return [
 			'id' => $model->getId(),
-			'parent_id' => $model->getParentId(),
-			'alpha_3' => $model->getAlpha3(),
+			'parent-id' => $model->getParentId(),
+			'alpha-3' => $model->getAlpha3(),
 			'name' => $model->getName(),
 		];
 	}
@@ -21,7 +21,7 @@ trait LanguageFamilySerializerTrait {
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'parent_id', 'alpha_3', 'name'];
+		return ['id', 'parent-id', 'alpha-3', 'name'];
 	}
 
 	/**
@@ -35,7 +35,7 @@ trait LanguageFamilySerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'parent_id', 'alpha_3', 'name'];
+		return ['id', 'parent-id', 'alpha-3', 'name'];
 	}
 
 	/**

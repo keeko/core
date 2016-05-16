@@ -13,23 +13,23 @@ trait ModuleSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'class_name' => $model->getClassName(),
-			'activated_version' => $model->getActivatedVersion(),
-			'default_action' => $model->getDefaultAction(),
+			'class-name' => $model->getClassName(),
+			'activated-version' => $model->getActivatedVersion(),
+			'default-action' => $model->getDefaultAction(),
 			'slug' => $model->getSlug(),
-			'has_api' => $model->getApi(),
+			'has-api' => $model->getApi(),
 			'id' => $model->getId(),
 			'name' => $model->getName(),
 			'title' => $model->getTitle(),
 			'description' => $model->getDescription(),
-			'installed_version' => $model->getInstalledVersion(),
+			'installed-version' => $model->getInstalledVersion(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['class_name', 'activated_version', 'default_action', 'slug', 'has_api', 'id', 'name', 'title', 'description', 'installed_version'];
+		return ['class-name', 'activated-version', 'default-action', 'slug', 'has-api', 'id', 'name', 'title', 'description', 'installed-version'];
 	}
 
 	/**
@@ -50,7 +50,7 @@ trait ModuleSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['class_name', 'activated_version', 'default_action', 'slug', 'has_api', 'id', 'name', 'title', 'description', 'installed_version'];
+		return ['class-name', 'activated-version', 'default-action', 'slug', 'has-api', 'id', 'name', 'title', 'description', 'installed-version'];
 	}
 
 	/**
@@ -70,7 +70,7 @@ trait ModuleSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['class_name', 'activated_version', 'default_action', 'slug', 'has_api', 'id', 'name', 'title', 'description', 'installed_version']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['class-name', 'activated-version', 'default-action', 'slug', 'has-api', 'id', 'name', 'title', 'description', 'installed-version']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

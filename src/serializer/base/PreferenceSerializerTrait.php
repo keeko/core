@@ -15,14 +15,14 @@ trait PreferenceSerializerTrait {
 		return [
 			'key' => $model->getKey(),
 			'value' => $model->getValue(),
-			'module_id' => $model->getModuleId(),
+			'module-id' => $model->getModuleId(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['key', 'value', 'module_id'];
+		return ['key', 'value', 'module-id'];
 	}
 
 	/**
@@ -43,7 +43,7 @@ trait PreferenceSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['key', 'value', 'module_id'];
+		return ['key', 'value', 'module-id'];
 	}
 
 	/**
@@ -63,7 +63,7 @@ trait PreferenceSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['key', 'value', 'module_id']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['key', 'value', 'module-id']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

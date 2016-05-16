@@ -22,15 +22,15 @@ trait ActionSerializerTrait {
 			'name' => $model->getName(),
 			'title' => $model->getTitle(),
 			'description' => $model->getDescription(),
-			'class_name' => $model->getClassName(),
-			'module_id' => $model->getModuleId(),
+			'class-name' => $model->getClassName(),
+			'module-id' => $model->getModuleId(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'name', 'title', 'description', 'class_name', 'module_id'];
+		return ['id', 'name', 'title', 'description', 'class-name', 'module-id'];
 	}
 
 	/**
@@ -53,7 +53,7 @@ trait ActionSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'name', 'title', 'description', 'class_name', 'module_id'];
+		return ['id', 'name', 'title', 'description', 'class-name', 'module-id'];
 	}
 
 	/**
@@ -82,7 +82,7 @@ trait ActionSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'name', 'title', 'description', 'class_name', 'module_id']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'name', 'title', 'description', 'class-name', 'module-id']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

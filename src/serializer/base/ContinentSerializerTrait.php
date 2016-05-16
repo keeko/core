@@ -12,7 +12,7 @@ trait ContinentSerializerTrait {
 	public function getAttributes($model, array $fields = null) {
 		return [
 			'id' => $model->getId(),
-			'parent_id' => $model->getParentId(),
+			'parent-id' => $model->getParentId(),
 			'numeric' => $model->getNumeric(),
 			'name' => $model->getName(),
 		];
@@ -21,7 +21,7 @@ trait ContinentSerializerTrait {
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'parent_id', 'numeric', 'name'];
+		return ['id', 'parent-id', 'numeric', 'name'];
 	}
 
 	/**
@@ -35,7 +35,7 @@ trait ContinentSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'parent_id', 'numeric', 'name'];
+		return ['id', 'parent-id', 'numeric', 'name'];
 	}
 
 	/**

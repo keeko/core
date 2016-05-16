@@ -19,14 +19,14 @@ trait ExtensionSerializerTrait {
 			'id' => $model->getId(),
 			'key' => $model->getKey(),
 			'data' => $model->getData(),
-			'package_id' => $model->getPackageId(),
+			'package-id' => $model->getPackageId(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'key', 'data', 'package_id'];
+		return ['id', 'key', 'data', 'package-id'];
 	}
 
 	/**
@@ -48,7 +48,7 @@ trait ExtensionSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'key', 'data', 'package_id'];
+		return ['id', 'key', 'data', 'package-id'];
 	}
 
 	/**
@@ -68,7 +68,7 @@ trait ExtensionSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'key', 'data', 'package_id']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'key', 'data', 'package-id']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

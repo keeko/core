@@ -14,11 +14,11 @@ trait ActivityObjectSerializerTrait {
 	public function getAttributes($model, array $fields = null) {
 		return [
 			'id' => $model->getId(),
-			'class_name' => $model->getClassName(),
+			'class-name' => $model->getClassName(),
 			'type' => $model->getType(),
-			'display_name' => $model->getDisplayName(),
+			'display-name' => $model->getDisplayName(),
 			'url' => $model->getUrl(),
-			'reference_id' => $model->getReferenceId(),
+			'reference-id' => $model->getReferenceId(),
 			'version' => $model->getVersion(),
 			'extra' => $model->getExtra(),
 		];
@@ -27,7 +27,7 @@ trait ActivityObjectSerializerTrait {
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'class_name', 'type', 'display_name', 'url', 'reference_id', 'version', 'extra'];
+		return ['id', 'class-name', 'type', 'display-name', 'url', 'reference-id', 'version', 'extra'];
 	}
 
 	/**
@@ -48,7 +48,7 @@ trait ActivityObjectSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'class_name', 'type', 'display_name', 'url', 'reference_id', 'version', 'extra'];
+		return ['id', 'class-name', 'type', 'display-name', 'url', 'reference-id', 'version', 'extra'];
 	}
 
 	/**
@@ -68,7 +68,7 @@ trait ActivityObjectSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'class_name', 'type', 'display_name', 'url', 'reference_id', 'version', 'extra']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'class-name', 'type', 'display-name', 'url', 'reference-id', 'version', 'extra']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

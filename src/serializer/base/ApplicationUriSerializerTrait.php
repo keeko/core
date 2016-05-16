@@ -34,15 +34,15 @@ trait ApplicationUriSerializerTrait {
 			'httphost' => $model->getHttphost(),
 			'basepath' => $model->getBasepath(),
 			'secure' => $model->getSecure(),
-			'application_id' => $model->getApplicationId(),
-			'localization_id' => $model->getLocalizationId(),
+			'application-id' => $model->getApplicationId(),
+			'localization-id' => $model->getLocalizationId(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'httphost', 'basepath', 'secure', 'application_id', 'localization_id'];
+		return ['id', 'httphost', 'basepath', 'secure', 'application-id', 'localization-id'];
 	}
 
 	/**
@@ -65,7 +65,7 @@ trait ApplicationUriSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'httphost', 'basepath', 'secure', 'application_id', 'localization_id'];
+		return ['id', 'httphost', 'basepath', 'secure', 'application-id', 'localization-id'];
 	}
 
 	/**
@@ -85,7 +85,7 @@ trait ApplicationUriSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'httphost', 'basepath', 'secure', 'application_id', 'localization_id']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'httphost', 'basepath', 'secure', 'application-id', 'localization-id']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

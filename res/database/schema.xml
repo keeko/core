@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <database defaultIdMethod="native" name="keeko" namespace="keeko\core\model" identifierQuoting="true"
 	defaultPhpNamingMethod="phpname" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://github.com/propelorm/Propel2/blob/master/resources/xsd/database.xsd"
+	xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/propelorm/Propel2/master/resources/xsd/database.xsd"
 	tablePrefix="kk_">
 
 	<!-- Language -->
 	<table name="language" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
-		<column name="alpha_2" type="VARCHAR" size="2" desc="ISO 639-1 two-letter code" />
-		<column name="alpha_3T" type="VARCHAR" size="3" desc="ISO 639-2/T three-letter code" />
-		<column name="alpha_3B" type="VARCHAR" size="3" desc="ISO 639-2/B three-letter code" />
-		<column name="alpha_3" type="VARCHAR" size="3" desc="ISO 639-3 three-letter code" />
+		<column name="alpha_2" type="VARCHAR" size="2" description="ISO 639-1 two-letter code" />
+		<column name="alpha_3T" type="VARCHAR" size="3" description="ISO 639-2/T three-letter code" />
+		<column name="alpha_3B" type="VARCHAR" size="3" description="ISO 639-2/B three-letter code" />
+		<column name="alpha_3" type="VARCHAR" size="3" description="ISO 639-3 three-letter code" />
 		<column name="parent_id" type="INTEGER" size="10" />
 		<column name="macrolanguage_status" type="CHAR" size="1" />
 		<column name="name" type="VARCHAR" size="128" />
 		<column name="native_name" type="VARCHAR" size="128" />
 		<column name="collate" type="VARCHAR" size="10" />
-		<column name="subtag" type="VARCHAR" size="76" desc="Subtag used for locales" />
-		<column name="prefix" type="VARCHAR" size="76" desc="Possibly (required) subtag (means this is an extlang)" />
+		<column name="subtag" type="VARCHAR" size="76" description="Subtag used for locales" />
+		<column name="prefix" type="VARCHAR" size="76" description="Possibly (required) subtag (means this is an extlang)" />
 		<column name="scope_id" type="INTEGER" size="10" required="true" />
 		<column name="type_id" type="INTEGER" size="10" />
 		<column name="family_id" type="INTEGER" size="10" />
@@ -57,8 +57,8 @@
 	<table name="language_script" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
-		<column name="alpha_4" type="CHAR" size="4" desc="ISO 15924 alpha-4 code"/>
-		<column name="numeric" type="INTEGER" desc="ISO 15924 numeric representation"/>
+		<column name="alpha_4" type="CHAR" size="4" description="ISO 15924 alpha-4 code"/>
+		<column name="numeric" type="INTEGER" description="ISO 15924 numeric representation"/>
 		<column name="name" type="VARCHAR" />
 		<column name="alias" type="VARCHAR"/>
 		<column name="direction" type="VARCHAR"/>
@@ -68,7 +68,7 @@
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="parent_id" type="INTEGER"/>
-		<column name="alpha_3" type="VARCHAR" size="3" desc="ISO 639-5 Alpha-3 code"/>
+		<column name="alpha_3" type="VARCHAR" size="3" description="ISO 639-5 Alpha-3 code"/>
 		<column name="name" type="VARCHAR"/>
 	</table>
 	
@@ -76,9 +76,9 @@
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="name" type="VARCHAR" />
-		<column name="subtag" type="VARCHAR" size="76" desc="Subtag used for locales"/>
-		<column name="prefixes" type="VARCHAR" desc="A comma separated list of possibly multiple prefixes" />
-		<column name="comment" type="LONGVARCHAR" desc="A comment for the variant" />
+		<column name="subtag" type="VARCHAR" size="76" description="Subtag used for locales"/>
+		<column name="prefixes" type="VARCHAR" description="A comma separated list of possibly multiple prefixes" />
+		<column name="comment" type="LONGVARCHAR" description="A comment for the variant" />
 	</table>
 	
 	<!-- Currency -->
@@ -100,13 +100,13 @@
 	<table name="country" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
-		<column name="numeric" type="INTEGER" desc="ISO 3166-1 numeric three-digit country code" />
-		<column name="alpha_2" type="CHAR" size="2" desc="ISO 3166-1 alpha-2 two-letter country code" />
-		<column name="alpha_3" type="CHAR" size="3" desc="ISO 3166-1 alpha-3 three-letter country code" />
+		<column name="numeric" type="INTEGER" description="ISO 3166-1 numeric three-digit country code" />
+		<column name="alpha_2" type="CHAR" size="2" description="ISO 3166-1 alpha-2 two-letter country code" />
+		<column name="alpha_3" type="CHAR" size="3" description="ISO 3166-1 alpha-3 three-letter country code" />
 		<column name="short_name" type="VARCHAR" size="128" />
-		<column name="ioc" type="CHAR" size="3" desc="IOC Country code" />
-		<column name="tld" type="VARCHAR" size="3" desc="IANA Top-Level-Domain" />
-		<column name="phone" type="VARCHAR" size="16" desc="ITU-T country calling code" />
+		<column name="ioc" type="CHAR" size="3" description="IOC Country code" />
+		<column name="tld" type="VARCHAR" size="3" description="IANA Top-Level-Domain" />
+		<column name="phone" type="VARCHAR" size="16" description="ITU-T country calling code" />
 		<column name="capital" type="VARCHAR" size="128" />
 		<column name="postal_code_format" type="VARCHAR" />
 		<column name="postal_code_regex" type="VARCHAR" />
@@ -145,14 +145,14 @@
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="parent_id" type="INTEGER" />
-		<column name="numeric" type="INTEGER" desc="M.49 numeric code"/>
+		<column name="numeric" type="INTEGER" description="M.49 numeric code"/>
 		<column name="name" type="VARCHAR" size="45" required="true" />
 	</table>
 
 	<table name="subdivision" namespace="\keeko\core\model" readOnly="true">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
-		<column name="code" type="VARCHAR" size="45" desc="The ISO 3166-2 subdivision code"/>
+		<column name="code" type="VARCHAR" size="45" description="The ISO 3166-2 subdivision code"/>
 		<column name="name" type="VARCHAR" size="128" />
 		<column name="native_name" type="VARCHAR" size="128" />
 		<column name="alt_names" type="VARCHAR" size="255" />
@@ -430,7 +430,7 @@
 		</foreign-key>
 	</table>
 	
-	<table name="activity">
+	<table name="activity" namespace="\keeko\core\model">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="actor_id" type="INTEGER" required="true"/>
@@ -450,7 +450,7 @@
 		</foreign-key>
 	</table>
 
-	<table name="activity_object">
+	<table name="activity_object" namespace="\keeko\core\model">
 		<!-- Fields -->
 		<column name="id" type="INTEGER" primaryKey="true" required="true" autoIncrement="true" />
 		<column name="class_name" type="VARCHAR"/>

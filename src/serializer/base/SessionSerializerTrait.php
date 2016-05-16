@@ -17,22 +17,22 @@ trait SessionSerializerTrait {
 	public function getAttributes($model, array $fields = null) {
 		return [
 			'token' => $model->getToken(),
-			'user_id' => $model->getUserId(),
+			'user-id' => $model->getUserId(),
 			'ip' => $model->getIp(),
-			'user_agent' => $model->getUserAgent(),
+			'user-agent' => $model->getUserAgent(),
 			'browser' => $model->getBrowser(),
 			'device' => $model->getDevice(),
 			'os' => $model->getOs(),
 			'location' => $model->getLocation(),
-			'created_at' => $model->getCreatedAt(\DateTime::ISO8601),
-			'updated_at' => $model->getUpdatedAt(\DateTime::ISO8601),
+			'created-at' => $model->getCreatedAt(\DateTime::ISO8601),
+			'updated-at' => $model->getUpdatedAt(\DateTime::ISO8601),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['token', 'user_id', 'ip', 'user_agent', 'browser', 'device', 'os', 'location', 'created_at', 'updated_at'];
+		return ['token', 'user-id', 'ip', 'user-agent', 'browser', 'device', 'os', 'location', 'created-at', 'updated-at'];
 	}
 
 	/**
@@ -54,7 +54,7 @@ trait SessionSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['token', 'user_id', 'ip', 'user_agent', 'browser', 'device', 'os', 'location', 'created_at', 'updated_at'];
+		return ['token', 'user-id', 'ip', 'user-agent', 'browser', 'device', 'os', 'location', 'created-at', 'updated-at'];
 	}
 
 	/**
@@ -74,7 +74,7 @@ trait SessionSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['token', 'user_id', 'ip', 'user_agent', 'browser', 'device', 'os', 'location']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['token', 'user-id', 'ip', 'user-agent', 'browser', 'device', 'os', 'location']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);

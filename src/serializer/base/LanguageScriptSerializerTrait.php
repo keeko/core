@@ -12,7 +12,7 @@ trait LanguageScriptSerializerTrait {
 	public function getAttributes($model, array $fields = null) {
 		return [
 			'id' => $model->getId(),
-			'alpha_4' => $model->getAlpha4(),
+			'alpha-4' => $model->getAlpha4(),
 			'numeric' => $model->getNumeric(),
 			'name' => $model->getName(),
 			'alias' => $model->getAlias(),
@@ -23,7 +23,7 @@ trait LanguageScriptSerializerTrait {
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'alpha_4', 'numeric', 'name', 'alias', 'direction'];
+		return ['id', 'alpha-4', 'numeric', 'name', 'alias', 'direction'];
 	}
 
 	/**
@@ -37,7 +37,7 @@ trait LanguageScriptSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'alpha_4', 'numeric', 'name', 'alias', 'direction'];
+		return ['id', 'alpha-4', 'numeric', 'name', 'alias', 'direction'];
 	}
 
 	/**

@@ -12,28 +12,28 @@ trait LanguageSerializerTrait {
 	public function getAttributes($model, array $fields = null) {
 		return [
 			'id' => $model->getId(),
-			'alpha_2' => $model->getAlpha2(),
-			'alpha_3T' => $model->getAlpha3T(),
-			'alpha_3B' => $model->getAlpha3B(),
-			'alpha_3' => $model->getAlpha3(),
-			'parent_id' => $model->getParentId(),
-			'macrolanguage_status' => $model->getMacrolanguageStatus(),
+			'alpha-2' => $model->getAlpha2(),
+			'alpha-3-t' => $model->getAlpha3T(),
+			'alpha-3-b' => $model->getAlpha3B(),
+			'alpha-3' => $model->getAlpha3(),
+			'parent-id' => $model->getParentId(),
+			'macrolanguage-status' => $model->getMacrolanguageStatus(),
 			'name' => $model->getName(),
-			'native_name' => $model->getNativeName(),
+			'native-name' => $model->getNativeName(),
 			'collate' => $model->getCollate(),
 			'subtag' => $model->getSubtag(),
 			'prefix' => $model->getPrefix(),
-			'scope_id' => $model->getScopeId(),
-			'type_id' => $model->getTypeId(),
-			'family_id' => $model->getFamilyId(),
-			'default_script_id' => $model->getDefaultScriptId(),
+			'scope-id' => $model->getScopeId(),
+			'type-id' => $model->getTypeId(),
+			'family-id' => $model->getFamilyId(),
+			'default-script-id' => $model->getDefaultScriptId(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'alpha_2', 'alpha_3T', 'alpha_3B', 'alpha_3', 'parent_id', 'macrolanguage_status', 'name', 'native_name', 'collate', 'subtag', 'prefix', 'scope_id', 'type_id', 'family_id', 'default_script_id'];
+		return ['id', 'alpha-2', 'alpha-3-t', 'alpha-3-b', 'alpha-3', 'parent-id', 'macrolanguage-status', 'name', 'native-name', 'collate', 'subtag', 'prefix', 'scope-id', 'type-id', 'family-id', 'default-script-id'];
 	}
 
 	/**
@@ -47,7 +47,7 @@ trait LanguageSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'alpha_2', 'alpha_3T', 'alpha_3B', 'alpha_3', 'parent_id', 'macrolanguage_status', 'name', 'native_name', 'collate', 'subtag', 'prefix', 'scope_id', 'type_id', 'family_id', 'default_script_id'];
+		return ['id', 'alpha-2', 'alpha-3-t', 'alpha-3-b', 'alpha-3', 'parent-id', 'macrolanguage-status', 'name', 'native-name', 'collate', 'subtag', 'prefix', 'scope-id', 'type-id', 'family-id', 'default-script-id'];
 	}
 
 	/**

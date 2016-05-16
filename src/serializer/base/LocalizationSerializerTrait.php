@@ -34,21 +34,21 @@ trait LocalizationSerializerTrait {
 	public function getAttributes($model, array $fields = null) {
 		return [
 			'id' => $model->getId(),
-			'parent_id' => $model->getParentId(),
+			'parent-id' => $model->getParentId(),
 			'name' => $model->getName(),
 			'locale' => $model->getLocale(),
-			'language_id' => $model->getLanguageId(),
-			'ext_language_id' => $model->getExtLanguageId(),
+			'language-id' => $model->getLanguageId(),
+			'ext-language-id' => $model->getExtLanguageId(),
 			'region' => $model->getRegion(),
-			'script_id' => $model->getScriptId(),
-			'is_default' => $model->getIsDefault(),
+			'script-id' => $model->getScriptId(),
+			'is-default' => $model->getIsDefault(),
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'parent_id', 'name', 'locale', 'language_id', 'ext_language_id', 'region', 'script_id', 'is_default'];
+		return ['id', 'parent-id', 'name', 'locale', 'language-id', 'ext-language-id', 'region', 'script-id', 'is-default'];
 	}
 
 	/**
@@ -73,7 +73,7 @@ trait LocalizationSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'parent_id', 'name', 'locale', 'language_id', 'ext_language_id', 'region', 'script_id', 'is_default'];
+		return ['id', 'parent-id', 'name', 'locale', 'language-id', 'ext-language-id', 'region', 'script-id', 'is-default'];
 	}
 
 	/**
@@ -93,7 +93,7 @@ trait LocalizationSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'parent_id', 'name', 'locale', 'language_id', 'ext_language_id', 'region', 'script_id', 'is_default']);
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'parent-id', 'name', 'locale', 'language-id', 'ext-language-id', 'region', 'script-id', 'is-default']);
 
 		// relationships
 		$this->hydrateRelationships($model, $data);
