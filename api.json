@@ -1,7 +1,7 @@
 {
 	"swagger": "2.0",
 	"info": {
-		"title": "Keeko core module API"
+		"title": "Keeko core API"
 	},
 	"paths": {
 		"/languages/{id}": {
@@ -25,10 +25,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No language found"
+						"description": "No language found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -53,7 +59,7 @@
 				]
 			}
 		},
-		"/language_scopes/{id}": {
+		"/language-scopes/{id}": {
 			"get": {
 				"description": "Reads a language-scope",
 				"operationId": "language_scope-read",
@@ -74,10 +80,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No language_scope found"
+						"description": "No language_scope found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -85,7 +97,7 @@
 				]
 			}
 		},
-		"/language_scopes": {
+		"/language-scopes": {
 			"get": {
 				"description": "List all language-scopes",
 				"operationId": "language_scope-list",
@@ -102,7 +114,7 @@
 				]
 			}
 		},
-		"/language_types/{id}": {
+		"/language-types/{id}": {
 			"get": {
 				"description": "Reads a language-type",
 				"operationId": "language_type-read",
@@ -123,10 +135,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No language_type found"
+						"description": "No language_type found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -134,7 +152,7 @@
 				]
 			}
 		},
-		"/language_types": {
+		"/language-types": {
 			"get": {
 				"description": "List all language-types",
 				"operationId": "language_type-list",
@@ -151,7 +169,7 @@
 				]
 			}
 		},
-		"/language_scripts/{id}": {
+		"/language-scripts/{id}": {
 			"get": {
 				"description": "Reads a language-script",
 				"operationId": "language_script-read",
@@ -172,10 +190,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No language_script found"
+						"description": "No language_script found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -183,7 +207,7 @@
 				]
 			}
 		},
-		"/language_scripts": {
+		"/language-scripts": {
 			"get": {
 				"description": "List all language-scripts",
 				"operationId": "language_script-list",
@@ -200,7 +224,7 @@
 				]
 			}
 		},
-		"/language_families/{id}": {
+		"/language-families/{id}": {
 			"get": {
 				"description": "Reads a language-family",
 				"operationId": "language_family-read",
@@ -221,10 +245,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No language_family found"
+						"description": "No language_family found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -232,7 +262,7 @@
 				]
 			}
 		},
-		"/language_families": {
+		"/language-families": {
 			"get": {
 				"description": "List all language-families",
 				"operationId": "language_family-list",
@@ -249,7 +279,7 @@
 				]
 			}
 		},
-		"/language_variants/{id}": {
+		"/language-variants/{id}": {
 			"get": {
 				"description": "Reads a language-variant",
 				"operationId": "language_variant-read",
@@ -270,10 +300,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No language_variant found"
+						"description": "No language_variant found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -281,7 +317,7 @@
 				]
 			}
 		},
-		"/language_variants": {
+		"/language-variants": {
 			"get": {
 				"description": "List all language-variants",
 				"operationId": "language_variant-list",
@@ -319,10 +355,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No currency found"
+						"description": "No currency found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -368,10 +410,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No country found"
+						"description": "No country found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -417,10 +465,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No continent found"
+						"description": "No continent found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -466,10 +520,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No subdivision found"
+						"description": "No subdivision found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -494,7 +554,7 @@
 				]
 			}
 		},
-		"/region_types/{id}": {
+		"/region-types/{id}": {
 			"get": {
 				"description": "Reads a region-type",
 				"operationId": "region_type-read",
@@ -515,10 +575,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No region_type found"
+						"description": "No region_type found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -526,7 +592,7 @@
 				]
 			}
 		},
-		"/region_types": {
+		"/region-types": {
 			"get": {
 				"description": "List all region-types",
 				"operationId": "region_type-list",
@@ -543,7 +609,7 @@
 				]
 			}
 		},
-		"/region_areas/{id}": {
+		"/region-areas/{id}": {
 			"get": {
 				"description": "Reads a region-area",
 				"operationId": "region_area-read",
@@ -564,10 +630,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No region_area found"
+						"description": "No region_area found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -575,7 +647,7 @@
 				]
 			}
 		},
-		"/region_areas": {
+		"/region-areas": {
 			"get": {
 				"description": "List all region-areas",
 				"operationId": "region_area-list",
@@ -593,21 +665,6 @@
 			}
 		},
 		"/localizations": {
-			"get": {
-				"description": "List all localizations",
-				"operationId": "localization-list",
-				"responses": {
-					"200": {
-						"description": "Array of localizations",
-						"schema": {
-							"$ref": "#/definitions/PagedLocalizations"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
 			"post": {
 				"description": "Creates a localization",
 				"operationId": "localization-create",
@@ -625,6 +682,21 @@
 				"responses": {
 					"201": {
 						"description": "localization created"
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"get": {
+				"description": "List all localizations",
+				"operationId": "localization-list",
+				"responses": {
+					"200": {
+						"description": "Array of localizations",
+						"schema": {
+							"$ref": "#/definitions/PagedLocalizations"
+						}
 					}
 				},
 				"tags": [
@@ -653,10 +725,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -683,10 +761,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -710,10 +794,16 @@
 						"description": "localization deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -721,7 +811,7 @@
 				]
 			}
 		},
-		"/localizations/{id}/relationship/localization": {
+		"/localizations/{id}/relationship/localizations": {
 			"get": {
 				"description": "Reads the relationship of localization to localization",
 				"operationId": "localization-to-localization-relationship-read",
@@ -735,11 +825,108 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve localization from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"post": {
+				"description": "Adds localization as relationship to localization",
+				"operationId": "localization-to-localization-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The localization id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve localization from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -756,14 +943,233 @@
 						"required": true,
 						"description": "The localization id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve localization from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"delete": {
+				"description": "Removes localization as relationship of localization",
+				"operationId": "localization-to-localization-relationship-remove",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The localization id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve localization from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			}
+		},
+		"/localizations/{id}/relationship/parent": {
+			"get": {
+				"description": "Reads the relationship of localization to parent",
+				"operationId": "localization-to-parent-relationship-read",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The localization id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve parent from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"patch": {
+				"description": "Updates the relationship of localization to parent",
+				"operationId": "localization-to-parent-relationship-update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The localization id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates parent",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve parent from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -785,11 +1191,40 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve language from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -806,14 +1241,57 @@
 						"required": true,
 						"description": "The localization id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates language",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier"
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve language from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -821,10 +1299,10 @@
 				]
 			}
 		},
-		"/localizations/{id}/relationship/language_script": {
+		"/localizations/{id}/relationship/ext-lang": {
 			"get": {
-				"description": "Reads the relationship of localization to language_script",
-				"operationId": "localization-to-language_script-relationship-read",
+				"description": "Reads the relationship of localization to ext_lang",
+				"operationId": "localization-to-ext_lang-relationship-read",
 				"parameters": [
 					{
 						"name": "id",
@@ -835,11 +1313,40 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve ext-lang from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -847,8 +1354,77 @@
 				]
 			},
 			"patch": {
-				"description": "Updates the relationship of localization to language_script",
-				"operationId": "localization-to-language_script-relationship-update",
+				"description": "Updates the relationship of localization to ext_lang",
+				"operationId": "localization-to-ext_lang-relationship-update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The localization id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates ext-lang",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve ext-lang from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			}
+		},
+		"/localizations/{id}/relationship/script": {
+			"get": {
+				"description": "Reads the relationship of localization to script",
+				"operationId": "localization-to-script-relationship-read",
 				"parameters": [
 					{
 						"name": "id",
@@ -859,11 +1435,107 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve script from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"patch": {
+				"description": "Updates the relationship of localization to script",
+				"operationId": "localization-to-script-relationship-update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The localization id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates script",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve script from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -871,7 +1543,7 @@
 				]
 			}
 		},
-		"/localizations/{id}/relationship/language_variants": {
+		"/localizations/{id}/relationship/language-variants": {
 			"get": {
 				"description": "Reads the relationship of localization to language_variant",
 				"operationId": "localization-to-language_variant-relationship-read",
@@ -885,11 +1557,39 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve language-variant from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -906,14 +1606,59 @@
 						"required": true,
 						"description": "The localization id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds language-variant",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve language-variant from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -930,14 +1675,59 @@
 						"required": true,
 						"description": "The localization id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates language-variant",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve language-variant from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -957,11 +1747,39 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve language-variant from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No localization found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -969,15 +1787,52 @@
 				]
 			}
 		},
-		"/packages": {
+		"/localizations/{id}/relationship/application-uris": {
 			"get": {
-				"description": "List all packages",
-				"operationId": "package-list",
+				"description": "Reads the relationship of localization to application_uri",
+				"operationId": "localization-to-application_uri-relationship-read",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The localization id",
+						"type": "integer"
+					}
+				],
 				"responses": {
 					"200": {
-						"description": "Array of packages",
+						"description": "Retrieve application-uri from localization",
 						"schema": {
-							"$ref": "#/definitions/PagedPackages"
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
 						}
 					}
 				},
@@ -986,54 +1841,68 @@
 				]
 			},
 			"post": {
-				"description": "Creates a package",
-				"operationId": "package-create",
-				"parameters": [
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "The new package",
-						"schema": {
-							"$ref": "#/definitions/WritablePackage"
-						}
-					}
-				],
-				"responses": {
-					"201": {
-						"description": "package created"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			}
-		},
-		"/packages/{id}": {
-			"get": {
-				"description": "Reads a package",
-				"operationId": "package-read",
+				"description": "Adds application_uri as relationship to localization",
+				"operationId": "localization-to-application_uri-relationship-add",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "The package id",
+						"description": "The localization id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds application-uri",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
 					"200": {
-						"description": "gets the package",
+						"description": "Retrieve application-uri from localization",
 						"schema": {
-							"$ref": "#/definitions/Package"
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No package found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1041,29 +1910,68 @@
 				]
 			},
 			"patch": {
-				"description": "Updates a package",
-				"operationId": "package-update",
+				"description": "Updates the relationship of localization to application_uri",
+				"operationId": "localization-to-application_uri-relationship-update",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "The package id",
+						"description": "The localization id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates application-uri",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
 					"200": {
-						"description": "package updated",
+						"description": "Retrieve application-uri from localization",
 						"schema": {
-							"$ref": "#/definitions/Package"
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No package found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1071,26 +1979,51 @@
 				]
 			},
 			"delete": {
-				"description": "Deletes a package",
-				"operationId": "package-delete",
+				"description": "Removes application_uri as relationship of localization",
+				"operationId": "localization-to-application_uri-relationship-remove",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "The package id",
+						"description": "The localization id",
 						"type": "integer"
 					}
 				],
 				"responses": {
-					"204": {
-						"description": "package deleted"
+					"200": {
+						"description": "Retrieve application-uri from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No package found"
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1099,21 +2032,6 @@
 			}
 		},
 		"/applications": {
-			"get": {
-				"description": "List all applications",
-				"operationId": "application-list",
-				"responses": {
-					"200": {
-						"description": "Array of applications",
-						"schema": {
-							"$ref": "#/definitions/PagedApplications"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
 			"post": {
 				"description": "Creates an application",
 				"operationId": "application-create",
@@ -1131,6 +2049,21 @@
 				"responses": {
 					"201": {
 						"description": "application created"
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"get": {
+				"description": "List all applications",
+				"operationId": "application-list",
+				"responses": {
+					"200": {
+						"description": "Array of applications",
+						"schema": {
+							"$ref": "#/definitions/PagedApplications"
+						}
 					}
 				},
 				"tags": [
@@ -1159,10 +2092,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No application found"
+						"description": "No application found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1189,10 +2128,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No application found"
+						"description": "No application found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1216,10 +2161,16 @@
 						"description": "application deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No application found"
+						"description": "No application found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1227,15 +2178,52 @@
 				]
 			}
 		},
-		"/application_uris": {
+		"/applications/{id}/relationship/application-uris": {
 			"get": {
-				"description": "List all application-uris",
-				"operationId": "application_uri-list",
+				"description": "Reads the relationship of application to application_uri",
+				"operationId": "application-to-application_uri-relationship-read",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The application id",
+						"type": "integer"
+					}
+				],
 				"responses": {
 					"200": {
-						"description": "Array of application_uris",
+						"description": "Retrieve application-uri from application",
 						"schema": {
-							"$ref": "#/definitions/PagedApplicationUris"
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No application found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
 						}
 					}
 				},
@@ -1243,6 +2231,198 @@
 					"core"
 				]
 			},
+			"post": {
+				"description": "Adds application_uri as relationship to application",
+				"operationId": "application-to-application_uri-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The application id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds application-uri",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve application-uri from application",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No application found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"patch": {
+				"description": "Updates the relationship of application to application_uri",
+				"operationId": "application-to-application_uri-relationship-update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The application id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates application-uri",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve application-uri from application",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No application found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"delete": {
+				"description": "Removes application_uri as relationship of application",
+				"operationId": "application-to-application_uri-relationship-remove",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The application id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve application-uri from application",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No application found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			}
+		},
+		"/application-uris": {
 			"post": {
 				"description": "Creates an application-uri",
 				"operationId": "application_uri-create",
@@ -1265,9 +2445,24 @@
 				"tags": [
 					"core"
 				]
+			},
+			"get": {
+				"description": "List all application-uris",
+				"operationId": "application_uri-list",
+				"responses": {
+					"200": {
+						"description": "Array of application_uris",
+						"schema": {
+							"$ref": "#/definitions/PagedApplicationUris"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
 			}
 		},
-		"/application_uris/{id}": {
+		"/application-uris/{id}": {
 			"get": {
 				"description": "Reads an application-uri",
 				"operationId": "application_uri-read",
@@ -1288,10 +2483,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No application_uri found"
+						"description": "No application_uri found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1318,10 +2519,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No application_uri found"
+						"description": "No application_uri found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1345,10 +2552,16 @@
 						"description": "application_uri deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No application_uri found"
+						"description": "No application_uri found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1356,7 +2569,7 @@
 				]
 			}
 		},
-		"/application_uris/{id}/relationship/application": {
+		"/application-uris/{id}/relationship/application": {
 			"get": {
 				"description": "Reads the relationship of application_uri to application",
 				"operationId": "application_uri-to-application-relationship-read",
@@ -1370,11 +2583,40 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve application from application_uri",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No application_uri found"
+						"description": "No application_uri found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1391,14 +2633,57 @@
 						"required": true,
 						"description": "The application_uri id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates application",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier"
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve application from application_uri",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No application_uri found"
+						"description": "No application_uri found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1406,7 +2691,7 @@
 				]
 			}
 		},
-		"/application_uris/{id}/relationship/localization": {
+		"/application-uris/{id}/relationship/localization": {
 			"get": {
 				"description": "Reads the relationship of application_uri to localization",
 				"operationId": "application_uri-to-localization-relationship-read",
@@ -1420,11 +2705,40 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve localization from application_uri",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No application_uri found"
+						"description": "No application_uri found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1441,14 +2755,57 @@
 						"required": true,
 						"description": "The application_uri id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier"
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve localization from application_uri",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No application_uri found"
+						"description": "No application_uri found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1457,21 +2814,6 @@
 			}
 		},
 		"/modules": {
-			"get": {
-				"description": "List all modules",
-				"operationId": "module-list",
-				"responses": {
-					"200": {
-						"description": "Array of modules",
-						"schema": {
-							"$ref": "#/definitions/PagedModules"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
 			"post": {
 				"description": "Creates a module",
 				"operationId": "module-create",
@@ -1489,6 +2831,21 @@
 				"responses": {
 					"201": {
 						"description": "module created"
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"get": {
+				"description": "List all modules",
+				"operationId": "module-list",
+				"responses": {
+					"200": {
+						"description": "Array of modules",
+						"schema": {
+							"$ref": "#/definitions/PagedModules"
+						}
 					}
 				},
 				"tags": [
@@ -1517,10 +2874,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No module found"
+						"description": "No module found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1547,10 +2910,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No module found"
+						"description": "No module found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1574,10 +2943,260 @@
 						"description": "module deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No module found"
+						"description": "No module found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			}
+		},
+		"/modules/{id}/relationship/actions": {
+			"get": {
+				"description": "Reads the relationship of module to action",
+				"operationId": "module-to-action-relationship-read",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The module id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve action from module",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No module found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"post": {
+				"description": "Adds action as relationship to module",
+				"operationId": "module-to-action-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The module id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve action from module",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No module found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"patch": {
+				"description": "Updates the relationship of module to action",
+				"operationId": "module-to-action-relationship-update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The module id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve action from module",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No module found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"delete": {
+				"description": "Removes action as relationship of module",
+				"operationId": "module-to-action-relationship-remove",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The module id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve action from module",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No module found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1586,21 +3205,6 @@
 			}
 		},
 		"/actions": {
-			"get": {
-				"description": "List all actions",
-				"operationId": "action-list",
-				"responses": {
-					"200": {
-						"description": "Array of actions",
-						"schema": {
-							"$ref": "#/definitions/PagedActions"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
 			"post": {
 				"description": "Creates an action",
 				"operationId": "action-create",
@@ -1618,6 +3222,21 @@
 				"responses": {
 					"201": {
 						"description": "action created"
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"get": {
+				"description": "List all actions",
+				"operationId": "action-list",
+				"responses": {
+					"200": {
+						"description": "Array of actions",
+						"schema": {
+							"$ref": "#/definitions/PagedActions"
+						}
 					}
 				},
 				"tags": [
@@ -1646,10 +3265,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No action found"
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1676,10 +3301,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No action found"
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1703,10 +3334,16 @@
 						"description": "action deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No action found"
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1728,11 +3365,40 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve module from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No action found"
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1749,14 +3415,57 @@
 						"required": true,
 						"description": "The action id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates module",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier"
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve module from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No action found"
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1778,11 +3487,39 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve group from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No action found"
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1799,14 +3536,59 @@
 						"required": true,
 						"description": "The action id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve group from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No action found"
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1823,14 +3605,59 @@
 						"required": true,
 						"description": "The action id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve group from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No action found"
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1850,11 +3677,283 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve group from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No action found"
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			}
+		},
+		"/actions/{id}/relationship/apis": {
+			"get": {
+				"description": "Reads the relationship of action to api",
+				"operationId": "action-to-api-relationship-read",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The action id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve api from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"post": {
+				"description": "Adds api as relationship to action",
+				"operationId": "action-to-api-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The action id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds api",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve api from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"patch": {
+				"description": "Updates the relationship of action to api",
+				"operationId": "action-to-api-relationship-update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The action id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates api",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve api from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"delete": {
+				"description": "Removes api as relationship of action",
+				"operationId": "action-to-api-relationship-remove",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The action id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve api from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1863,21 +3962,6 @@
 			}
 		},
 		"/extensions": {
-			"get": {
-				"description": "List all extensions",
-				"operationId": "extension-list",
-				"responses": {
-					"200": {
-						"description": "Array of extensions",
-						"schema": {
-							"$ref": "#/definitions/PagedExtensions"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
 			"post": {
 				"description": "Creates an extension",
 				"operationId": "extension-create",
@@ -1895,6 +3979,21 @@
 				"responses": {
 					"201": {
 						"description": "extension created"
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"get": {
+				"description": "List all extensions",
+				"operationId": "extension-list",
+				"responses": {
+					"200": {
+						"description": "Array of extensions",
+						"schema": {
+							"$ref": "#/definitions/PagedExtensions"
+						}
 					}
 				},
 				"tags": [
@@ -1923,10 +4022,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No extension found"
+						"description": "No extension found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1953,10 +4058,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No extension found"
+						"description": "No extension found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -1980,60 +4091,16 @@
 						"description": "extension deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No extension found"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			}
-		},
-		"/extensions/{id}/relationship/package": {
-			"get": {
-				"description": "Reads the relationship of extension to package",
-				"operationId": "extension-to-package-relationship-read",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The extension id",
-						"type": "integer"
-					}
-				],
-				"responses": {
-					"400": {
-						"description": "Invalid ID supplied"
-					},
-					"404": {
-						"description": "No extension found"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"patch": {
-				"description": "Updates the relationship of extension to package",
-				"operationId": "extension-to-package-relationship-update",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The extension id",
-						"type": "integer"
-					}
-				],
-				"responses": {
-					"400": {
-						"description": "Invalid ID supplied"
-					},
-					"404": {
-						"description": "No extension found"
+						"description": "No extension found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2042,21 +4109,6 @@
 			}
 		},
 		"/preferences": {
-			"get": {
-				"description": "List all preferences",
-				"operationId": "preference-list",
-				"responses": {
-					"200": {
-						"description": "Array of preferences",
-						"schema": {
-							"$ref": "#/definitions/PagedPreferences"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
 			"post": {
 				"description": "Creates a preference",
 				"operationId": "preference-create",
@@ -2074,6 +4126,21 @@
 				"responses": {
 					"201": {
 						"description": "preference created"
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"get": {
+				"description": "List all preferences",
+				"operationId": "preference-list",
+				"responses": {
+					"200": {
+						"description": "Array of preferences",
+						"schema": {
+							"$ref": "#/definitions/PagedPreferences"
+						}
 					}
 				},
 				"tags": [
@@ -2102,10 +4169,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No preference found"
+						"description": "No preference found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2132,10 +4205,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No preference found"
+						"description": "No preference found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2159,10 +4238,16 @@
 						"description": "preference deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No preference found"
+						"description": "No preference found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2171,21 +4256,6 @@
 			}
 		},
 		"/apis": {
-			"get": {
-				"description": "List all apis",
-				"operationId": "api-list",
-				"responses": {
-					"200": {
-						"description": "Array of apis",
-						"schema": {
-							"$ref": "#/definitions/PagedApis"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
 			"post": {
 				"description": "Creates an api",
 				"operationId": "api-create",
@@ -2203,6 +4273,21 @@
 				"responses": {
 					"201": {
 						"description": "api created"
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"get": {
+				"description": "List all apis",
+				"operationId": "api-list",
+				"responses": {
+					"200": {
+						"description": "Array of apis",
+						"schema": {
+							"$ref": "#/definitions/PagedApis"
+						}
 					}
 				},
 				"tags": [
@@ -2231,10 +4316,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No api found"
+						"description": "No api found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2261,10 +4352,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No api found"
+						"description": "No api found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2288,10 +4385,16 @@
 						"description": "api deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No api found"
+						"description": "No api found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2313,11 +4416,40 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve action from api",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No api found"
+						"description": "No api found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2334,14 +4466,57 @@
 						"required": true,
 						"description": "The api id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier"
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve action from api",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No api found"
+						"description": "No api found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2350,21 +4525,6 @@
 			}
 		},
 		"/users": {
-			"get": {
-				"description": "List all users",
-				"operationId": "user-list",
-				"responses": {
-					"200": {
-						"description": "Array of users",
-						"schema": {
-							"$ref": "#/definitions/PagedUsers"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
 			"post": {
 				"description": "Creates an user",
 				"operationId": "user-create",
@@ -2382,6 +4542,21 @@
 				"responses": {
 					"201": {
 						"description": "user created"
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"get": {
+				"description": "List all users",
+				"operationId": "user-list",
+				"responses": {
+					"200": {
+						"description": "Array of users",
+						"schema": {
+							"$ref": "#/definitions/PagedUsers"
+						}
 					}
 				},
 				"tags": [
@@ -2410,10 +4585,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No user found"
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2440,10 +4621,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No user found"
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2467,10 +4654,16 @@
 						"description": "user deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No user found"
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2492,11 +4685,39 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve group from user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No user found"
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2513,14 +4734,59 @@
 						"required": true,
 						"description": "The user id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve group from user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No user found"
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2537,14 +4803,59 @@
 						"required": true,
 						"description": "The user id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve group from user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No user found"
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2564,11 +4875,283 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve group from user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No user found"
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			}
+		},
+		"/users/{id}/relationship/activities": {
+			"get": {
+				"description": "Reads the relationship of user to activity",
+				"operationId": "user-to-activity-relationship-read",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The user id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve activity from user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"post": {
+				"description": "Adds activity as relationship to user",
+				"operationId": "user-to-activity-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The user id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds activity",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve activity from user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"patch": {
+				"description": "Updates the relationship of user to activity",
+				"operationId": "user-to-activity-relationship-update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The user id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates activity",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve activity from user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"delete": {
+				"description": "Removes activity as relationship of user",
+				"operationId": "user-to-activity-relationship-remove",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The user id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve activity from user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2577,21 +5160,6 @@
 			}
 		},
 		"/groups": {
-			"get": {
-				"description": "List all groups",
-				"operationId": "group-list",
-				"responses": {
-					"200": {
-						"description": "Array of groups",
-						"schema": {
-							"$ref": "#/definitions/PagedGroups"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
 			"post": {
 				"description": "Creates a group",
 				"operationId": "group-create",
@@ -2609,6 +5177,21 @@
 				"responses": {
 					"201": {
 						"description": "group created"
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"get": {
+				"description": "List all groups",
+				"operationId": "group-list",
+				"responses": {
+					"200": {
+						"description": "Array of groups",
+						"schema": {
+							"$ref": "#/definitions/PagedGroups"
+						}
 					}
 				},
 				"tags": [
@@ -2637,10 +5220,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No group found"
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2667,10 +5256,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No group found"
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2694,10 +5289,16 @@
 						"description": "group deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No group found"
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2719,11 +5320,39 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve user from group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No group found"
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2740,14 +5369,59 @@
 						"required": true,
 						"description": "The group id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve user from group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No group found"
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2764,14 +5438,59 @@
 						"required": true,
 						"description": "The group id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve user from group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No group found"
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2791,11 +5510,39 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve user from group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No group found"
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2817,11 +5564,39 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve action from group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No group found"
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2838,14 +5613,59 @@
 						"required": true,
 						"description": "The group id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve action from group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No group found"
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2862,14 +5682,59 @@
 						"required": true,
 						"description": "The group id",
 						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve action from group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No group found"
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2889,11 +5754,39 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Retrieve action from group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No group found"
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2902,21 +5795,6 @@
 			}
 		},
 		"/activities": {
-			"get": {
-				"description": "Creates an activity",
-				"operationId": "activity-list",
-				"responses": {
-					"200": {
-						"description": "Array of activities",
-						"schema": {
-							"$ref": "#/definitions/PagedActivities"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
 			"post": {
 				"description": "Creates an activity",
 				"operationId": "activity-create",
@@ -2939,11 +5817,26 @@
 				"tags": [
 					"core"
 				]
+			},
+			"get": {
+				"description": "List all activities",
+				"operationId": "activity-list",
+				"responses": {
+					"200": {
+						"description": "Array of activities",
+						"schema": {
+							"$ref": "#/definitions/PagedActivities"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
 			}
 		},
 		"/activities/{id}": {
 			"get": {
-				"description": "Creates an activity",
+				"description": "Reads an activity",
 				"operationId": "activity-read",
 				"parameters": [
 					{
@@ -2962,10 +5855,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No activity found"
+						"description": "No activity found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -2973,7 +5872,7 @@
 				]
 			},
 			"patch": {
-				"description": "Creates an activity",
+				"description": "Updates an activity",
 				"operationId": "activity-update",
 				"parameters": [
 					{
@@ -2992,10 +5891,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No activity found"
+						"description": "No activity found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -3003,7 +5908,7 @@
 				]
 			},
 			"delete": {
-				"description": "Creates an activity",
+				"description": "Deletes an activity",
 				"operationId": "activity-delete",
 				"parameters": [
 					{
@@ -3019,10 +5924,16 @@
 						"description": "activity deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No activity found"
+						"description": "No activity found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -3030,10 +5941,10 @@
 				]
 			}
 		},
-		"/activities/{id}/relationship/user": {
+		"/activities/{id}/relationship/actor": {
 			"get": {
-				"description": "Reads the relationship of activity to user",
-				"operationId": "activity-to-user-relationship-read",
+				"description": "Reads the relationship of activity to actor",
+				"operationId": "activity-to-actor-relationship-read",
 				"parameters": [
 					{
 						"name": "id",
@@ -3043,102 +5954,40 @@
 						"type": "integer"
 					}
 				],
-				"responses": {
-					"400": {
-						"description": "Invalid ID supplied"
-					},
-					"404": {
-						"description": "No activity found"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"patch": {
-				"description": "Updates the relationship of activity to user",
-				"operationId": "activity-to-user-relationship-update",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The activity id",
-						"type": "integer"
-					}
-				],
-				"responses": {
-					"400": {
-						"description": "Invalid ID supplied"
-					},
-					"404": {
-						"description": "No activity found"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			}
-		},
-		"/activities/{id}/relationship/activity_object": {
-			"get": {
-				"description": "Reads the relationship of activity to activity_object",
-				"operationId": "activity-to-activity_object-relationship-read",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The activity id",
-						"type": "integer"
-					}
-				],
-				"responses": {
-					"400": {
-						"description": "Invalid ID supplied"
-					},
-					"404": {
-						"description": "No activity found"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"patch": {
-				"description": "Updates the relationship of activity to activity_object",
-				"operationId": "activity-to-activity_object-relationship-update",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The activity id",
-						"type": "integer"
-					}
-				],
-				"responses": {
-					"400": {
-						"description": "Invalid ID supplied"
-					},
-					"404": {
-						"description": "No activity found"
-					}
-				},
-				"tags": [
-					"core"
-				]
-			}
-		},
-		"/activity_objects": {
-			"get": {
-				"description": "List all activity-objects",
-				"operationId": "activity_object-list",
 				"responses": {
 					"200": {
-						"description": "Array of activity_objects",
+						"description": "Retrieve actor from activity",
 						"schema": {
-							"$ref": "#/definitions/PagedActivityObjects"
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No activity found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
 						}
 					}
 				},
@@ -3146,6 +5995,319 @@
 					"core"
 				]
 			},
+			"patch": {
+				"description": "Updates the relationship of activity to actor",
+				"operationId": "activity-to-actor-relationship-update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The activity id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates actor",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve actor from activity",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No activity found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			}
+		},
+		"/activities/{id}/relationship/object": {
+			"get": {
+				"description": "Reads the relationship of activity to object",
+				"operationId": "activity-to-object-relationship-read",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The activity id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve object from activity",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No activity found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"patch": {
+				"description": "Updates the relationship of activity to object",
+				"operationId": "activity-to-object-relationship-update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The activity id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates object",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve object from activity",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No activity found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			}
+		},
+		"/activities/{id}/relationship/target": {
+			"get": {
+				"description": "Reads the relationship of activity to target",
+				"operationId": "activity-to-target-relationship-read",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The activity id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve target from activity",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No activity found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"patch": {
+				"description": "Updates the relationship of activity to target",
+				"operationId": "activity-to-target-relationship-update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The activity id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates target",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve target from activity",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										},
+										"related": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/ResourceIdentifier",
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No activity found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			}
+		},
+		"/activity-objects": {
 			"post": {
 				"description": "Creates an activity-object",
 				"operationId": "activity_object-create",
@@ -3168,9 +6330,24 @@
 				"tags": [
 					"core"
 				]
+			},
+			"get": {
+				"description": "List all activity-objects",
+				"operationId": "activity_object-list",
+				"responses": {
+					"200": {
+						"description": "Array of activity_objects",
+						"schema": {
+							"$ref": "#/definitions/PagedActivityObjects"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
 			}
 		},
-		"/activity_objects/{id}": {
+		"/activity-objects/{id}": {
 			"get": {
 				"description": "Reads an activity-object",
 				"operationId": "activity_object-read",
@@ -3191,10 +6368,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No activity_object found"
+						"description": "No activity_object found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -3221,10 +6404,16 @@
 						}
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No activity_object found"
+						"description": "No activity_object found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -3248,10 +6437,260 @@
 						"description": "activity_object deleted"
 					},
 					"400": {
-						"description": "Invalid ID supplied"
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					},
 					"404": {
-						"description": "No activity_object found"
+						"description": "No activity_object found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			}
+		},
+		"/activity-objects/{id}/relationship/activities": {
+			"get": {
+				"description": "Reads the relationship of activity_object to activity",
+				"operationId": "activity_object-to-activity-relationship-read",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The activity_object id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve activity from activity_object",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No activity_object found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"post": {
+				"description": "Adds activity as relationship to activity_object",
+				"operationId": "activity_object-to-activity-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The activity_object id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds activity",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve activity from activity_object",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No activity_object found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"patch": {
+				"description": "Updates the relationship of activity_object to activity",
+				"operationId": "activity_object-to-activity-relationship-update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The activity_object id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Updates activity",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve activity from activity_object",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No activity_object found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				},
+				"tags": [
+					"core"
+				]
+			},
+			"delete": {
+				"description": "Removes activity as relationship of activity_object",
+				"operationId": "activity_object-to-activity-relationship-remove",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The activity_object id",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve activity from activity_object",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No activity_object found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
 					}
 				},
 				"tags": [
@@ -3261,37 +6700,6 @@
 		}
 	},
 	"definitions": {
-		"PagedMeta": {
-			"type": "object",
-			"properties": {
-				"total": {
-					"type": "integer"
-				},
-				"first": {
-					"type": "integer"
-				},
-				"next": {
-					"type": "integer"
-				},
-				"previous": {
-					"type": "integer"
-				},
-				"last": {
-					"type": "integer"
-				}
-			}
-		},
-		"ResourceIdentifier": {
-			"type": "object",
-			"properties": {
-				"id": {
-					"type": "string"
-				},
-				"type": {
-					"type": "string"
-				}
-			}
-		},
 		"PagedLanguages": {
 			"type": "object",
 			"properties": {
@@ -3371,6 +6779,17 @@
 						"relationships": {
 							"type": "object",
 							"properties": {
+								"sublanguages": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
 								"parent": {
 									"type": "object",
 									"properties": {
@@ -3447,6 +6866,17 @@
 												"type": {
 													"type": "string"
 												}
+											}
+										}
+									}
+								},
+								"localizations": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
 											}
 										}
 									}
@@ -3530,6 +6960,25 @@
 						"relationships": {
 							"type": "object",
 							"properties": {
+								"sublanguages": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
 								"parent": {
 									"type": "object",
 									"properties": {
@@ -3649,6 +7098,25 @@
 											}
 										}
 									}
+								},
+								"localizations": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
 								}
 							}
 						}
@@ -3689,6 +7157,22 @@
 									"type": "string"
 								}
 							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"languages": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -3719,6 +7203,30 @@
 							"properties": {
 								"name": {
 									"type": "string"
+								}
+							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"languages": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
 								}
 							}
 						}
@@ -3759,6 +7267,22 @@
 									"type": "string"
 								}
 							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"languages": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -3789,6 +7313,30 @@
 							"properties": {
 								"name": {
 									"type": "string"
+								}
+							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"languages": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
 								}
 							}
 						}
@@ -3841,6 +7389,33 @@
 									"type": "string"
 								}
 							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"languages": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
+								"localizations": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -3883,6 +7458,49 @@
 								},
 								"direction": {
 									"type": "string"
+								}
+							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"languages": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
+								"localizations": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
 								}
 							}
 						}
@@ -3929,6 +7547,22 @@
 									"type": "string"
 								}
 							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"languages": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -3965,6 +7599,30 @@
 								},
 								"name": {
 									"type": "string"
+								}
+							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"languages": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
 								}
 							}
 						}
@@ -4157,6 +7815,22 @@
 									"type": "string"
 								}
 							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"countries": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -4211,6 +7885,30 @@
 								},
 								"sub_symbol_right": {
 									"type": "string"
+								}
+							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"countries": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
 								}
 							}
 						}
@@ -4350,6 +8048,22 @@
 										}
 									}
 								},
+								"type": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"type": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								},
 								"subtype": {
 									"type": "object",
 									"properties": {
@@ -4366,6 +8080,17 @@
 										}
 									}
 								},
+								"subordinates": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
 								"country": {
 									"type": "object",
 									"properties": {
@@ -4378,6 +8103,17 @@
 												"type": {
 													"type": "string"
 												}
+											}
+										}
+									}
+								},
+								"subdivisions": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
 											}
 										}
 									}
@@ -4530,6 +8266,30 @@
 										}
 									}
 								},
+								"type": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"type": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								},
 								"subtype": {
 									"type": "object",
 									"properties": {
@@ -4554,6 +8314,25 @@
 										}
 									}
 								},
+								"subordinates": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
 								"country": {
 									"type": "object",
 									"properties": {
@@ -4574,6 +8353,25 @@
 												"type": {
 													"type": "string"
 												}
+											}
+										}
+									}
+								},
+								"subdivisions": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
 											}
 										}
 									}
@@ -4623,6 +8421,22 @@
 									"type": "string"
 								}
 							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"countries": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -4659,6 +8473,30 @@
 								},
 								"name": {
 									"type": "string"
+								}
+							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"countries": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
 								}
 							}
 						}
@@ -4902,6 +8740,28 @@
 						"relationships": {
 							"type": "object",
 							"properties": {
+								"countries": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
+								"subdivisions": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
 								"area": {
 									"type": "object",
 									"properties": {
@@ -4958,6 +8818,44 @@
 						"relationships": {
 							"type": "object",
 							"properties": {
+								"countries": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
+								"subdivisions": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
 								"area": {
 									"type": "object",
 									"properties": {
@@ -5021,6 +8919,22 @@
 									"type": "string"
 								}
 							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"types": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -5051,6 +8965,30 @@
 							"properties": {
 								"name": {
 									"type": "string"
+								}
+							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"types": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
 								}
 							}
 						}
@@ -5116,7 +9054,34 @@
 						"relationships": {
 							"type": "object",
 							"properties": {
+								"localizations": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
 								"parent": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"type": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								},
+								"language": {
 									"type": "object",
 									"properties": {
 										"data": {
@@ -5165,6 +9130,17 @@
 									}
 								},
 								"language-variants": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
+								"application-uris": {
 									"type": "object",
 									"properties": {
 										"data": {
@@ -5233,7 +9209,50 @@
 						"relationships": {
 							"type": "object",
 							"properties": {
+								"localizations": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
 								"parent": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"type": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								},
+								"language": {
 									"type": "object",
 									"properties": {
 										"links": {
@@ -5323,100 +9342,25 @@
 											}
 										}
 									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"PagedPackages": {
-			"type": "object",
-			"properties": {
-				"data": {
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/Package"
-					}
-				},
-				"meta": {
-					"$ref": "#/definitions/PagedMeta"
-				}
-			}
-		},
-		"WritablePackage": {
-			"type": "object",
-			"properties": {
-				"data": {
-					"type": "object",
-					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
-						"attributes": {
-							"type": "object",
-							"properties": {
-								"name": {
-									"type": "string"
 								},
-								"title": {
-									"type": "string"
-								},
-								"description": {
-									"type": "string"
-								},
-								"installed_version": {
-									"type": "string"
-								},
-								"descendant_class": {
-									"type": "string"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"Package": {
-			"type": "object",
-			"properties": {
-				"links": {
-					"type": "object",
-					"properties": {
-						"self": {
-							"type": "string"
-						}
-					}
-				},
-				"data": {
-					"type": "object",
-					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
-						"attributes": {
-							"type": "object",
-							"properties": {
-								"name": {
-									"type": "string"
-								},
-								"title": {
-									"type": "string"
-								},
-								"description": {
-									"type": "string"
-								},
-								"installed_version": {
-									"type": "string"
-								},
-								"descendant_class": {
-									"type": "string"
+								"application-uris": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
 								}
 							}
 						}
@@ -5471,7 +9415,20 @@
 							}
 						},
 						"relationships": {
-							"type": "object"
+							"type": "object",
+							"properties": {
+								"application-uris": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -5518,7 +9475,28 @@
 							}
 						},
 						"relationships": {
-							"type": "object"
+							"type": "object",
+							"properties": {
+								"application-uris": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -5767,7 +9745,20 @@
 							}
 						},
 						"relationships": {
-							"type": "object"
+							"type": "object",
+							"properties": {
+								"actions": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -5826,7 +9817,28 @@
 							}
 						},
 						"relationships": {
-							"type": "object"
+							"type": "object",
+							"properties": {
+								"actions": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -5898,6 +9910,17 @@
 									}
 								},
 								"groups": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
+								"apis": {
 									"type": "object",
 									"properties": {
 										"data": {
@@ -5999,6 +10022,25 @@
 											}
 										}
 									}
+								},
+								"apis": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
 								}
 							}
 						}
@@ -6045,27 +10087,6 @@
 									"type": "integer"
 								}
 							}
-						},
-						"relationships": {
-							"type": "object",
-							"properties": {
-								"package": {
-									"type": "object",
-									"properties": {
-										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
-										}
-									}
-								}
-							}
 						}
 					}
 				}
@@ -6102,35 +10123,6 @@
 								},
 								"package_id": {
 									"type": "integer"
-								}
-							}
-						},
-						"relationships": {
-							"type": "object",
-							"properties": {
-								"package": {
-									"type": "object",
-									"properties": {
-										"links": {
-											"type": "object",
-											"properties": {
-												"self": {
-													"type": "string"
-												}
-											}
-										},
-										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
-										}
-									}
 								}
 							}
 						}
@@ -6387,7 +10379,7 @@
 						"attributes": {
 							"type": "object",
 							"properties": {
-								"login_name": {
+								"user_name": {
 									"type": "string"
 								},
 								"password": {
@@ -6399,34 +10391,22 @@
 								"family_name": {
 									"type": "string"
 								},
-								"display_name": {
-									"type": "string"
-								},
-								"email": {
-									"type": "string"
-								},
-								"birthday": {
-									"type": "string"
-								},
-								"sex": {
-									"type": "integer"
-								},
-								"user_name": {
-									"type": "string"
-								},
 								"nick_name": {
-									"type": "string"
-								},
-								"slug": {
 									"type": "string"
 								},
 								"display_name_user_select": {
 									"type": "string"
 								},
+								"email": {
+									"type": "string"
+								},
 								"birth": {
 									"type": "string"
 								},
-								"password_recover_token": {
+								"sex": {
+									"type": "integer"
+								},
+								"slug": {
 									"type": "string"
 								}
 							}
@@ -6435,6 +10415,17 @@
 							"type": "object",
 							"properties": {
 								"groups": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
+								"activities": {
 									"type": "object",
 									"properties": {
 										"data": {
@@ -6474,7 +10465,7 @@
 						"attributes": {
 							"type": "object",
 							"properties": {
-								"login_name": {
+								"user_name": {
 									"type": "string"
 								},
 								"given_name": {
@@ -6483,40 +10474,28 @@
 								"family_name": {
 									"type": "string"
 								},
+								"nick_name": {
+									"type": "string"
+								},
 								"display_name": {
 									"type": "string"
 								},
 								"email": {
 									"type": "string"
 								},
-								"birthday": {
+								"birth": {
 									"type": "string"
 								},
 								"sex": {
 									"type": "integer"
 								},
+								"slug": {
+									"type": "string"
+								},
 								"created_at": {
 									"type": "string"
 								},
 								"updated_at": {
-									"type": "string"
-								},
-								"user_name": {
-									"type": "string"
-								},
-								"nick_name": {
-									"type": "string"
-								},
-								"slug": {
-									"type": "string"
-								},
-								"display_name_user_select": {
-									"type": "string"
-								},
-								"birth": {
-									"type": "string"
-								},
-								"password_recover_token": {
 									"type": "string"
 								}
 							}
@@ -6525,6 +10504,25 @@
 							"type": "object",
 							"properties": {
 								"groups": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								},
+								"activities": {
 									"type": "object",
 									"properties": {
 										"links": {
@@ -6787,6 +10785,22 @@
 										}
 									}
 								},
+								"object": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"type": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								},
 								"target": {
 									"type": "object",
 									"properties": {
@@ -6850,6 +10864,30 @@
 							"type": "object",
 							"properties": {
 								"actor": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"type": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								},
+								"object": {
 									"type": "object",
 									"properties": {
 										"links": {
@@ -6954,6 +10992,22 @@
 									"type": "string"
 								}
 							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"activities": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -7004,8 +11058,92 @@
 									"type": "string"
 								}
 							}
+						},
+						"relationships": {
+							"type": "object",
+							"properties": {
+								"activities": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "object",
+											"properties": {
+												"self": {
+													"type": "string"
+												}
+											}
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/definitions/ResourceIdentifier"
+											}
+										}
+									}
+								}
+							}
 						}
 					}
+				}
+			}
+		},
+		"Errors": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/Error"
+			}
+		},
+		"Error": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"status": {
+					"type": "string"
+				},
+				"code": {
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				},
+				"detail": {
+					"type": "string"
+				},
+				"meta": {
+					"type": "object"
+				}
+			}
+		},
+		"PagedMeta": {
+			"type": "object",
+			"properties": {
+				"total": {
+					"type": "integer"
+				},
+				"first": {
+					"type": "integer"
+				},
+				"next": {
+					"type": "integer"
+				},
+				"previous": {
+					"type": "integer"
+				},
+				"last": {
+					"type": "integer"
+				}
+			}
+		},
+		"ResourceIdentifier": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		}

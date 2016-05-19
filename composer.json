@@ -1,1416 +1,1709 @@
 {
-	"name" : "keeko/core",
-	"description" : "Keeko core module",
-	"type" : "keeko-module",
-	"license" : "MIT",
-	"authors" : [{
-			"name" : "gossi",
-			"homepage" : "http://gos.si"
+	"name": "keeko/core",
+	"description": "Keeko core module",
+	"type": "keeko-module",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "gossi",
+			"homepage": "http://gos.si"
 		}
 	],
-	"autoload" : {
-		"psr-4" : {
-			"keeko\\core\\" : "src"
+	"autoload": {
+		"psr-4": {
+			"keeko\\core\\": "src"
 		}
 	},
-	"require" : {
-		"php" : ">=5.5.9",
-		"keeko/composer-installer" : "*",
-		"composer/composer" : "dev-master@dev",
-		"propel/propel" : "2.0.0-alpha5@alpha",
-		"puli/repository" : "^1.0@beta",
-		"puli/composer-plugin" : "@beta",
-		"puli/twig-extension" : "@beta",
-		"puli/url-generator" : "@beta",
-		"puli/discovery" : "@beta",
-		"symfony/options-resolver" : "~3 || ~2"
+	"require": {
+		"php": ">=5.5.9",
+		"keeko/composer-installer": "*",
+		"composer/composer": "dev-master@dev",
+		"propel/propel": "2.0.0-alpha5@alpha",
+		"puli/repository": "^1.0@beta",
+		"puli/composer-plugin": "@beta",
+		"puli/twig-extension": "@beta",
+		"puli/url-generator": "@beta",
+		"puli/discovery": "@beta",
+		"symfony/options-resolver": "~3 || ~2"
 	},
-	"require-dev" : {
-		"phpunit/phpunit" : "~4",
-		"keeko/framework" : "dev-master@dev",
-		"composer/composer" : "@dev",
-		"propel/propel" : "@dev",
-		"puli/composer-plugin" : "@beta"
+	"require-dev": {
+		"phpunit/phpunit": "~4",
+		"keeko/framework": "dev-master@dev",
+		"composer/composer": "@dev",
+		"propel/propel": "@dev",
+		"puli/composer-plugin": "@beta"
 	},
-	"extra" : {
-		"keeko" : {
-			"module" : {
-				"title" : "Keeko core",
-				"class" : "keeko\\core\\CoreModule",
-				"extension-points" : {
-					"keeko.core.listener" : "schema/listener.json"
+	"extra": {
+		"keeko": {
+			"module": {
+				"title": "Keeko core",
+				"class": "keeko\\core\\CoreModule",
+				"extension-points": {
+					"keeko.core.listener": "schema/listener.json"
 				},
-				"extensions" : {
-					"keeko.core.listener" : [{
-							"class" : "keeko\\core\\listener\\UserListener",
-							"method" : "normalizeNames",
-							"event" : "core.user.pre_save"
-						}, {
-							"class" : "keeko\\core\\listener\\UserListener",
-							"method" : "updateDisplayName",
-							"event" : "core.user.pre_save"
+				"extensions": {
+					"keeko.core.listener": [
+						{
+							"class": "keeko\\core\\listener\\UserListener",
+							"method": "normalizeNames",
+							"event": "core.user.pre_save"
+						},
+						{
+							"class": "keeko\\core\\listener\\UserListener",
+							"method": "updateDisplayName",
+							"event": "core.user.pre_save"
 						}
 					]
 				},
-				"actions" : {
-					"language-read" : {
-						"title" : "Reads a language",
-						"class" : "keeko\\core\\action\\LanguageReadAction",
-						"acl" : [
+				"actions": {
+					"language-read": {
+						"title": "Reads a language",
+						"class": "keeko\\core\\action\\LanguageReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageReadJsonResponder"
 						}
 					},
-					"language-list" : {
-						"title" : "List all languages",
-						"class" : "keeko\\core\\action\\LanguageListAction",
-						"acl" : [
+					"language-list": {
+						"title": "List all languages",
+						"class": "keeko\\core\\action\\LanguageListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageListJsonResponder"
 						}
 					},
-					"language_scope-read" : {
-						"title" : "Reads a language-scope",
-						"class" : "keeko\\core\\action\\LanguageScopeReadAction",
-						"acl" : [
+					"language_scope-read": {
+						"title": "Reads a language-scope",
+						"class": "keeko\\core\\action\\LanguageScopeReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageScopeReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageScopeReadJsonResponder"
 						}
 					},
-					"language_scope-list" : {
-						"title" : "List all language-scopes",
-						"class" : "keeko\\core\\action\\LanguageScopeListAction",
-						"acl" : [
+					"language_scope-list": {
+						"title": "List all language-scopes",
+						"class": "keeko\\core\\action\\LanguageScopeListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageScopeListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageScopeListJsonResponder"
 						}
 					},
-					"language_type-read" : {
-						"title" : "Reads a language-type",
-						"class" : "keeko\\core\\action\\LanguageTypeReadAction",
-						"acl" : [
+					"language_type-read": {
+						"title": "Reads a language-type",
+						"class": "keeko\\core\\action\\LanguageTypeReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageTypeReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageTypeReadJsonResponder"
 						}
 					},
-					"language_type-list" : {
-						"title" : "List all language-types",
-						"class" : "keeko\\core\\action\\LanguageTypeListAction",
-						"acl" : [
+					"language_type-list": {
+						"title": "List all language-types",
+						"class": "keeko\\core\\action\\LanguageTypeListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageTypeListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageTypeListJsonResponder"
 						}
 					},
-					"language_script-read" : {
-						"title" : "Reads a language-script",
-						"class" : "keeko\\core\\action\\LanguageScriptReadAction",
-						"acl" : [
+					"language_script-read": {
+						"title": "Reads a language-script",
+						"class": "keeko\\core\\action\\LanguageScriptReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageScriptReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageScriptReadJsonResponder"
 						}
 					},
-					"language_script-list" : {
-						"title" : "List all language-scripts",
-						"class" : "keeko\\core\\action\\LanguageScriptListAction",
-						"acl" : [
+					"language_script-list": {
+						"title": "List all language-scripts",
+						"class": "keeko\\core\\action\\LanguageScriptListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageScriptListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageScriptListJsonResponder"
 						}
 					},
-					"language_family-read" : {
-						"title" : "Reads a language-family",
-						"class" : "keeko\\core\\action\\LanguageFamilyReadAction",
-						"acl" : [
+					"language_family-read": {
+						"title": "Reads a language-family",
+						"class": "keeko\\core\\action\\LanguageFamilyReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageFamilyReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageFamilyReadJsonResponder"
 						}
 					},
-					"language_family-list" : {
-						"title" : "List all language-families",
-						"class" : "keeko\\core\\action\\LanguageFamilyListAction",
-						"acl" : [
+					"language_family-list": {
+						"title": "List all language-families",
+						"class": "keeko\\core\\action\\LanguageFamilyListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageFamilyListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageFamilyListJsonResponder"
 						}
 					},
-					"language_variant-read" : {
-						"title" : "Reads a language-variant",
-						"class" : "keeko\\core\\action\\LanguageVariantReadAction",
-						"acl" : [
+					"language_variant-read": {
+						"title": "Reads a language-variant",
+						"class": "keeko\\core\\action\\LanguageVariantReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageVariantReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageVariantReadJsonResponder"
 						}
 					},
-					"language_variant-list" : {
-						"title" : "List all language-variants",
-						"class" : "keeko\\core\\action\\LanguageVariantListAction",
-						"acl" : [
+					"language_variant-list": {
+						"title": "List all language-variants",
+						"class": "keeko\\core\\action\\LanguageVariantListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LanguageVariantListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LanguageVariantListJsonResponder"
 						}
 					},
-					"currency-read" : {
-						"title" : "Reads a currency",
-						"class" : "keeko\\core\\action\\CurrencyReadAction",
-						"acl" : [
+					"currency-read": {
+						"title": "Reads a currency",
+						"class": "keeko\\core\\action\\CurrencyReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\CurrencyReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\CurrencyReadJsonResponder"
 						}
 					},
-					"currency-list" : {
-						"title" : "List all currencies",
-						"class" : "keeko\\core\\action\\CurrencyListAction",
-						"acl" : [
+					"currency-list": {
+						"title": "List all currencies",
+						"class": "keeko\\core\\action\\CurrencyListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\CurrencyListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\CurrencyListJsonResponder"
 						}
 					},
-					"country-read" : {
-						"title" : "Reads a country",
-						"class" : "keeko\\core\\action\\CountryReadAction",
-						"acl" : [
+					"country-read": {
+						"title": "Reads a country",
+						"class": "keeko\\core\\action\\CountryReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\CountryReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\CountryReadJsonResponder"
 						}
 					},
-					"country-list" : {
-						"title" : "List all countries",
-						"class" : "keeko\\core\\action\\CountryListAction",
-						"acl" : [
+					"country-list": {
+						"title": "List all countries",
+						"class": "keeko\\core\\action\\CountryListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\CountryListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\CountryListJsonResponder"
 						}
 					},
-					"continent-read" : {
-						"title" : "Reads a continent",
-						"class" : "keeko\\core\\action\\ContinentReadAction",
-						"acl" : [
+					"continent-read": {
+						"title": "Reads a continent",
+						"class": "keeko\\core\\action\\ContinentReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ContinentReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ContinentReadJsonResponder"
 						}
 					},
-					"continent-list" : {
-						"title" : "List all continents",
-						"class" : "keeko\\core\\action\\ContinentListAction",
-						"acl" : [
+					"continent-list": {
+						"title": "List all continents",
+						"class": "keeko\\core\\action\\ContinentListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ContinentListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ContinentListJsonResponder"
 						}
 					},
-					"subdivision-read" : {
-						"title" : "Reads a subdivision",
-						"class" : "keeko\\core\\action\\SubdivisionReadAction",
-						"acl" : [
+					"subdivision-read": {
+						"title": "Reads a subdivision",
+						"class": "keeko\\core\\action\\SubdivisionReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\SubdivisionReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\SubdivisionReadJsonResponder"
 						}
 					},
-					"subdivision-list" : {
-						"title" : "List all subdivisions",
-						"class" : "keeko\\core\\action\\SubdivisionListAction",
-						"acl" : [
+					"subdivision-list": {
+						"title": "List all subdivisions",
+						"class": "keeko\\core\\action\\SubdivisionListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\SubdivisionListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\SubdivisionListJsonResponder"
 						}
 					},
-					"region_type-read" : {
-						"title" : "Reads a region-type",
-						"class" : "keeko\\core\\action\\RegionTypeReadAction",
-						"acl" : [
+					"region_type-read": {
+						"title": "Reads a region-type",
+						"class": "keeko\\core\\action\\RegionTypeReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\RegionTypeReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\RegionTypeReadJsonResponder"
 						}
 					},
-					"region_type-list" : {
-						"title" : "List all region-types",
-						"class" : "keeko\\core\\action\\RegionTypeListAction",
-						"acl" : [
+					"region_type-list": {
+						"title": "List all region-types",
+						"class": "keeko\\core\\action\\RegionTypeListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\RegionTypeListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\RegionTypeListJsonResponder"
 						}
 					},
-					"region_area-read" : {
-						"title" : "Reads a region-area",
-						"class" : "keeko\\core\\action\\RegionAreaReadAction",
-						"acl" : [
+					"region_area-read": {
+						"title": "Reads a region-area",
+						"class": "keeko\\core\\action\\RegionAreaReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\RegionAreaReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\RegionAreaReadJsonResponder"
 						}
 					},
-					"region_area-list" : {
-						"title" : "List all region-areas",
-						"class" : "keeko\\core\\action\\RegionAreaListAction",
-						"acl" : [
+					"region_area-list": {
+						"title": "List all region-areas",
+						"class": "keeko\\core\\action\\RegionAreaListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\RegionAreaListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\RegionAreaListJsonResponder"
 						}
 					},
-					"localization-create" : {
-						"title" : "Creates a localization",
-						"class" : "keeko\\core\\action\\LocalizationCreateAction",
-						"acl" : [
+					"localization-create": {
+						"title": "Creates a localization",
+						"class": "keeko\\core\\action\\LocalizationCreateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationCreateJsonResponder"
 						}
 					},
-					"localization-read" : {
-						"title" : "Reads a localization",
-						"class" : "keeko\\core\\action\\LocalizationReadAction",
-						"acl" : [
+					"localization-read": {
+						"title": "Reads a localization",
+						"class": "keeko\\core\\action\\LocalizationReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationReadJsonResponder"
 						}
 					},
-					"localization-list" : {
-						"title" : "List all localizations",
-						"class" : "keeko\\core\\action\\LocalizationListAction",
-						"acl" : [
+					"localization-list": {
+						"title": "List all localizations",
+						"class": "keeko\\core\\action\\LocalizationListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationListJsonResponder"
 						}
 					},
-					"localization-update" : {
-						"title" : "Updates a localization",
-						"class" : "keeko\\core\\action\\LocalizationUpdateAction",
-						"acl" : [
+					"localization-update": {
+						"title": "Updates a localization",
+						"class": "keeko\\core\\action\\LocalizationUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationUpdateJsonResponder"
 						}
 					},
-					"localization-delete" : {
-						"title" : "Deletes a localization",
-						"class" : "keeko\\core\\action\\LocalizationDeleteAction",
-						"acl" : [
+					"localization-delete": {
+						"title": "Deletes a localization",
+						"class": "keeko\\core\\action\\LocalizationDeleteAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationDeleteJsonResponder"
 						}
 					},
-					"localization-to-localization-relationship-read" : {
-						"title" : "Reads the relationship of localization to localization",
-						"class" : "keeko\\core\\action\\LocalizationLocalizationReadAction",
-						"acl" : [
+					"localization-to-localization-relationship-read": {
+						"title": "Reads the relationship of localization to localization",
+						"class": "keeko\\core\\action\\LocalizationLocalizationReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationLocalizationJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationLocalizationJsonResponder"
 						}
 					},
-					"localization-to-localization-relationship-update" : {
-						"title" : "Updates the relationship of localization to localization",
-						"class" : "keeko\\core\\action\\LocalizationLocalizationUpdateAction",
-						"acl" : [
+					"localization-to-localization-relationship-add": {
+						"title": "Adds localization as relationship to localization",
+						"class": "keeko\\core\\action\\LocalizationLocalizationAddAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationLocalizationJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationLocalizationJsonResponder"
 						}
 					},
-					"localization-to-language-relationship-read" : {
-						"title" : "Reads the relationship of localization to language",
-						"class" : "keeko\\core\\action\\LocalizationLanguageReadAction",
-						"acl" : [
+					"localization-to-localization-relationship-update": {
+						"title": "Updates the relationship of localization to localization",
+						"class": "keeko\\core\\action\\LocalizationLocalizationUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationLanguageJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationLocalizationJsonResponder"
 						}
 					},
-					"localization-to-language-relationship-update" : {
-						"title" : "Updates the relationship of localization to language",
-						"class" : "keeko\\core\\action\\LocalizationLanguageUpdateAction",
-						"acl" : [
+					"localization-to-localization-relationship-remove": {
+						"title": "Removes localization as relationship of localization",
+						"class": "keeko\\core\\action\\LocalizationLocalizationRemoveAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationLanguageJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationLocalizationJsonResponder"
 						}
 					},
-					"localization-to-language_script-relationship-read" : {
-						"title" : "Reads the relationship of localization to language_script",
-						"class" : "keeko\\core\\action\\LocalizationLanguageScriptReadAction",
-						"acl" : [
+					"localization-to-parent-relationship-read": {
+						"title": "Reads the relationship of localization to parent",
+						"class": "keeko\\core\\action\\LocalizationParentReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationLanguageScriptJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationParentJsonResponder"
 						}
 					},
-					"localization-to-language_script-relationship-update" : {
-						"title" : "Updates the relationship of localization to language_script",
-						"class" : "keeko\\core\\action\\LocalizationLanguageScriptUpdateAction",
-						"acl" : [
+					"localization-to-parent-relationship-update": {
+						"title": "Updates the relationship of localization to parent",
+						"class": "keeko\\core\\action\\LocalizationParentUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationLanguageScriptJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationParentJsonResponder"
 						}
 					},
-					"localization-to-language_variant-relationship-read" : {
-						"title" : "Reads the relationship of localization to language_variant",
-						"class" : "keeko\\core\\action\\LocalizationLanguageVariantReadAction",
-						"acl" : [
+					"localization-to-language-relationship-read": {
+						"title": "Reads the relationship of localization to language",
+						"class": "keeko\\core\\action\\LocalizationLanguageReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationLanguageVariantJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationLanguageJsonResponder"
 						}
 					},
-					"localization-to-language_variant-relationship-update" : {
-						"title" : "Updates the relationship of localization to language_variant",
-						"class" : "keeko\\core\\action\\LocalizationLanguageVariantUpdateAction",
-						"acl" : [
+					"localization-to-language-relationship-update": {
+						"title": "Updates the relationship of localization to language",
+						"class": "keeko\\core\\action\\LocalizationLanguageUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationLanguageVariantJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationLanguageJsonResponder"
 						}
 					},
-					"localization-to-language_variant-relationship-add" : {
-						"title" : "Adds language_variant as relationship to localization",
-						"class" : "keeko\\core\\action\\LocalizationLanguageVariantAddAction",
-						"acl" : [
+					"localization-to-ext_lang-relationship-read": {
+						"title": "Reads the relationship of localization to ext_lang",
+						"class": "keeko\\core\\action\\LocalizationExtLangReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationLanguageVariantJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationExtLangJsonResponder"
 						}
 					},
-					"localization-to-language_variant-relationship-remove" : {
-						"title" : "Removes language_variant as relationship of localization",
-						"class" : "keeko\\core\\action\\LocalizationLanguageVariantRemoveAction",
-						"acl" : [
+					"localization-to-ext_lang-relationship-update": {
+						"title": "Updates the relationship of localization to ext_lang",
+						"class": "keeko\\core\\action\\LocalizationExtLangUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\LocalizationLanguageVariantJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationExtLangJsonResponder"
 						}
 					},
-					"package-create" : {
-						"title" : "Creates a package",
-						"class" : "keeko\\core\\action\\PackageCreateAction",
-						"acl" : [
+					"localization-to-script-relationship-read": {
+						"title": "Reads the relationship of localization to script",
+						"class": "keeko\\core\\action\\LocalizationScriptReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\PackageCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationScriptJsonResponder"
 						}
 					},
-					"package-read" : {
-						"title" : "Reads a package",
-						"class" : "keeko\\core\\action\\PackageReadAction",
-						"acl" : [
+					"localization-to-script-relationship-update": {
+						"title": "Updates the relationship of localization to script",
+						"class": "keeko\\core\\action\\LocalizationScriptUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\PackageReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationScriptJsonResponder"
 						}
 					},
-					"package-list" : {
-						"title" : "List all packages",
-						"class" : "keeko\\core\\action\\PackageListAction",
-						"acl" : [
+					"localization-to-language_variant-relationship-read": {
+						"title": "Reads the relationship of localization to language_variant",
+						"class": "keeko\\core\\action\\LocalizationLanguageVariantReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\PackageListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationLanguageVariantJsonResponder"
 						}
 					},
-					"package-update" : {
-						"title" : "Updates a package",
-						"class" : "keeko\\core\\action\\PackageUpdateAction",
-						"acl" : [
+					"localization-to-language_variant-relationship-add": {
+						"title": "Adds language_variant as relationship to localization",
+						"class": "keeko\\core\\action\\LocalizationLanguageVariantAddAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\PackageUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationLanguageVariantJsonResponder"
 						}
 					},
-					"package-delete" : {
-						"title" : "Deletes a package",
-						"class" : "keeko\\core\\action\\PackageDeleteAction",
-						"acl" : [
+					"localization-to-language_variant-relationship-update": {
+						"title": "Updates the relationship of localization to language_variant",
+						"class": "keeko\\core\\action\\LocalizationLanguageVariantUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\PackageDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationLanguageVariantJsonResponder"
 						}
 					},
-					"application-create" : {
-						"title" : "Creates an application",
-						"class" : "keeko\\core\\action\\ApplicationCreateAction",
-						"acl" : [
+					"localization-to-language_variant-relationship-remove": {
+						"title": "Removes language_variant as relationship of localization",
+						"class": "keeko\\core\\action\\LocalizationLanguageVariantRemoveAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationLanguageVariantJsonResponder"
 						}
 					},
-					"application-read" : {
-						"title" : "Reads an application",
-						"class" : "keeko\\core\\action\\ApplicationReadAction",
-						"acl" : [
+					"localization-to-application_uri-relationship-read": {
+						"title": "Reads the relationship of localization to application_uri",
+						"class": "keeko\\core\\action\\LocalizationApplicationUriReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationApplicationUriJsonResponder"
 						}
 					},
-					"application-list" : {
-						"title" : "List all applications",
-						"class" : "keeko\\core\\action\\ApplicationListAction",
-						"acl" : [
+					"localization-to-application_uri-relationship-add": {
+						"title": "Adds application_uri as relationship to localization",
+						"class": "keeko\\core\\action\\LocalizationApplicationUriAddAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationApplicationUriJsonResponder"
 						}
 					},
-					"application-update" : {
-						"title" : "Updates an application",
-						"class" : "keeko\\core\\action\\ApplicationUpdateAction",
-						"acl" : [
+					"localization-to-application_uri-relationship-update": {
+						"title": "Updates the relationship of localization to application_uri",
+						"class": "keeko\\core\\action\\LocalizationApplicationUriUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationApplicationUriJsonResponder"
 						}
 					},
-					"application-delete" : {
-						"title" : "Deletes an application",
-						"class" : "keeko\\core\\action\\ApplicationDeleteAction",
-						"acl" : [
+					"localization-to-application_uri-relationship-remove": {
+						"title": "Removes application_uri as relationship of localization",
+						"class": "keeko\\core\\action\\LocalizationApplicationUriRemoveAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\LocalizationApplicationUriJsonResponder"
 						}
 					},
-					"application_uri-create" : {
-						"title" : "Creates an application-uri",
-						"class" : "keeko\\core\\action\\ApplicationUriCreateAction",
-						"acl" : [
+					"application-create": {
+						"title": "Creates an application",
+						"class": "keeko\\core\\action\\ApplicationCreateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationUriCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationCreateJsonResponder"
 						}
 					},
-					"application_uri-read" : {
-						"title" : "Reads an application-uri",
-						"class" : "keeko\\core\\action\\ApplicationUriReadAction",
-						"acl" : [
+					"application-read": {
+						"title": "Reads an application",
+						"class": "keeko\\core\\action\\ApplicationReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationUriReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationReadJsonResponder"
 						}
 					},
-					"application_uri-list" : {
-						"title" : "List all application-uris",
-						"class" : "keeko\\core\\action\\ApplicationUriListAction",
-						"acl" : [
+					"application-list": {
+						"title": "List all applications",
+						"class": "keeko\\core\\action\\ApplicationListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationUriListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationListJsonResponder"
 						}
 					},
-					"application_uri-update" : {
-						"title" : "Updates an application-uri",
-						"class" : "keeko\\core\\action\\ApplicationUriUpdateAction",
-						"acl" : [
+					"application-update": {
+						"title": "Updates an application",
+						"class": "keeko\\core\\action\\ApplicationUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationUriUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationUpdateJsonResponder"
 						}
 					},
-					"application_uri-delete" : {
-						"title" : "Deletes an application-uri",
-						"class" : "keeko\\core\\action\\ApplicationUriDeleteAction",
-						"acl" : [
+					"application-delete": {
+						"title": "Deletes an application",
+						"class": "keeko\\core\\action\\ApplicationDeleteAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationUriDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationDeleteJsonResponder"
 						}
 					},
-					"application_uri-to-application-relationship-read" : {
-						"title" : "Reads the relationship of application_uri to application",
-						"class" : "keeko\\core\\action\\ApplicationUriApplicationReadAction",
-						"acl" : [
+					"application-to-application_uri-relationship-read": {
+						"title": "Reads the relationship of application to application_uri",
+						"class": "keeko\\core\\action\\ApplicationApplicationUriReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationUriApplicationJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationApplicationUriJsonResponder"
 						}
 					},
-					"application_uri-to-application-relationship-update" : {
-						"title" : "Updates the relationship of application_uri to application",
-						"class" : "keeko\\core\\action\\ApplicationUriApplicationUpdateAction",
-						"acl" : [
+					"application-to-application_uri-relationship-add": {
+						"title": "Adds application_uri as relationship to application",
+						"class": "keeko\\core\\action\\ApplicationApplicationUriAddAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationUriApplicationJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationApplicationUriJsonResponder"
 						}
 					},
-					"application_uri-to-localization-relationship-read" : {
-						"title" : "Reads the relationship of application_uri to localization",
-						"class" : "keeko\\core\\action\\ApplicationUriLocalizationReadAction",
-						"acl" : [
+					"application-to-application_uri-relationship-update": {
+						"title": "Updates the relationship of application to application_uri",
+						"class": "keeko\\core\\action\\ApplicationApplicationUriUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationUriLocalizationJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationApplicationUriJsonResponder"
 						}
 					},
-					"application_uri-to-localization-relationship-update" : {
-						"title" : "Updates the relationship of application_uri to localization",
-						"class" : "keeko\\core\\action\\ApplicationUriLocalizationUpdateAction",
-						"acl" : [
+					"application-to-application_uri-relationship-remove": {
+						"title": "Removes application_uri as relationship of application",
+						"class": "keeko\\core\\action\\ApplicationApplicationUriRemoveAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApplicationUriLocalizationJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationApplicationUriJsonResponder"
 						}
 					},
-					"module-create" : {
-						"title" : "Creates a module",
-						"class" : "keeko\\core\\action\\ModuleCreateAction",
-						"acl" : [
+					"application_uri-create": {
+						"title": "Creates an application-uri",
+						"class": "keeko\\core\\action\\ApplicationUriCreateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ModuleCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationUriCreateJsonResponder"
 						}
 					},
-					"module-read" : {
-						"title" : "Reads a module",
-						"class" : "keeko\\core\\action\\ModuleReadAction",
-						"acl" : [
+					"application_uri-read": {
+						"title": "Reads an application-uri",
+						"class": "keeko\\core\\action\\ApplicationUriReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ModuleReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationUriReadJsonResponder"
 						}
 					},
-					"module-list" : {
-						"title" : "List all modules",
-						"class" : "keeko\\core\\action\\ModuleListAction",
-						"acl" : [
+					"application_uri-list": {
+						"title": "List all application-uris",
+						"class": "keeko\\core\\action\\ApplicationUriListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ModuleListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationUriListJsonResponder"
 						}
 					},
-					"module-update" : {
-						"title" : "Updates a module",
-						"class" : "keeko\\core\\action\\ModuleUpdateAction",
-						"acl" : [
+					"application_uri-update": {
+						"title": "Updates an application-uri",
+						"class": "keeko\\core\\action\\ApplicationUriUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ModuleUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationUriUpdateJsonResponder"
 						}
 					},
-					"module-delete" : {
-						"title" : "Deletes a module",
-						"class" : "keeko\\core\\action\\ModuleDeleteAction",
-						"acl" : [
+					"application_uri-delete": {
+						"title": "Deletes an application-uri",
+						"class": "keeko\\core\\action\\ApplicationUriDeleteAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ModuleDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationUriDeleteJsonResponder"
 						}
 					},
-					"action-create" : {
-						"title" : "Creates an action",
-						"class" : "keeko\\core\\action\\ActionCreateAction",
-						"acl" : [
+					"application_uri-to-application-relationship-read": {
+						"title": "Reads the relationship of application_uri to application",
+						"class": "keeko\\core\\action\\ApplicationUriApplicationReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActionCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationUriApplicationJsonResponder"
 						}
 					},
-					"action-read" : {
-						"title" : "Reads an action",
-						"class" : "keeko\\core\\action\\ActionReadAction",
-						"acl" : [
+					"application_uri-to-application-relationship-update": {
+						"title": "Updates the relationship of application_uri to application",
+						"class": "keeko\\core\\action\\ApplicationUriApplicationUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActionReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationUriApplicationJsonResponder"
 						}
 					},
-					"action-list" : {
-						"title" : "List all actions",
-						"class" : "keeko\\core\\action\\ActionListAction",
-						"acl" : [
+					"application_uri-to-localization-relationship-read": {
+						"title": "Reads the relationship of application_uri to localization",
+						"class": "keeko\\core\\action\\ApplicationUriLocalizationReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActionListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationUriLocalizationJsonResponder"
 						}
 					},
-					"action-update" : {
-						"title" : "Updates an action",
-						"class" : "keeko\\core\\action\\ActionUpdateAction",
-						"acl" : [
+					"application_uri-to-localization-relationship-update": {
+						"title": "Updates the relationship of application_uri to localization",
+						"class": "keeko\\core\\action\\ApplicationUriLocalizationUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActionUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApplicationUriLocalizationJsonResponder"
 						}
 					},
-					"action-delete" : {
-						"title" : "Deletes an action",
-						"class" : "keeko\\core\\action\\ActionDeleteAction",
-						"acl" : [
+					"module-create": {
+						"title": "Creates a module",
+						"class": "keeko\\core\\action\\ModuleCreateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActionDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ModuleCreateJsonResponder"
 						}
 					},
-					"action-to-module-relationship-read" : {
-						"title" : "Reads the relationship of action to module",
-						"class" : "keeko\\core\\action\\ActionModuleReadAction",
-						"acl" : [
+					"module-read": {
+						"title": "Reads a module",
+						"class": "keeko\\core\\action\\ModuleReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActionModuleJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ModuleReadJsonResponder"
 						}
 					},
-					"action-to-module-relationship-update" : {
-						"title" : "Updates the relationship of action to module",
-						"class" : "keeko\\core\\action\\ActionModuleUpdateAction",
-						"acl" : [
+					"module-list": {
+						"title": "List all modules",
+						"class": "keeko\\core\\action\\ModuleListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActionModuleJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ModuleListJsonResponder"
 						}
 					},
-					"action-to-group-relationship-read" : {
-						"title" : "Reads the relationship of action to group",
-						"class" : "keeko\\core\\action\\ActionGroupReadAction",
-						"acl" : [
+					"module-update": {
+						"title": "Updates a module",
+						"class": "keeko\\core\\action\\ModuleUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActionGroupJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ModuleUpdateJsonResponder"
 						}
 					},
-					"action-to-group-relationship-update" : {
-						"title" : "Updates the relationship of action to group",
-						"class" : "keeko\\core\\action\\ActionGroupUpdateAction",
-						"acl" : [
+					"module-delete": {
+						"title": "Deletes a module",
+						"class": "keeko\\core\\action\\ModuleDeleteAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActionGroupJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ModuleDeleteJsonResponder"
 						}
 					},
-					"action-to-group-relationship-add" : {
-						"title" : "Adds group as relationship to action",
-						"class" : "keeko\\core\\action\\ActionGroupAddAction",
-						"acl" : [
+					"module-to-action-relationship-read": {
+						"title": "Reads the relationship of module to action",
+						"class": "keeko\\core\\action\\ModuleActionReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActionGroupJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ModuleActionJsonResponder"
 						}
 					},
-					"action-to-group-relationship-remove" : {
-						"title" : "Removes group as relationship of action",
-						"class" : "keeko\\core\\action\\ActionGroupRemoveAction",
-						"acl" : [
+					"module-to-action-relationship-add": {
+						"title": "Adds action as relationship to module",
+						"class": "keeko\\core\\action\\ModuleActionAddAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActionGroupJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ModuleActionJsonResponder"
 						}
 					},
-					"extension-create" : {
-						"title" : "Creates an extension",
-						"class" : "keeko\\core\\action\\ExtensionCreateAction",
-						"acl" : [
+					"module-to-action-relationship-update": {
+						"title": "Updates the relationship of module to action",
+						"class": "keeko\\core\\action\\ModuleActionUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ExtensionCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ModuleActionJsonResponder"
 						}
 					},
-					"extension-read" : {
-						"title" : "Reads an extension",
-						"class" : "keeko\\core\\action\\ExtensionReadAction",
-						"acl" : [
+					"module-to-action-relationship-remove": {
+						"title": "Removes action as relationship of module",
+						"class": "keeko\\core\\action\\ModuleActionRemoveAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ExtensionReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ModuleActionJsonResponder"
 						}
 					},
-					"extension-list" : {
-						"title" : "List all extensions",
-						"class" : "keeko\\core\\action\\ExtensionListAction",
-						"acl" : [
+					"action-create": {
+						"title": "Creates an action",
+						"class": "keeko\\core\\action\\ActionCreateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ExtensionListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionCreateJsonResponder"
 						}
 					},
-					"extension-update" : {
-						"title" : "Updates an extension",
-						"class" : "keeko\\core\\action\\ExtensionUpdateAction",
-						"acl" : [
+					"action-read": {
+						"title": "Reads an action",
+						"class": "keeko\\core\\action\\ActionReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ExtensionUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionReadJsonResponder"
 						}
 					},
-					"extension-delete" : {
-						"title" : "Deletes an extension",
-						"class" : "keeko\\core\\action\\ExtensionDeleteAction",
-						"acl" : [
+					"action-list": {
+						"title": "List all actions",
+						"class": "keeko\\core\\action\\ActionListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ExtensionDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionListJsonResponder"
 						}
 					},
-					"extension-to-package-relationship-read" : {
-						"title" : "Reads the relationship of extension to package",
-						"class" : "keeko\\core\\action\\ExtensionPackageReadAction",
-						"acl" : [
+					"action-update": {
+						"title": "Updates an action",
+						"class": "keeko\\core\\action\\ActionUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ExtensionPackageJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionUpdateJsonResponder"
 						}
 					},
-					"extension-to-package-relationship-update" : {
-						"title" : "Updates the relationship of extension to package",
-						"class" : "keeko\\core\\action\\ExtensionPackageUpdateAction",
-						"acl" : [
+					"action-delete": {
+						"title": "Deletes an action",
+						"class": "keeko\\core\\action\\ActionDeleteAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ExtensionPackageJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionDeleteJsonResponder"
 						}
 					},
-					"preference-create" : {
-						"title" : "Creates a preference",
-						"class" : "keeko\\core\\action\\PreferenceCreateAction",
-						"acl" : [
+					"action-to-module-relationship-read": {
+						"title": "Reads the relationship of action to module",
+						"class": "keeko\\core\\action\\ActionModuleReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\PreferenceCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionModuleJsonResponder"
 						}
 					},
-					"preference-read" : {
-						"title" : "Reads a preference",
-						"class" : "keeko\\core\\action\\PreferenceReadAction",
-						"acl" : [
+					"action-to-module-relationship-update": {
+						"title": "Updates the relationship of action to module",
+						"class": "keeko\\core\\action\\ActionModuleUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\PreferenceReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionModuleJsonResponder"
 						}
 					},
-					"preference-list" : {
-						"title" : "List all preferences",
-						"class" : "keeko\\core\\action\\PreferenceListAction",
-						"acl" : [
+					"action-to-group-relationship-read": {
+						"title": "Reads the relationship of action to group",
+						"class": "keeko\\core\\action\\ActionGroupReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\PreferenceListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionGroupJsonResponder"
 						}
 					},
-					"preference-update" : {
-						"title" : "Updates a preference",
-						"class" : "keeko\\core\\action\\PreferenceUpdateAction",
-						"acl" : [
+					"action-to-group-relationship-add": {
+						"title": "Adds group as relationship to action",
+						"class": "keeko\\core\\action\\ActionGroupAddAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\PreferenceUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionGroupJsonResponder"
 						}
 					},
-					"preference-delete" : {
-						"title" : "Deletes a preference",
-						"class" : "keeko\\core\\action\\PreferenceDeleteAction",
-						"acl" : [
+					"action-to-group-relationship-update": {
+						"title": "Updates the relationship of action to group",
+						"class": "keeko\\core\\action\\ActionGroupUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\PreferenceDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionGroupJsonResponder"
 						}
 					},
-					"api-create" : {
-						"title" : "Creates an api",
-						"class" : "keeko\\core\\action\\ApiCreateAction",
-						"acl" : [
+					"action-to-group-relationship-remove": {
+						"title": "Removes group as relationship of action",
+						"class": "keeko\\core\\action\\ActionGroupRemoveAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApiCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionGroupJsonResponder"
 						}
 					},
-					"api-read" : {
-						"title" : "Reads an api",
-						"class" : "keeko\\core\\action\\ApiReadAction",
-						"acl" : [
+					"action-to-api-relationship-read": {
+						"title": "Reads the relationship of action to api",
+						"class": "keeko\\core\\action\\ActionApiReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApiReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionApiJsonResponder"
 						}
 					},
-					"api-list" : {
-						"title" : "List all apis",
-						"class" : "keeko\\core\\action\\ApiListAction",
-						"acl" : [
+					"action-to-api-relationship-add": {
+						"title": "Adds api as relationship to action",
+						"class": "keeko\\core\\action\\ActionApiAddAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApiListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionApiJsonResponder"
 						}
 					},
-					"api-update" : {
-						"title" : "Updates an api",
-						"class" : "keeko\\core\\action\\ApiUpdateAction",
-						"acl" : [
+					"action-to-api-relationship-update": {
+						"title": "Updates the relationship of action to api",
+						"class": "keeko\\core\\action\\ActionApiUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApiUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionApiJsonResponder"
 						}
 					},
-					"api-delete" : {
-						"title" : "Deletes an api",
-						"class" : "keeko\\core\\action\\ApiDeleteAction",
-						"acl" : [
+					"action-to-api-relationship-remove": {
+						"title": "Removes api as relationship of action",
+						"class": "keeko\\core\\action\\ActionApiRemoveAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApiDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ActionApiJsonResponder"
 						}
 					},
-					"api-to-action-relationship-read" : {
-						"title" : "Reads the relationship of api to action",
-						"class" : "keeko\\core\\action\\ApiActionReadAction",
-						"acl" : [
+					"extension-create": {
+						"title": "Creates an extension",
+						"class": "keeko\\core\\action\\ExtensionCreateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApiActionJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ExtensionCreateJsonResponder"
 						}
 					},
-					"api-to-action-relationship-update" : {
-						"title" : "Updates the relationship of api to action",
-						"class" : "keeko\\core\\action\\ApiActionUpdateAction",
-						"acl" : [
+					"extension-read": {
+						"title": "Reads an extension",
+						"class": "keeko\\core\\action\\ExtensionReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ApiActionJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ExtensionReadJsonResponder"
 						}
 					},
-					"session-create" : {
-						"title" : "Creates a session",
-						"class" : "keeko\\core\\action\\SessionCreateAction",
-						"acl" : [
+					"extension-list": {
+						"title": "List all extensions",
+						"class": "keeko\\core\\action\\ExtensionListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\SessionCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ExtensionListJsonResponder"
 						}
 					},
-					"session-read" : {
-						"title" : "Reads a session",
-						"class" : "keeko\\core\\action\\SessionReadAction",
-						"acl" : [
+					"extension-update": {
+						"title": "Updates an extension",
+						"class": "keeko\\core\\action\\ExtensionUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\SessionReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ExtensionUpdateJsonResponder"
 						}
 					},
-					"session-list" : {
-						"title" : "List all sessions",
-						"class" : "keeko\\core\\action\\SessionListAction",
-						"acl" : [
+					"extension-delete": {
+						"title": "Deletes an extension",
+						"class": "keeko\\core\\action\\ExtensionDeleteAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\SessionListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ExtensionDeleteJsonResponder"
 						}
 					},
-					"session-update" : {
-						"title" : "Updates a session",
-						"class" : "keeko\\core\\action\\SessionUpdateAction",
-						"acl" : [
+					"preference-create": {
+						"title": "Creates a preference",
+						"class": "keeko\\core\\action\\PreferenceCreateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\SessionUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\PreferenceCreateJsonResponder"
 						}
 					},
-					"session-delete" : {
-						"title" : "Deletes a session",
-						"class" : "keeko\\core\\action\\SessionDeleteAction",
-						"acl" : [
+					"preference-read": {
+						"title": "Reads a preference",
+						"class": "keeko\\core\\action\\PreferenceReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\SessionDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\PreferenceReadJsonResponder"
 						}
 					},
-					"session-to-user-relationship-read" : {
-						"title" : "Reads the relationship of session to user",
-						"class" : "keeko\\core\\action\\SessionUserReadAction",
-						"acl" : [
+					"preference-list": {
+						"title": "List all preferences",
+						"class": "keeko\\core\\action\\PreferenceListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\SessionUserJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\PreferenceListJsonResponder"
 						}
 					},
-					"session-to-user-relationship-update" : {
-						"title" : "Updates the relationship of session to user",
-						"class" : "keeko\\core\\action\\SessionUserUpdateAction",
-						"acl" : [
+					"preference-update": {
+						"title": "Updates a preference",
+						"class": "keeko\\core\\action\\PreferenceUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\SessionUserJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\PreferenceUpdateJsonResponder"
 						}
 					},
-					"user-create" : {
-						"title" : "Creates an user",
-						"class" : "keeko\\core\\action\\UserCreateAction",
-						"acl" : [
+					"preference-delete": {
+						"title": "Deletes a preference",
+						"class": "keeko\\core\\action\\PreferenceDeleteAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\UserCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\PreferenceDeleteJsonResponder"
 						}
 					},
-					"user-read" : {
-						"title" : "Reads an user",
-						"class" : "keeko\\core\\action\\UserReadAction",
-						"acl" : [
+					"api-create": {
+						"title": "Creates an api",
+						"class": "keeko\\core\\action\\ApiCreateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\UserReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApiCreateJsonResponder"
 						}
 					},
-					"user-list" : {
-						"title" : "List all users",
-						"class" : "keeko\\core\\action\\UserListAction",
-						"acl" : [
+					"api-read": {
+						"title": "Reads an api",
+						"class": "keeko\\core\\action\\ApiReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\UserListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApiReadJsonResponder"
 						}
 					},
-					"user-update" : {
-						"title" : "Updates an user",
-						"class" : "keeko\\core\\action\\UserUpdateAction",
-						"acl" : [
+					"api-list": {
+						"title": "List all apis",
+						"class": "keeko\\core\\action\\ApiListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\UserUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApiListJsonResponder"
 						}
 					},
-					"user-delete" : {
-						"title" : "Deletes an user",
-						"class" : "keeko\\core\\action\\UserDeleteAction",
-						"acl" : [
+					"api-update": {
+						"title": "Updates an api",
+						"class": "keeko\\core\\action\\ApiUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\UserDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApiUpdateJsonResponder"
 						}
 					},
-					"user-to-group-relationship-read" : {
-						"title" : "Reads the relationship of user to group",
-						"class" : "keeko\\core\\action\\UserGroupReadAction",
-						"acl" : [
+					"api-delete": {
+						"title": "Deletes an api",
+						"class": "keeko\\core\\action\\ApiDeleteAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\UserGroupJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApiDeleteJsonResponder"
 						}
 					},
-					"user-to-group-relationship-update" : {
-						"title" : "Updates the relationship of user to group",
-						"class" : "keeko\\core\\action\\UserGroupUpdateAction",
-						"acl" : [
+					"api-to-action-relationship-read": {
+						"title": "Reads the relationship of api to action",
+						"class": "keeko\\core\\action\\ApiActionReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\UserGroupJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApiActionJsonResponder"
 						}
 					},
-					"user-to-group-relationship-add" : {
-						"title" : "Adds group as relationship to user",
-						"class" : "keeko\\core\\action\\UserGroupAddAction",
-						"acl" : [
+					"api-to-action-relationship-update": {
+						"title": "Updates the relationship of api to action",
+						"class": "keeko\\core\\action\\ApiActionUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\UserGroupJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\ApiActionJsonResponder"
 						}
 					},
-					"user-to-group-relationship-remove" : {
-						"title" : "Removes group as relationship of user",
-						"class" : "keeko\\core\\action\\UserGroupRemoveAction",
-						"acl" : [
+					"session-create": {
+						"title": "Creates a session",
+						"class": "keeko\\core\\action\\SessionCreateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\UserGroupJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\SessionCreateJsonResponder"
 						}
 					},
-					"group-create" : {
-						"title" : "Creates a group",
-						"class" : "keeko\\core\\action\\GroupCreateAction",
-						"acl" : [
+					"session-read": {
+						"title": "Reads a session",
+						"class": "keeko\\core\\action\\SessionReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\SessionReadJsonResponder"
 						}
 					},
-					"group-read" : {
-						"title" : "Reads a group",
-						"class" : "keeko\\core\\action\\GroupReadAction",
-						"acl" : [
+					"session-list": {
+						"title": "List all sessions",
+						"class": "keeko\\core\\action\\SessionListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\SessionListJsonResponder"
 						}
 					},
-					"group-list" : {
-						"title" : "List all groups",
-						"class" : "keeko\\core\\action\\GroupListAction",
-						"acl" : [
+					"session-update": {
+						"title": "Updates a session",
+						"class": "keeko\\core\\action\\SessionUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\SessionUpdateJsonResponder"
 						}
 					},
-					"group-update" : {
-						"title" : "Updates a group",
-						"class" : "keeko\\core\\action\\GroupUpdateAction",
-						"acl" : [
+					"session-delete": {
+						"title": "Deletes a session",
+						"class": "keeko\\core\\action\\SessionDeleteAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\SessionDeleteJsonResponder"
 						}
 					},
-					"group-delete" : {
-						"title" : "Deletes a group",
-						"class" : "keeko\\core\\action\\GroupDeleteAction",
-						"acl" : [
+					"session-to-user-relationship-read": {
+						"title": "Reads the relationship of session to user",
+						"class": "keeko\\core\\action\\SessionUserReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\SessionUserJsonResponder"
 						}
 					},
-					"group-to-user-relationship-read" : {
-						"title" : "Reads the relationship of group to user",
-						"class" : "keeko\\core\\action\\GroupUserReadAction",
-						"acl" : [
+					"session-to-user-relationship-update": {
+						"title": "Updates the relationship of session to user",
+						"class": "keeko\\core\\action\\SessionUserUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupUserJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\SessionUserJsonResponder"
 						}
 					},
-					"group-to-user-relationship-update" : {
-						"title" : "Updates the relationship of group to user",
-						"class" : "keeko\\core\\action\\GroupUserUpdateAction",
-						"acl" : [
+					"user-create": {
+						"title": "Creates an user",
+						"class": "keeko\\core\\action\\UserCreateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupUserJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserCreateJsonResponder"
 						}
 					},
-					"group-to-user-relationship-add" : {
-						"title" : "Adds user as relationship to group",
-						"class" : "keeko\\core\\action\\GroupUserAddAction",
-						"acl" : [
+					"user-read": {
+						"title": "Reads an user",
+						"class": "keeko\\core\\action\\UserReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupUserJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserReadJsonResponder"
 						}
 					},
-					"group-to-user-relationship-remove" : {
-						"title" : "Removes user as relationship of group",
-						"class" : "keeko\\core\\action\\GroupUserRemoveAction",
-						"acl" : [
+					"user-list": {
+						"title": "List all users",
+						"class": "keeko\\core\\action\\UserListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupUserJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserListJsonResponder"
 						}
 					},
-					"group-to-action-relationship-read" : {
-						"title" : "Reads the relationship of group to action",
-						"class" : "keeko\\core\\action\\GroupActionReadAction",
-						"acl" : [
+					"user-update": {
+						"title": "Updates an user",
+						"class": "keeko\\core\\action\\UserUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupActionJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserUpdateJsonResponder"
 						}
 					},
-					"group-to-action-relationship-update" : {
-						"title" : "Updates the relationship of group to action",
-						"class" : "keeko\\core\\action\\GroupActionUpdateAction",
-						"acl" : [
+					"user-delete": {
+						"title": "Deletes an user",
+						"class": "keeko\\core\\action\\UserDeleteAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupActionJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserDeleteJsonResponder"
 						}
 					},
-					"group-to-action-relationship-add" : {
-						"title" : "Adds action as relationship to group",
-						"class" : "keeko\\core\\action\\GroupActionAddAction",
-						"acl" : [
+					"user-to-session-relationship-read": {
+						"title": "Reads the relationship of user to session",
+						"class": "keeko\\core\\action\\UserSessionReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupActionJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserSessionJsonResponder"
 						}
 					},
-					"group-to-action-relationship-remove" : {
-						"title" : "Removes action as relationship of group",
-						"class" : "keeko\\core\\action\\GroupActionRemoveAction",
-						"acl" : [
+					"user-to-session-relationship-add": {
+						"title": "Adds session as relationship to user",
+						"class": "keeko\\core\\action\\UserSessionAddAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\GroupActionJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserSessionJsonResponder"
 						}
 					},
-					"activity-create" : {
-						"title" : "Creates an activity",
-						"class" : "keeko\\core\\action\\ActivityCreateAction",
-						"acl" : [
+					"user-to-session-relationship-update": {
+						"title": "Updates the relationship of user to session",
+						"class": "keeko\\core\\action\\UserSessionUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserSessionJsonResponder"
 						}
 					},
-					"activity-read" : {
-						"title" : "Creates an activity",
-						"class" : "keeko\\core\\action\\ActivityCreateAction",
-						"acl" : [
+					"user-to-session-relationship-remove": {
+						"title": "Removes session as relationship of user",
+						"class": "keeko\\core\\action\\UserSessionRemoveAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserSessionJsonResponder"
 						}
 					},
-					"activity-list" : {
-						"title" : "Creates an activity",
-						"class" : "keeko\\core\\action\\ActivityCreateAction",
-						"acl" : [
+					"user-to-group-relationship-read": {
+						"title": "Reads the relationship of user to group",
+						"class": "keeko\\core\\action\\UserGroupReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserGroupJsonResponder"
 						}
 					},
-					"activity-update" : {
-						"title" : "Creates an activity",
-						"class" : "keeko\\core\\action\\ActivityCreateAction",
-						"acl" : [
+					"user-to-group-relationship-add": {
+						"title": "Adds group as relationship to user",
+						"class": "keeko\\core\\action\\UserGroupAddAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserGroupJsonResponder"
 						}
 					},
-					"activity-delete" : {
-						"title" : "Creates an activity",
-						"class" : "keeko\\core\\action\\ActivityCreateAction",
-						"acl" : [
+					"user-to-group-relationship-update": {
+						"title": "Updates the relationship of user to group",
+						"class": "keeko\\core\\action\\UserGroupUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserGroupJsonResponder"
 						}
 					},
-					"activity-to-user-relationship-read" : {
-						"title" : "Reads the relationship of activity to user",
-						"class" : "keeko\\core\\action\\ActivityUserReadAction",
-						"acl" : [
+					"user-to-group-relationship-remove": {
+						"title": "Removes group as relationship of user",
+						"class": "keeko\\core\\action\\UserGroupRemoveAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityUserJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserGroupJsonResponder"
 						}
 					},
-					"activity-to-user-relationship-update" : {
-						"title" : "Updates the relationship of activity to user",
-						"class" : "keeko\\core\\action\\ActivityUserUpdateAction",
-						"acl" : [
+					"user-to-activity-relationship-read": {
+						"title": "Reads the relationship of user to activity",
+						"class": "keeko\\core\\action\\UserActivityReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityUserJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserActivityJsonResponder"
 						}
 					},
-					"activity-to-activity_object-relationship-read" : {
-						"title" : "Reads the relationship of activity to activity_object",
-						"class" : "keeko\\core\\action\\ActivityActivityObjectReadAction",
-						"acl" : [
+					"user-to-activity-relationship-add": {
+						"title": "Adds activity as relationship to user",
+						"class": "keeko\\core\\action\\UserActivityAddAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityActivityObjectJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserActivityJsonResponder"
 						}
 					},
-					"activity-to-activity_object-relationship-update" : {
-						"title" : "Updates the relationship of activity to activity_object",
-						"class" : "keeko\\core\\action\\ActivityActivityObjectUpdateAction",
-						"acl" : [
+					"user-to-activity-relationship-update": {
+						"title": "Updates the relationship of user to activity",
+						"class": "keeko\\core\\action\\UserActivityUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityActivityObjectJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserActivityJsonResponder"
 						}
 					},
-					"activity_object-create" : {
-						"title" : "Creates an activity-object",
-						"class" : "keeko\\core\\action\\ActivityObjectCreateAction",
-						"acl" : [
+					"user-to-activity-relationship-remove": {
+						"title": "Removes activity as relationship of user",
+						"class": "keeko\\core\\action\\UserActivityRemoveAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityObjectCreateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\UserActivityJsonResponder"
 						}
 					},
-					"activity_object-read" : {
-						"title" : "Reads an activity-object",
-						"class" : "keeko\\core\\action\\ActivityObjectReadAction",
-						"acl" : [
+					"group-create": {
+						"title": "Creates a group",
+						"class": "keeko\\core\\action\\GroupCreateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityObjectReadJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\GroupCreateJsonResponder"
 						}
 					},
-					"activity_object-list" : {
-						"title" : "List all activity-objects",
-						"class" : "keeko\\core\\action\\ActivityObjectListAction",
-						"acl" : [
+					"group-read": {
+						"title": "Reads a group",
+						"class": "keeko\\core\\action\\GroupReadAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityObjectListJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\GroupReadJsonResponder"
 						}
 					},
-					"activity_object-update" : {
-						"title" : "Updates an activity-object",
-						"class" : "keeko\\core\\action\\ActivityObjectUpdateAction",
-						"acl" : [
+					"group-list": {
+						"title": "List all groups",
+						"class": "keeko\\core\\action\\GroupListAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityObjectUpdateJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\GroupListJsonResponder"
 						}
 					},
-					"activity_object-delete" : {
-						"title" : "Deletes an activity-object",
-						"class" : "keeko\\core\\action\\ActivityObjectDeleteAction",
-						"acl" : [
+					"group-update": {
+						"title": "Updates a group",
+						"class": "keeko\\core\\action\\GroupUpdateAction",
+						"acl": [
 							"admin"
 						],
-						"response" : {
-							"json" : "keeko\\core\\responder\\ActivityObjectDeleteJsonResponder"
+						"response": {
+							"json": "keeko\\core\\responder\\GroupUpdateJsonResponder"
+						}
+					},
+					"group-delete": {
+						"title": "Deletes a group",
+						"class": "keeko\\core\\action\\GroupDeleteAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupDeleteJsonResponder"
+						}
+					},
+					"group-to-user-relationship-read": {
+						"title": "Reads the relationship of group to user",
+						"class": "keeko\\core\\action\\GroupUserReadAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupUserJsonResponder"
+						}
+					},
+					"group-to-user-relationship-add": {
+						"title": "Adds user as relationship to group",
+						"class": "keeko\\core\\action\\GroupUserAddAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupUserJsonResponder"
+						}
+					},
+					"group-to-user-relationship-update": {
+						"title": "Updates the relationship of group to user",
+						"class": "keeko\\core\\action\\GroupUserUpdateAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupUserJsonResponder"
+						}
+					},
+					"group-to-user-relationship-remove": {
+						"title": "Removes user as relationship of group",
+						"class": "keeko\\core\\action\\GroupUserRemoveAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupUserJsonResponder"
+						}
+					},
+					"group-to-action-relationship-read": {
+						"title": "Reads the relationship of group to action",
+						"class": "keeko\\core\\action\\GroupActionReadAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupActionJsonResponder"
+						}
+					},
+					"group-to-action-relationship-add": {
+						"title": "Adds action as relationship to group",
+						"class": "keeko\\core\\action\\GroupActionAddAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupActionJsonResponder"
+						}
+					},
+					"group-to-action-relationship-update": {
+						"title": "Updates the relationship of group to action",
+						"class": "keeko\\core\\action\\GroupActionUpdateAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupActionJsonResponder"
+						}
+					},
+					"group-to-action-relationship-remove": {
+						"title": "Removes action as relationship of group",
+						"class": "keeko\\core\\action\\GroupActionRemoveAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\GroupActionJsonResponder"
+						}
+					},
+					"activity-create": {
+						"title": "Creates an activity",
+						"class": "keeko\\core\\action\\ActivityCreateAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityCreateJsonResponder"
+						}
+					},
+					"activity-read": {
+						"title": "Reads an activity",
+						"class": "keeko\\core\\action\\ActivityReadAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityReadJsonResponder"
+						}
+					},
+					"activity-list": {
+						"title": "List all activities",
+						"class": "keeko\\core\\action\\ActivityListAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityListJsonResponder"
+						}
+					},
+					"activity-update": {
+						"title": "Updates an activity",
+						"class": "keeko\\core\\action\\ActivityUpdateAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityUpdateJsonResponder"
+						}
+					},
+					"activity-delete": {
+						"title": "Deletes an activity",
+						"class": "keeko\\core\\action\\ActivityDeleteAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityDeleteJsonResponder"
+						}
+					},
+					"activity-to-actor-relationship-read": {
+						"title": "Reads the relationship of activity to actor",
+						"class": "keeko\\core\\action\\ActivityActorReadAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityActorJsonResponder"
+						}
+					},
+					"activity-to-actor-relationship-update": {
+						"title": "Updates the relationship of activity to actor",
+						"class": "keeko\\core\\action\\ActivityActorUpdateAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityActorJsonResponder"
+						}
+					},
+					"activity-to-object-relationship-read": {
+						"title": "Reads the relationship of activity to object",
+						"class": "keeko\\core\\action\\ActivityObjectReadAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityObjectJsonResponder"
+						}
+					},
+					"activity-to-object-relationship-update": {
+						"title": "Updates the relationship of activity to object",
+						"class": "keeko\\core\\action\\ActivityObjectUpdateAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityObjectJsonResponder"
+						}
+					},
+					"activity-to-target-relationship-read": {
+						"title": "Reads the relationship of activity to target",
+						"class": "keeko\\core\\action\\ActivityTargetReadAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityTargetJsonResponder"
+						}
+					},
+					"activity-to-target-relationship-update": {
+						"title": "Updates the relationship of activity to target",
+						"class": "keeko\\core\\action\\ActivityTargetUpdateAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityTargetJsonResponder"
+						}
+					},
+					"activity_object-create": {
+						"title": "Creates an activity-object",
+						"class": "keeko\\core\\action\\ActivityObjectCreateAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityObjectCreateJsonResponder"
+						}
+					},
+					"activity_object-read": {
+						"title": "Reads an activity-object",
+						"class": "keeko\\core\\action\\ActivityObjectReadAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityObjectReadJsonResponder"
+						}
+					},
+					"activity_object-list": {
+						"title": "List all activity-objects",
+						"class": "keeko\\core\\action\\ActivityObjectListAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityObjectListJsonResponder"
+						}
+					},
+					"activity_object-update": {
+						"title": "Updates an activity-object",
+						"class": "keeko\\core\\action\\ActivityObjectUpdateAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityObjectUpdateJsonResponder"
+						}
+					},
+					"activity_object-delete": {
+						"title": "Deletes an activity-object",
+						"class": "keeko\\core\\action\\ActivityObjectDeleteAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityObjectDeleteJsonResponder"
+						}
+					},
+					"activity_object-to-activity-relationship-read": {
+						"title": "Reads the relationship of activity_object to activity",
+						"class": "keeko\\core\\action\\ActivityObjectActivityReadAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityObjectActivityJsonResponder"
+						}
+					},
+					"activity_object-to-activity-relationship-add": {
+						"title": "Adds activity as relationship to activity_object",
+						"class": "keeko\\core\\action\\ActivityObjectActivityAddAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityObjectActivityJsonResponder"
+						}
+					},
+					"activity_object-to-activity-relationship-update": {
+						"title": "Updates the relationship of activity_object to activity",
+						"class": "keeko\\core\\action\\ActivityObjectActivityUpdateAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityObjectActivityJsonResponder"
+						}
+					},
+					"activity_object-to-activity-relationship-remove": {
+						"title": "Removes activity as relationship of activity_object",
+						"class": "keeko\\core\\action\\ActivityObjectActivityRemoveAction",
+						"acl": [
+							"admin"
+						],
+						"response": {
+							"json": "keeko\\core\\responder\\ActivityObjectActivityJsonResponder"
 						}
 					}
 				}
