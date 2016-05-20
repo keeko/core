@@ -2,9 +2,6 @@
 	"models": {
 	    "user" : {
 			"write" : {
-				"conversion" : {
-					"password" : "password_hash($v, PASSWORD_BCRYPT)"
-				},
 				"filter" : [
 				    "display_name",
 					"password_recover_token",
@@ -18,6 +15,9 @@
 					"password_recover_token",
 					"password_recover_time"
 				]
+			},
+			"normalizer": {
+			    "password": "keeko\\core\\normalizer\\PasswordNormalizer"
 			}
 		}
 	},

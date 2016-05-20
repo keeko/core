@@ -98,8 +98,14 @@ trait UserSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
-		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'user-name', 'password' => function($v) {
-			return password_hash($v, PASSWORD_BCRYPT);
+		$service = $this->getServiceContainer();
+		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'user-name', 'password' => function ($value) use ($service) {
+			if (class_exists('keeko\core\normalizer\PasswordNormalizer')) {
+				$normalizer = new keeko\core\normalizer\PasswordNormalizer();
+				$normalizer->setServiceContainer($service);
+				return $normalizer->normalize($value);
+			}
+			return $value;
 		}, 'given-name', 'family-name', 'nick-name', 'display-name-user-select', 'email', 'birth', 'sex', 'slug']);
 
 		// relationships
