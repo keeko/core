@@ -39,9 +39,9 @@ trait UserDomainTrait {
 	 */
 	public function addActivities($id, $data) {
 		// find
-		$user = $this->get($id);
+		$model = $this->get($id);
 
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 		 
@@ -51,8 +51,8 @@ trait UserDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Activity';
 			}
-			$activity = ActivityQuery::create()->findOneById($entry['id']);
-			$user->addActivity($activity);
+			$related = ActivityQuery::create()->findOneById($entry['id']);
+			$model->addActivity($related);
 		}
 
 		if (count($errors) > 0) {
@@ -60,19 +60,19 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_ACTIVITIES_ADD, $event);
 		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
-		$rows = $user->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(UserEvent::POST_ACTIVITIES_ADD, $event);
 		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $user]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $user]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -84,9 +84,9 @@ trait UserDomainTrait {
 	 */
 	public function addGroups($id, $data) {
 		// find
-		$user = $this->get($id);
+		$model = $this->get($id);
 
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 		 
@@ -96,8 +96,8 @@ trait UserDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Group';
 			}
-			$group = GroupQuery::create()->findOneById($entry['id']);
-			$user->addGroup($group);
+			$related = GroupQuery::create()->findOneById($entry['id']);
+			$model->addGroup($related);
 		}
 
 		if (count($errors) > 0) {
@@ -105,19 +105,19 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_GROUPS_ADD, $event);
 		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
-		$rows = $user->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(UserEvent::POST_GROUPS_ADD, $event);
 		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $user]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $user]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -129,9 +129,9 @@ trait UserDomainTrait {
 	 */
 	public function addSessions($id, $data) {
 		// find
-		$user = $this->get($id);
+		$model = $this->get($id);
 
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 		 
@@ -141,8 +141,8 @@ trait UserDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Session';
 			}
-			$session = SessionQuery::create()->findOneById($entry['id']);
-			$user->addSession($session);
+			$related = SessionQuery::create()->findOneById($entry['id']);
+			$model->addSession($related);
 		}
 
 		if (count($errors) > 0) {
@@ -150,19 +150,19 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_SESSIONS_ADD, $event);
 		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
-		$rows = $user->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(UserEvent::POST_SESSIONS_ADD, $event);
 		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $user]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $user]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -174,25 +174,25 @@ trait UserDomainTrait {
 	public function create($data) {
 		// hydrate
 		$serializer = User::getSerializer();
-		$user = $serializer->hydrate(new User(), $data);
+		$model = $serializer->hydrate(new User(), $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($user)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_CREATE, $event);
 		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
-		$user->save();
+		$model->save();
 		$dispatcher->dispatch(UserEvent::POST_CREATE, $event);
 		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
-		return new Created(['model' => $user]);
+		return new Created(['model' => $model]);
 	}
 
 	/**
@@ -203,21 +203,21 @@ trait UserDomainTrait {
 	 */
 	public function delete($id) {
 		// find
-		$user = $this->get($id);
+		$model = $this->get($id);
 
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
 		// delete
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_DELETE, $event);
-		$user->delete();
+		$model->delete();
 
-		if ($user->isDeleted()) {
+		if ($model->isDeleted()) {
 			$dispatcher->dispatch(UserEvent::POST_DELETE, $event);
-			return new Deleted(['model' => $user]);
+			return new Deleted(['model' => $model]);
 		}
 
 		return new NotDeleted(['message' => 'Could not delete User']);
@@ -251,10 +251,10 @@ trait UserDomainTrait {
 		}
 
 		// paginate
-		$user = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $user]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -265,14 +265,14 @@ trait UserDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$user = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
-		return new Found(['model' => $user]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -284,9 +284,9 @@ trait UserDomainTrait {
 	 */
 	public function removeActivities($id, $data) {
 		// find
-		$user = $this->get($id);
+		$model = $this->get($id);
 
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
@@ -296,8 +296,8 @@ trait UserDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Activity';
 			}
-			$activity = ActivityQuery::create()->findOneById($entry['id']);
-			$user->removeActivity($activity);
+			$related = ActivityQuery::create()->findOneById($entry['id']);
+			$model->removeActivity($related);
 		}
 
 		if (count($errors) > 0) {
@@ -305,19 +305,19 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_ACTIVITIES_REMOVE, $event);
 		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
-		$rows = $user->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(UserEvent::POST_ACTIVITIES_REMOVE, $event);
 		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $user]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $user]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -329,9 +329,9 @@ trait UserDomainTrait {
 	 */
 	public function removeGroups($id, $data) {
 		// find
-		$user = $this->get($id);
+		$model = $this->get($id);
 
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
@@ -341,8 +341,8 @@ trait UserDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Group';
 			}
-			$group = GroupQuery::create()->findOneById($entry['id']);
-			$user->removeGroup($group);
+			$related = GroupQuery::create()->findOneById($entry['id']);
+			$model->removeGroup($related);
 		}
 
 		if (count($errors) > 0) {
@@ -350,19 +350,19 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_GROUPS_REMOVE, $event);
 		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
-		$rows = $user->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(UserEvent::POST_GROUPS_REMOVE, $event);
 		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $user]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $user]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -374,9 +374,9 @@ trait UserDomainTrait {
 	 */
 	public function removeSessions($id, $data) {
 		// find
-		$user = $this->get($id);
+		$model = $this->get($id);
 
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
@@ -386,8 +386,8 @@ trait UserDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Session';
 			}
-			$session = SessionQuery::create()->findOneById($entry['id']);
-			$user->removeSession($session);
+			$related = SessionQuery::create()->findOneById($entry['id']);
+			$model->removeSession($related);
 		}
 
 		if (count($errors) > 0) {
@@ -395,19 +395,19 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_SESSIONS_REMOVE, $event);
 		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
-		$rows = $user->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(UserEvent::POST_SESSIONS_REMOVE, $event);
 		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $user]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $user]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -419,34 +419,34 @@ trait UserDomainTrait {
 	 */
 	public function update($id, $data) {
 		// find
-		$user = $this->get($id);
+		$model = $this->get($id);
 
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
 		// hydrate
 		$serializer = User::getSerializer();
-		$user = $serializer->hydrate($user, $data);
+		$model = $serializer->hydrate($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($user)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_UPDATE, $event);
 		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
-		$rows = $user->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(UserEvent::POST_UPDATE, $event);
 		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
-		$payload = ['model' => $user];
+		$payload = ['model' => $model];
 
 		if ($rows === 0) {
 			return new NotUpdated($payload);
@@ -464,14 +464,14 @@ trait UserDomainTrait {
 	 */
 	public function updateActivities($id, $data) {
 		// find
-		$user = $this->get($id);
+		$model = $this->get($id);
 
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
 		// remove all relationships before
-		ActivityQuery::create()->filterByActor($user)->delete();
+		ActivityQuery::create()->filterByActor($model)->delete();
 
 		// add them
 		$errors = [];
@@ -479,8 +479,8 @@ trait UserDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Activity';
 			}
-			$activity = ActivityQuery::create()->findOneById($entry['id']);
-			$user->addActivity($activity);
+			$related = ActivityQuery::create()->findOneById($entry['id']);
+			$model->addActivity($related);
 		}
 
 		if (count($errors) > 0) {
@@ -488,19 +488,19 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_ACTIVITIES_UPDATE, $event);
 		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
-		$rows = $user->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(UserEvent::POST_ACTIVITIES_UPDATE, $event);
 		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $user]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $user]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -512,14 +512,14 @@ trait UserDomainTrait {
 	 */
 	public function updateGroups($id, $data) {
 		// find
-		$user = $this->get($id);
+		$model = $this->get($id);
 
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
 		// remove all relationships before
-		UserGroupQuery::create()->filterByUser($user)->delete();
+		UserGroupQuery::create()->filterByUser($model)->delete();
 
 		// add them
 		$errors = [];
@@ -527,8 +527,8 @@ trait UserDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Group';
 			}
-			$group = GroupQuery::create()->findOneById($entry['id']);
-			$user->addGroup($group);
+			$related = GroupQuery::create()->findOneById($entry['id']);
+			$model->addGroup($related);
 		}
 
 		if (count($errors) > 0) {
@@ -536,19 +536,19 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_GROUPS_UPDATE, $event);
 		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
-		$rows = $user->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(UserEvent::POST_GROUPS_UPDATE, $event);
 		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $user]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $user]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -560,14 +560,14 @@ trait UserDomainTrait {
 	 */
 	public function updateSessions($id, $data) {
 		// find
-		$user = $this->get($id);
+		$model = $this->get($id);
 
-		if ($user === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
 		// remove all relationships before
-		SessionQuery::create()->filterByUser($user)->delete();
+		SessionQuery::create()->filterByUser($model)->delete();
 
 		// add them
 		$errors = [];
@@ -575,8 +575,8 @@ trait UserDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Session';
 			}
-			$session = SessionQuery::create()->findOneById($entry['id']);
-			$user->addSession($session);
+			$related = SessionQuery::create()->findOneById($entry['id']);
+			$model->addSession($related);
 		}
 
 		if (count($errors) > 0) {
@@ -584,29 +584,46 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($user);
+		$event = new UserEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(UserEvent::PRE_SESSIONS_UPDATE, $event);
 		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
-		$rows = $user->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(UserEvent::POST_SESSIONS_UPDATE, $event);
 		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $user]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $user]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\UserDomain
-	 * 
-	 * @param UserQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(UserQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one User with the given id from cache
@@ -621,10 +638,10 @@ trait UserDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$user = UserQuery::create()->findOneById($id);
-		$this->pool->set($id, $user);
+		$model = UserQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $user;
+		return $model;
 	}
 
 	/**

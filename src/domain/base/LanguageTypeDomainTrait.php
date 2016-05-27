@@ -47,10 +47,10 @@ trait LanguageTypeDomainTrait {
 		}
 
 		// paginate
-		$languageType = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $languageType]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -61,24 +61,41 @@ trait LanguageTypeDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$languageType = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($languageType === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'LanguageType not found.']);
 		}
 
-		return new Found(['model' => $languageType]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\LanguageTypeDomain
-	 * 
-	 * @param LanguageTypeQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(LanguageTypeQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one LanguageType with the given id from cache
@@ -93,10 +110,10 @@ trait LanguageTypeDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$languageType = LanguageTypeQuery::create()->findOneById($id);
-		$this->pool->set($id, $languageType);
+		$model = LanguageTypeQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $languageType;
+		return $model;
 	}
 
 	/**

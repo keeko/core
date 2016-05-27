@@ -36,9 +36,9 @@ trait ActivityObjectDomainTrait {
 	 */
 	public function addActivities($id, $data) {
 		// find
-		$activityObject = $this->get($id);
+		$model = $this->get($id);
 
-		if ($activityObject === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'ActivityObject not found.']);
 		}
 		 
@@ -48,8 +48,8 @@ trait ActivityObjectDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Activity';
 			}
-			$activity = ActivityQuery::create()->findOneById($entry['id']);
-			$activityObject->addActivity($activity);
+			$related = ActivityQuery::create()->findOneById($entry['id']);
+			$model->addActivity($related);
 		}
 
 		if (count($errors) > 0) {
@@ -57,19 +57,19 @@ trait ActivityObjectDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ActivityObjectEvent($activityObject);
+		$event = new ActivityObjectEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ActivityObjectEvent::PRE_ACTIVITIES_ADD, $event);
 		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
-		$rows = $activityObject->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ActivityObjectEvent::POST_ACTIVITIES_ADD, $event);
 		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $activityObject]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $activityObject]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -81,25 +81,25 @@ trait ActivityObjectDomainTrait {
 	public function create($data) {
 		// hydrate
 		$serializer = ActivityObject::getSerializer();
-		$activityObject = $serializer->hydrate(new ActivityObject(), $data);
+		$model = $serializer->hydrate(new ActivityObject(), $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($activityObject)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ActivityObjectEvent($activityObject);
+		$event = new ActivityObjectEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ActivityObjectEvent::PRE_CREATE, $event);
 		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
-		$activityObject->save();
+		$model->save();
 		$dispatcher->dispatch(ActivityObjectEvent::POST_CREATE, $event);
 		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
-		return new Created(['model' => $activityObject]);
+		return new Created(['model' => $model]);
 	}
 
 	/**
@@ -110,21 +110,21 @@ trait ActivityObjectDomainTrait {
 	 */
 	public function delete($id) {
 		// find
-		$activityObject = $this->get($id);
+		$model = $this->get($id);
 
-		if ($activityObject === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'ActivityObject not found.']);
 		}
 
 		// delete
-		$event = new ActivityObjectEvent($activityObject);
+		$event = new ActivityObjectEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ActivityObjectEvent::PRE_DELETE, $event);
-		$activityObject->delete();
+		$model->delete();
 
-		if ($activityObject->isDeleted()) {
+		if ($model->isDeleted()) {
 			$dispatcher->dispatch(ActivityObjectEvent::POST_DELETE, $event);
-			return new Deleted(['model' => $activityObject]);
+			return new Deleted(['model' => $model]);
 		}
 
 		return new NotDeleted(['message' => 'Could not delete ActivityObject']);
@@ -158,10 +158,10 @@ trait ActivityObjectDomainTrait {
 		}
 
 		// paginate
-		$activityObject = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $activityObject]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -172,14 +172,14 @@ trait ActivityObjectDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$activityObject = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($activityObject === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'ActivityObject not found.']);
 		}
 
-		return new Found(['model' => $activityObject]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -191,9 +191,9 @@ trait ActivityObjectDomainTrait {
 	 */
 	public function removeActivities($id, $data) {
 		// find
-		$activityObject = $this->get($id);
+		$model = $this->get($id);
 
-		if ($activityObject === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'ActivityObject not found.']);
 		}
 
@@ -203,8 +203,8 @@ trait ActivityObjectDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Activity';
 			}
-			$activity = ActivityQuery::create()->findOneById($entry['id']);
-			$activityObject->removeActivity($activity);
+			$related = ActivityQuery::create()->findOneById($entry['id']);
+			$model->removeActivity($related);
 		}
 
 		if (count($errors) > 0) {
@@ -212,19 +212,19 @@ trait ActivityObjectDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ActivityObjectEvent($activityObject);
+		$event = new ActivityObjectEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ActivityObjectEvent::PRE_ACTIVITIES_REMOVE, $event);
 		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
-		$rows = $activityObject->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ActivityObjectEvent::POST_ACTIVITIES_REMOVE, $event);
 		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $activityObject]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $activityObject]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -236,34 +236,34 @@ trait ActivityObjectDomainTrait {
 	 */
 	public function update($id, $data) {
 		// find
-		$activityObject = $this->get($id);
+		$model = $this->get($id);
 
-		if ($activityObject === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'ActivityObject not found.']);
 		}
 
 		// hydrate
 		$serializer = ActivityObject::getSerializer();
-		$activityObject = $serializer->hydrate($activityObject, $data);
+		$model = $serializer->hydrate($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($activityObject)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ActivityObjectEvent($activityObject);
+		$event = new ActivityObjectEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ActivityObjectEvent::PRE_UPDATE, $event);
 		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
-		$rows = $activityObject->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ActivityObjectEvent::POST_UPDATE, $event);
 		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
 
-		$payload = ['model' => $activityObject];
+		$payload = ['model' => $model];
 
 		if ($rows === 0) {
 			return new NotUpdated($payload);
@@ -281,14 +281,14 @@ trait ActivityObjectDomainTrait {
 	 */
 	public function updateActivities($id, $data) {
 		// find
-		$activityObject = $this->get($id);
+		$model = $this->get($id);
 
-		if ($activityObject === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'ActivityObject not found.']);
 		}
 
 		// remove all relationships before
-		ActivityQuery::create()->filterByTarget($activityObject)->delete();
+		ActivityQuery::create()->filterByTarget($model)->delete();
 
 		// add them
 		$errors = [];
@@ -296,8 +296,8 @@ trait ActivityObjectDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Activity';
 			}
-			$activity = ActivityQuery::create()->findOneById($entry['id']);
-			$activityObject->addActivity($activity);
+			$related = ActivityQuery::create()->findOneById($entry['id']);
+			$model->addActivity($related);
 		}
 
 		if (count($errors) > 0) {
@@ -305,29 +305,46 @@ trait ActivityObjectDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ActivityObjectEvent($activityObject);
+		$event = new ActivityObjectEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ActivityObjectEvent::PRE_ACTIVITIES_UPDATE, $event);
 		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
-		$rows = $activityObject->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ActivityObjectEvent::POST_ACTIVITIES_UPDATE, $event);
 		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $activityObject]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $activityObject]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\ActivityObjectDomain
-	 * 
-	 * @param ActivityObjectQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(ActivityObjectQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one ActivityObject with the given id from cache
@@ -342,10 +359,10 @@ trait ActivityObjectDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$activityObject = ActivityObjectQuery::create()->findOneById($id);
-		$this->pool->set($id, $activityObject);
+		$model = ActivityObjectQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $activityObject;
+		return $model;
 	}
 
 	/**

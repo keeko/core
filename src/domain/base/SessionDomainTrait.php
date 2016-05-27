@@ -35,25 +35,25 @@ trait SessionDomainTrait {
 	public function create($data) {
 		// hydrate
 		$serializer = Session::getSerializer();
-		$session = $serializer->hydrate(new Session(), $data);
+		$model = $serializer->hydrate(new Session(), $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($session)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new SessionEvent($session);
+		$event = new SessionEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(SessionEvent::PRE_CREATE, $event);
 		$dispatcher->dispatch(SessionEvent::PRE_SAVE, $event);
-		$session->save();
+		$model->save();
 		$dispatcher->dispatch(SessionEvent::POST_CREATE, $event);
 		$dispatcher->dispatch(SessionEvent::POST_SAVE, $event);
-		return new Created(['model' => $session]);
+		return new Created(['model' => $model]);
 	}
 
 	/**
@@ -64,21 +64,21 @@ trait SessionDomainTrait {
 	 */
 	public function delete($id) {
 		// find
-		$session = $this->get($id);
+		$model = $this->get($id);
 
-		if ($session === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Session not found.']);
 		}
 
 		// delete
-		$event = new SessionEvent($session);
+		$event = new SessionEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(SessionEvent::PRE_DELETE, $event);
-		$session->delete();
+		$model->delete();
 
-		if ($session->isDeleted()) {
+		if ($model->isDeleted()) {
 			$dispatcher->dispatch(SessionEvent::POST_DELETE, $event);
-			return new Deleted(['model' => $session]);
+			return new Deleted(['model' => $model]);
 		}
 
 		return new NotDeleted(['message' => 'Could not delete Session']);
@@ -112,10 +112,10 @@ trait SessionDomainTrait {
 		}
 
 		// paginate
-		$session = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $session]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -126,47 +126,47 @@ trait SessionDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$session = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($session === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Session not found.']);
 		}
 
-		return new Found(['model' => $session]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
 	 * Sets the User id
 	 * 
 	 * @param mixed $id
-	 * @param mixed $userId
+	 * @param mixed $relatedId
 	 * @return PayloadInterface
 	 */
-	public function setUserId($id, $userId) {
+	public function setUserId($id, $relatedId) {
 		// find
-		$session = $this->get($id);
+		$model = $this->get($id);
 
-		if ($session === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Session not found.']);
 		}
 
 		// update
-		if ($session->getUserId() !== $userId) {
-			$session->setUserId($userId);
+		if ($model->getUserId() !== $relatedId) {
+			$model->setUserId($relatedId);
 
-			$event = new SessionEvent($session);
+			$event = new SessionEvent($model);
 			$dispatcher = $this->getServiceContainer()->getDispatcher();
 			$dispatcher->dispatch(SessionEvent::PRE_USER_UPDATE, $event);
 			$dispatcher->dispatch(SessionEvent::PRE_SAVE, $event);
-			$session->save();
+			$model->save();
 			$dispatcher->dispatch(SessionEvent::POST_USER_UPDATE, $event);
 			$dispatcher->dispatch(SessionEvent::POST_SAVE, $event);
 			
-			return Updated(['model' => $session]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $session]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -178,34 +178,34 @@ trait SessionDomainTrait {
 	 */
 	public function update($id, $data) {
 		// find
-		$session = $this->get($id);
+		$model = $this->get($id);
 
-		if ($session === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Session not found.']);
 		}
 
 		// hydrate
 		$serializer = Session::getSerializer();
-		$session = $serializer->hydrate($session, $data);
+		$model = $serializer->hydrate($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($session)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new SessionEvent($session);
+		$event = new SessionEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(SessionEvent::PRE_UPDATE, $event);
 		$dispatcher->dispatch(SessionEvent::PRE_SAVE, $event);
-		$rows = $session->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(SessionEvent::POST_UPDATE, $event);
 		$dispatcher->dispatch(SessionEvent::POST_SAVE, $event);
 
-		$payload = ['model' => $session];
+		$payload = ['model' => $model];
 
 		if ($rows === 0) {
 			return new NotUpdated($payload);
@@ -215,13 +215,30 @@ trait SessionDomainTrait {
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\SessionDomain
-	 * 
-	 * @param SessionQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(SessionQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one Session with the given id from cache
@@ -236,10 +253,10 @@ trait SessionDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$session = SessionQuery::create()->findOneById($id);
-		$this->pool->set($id, $session);
+		$model = SessionQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $session;
+		return $model;
 	}
 
 	/**

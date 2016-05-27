@@ -11,21 +11,18 @@ trait SubdivisionSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'code' => $model->getCode(),
 			'name' => $model->getName(),
 			'native-name' => $model->getNativeName(),
 			'alt-names' => $model->getAltNames(),
-			'parent-id' => $model->getParentId(),
-			'country-id' => $model->getCountryId(),
-			'type-id' => $model->getTypeId(),
+			'parent-id' => $model->getParentId()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'code', 'name', 'native-name', 'alt-names', 'parent-id', 'country-id', 'type-id'];
+		return ['code', 'name', 'native-name', 'alt-names', 'parent-id'];
 	}
 
 	/**
@@ -33,13 +30,17 @@ trait SubdivisionSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'code', 'name', 'native-name', 'alt-names', 'parent-id', 'country-id', 'type-id'];
+		return ['code', 'name', 'native-name', 'alt-names', 'parent-id'];
 	}
 
 	/**

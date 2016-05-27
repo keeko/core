@@ -26,7 +26,6 @@ trait GroupSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'owner-id' => $model->getOwnerId(),
 			'name' => $model->getName(),
 			'is-guest' => $model->getIsGuest(),
@@ -34,14 +33,14 @@ trait GroupSerializerTrait {
 			'is-active' => $model->getIsActive(),
 			'is-system' => $model->getIsSystem(),
 			'created-at' => $model->getCreatedAt(\DateTime::ISO8601),
-			'updated-at' => $model->getUpdatedAt(\DateTime::ISO8601),
+			'updated-at' => $model->getUpdatedAt(\DateTime::ISO8601)
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'owner-id', 'name', 'is-guest', 'is-default', 'is-active', 'is-system', 'created-at', 'updated-at'];
+		return ['owner-id', 'name', 'is-guest', 'is-default', 'is-active', 'is-system', 'created-at', 'updated-at'];
 	}
 
 	/**
@@ -49,7 +48,11 @@ trait GroupSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -64,7 +67,7 @@ trait GroupSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'owner-id', 'name', 'is-guest', 'is-default', 'is-active', 'is-system', 'created-at', 'updated-at'];
+		return ['owner-id', 'name', 'is-guest', 'is-default', 'is-active', 'is-system', 'created-at', 'updated-at'];
 	}
 
 	/**

@@ -27,7 +27,6 @@ trait UserSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'user-name' => $model->getUserName(),
 			'given-name' => $model->getGivenName(),
 			'family-name' => $model->getFamilyName(),
@@ -38,14 +37,14 @@ trait UserSerializerTrait {
 			'sex' => $model->getSex(),
 			'slug' => $model->getSlug(),
 			'created-at' => $model->getCreatedAt(\DateTime::ISO8601),
-			'updated-at' => $model->getUpdatedAt(\DateTime::ISO8601),
+			'updated-at' => $model->getUpdatedAt(\DateTime::ISO8601)
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'user-name', 'given-name', 'family-name', 'nick-name', 'display-name', 'email', 'birth', 'sex', 'slug', 'created-at', 'updated-at'];
+		return ['user-name', 'given-name', 'family-name', 'nick-name', 'display-name', 'email', 'birth', 'sex', 'slug', 'created-at', 'updated-at'];
 	}
 
 	/**
@@ -53,7 +52,11 @@ trait UserSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -69,7 +72,7 @@ trait UserSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'user-name', 'given-name', 'family-name', 'nick-name', 'display-name', 'email', 'birth', 'sex', 'slug', 'created-at', 'updated-at'];
+		return ['user-name', 'given-name', 'family-name', 'nick-name', 'display-name', 'email', 'birth', 'sex', 'slug', 'created-at', 'updated-at'];
 	}
 
 	/**

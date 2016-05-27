@@ -35,25 +35,25 @@ trait ExtensionDomainTrait {
 	public function create($data) {
 		// hydrate
 		$serializer = Extension::getSerializer();
-		$extension = $serializer->hydrate(new Extension(), $data);
+		$model = $serializer->hydrate(new Extension(), $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($extension)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ExtensionEvent($extension);
+		$event = new ExtensionEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ExtensionEvent::PRE_CREATE, $event);
 		$dispatcher->dispatch(ExtensionEvent::PRE_SAVE, $event);
-		$extension->save();
+		$model->save();
 		$dispatcher->dispatch(ExtensionEvent::POST_CREATE, $event);
 		$dispatcher->dispatch(ExtensionEvent::POST_SAVE, $event);
-		return new Created(['model' => $extension]);
+		return new Created(['model' => $model]);
 	}
 
 	/**
@@ -64,21 +64,21 @@ trait ExtensionDomainTrait {
 	 */
 	public function delete($id) {
 		// find
-		$extension = $this->get($id);
+		$model = $this->get($id);
 
-		if ($extension === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Extension not found.']);
 		}
 
 		// delete
-		$event = new ExtensionEvent($extension);
+		$event = new ExtensionEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ExtensionEvent::PRE_DELETE, $event);
-		$extension->delete();
+		$model->delete();
 
-		if ($extension->isDeleted()) {
+		if ($model->isDeleted()) {
 			$dispatcher->dispatch(ExtensionEvent::POST_DELETE, $event);
-			return new Deleted(['model' => $extension]);
+			return new Deleted(['model' => $model]);
 		}
 
 		return new NotDeleted(['message' => 'Could not delete Extension']);
@@ -112,10 +112,10 @@ trait ExtensionDomainTrait {
 		}
 
 		// paginate
-		$extension = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $extension]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -126,14 +126,14 @@ trait ExtensionDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$extension = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($extension === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Extension not found.']);
 		}
 
-		return new Found(['model' => $extension]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -145,34 +145,34 @@ trait ExtensionDomainTrait {
 	 */
 	public function update($id, $data) {
 		// find
-		$extension = $this->get($id);
+		$model = $this->get($id);
 
-		if ($extension === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Extension not found.']);
 		}
 
 		// hydrate
 		$serializer = Extension::getSerializer();
-		$extension = $serializer->hydrate($extension, $data);
+		$model = $serializer->hydrate($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($extension)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ExtensionEvent($extension);
+		$event = new ExtensionEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ExtensionEvent::PRE_UPDATE, $event);
 		$dispatcher->dispatch(ExtensionEvent::PRE_SAVE, $event);
-		$rows = $extension->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ExtensionEvent::POST_UPDATE, $event);
 		$dispatcher->dispatch(ExtensionEvent::POST_SAVE, $event);
 
-		$payload = ['model' => $extension];
+		$payload = ['model' => $model];
 
 		if ($rows === 0) {
 			return new NotUpdated($payload);
@@ -182,13 +182,30 @@ trait ExtensionDomainTrait {
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\ExtensionDomain
-	 * 
-	 * @param ExtensionQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(ExtensionQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one Extension with the given id from cache
@@ -203,10 +220,10 @@ trait ExtensionDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$extension = ExtensionQuery::create()->findOneById($id);
-		$this->pool->set($id, $extension);
+		$model = ExtensionQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $extension;
+		return $model;
 	}
 
 	/**

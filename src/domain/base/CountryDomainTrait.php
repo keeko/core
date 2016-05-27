@@ -47,10 +47,10 @@ trait CountryDomainTrait {
 		}
 
 		// paginate
-		$country = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $country]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -61,24 +61,41 @@ trait CountryDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$country = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($country === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Country not found.']);
 		}
 
-		return new Found(['model' => $country]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\CountryDomain
-	 * 
-	 * @param CountryQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(CountryQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one Country with the given id from cache
@@ -93,10 +110,10 @@ trait CountryDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$country = CountryQuery::create()->findOneById($id);
-		$this->pool->set($id, $country);
+		$model = CountryQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $country;
+		return $model;
 	}
 
 	/**

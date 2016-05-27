@@ -11,19 +11,18 @@ trait LanguageScriptSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'alpha-4' => $model->getAlpha4(),
 			'numeric' => $model->getNumeric(),
 			'name' => $model->getName(),
 			'alias' => $model->getAlias(),
-			'direction' => $model->getDirection(),
+			'direction' => $model->getDirection()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'alpha-4', 'numeric', 'name', 'alias', 'direction'];
+		return ['alpha-4', 'numeric', 'name', 'alias', 'direction'];
 	}
 
 	/**
@@ -31,13 +30,17 @@ trait LanguageScriptSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'alpha-4', 'numeric', 'name', 'alias', 'direction'];
+		return ['alpha-4', 'numeric', 'name', 'alias', 'direction'];
 	}
 
 	/**

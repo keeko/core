@@ -47,10 +47,10 @@ trait LanguageFamilyDomainTrait {
 		}
 
 		// paginate
-		$languageFamily = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $languageFamily]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -61,24 +61,41 @@ trait LanguageFamilyDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$languageFamily = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($languageFamily === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'LanguageFamily not found.']);
 		}
 
-		return new Found(['model' => $languageFamily]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\LanguageFamilyDomain
-	 * 
-	 * @param LanguageFamilyQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(LanguageFamilyQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one LanguageFamily with the given id from cache
@@ -93,10 +110,10 @@ trait LanguageFamilyDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$languageFamily = LanguageFamilyQuery::create()->findOneById($id);
-		$this->pool->set($id, $languageFamily);
+		$model = LanguageFamilyQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $languageFamily;
+		return $model;
 	}
 
 	/**

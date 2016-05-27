@@ -47,10 +47,10 @@ trait RegionAreaDomainTrait {
 		}
 
 		// paginate
-		$regionArea = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $regionArea]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -61,24 +61,41 @@ trait RegionAreaDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$regionArea = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($regionArea === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'RegionArea not found.']);
 		}
 
-		return new Found(['model' => $regionArea]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\RegionAreaDomain
-	 * 
-	 * @param RegionAreaQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(RegionAreaQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one RegionArea with the given id from cache
@@ -93,10 +110,10 @@ trait RegionAreaDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$regionArea = RegionAreaQuery::create()->findOneById($id);
-		$this->pool->set($id, $regionArea);
+		$model = RegionAreaQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $regionArea;
+		return $model;
 	}
 
 	/**

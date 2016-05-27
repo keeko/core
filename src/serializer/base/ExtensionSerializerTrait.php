@@ -13,17 +13,15 @@ trait ExtensionSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'key' => $model->getKey(),
-			'data' => $model->getData(),
-			'package-id' => $model->getPackageId(),
+			'data' => $model->getData()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'key', 'data', 'package-id'];
+		return ['key', 'data'];
 	}
 
 	/**
@@ -31,7 +29,11 @@ trait ExtensionSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -44,7 +46,7 @@ trait ExtensionSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'key', 'data', 'package-id'];
+		return ['key', 'data'];
 	}
 
 	/**

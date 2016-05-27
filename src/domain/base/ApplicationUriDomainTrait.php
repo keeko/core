@@ -35,25 +35,25 @@ trait ApplicationUriDomainTrait {
 	public function create($data) {
 		// hydrate
 		$serializer = ApplicationUri::getSerializer();
-		$applicationUri = $serializer->hydrate(new ApplicationUri(), $data);
+		$model = $serializer->hydrate(new ApplicationUri(), $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($applicationUri)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ApplicationUriEvent($applicationUri);
+		$event = new ApplicationUriEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApplicationUriEvent::PRE_CREATE, $event);
 		$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
-		$applicationUri->save();
+		$model->save();
 		$dispatcher->dispatch(ApplicationUriEvent::POST_CREATE, $event);
 		$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
-		return new Created(['model' => $applicationUri]);
+		return new Created(['model' => $model]);
 	}
 
 	/**
@@ -64,21 +64,21 @@ trait ApplicationUriDomainTrait {
 	 */
 	public function delete($id) {
 		// find
-		$applicationUri = $this->get($id);
+		$model = $this->get($id);
 
-		if ($applicationUri === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'ApplicationUri not found.']);
 		}
 
 		// delete
-		$event = new ApplicationUriEvent($applicationUri);
+		$event = new ApplicationUriEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApplicationUriEvent::PRE_DELETE, $event);
-		$applicationUri->delete();
+		$model->delete();
 
-		if ($applicationUri->isDeleted()) {
+		if ($model->isDeleted()) {
 			$dispatcher->dispatch(ApplicationUriEvent::POST_DELETE, $event);
-			return new Deleted(['model' => $applicationUri]);
+			return new Deleted(['model' => $model]);
 		}
 
 		return new NotDeleted(['message' => 'Could not delete ApplicationUri']);
@@ -112,10 +112,10 @@ trait ApplicationUriDomainTrait {
 		}
 
 		// paginate
-		$applicationUri = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $applicationUri]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -126,80 +126,80 @@ trait ApplicationUriDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$applicationUri = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($applicationUri === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'ApplicationUri not found.']);
 		}
 
-		return new Found(['model' => $applicationUri]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
 	 * Sets the Application id
 	 * 
 	 * @param mixed $id
-	 * @param mixed $applicationId
+	 * @param mixed $relatedId
 	 * @return PayloadInterface
 	 */
-	public function setApplicationId($id, $applicationId) {
+	public function setApplicationId($id, $relatedId) {
 		// find
-		$applicationUri = $this->get($id);
+		$model = $this->get($id);
 
-		if ($applicationUri === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'ApplicationUri not found.']);
 		}
 
 		// update
-		if ($applicationUri->getApplicationId() !== $applicationId) {
-			$applicationUri->setApplicationId($applicationId);
+		if ($model->getApplicationId() !== $relatedId) {
+			$model->setApplicationId($relatedId);
 
-			$event = new ApplicationUriEvent($applicationUri);
+			$event = new ApplicationUriEvent($model);
 			$dispatcher = $this->getServiceContainer()->getDispatcher();
 			$dispatcher->dispatch(ApplicationUriEvent::PRE_APPLICATION_UPDATE, $event);
 			$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
-			$applicationUri->save();
+			$model->save();
 			$dispatcher->dispatch(ApplicationUriEvent::POST_APPLICATION_UPDATE, $event);
 			$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
 			
-			return Updated(['model' => $applicationUri]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $applicationUri]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
 	 * Sets the Localization id
 	 * 
 	 * @param mixed $id
-	 * @param mixed $localizationId
+	 * @param mixed $relatedId
 	 * @return PayloadInterface
 	 */
-	public function setLocalizationId($id, $localizationId) {
+	public function setLocalizationId($id, $relatedId) {
 		// find
-		$applicationUri = $this->get($id);
+		$model = $this->get($id);
 
-		if ($applicationUri === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'ApplicationUri not found.']);
 		}
 
 		// update
-		if ($applicationUri->getLocalizationId() !== $localizationId) {
-			$applicationUri->setLocalizationId($localizationId);
+		if ($model->getLocalizationId() !== $relatedId) {
+			$model->setLocalizationId($relatedId);
 
-			$event = new ApplicationUriEvent($applicationUri);
+			$event = new ApplicationUriEvent($model);
 			$dispatcher = $this->getServiceContainer()->getDispatcher();
 			$dispatcher->dispatch(ApplicationUriEvent::PRE_LOCALIZATION_UPDATE, $event);
 			$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
-			$applicationUri->save();
+			$model->save();
 			$dispatcher->dispatch(ApplicationUriEvent::POST_LOCALIZATION_UPDATE, $event);
 			$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
 			
-			return Updated(['model' => $applicationUri]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $applicationUri]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -211,34 +211,34 @@ trait ApplicationUriDomainTrait {
 	 */
 	public function update($id, $data) {
 		// find
-		$applicationUri = $this->get($id);
+		$model = $this->get($id);
 
-		if ($applicationUri === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'ApplicationUri not found.']);
 		}
 
 		// hydrate
 		$serializer = ApplicationUri::getSerializer();
-		$applicationUri = $serializer->hydrate($applicationUri, $data);
+		$model = $serializer->hydrate($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($applicationUri)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ApplicationUriEvent($applicationUri);
+		$event = new ApplicationUriEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApplicationUriEvent::PRE_UPDATE, $event);
 		$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
-		$rows = $applicationUri->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ApplicationUriEvent::POST_UPDATE, $event);
 		$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
 
-		$payload = ['model' => $applicationUri];
+		$payload = ['model' => $model];
 
 		if ($rows === 0) {
 			return new NotUpdated($payload);
@@ -248,13 +248,30 @@ trait ApplicationUriDomainTrait {
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\ApplicationUriDomain
-	 * 
-	 * @param ApplicationUriQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(ApplicationUriQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one ApplicationUri with the given id from cache
@@ -269,10 +286,10 @@ trait ApplicationUriDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$applicationUri = ApplicationUriQuery::create()->findOneById($id);
-		$this->pool->set($id, $applicationUri);
+		$model = ApplicationUriQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $applicationUri;
+		return $model;
 	}
 
 	/**

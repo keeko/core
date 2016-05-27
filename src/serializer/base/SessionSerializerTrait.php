@@ -16,8 +16,6 @@ trait SessionSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'token' => $model->getToken(),
-			'user-id' => $model->getUserId(),
 			'ip' => $model->getIp(),
 			'user-agent' => $model->getUserAgent(),
 			'browser' => $model->getBrowser(),
@@ -25,14 +23,14 @@ trait SessionSerializerTrait {
 			'os' => $model->getOs(),
 			'location' => $model->getLocation(),
 			'created-at' => $model->getCreatedAt(\DateTime::ISO8601),
-			'updated-at' => $model->getUpdatedAt(\DateTime::ISO8601),
+			'updated-at' => $model->getUpdatedAt(\DateTime::ISO8601)
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['token', 'user-id', 'ip', 'user-agent', 'browser', 'device', 'os', 'location', 'created-at', 'updated-at'];
+		return ['ip', 'user-agent', 'browser', 'device', 'os', 'location', 'created-at', 'updated-at'];
 	}
 
 	/**
@@ -40,7 +38,11 @@ trait SessionSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -54,7 +56,7 @@ trait SessionSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['token', 'user-id', 'ip', 'user-agent', 'browser', 'device', 'os', 'location', 'created-at', 'updated-at'];
+		return ['ip', 'user-agent', 'browser', 'device', 'os', 'location', 'created-at', 'updated-at'];
 	}
 
 	/**
@@ -88,11 +90,16 @@ trait SessionSerializerTrait {
 	 */
 	public function user($model) {
 		$serializer = User::getSerializer();
-		$relationship = new Relationship(new Resource($model->getUser(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'user');
+		$id = $serializer->getId($model->getUser());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getUser(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'user');
+		}
+
+		return null;
 	}
 
 	/**

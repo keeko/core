@@ -39,9 +39,9 @@ trait GroupDomainTrait {
 	 */
 	public function addActions($id, $data) {
 		// find
-		$group = $this->get($id);
+		$model = $this->get($id);
 
-		if ($group === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 		 
@@ -51,8 +51,8 @@ trait GroupDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Action';
 			}
-			$action = ActionQuery::create()->findOneById($entry['id']);
-			$group->addAction($action);
+			$related = ActionQuery::create()->findOneById($entry['id']);
+			$model->addAction($related);
 		}
 
 		if (count($errors) > 0) {
@@ -60,19 +60,19 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($group);
+		$event = new GroupEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(GroupEvent::PRE_ACTIONS_ADD, $event);
 		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
-		$rows = $group->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(GroupEvent::POST_ACTIONS_ADD, $event);
 		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $group]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $group]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -84,9 +84,9 @@ trait GroupDomainTrait {
 	 */
 	public function addUsers($id, $data) {
 		// find
-		$group = $this->get($id);
+		$model = $this->get($id);
 
-		if ($group === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 		 
@@ -96,8 +96,8 @@ trait GroupDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for User';
 			}
-			$user = UserQuery::create()->findOneById($entry['id']);
-			$group->addUser($user);
+			$related = UserQuery::create()->findOneById($entry['id']);
+			$model->addUser($related);
 		}
 
 		if (count($errors) > 0) {
@@ -105,19 +105,19 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($group);
+		$event = new GroupEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(GroupEvent::PRE_USERS_ADD, $event);
 		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
-		$rows = $group->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(GroupEvent::POST_USERS_ADD, $event);
 		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $group]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $group]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -129,25 +129,25 @@ trait GroupDomainTrait {
 	public function create($data) {
 		// hydrate
 		$serializer = Group::getSerializer();
-		$group = $serializer->hydrate(new Group(), $data);
+		$model = $serializer->hydrate(new Group(), $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($group)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new GroupEvent($group);
+		$event = new GroupEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(GroupEvent::PRE_CREATE, $event);
 		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
-		$group->save();
+		$model->save();
 		$dispatcher->dispatch(GroupEvent::POST_CREATE, $event);
 		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
-		return new Created(['model' => $group]);
+		return new Created(['model' => $model]);
 	}
 
 	/**
@@ -158,21 +158,21 @@ trait GroupDomainTrait {
 	 */
 	public function delete($id) {
 		// find
-		$group = $this->get($id);
+		$model = $this->get($id);
 
-		if ($group === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 
 		// delete
-		$event = new GroupEvent($group);
+		$event = new GroupEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(GroupEvent::PRE_DELETE, $event);
-		$group->delete();
+		$model->delete();
 
-		if ($group->isDeleted()) {
+		if ($model->isDeleted()) {
 			$dispatcher->dispatch(GroupEvent::POST_DELETE, $event);
-			return new Deleted(['model' => $group]);
+			return new Deleted(['model' => $model]);
 		}
 
 		return new NotDeleted(['message' => 'Could not delete Group']);
@@ -206,10 +206,10 @@ trait GroupDomainTrait {
 		}
 
 		// paginate
-		$group = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $group]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -220,14 +220,14 @@ trait GroupDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$group = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($group === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 
-		return new Found(['model' => $group]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -239,9 +239,9 @@ trait GroupDomainTrait {
 	 */
 	public function removeActions($id, $data) {
 		// find
-		$group = $this->get($id);
+		$model = $this->get($id);
 
-		if ($group === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 
@@ -251,8 +251,8 @@ trait GroupDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Action';
 			}
-			$action = ActionQuery::create()->findOneById($entry['id']);
-			$group->removeAction($action);
+			$related = ActionQuery::create()->findOneById($entry['id']);
+			$model->removeAction($related);
 		}
 
 		if (count($errors) > 0) {
@@ -260,19 +260,19 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($group);
+		$event = new GroupEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(GroupEvent::PRE_ACTIONS_REMOVE, $event);
 		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
-		$rows = $group->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(GroupEvent::POST_ACTIONS_REMOVE, $event);
 		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $group]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $group]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -284,9 +284,9 @@ trait GroupDomainTrait {
 	 */
 	public function removeUsers($id, $data) {
 		// find
-		$group = $this->get($id);
+		$model = $this->get($id);
 
-		if ($group === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 
@@ -296,8 +296,8 @@ trait GroupDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for User';
 			}
-			$user = UserQuery::create()->findOneById($entry['id']);
-			$group->removeUser($user);
+			$related = UserQuery::create()->findOneById($entry['id']);
+			$model->removeUser($related);
 		}
 
 		if (count($errors) > 0) {
@@ -305,19 +305,19 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($group);
+		$event = new GroupEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(GroupEvent::PRE_USERS_REMOVE, $event);
 		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
-		$rows = $group->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(GroupEvent::POST_USERS_REMOVE, $event);
 		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $group]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $group]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -329,34 +329,34 @@ trait GroupDomainTrait {
 	 */
 	public function update($id, $data) {
 		// find
-		$group = $this->get($id);
+		$model = $this->get($id);
 
-		if ($group === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 
 		// hydrate
 		$serializer = Group::getSerializer();
-		$group = $serializer->hydrate($group, $data);
+		$model = $serializer->hydrate($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($group)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new GroupEvent($group);
+		$event = new GroupEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(GroupEvent::PRE_UPDATE, $event);
 		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
-		$rows = $group->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(GroupEvent::POST_UPDATE, $event);
 		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
-		$payload = ['model' => $group];
+		$payload = ['model' => $model];
 
 		if ($rows === 0) {
 			return new NotUpdated($payload);
@@ -374,14 +374,14 @@ trait GroupDomainTrait {
 	 */
 	public function updateActions($id, $data) {
 		// find
-		$group = $this->get($id);
+		$model = $this->get($id);
 
-		if ($group === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 
 		// remove all relationships before
-		GroupActionQuery::create()->filterByGroup($group)->delete();
+		GroupActionQuery::create()->filterByGroup($model)->delete();
 
 		// add them
 		$errors = [];
@@ -389,8 +389,8 @@ trait GroupDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Action';
 			}
-			$action = ActionQuery::create()->findOneById($entry['id']);
-			$group->addAction($action);
+			$related = ActionQuery::create()->findOneById($entry['id']);
+			$model->addAction($related);
 		}
 
 		if (count($errors) > 0) {
@@ -398,19 +398,19 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($group);
+		$event = new GroupEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(GroupEvent::PRE_ACTIONS_UPDATE, $event);
 		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
-		$rows = $group->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(GroupEvent::POST_ACTIONS_UPDATE, $event);
 		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $group]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $group]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -422,14 +422,14 @@ trait GroupDomainTrait {
 	 */
 	public function updateUsers($id, $data) {
 		// find
-		$group = $this->get($id);
+		$model = $this->get($id);
 
-		if ($group === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 
 		// remove all relationships before
-		UserGroupQuery::create()->filterByGroup($group)->delete();
+		UserGroupQuery::create()->filterByGroup($model)->delete();
 
 		// add them
 		$errors = [];
@@ -437,8 +437,8 @@ trait GroupDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for User';
 			}
-			$user = UserQuery::create()->findOneById($entry['id']);
-			$group->addUser($user);
+			$related = UserQuery::create()->findOneById($entry['id']);
+			$model->addUser($related);
 		}
 
 		if (count($errors) > 0) {
@@ -446,29 +446,46 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($group);
+		$event = new GroupEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(GroupEvent::PRE_USERS_UPDATE, $event);
 		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
-		$rows = $group->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(GroupEvent::POST_USERS_UPDATE, $event);
 		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $group]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $group]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\GroupDomain
-	 * 
-	 * @param GroupQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(GroupQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one Group with the given id from cache
@@ -483,10 +500,10 @@ trait GroupDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$group = GroupQuery::create()->findOneById($id);
-		$this->pool->set($id, $group);
+		$model = GroupQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $group;
+		return $model;
 	}
 
 	/**

@@ -11,16 +11,14 @@ trait RegionTypeSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
-			'name' => $model->getName(),
-			'area-id' => $model->getAreaId(),
+			'name' => $model->getName()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'name', 'area-id'];
+		return ['name'];
 	}
 
 	/**
@@ -28,13 +26,17 @@ trait RegionTypeSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'name', 'area-id'];
+		return ['name'];
 	}
 
 	/**

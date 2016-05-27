@@ -16,11 +16,16 @@ trait ApiSerializerTrait {
 	 */
 	public function action($model) {
 		$serializer = Action::getSerializer();
-		$relationship = new Relationship(new Resource($model->getAction(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'action');
+		$id = $serializer->getId($model->getAction());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getAction(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'action');
+		}
+
+		return null;
 	}
 
 	/**
@@ -29,18 +34,16 @@ trait ApiSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'route' => $model->getRoute(),
 			'method' => $model->getMethod(),
-			'action-id' => $model->getActionId(),
-			'required-params' => $model->getRequiredParams(),
+			'required-params' => $model->getRequiredParams()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'route', 'method', 'action-id', 'required-params'];
+		return ['route', 'method', 'required-params'];
 	}
 
 	/**
@@ -48,7 +51,11 @@ trait ApiSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -62,7 +69,7 @@ trait ApiSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'route', 'method', 'action-id', 'required-params'];
+		return ['route', 'method', 'required-params'];
 	}
 
 	/**

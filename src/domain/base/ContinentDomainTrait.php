@@ -47,10 +47,10 @@ trait ContinentDomainTrait {
 		}
 
 		// paginate
-		$continent = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $continent]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -61,24 +61,41 @@ trait ContinentDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$continent = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($continent === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Continent not found.']);
 		}
 
-		return new Found(['model' => $continent]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\ContinentDomain
-	 * 
-	 * @param ContinentQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(ContinentQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one Continent with the given id from cache
@@ -93,10 +110,10 @@ trait ContinentDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$continent = ContinentQuery::create()->findOneById($id);
-		$this->pool->set($id, $continent);
+		$model = ContinentQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $continent;
+		return $model;
 	}
 
 	/**

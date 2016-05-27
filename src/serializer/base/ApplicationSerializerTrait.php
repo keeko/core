@@ -26,18 +26,17 @@ trait ApplicationSerializerTrait {
 	public function getAttributes($model, array $fields = null) {
 		return [
 			'class-name' => $model->getClassName(),
-			'id' => $model->getId(),
 			'name' => $model->getName(),
 			'title' => $model->getTitle(),
 			'description' => $model->getDescription(),
-			'installed-version' => $model->getInstalledVersion(),
+			'installed-version' => $model->getInstalledVersion()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['class-name', 'id', 'name', 'title', 'description', 'installed-version'];
+		return ['class-name', 'name', 'title', 'description', 'installed-version'];
 	}
 
 	/**
@@ -45,7 +44,11 @@ trait ApplicationSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -59,7 +62,7 @@ trait ApplicationSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['class-name', 'id', 'name', 'title', 'description', 'installed-version'];
+		return ['class-name', 'name', 'title', 'description', 'installed-version'];
 	}
 
 	/**

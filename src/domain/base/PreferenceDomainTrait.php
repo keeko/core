@@ -35,25 +35,25 @@ trait PreferenceDomainTrait {
 	public function create($data) {
 		// hydrate
 		$serializer = Preference::getSerializer();
-		$preference = $serializer->hydrate(new Preference(), $data);
+		$model = $serializer->hydrate(new Preference(), $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($preference)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new PreferenceEvent($preference);
+		$event = new PreferenceEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(PreferenceEvent::PRE_CREATE, $event);
 		$dispatcher->dispatch(PreferenceEvent::PRE_SAVE, $event);
-		$preference->save();
+		$model->save();
 		$dispatcher->dispatch(PreferenceEvent::POST_CREATE, $event);
 		$dispatcher->dispatch(PreferenceEvent::POST_SAVE, $event);
-		return new Created(['model' => $preference]);
+		return new Created(['model' => $model]);
 	}
 
 	/**
@@ -64,21 +64,21 @@ trait PreferenceDomainTrait {
 	 */
 	public function delete($id) {
 		// find
-		$preference = $this->get($id);
+		$model = $this->get($id);
 
-		if ($preference === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Preference not found.']);
 		}
 
 		// delete
-		$event = new PreferenceEvent($preference);
+		$event = new PreferenceEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(PreferenceEvent::PRE_DELETE, $event);
-		$preference->delete();
+		$model->delete();
 
-		if ($preference->isDeleted()) {
+		if ($model->isDeleted()) {
 			$dispatcher->dispatch(PreferenceEvent::POST_DELETE, $event);
-			return new Deleted(['model' => $preference]);
+			return new Deleted(['model' => $model]);
 		}
 
 		return new NotDeleted(['message' => 'Could not delete Preference']);
@@ -112,10 +112,10 @@ trait PreferenceDomainTrait {
 		}
 
 		// paginate
-		$preference = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $preference]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -126,14 +126,14 @@ trait PreferenceDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$preference = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($preference === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Preference not found.']);
 		}
 
-		return new Found(['model' => $preference]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -145,34 +145,34 @@ trait PreferenceDomainTrait {
 	 */
 	public function update($id, $data) {
 		// find
-		$preference = $this->get($id);
+		$model = $this->get($id);
 
-		if ($preference === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Preference not found.']);
 		}
 
 		// hydrate
 		$serializer = Preference::getSerializer();
-		$preference = $serializer->hydrate($preference, $data);
+		$model = $serializer->hydrate($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($preference)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new PreferenceEvent($preference);
+		$event = new PreferenceEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(PreferenceEvent::PRE_UPDATE, $event);
 		$dispatcher->dispatch(PreferenceEvent::PRE_SAVE, $event);
-		$rows = $preference->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(PreferenceEvent::POST_UPDATE, $event);
 		$dispatcher->dispatch(PreferenceEvent::POST_SAVE, $event);
 
-		$payload = ['model' => $preference];
+		$payload = ['model' => $model];
 
 		if ($rows === 0) {
 			return new NotUpdated($payload);
@@ -182,13 +182,30 @@ trait PreferenceDomainTrait {
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\PreferenceDomain
-	 * 
-	 * @param PreferenceQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(PreferenceQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one Preference with the given id from cache
@@ -203,10 +220,10 @@ trait PreferenceDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$preference = PreferenceQuery::create()->findOneById($id);
-		$this->pool->set($id, $preference);
+		$model = PreferenceQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $preference;
+		return $model;
 	}
 
 	/**

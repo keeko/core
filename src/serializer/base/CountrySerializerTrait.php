@@ -11,7 +11,6 @@ trait CountrySerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'numeric' => $model->getNumeric(),
 			'alpha-2' => $model->getAlpha2(),
 			'alpha-3' => $model->getAlpha3(),
@@ -22,25 +21,20 @@ trait CountrySerializerTrait {
 			'capital' => $model->getCapital(),
 			'postal-code-format' => $model->getPostalCodeFormat(),
 			'postal-code-regex' => $model->getPostalCodeRegex(),
-			'continent-id' => $model->getContinentId(),
-			'currency-id' => $model->getCurrencyId(),
-			'type-id' => $model->getTypeId(),
-			'subtype-id' => $model->getSubtypeId(),
-			'sovereignity-id' => $model->getSovereignityId(),
 			'formal-name' => $model->getFormalName(),
 			'formal-native-name' => $model->getFormalNativeName(),
 			'short-native-name' => $model->getShortNativeName(),
 			'bbox-sw-lat' => $model->getBboxSwLat(),
 			'bbox-sw-lng' => $model->getBboxSwLng(),
 			'bbox-ne-lat' => $model->getBboxNeLat(),
-			'bbox-ne-lng' => $model->getBboxNeLng(),
+			'bbox-ne-lng' => $model->getBboxNeLng()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'numeric', 'alpha-2', 'alpha-3', 'short-name', 'ioc', 'tld', 'phone', 'capital', 'postal-code-format', 'postal-code-regex', 'continent-id', 'currency-id', 'type-id', 'subtype-id', 'sovereignity-id', 'formal-name', 'formal-native-name', 'short-native-name', 'bbox-sw-lat', 'bbox-sw-lng', 'bbox-ne-lat', 'bbox-ne-lng'];
+		return ['numeric', 'alpha-2', 'alpha-3', 'short-name', 'ioc', 'tld', 'phone', 'capital', 'postal-code-format', 'postal-code-regex', 'formal-name', 'formal-native-name', 'short-native-name', 'bbox-sw-lat', 'bbox-sw-lng', 'bbox-ne-lat', 'bbox-ne-lng'];
 	}
 
 	/**
@@ -48,13 +42,17 @@ trait CountrySerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'numeric', 'alpha-2', 'alpha-3', 'short-name', 'ioc', 'tld', 'phone', 'capital', 'postal-code-format', 'postal-code-regex', 'continent-id', 'currency-id', 'type-id', 'subtype-id', 'sovereignity-id', 'formal-name', 'formal-native-name', 'short-native-name', 'bbox-sw-lat', 'bbox-sw-lng', 'bbox-ne-lat', 'bbox-ne-lng'];
+		return ['numeric', 'alpha-2', 'alpha-3', 'short-name', 'ioc', 'tld', 'phone', 'capital', 'postal-code-format', 'postal-code-regex', 'formal-name', 'formal-native-name', 'short-native-name', 'bbox-sw-lat', 'bbox-sw-lng', 'bbox-ne-lat', 'bbox-ne-lng'];
 	}
 
 	/**

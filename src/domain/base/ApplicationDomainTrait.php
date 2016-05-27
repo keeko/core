@@ -36,9 +36,9 @@ trait ApplicationDomainTrait {
 	 */
 	public function addApplicationUris($id, $data) {
 		// find
-		$application = $this->get($id);
+		$model = $this->get($id);
 
-		if ($application === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Application not found.']);
 		}
 		 
@@ -48,8 +48,8 @@ trait ApplicationDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for ApplicationUri';
 			}
-			$applicationUri = ApplicationUriQuery::create()->findOneById($entry['id']);
-			$application->addApplicationUri($applicationUri);
+			$related = ApplicationUriQuery::create()->findOneById($entry['id']);
+			$model->addApplicationUri($related);
 		}
 
 		if (count($errors) > 0) {
@@ -57,19 +57,19 @@ trait ApplicationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ApplicationEvent($application);
+		$event = new ApplicationEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_ADD, $event);
 		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
-		$rows = $application->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ApplicationEvent::POST_APPLICATION_URIS_ADD, $event);
 		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $application]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $application]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -81,25 +81,25 @@ trait ApplicationDomainTrait {
 	public function create($data) {
 		// hydrate
 		$serializer = Application::getSerializer();
-		$application = $serializer->hydrate(new Application(), $data);
+		$model = $serializer->hydrate(new Application(), $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($application)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ApplicationEvent($application);
+		$event = new ApplicationEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApplicationEvent::PRE_CREATE, $event);
 		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
-		$application->save();
+		$model->save();
 		$dispatcher->dispatch(ApplicationEvent::POST_CREATE, $event);
 		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
-		return new Created(['model' => $application]);
+		return new Created(['model' => $model]);
 	}
 
 	/**
@@ -110,21 +110,21 @@ trait ApplicationDomainTrait {
 	 */
 	public function delete($id) {
 		// find
-		$application = $this->get($id);
+		$model = $this->get($id);
 
-		if ($application === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Application not found.']);
 		}
 
 		// delete
-		$event = new ApplicationEvent($application);
+		$event = new ApplicationEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApplicationEvent::PRE_DELETE, $event);
-		$application->delete();
+		$model->delete();
 
-		if ($application->isDeleted()) {
+		if ($model->isDeleted()) {
 			$dispatcher->dispatch(ApplicationEvent::POST_DELETE, $event);
-			return new Deleted(['model' => $application]);
+			return new Deleted(['model' => $model]);
 		}
 
 		return new NotDeleted(['message' => 'Could not delete Application']);
@@ -158,10 +158,10 @@ trait ApplicationDomainTrait {
 		}
 
 		// paginate
-		$application = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $application]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -172,14 +172,14 @@ trait ApplicationDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$application = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($application === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Application not found.']);
 		}
 
-		return new Found(['model' => $application]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -191,9 +191,9 @@ trait ApplicationDomainTrait {
 	 */
 	public function removeApplicationUris($id, $data) {
 		// find
-		$application = $this->get($id);
+		$model = $this->get($id);
 
-		if ($application === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Application not found.']);
 		}
 
@@ -203,8 +203,8 @@ trait ApplicationDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for ApplicationUri';
 			}
-			$applicationUri = ApplicationUriQuery::create()->findOneById($entry['id']);
-			$application->removeApplicationUri($applicationUri);
+			$related = ApplicationUriQuery::create()->findOneById($entry['id']);
+			$model->removeApplicationUri($related);
 		}
 
 		if (count($errors) > 0) {
@@ -212,19 +212,19 @@ trait ApplicationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ApplicationEvent($application);
+		$event = new ApplicationEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_REMOVE, $event);
 		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
-		$rows = $application->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ApplicationEvent::POST_APPLICATION_URIS_REMOVE, $event);
 		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $application]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $application]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -236,34 +236,34 @@ trait ApplicationDomainTrait {
 	 */
 	public function update($id, $data) {
 		// find
-		$application = $this->get($id);
+		$model = $this->get($id);
 
-		if ($application === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Application not found.']);
 		}
 
 		// hydrate
 		$serializer = Application::getSerializer();
-		$application = $serializer->hydrate($application, $data);
+		$model = $serializer->hydrate($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($application)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ApplicationEvent($application);
+		$event = new ApplicationEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApplicationEvent::PRE_UPDATE, $event);
 		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
-		$rows = $application->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ApplicationEvent::POST_UPDATE, $event);
 		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
 
-		$payload = ['model' => $application];
+		$payload = ['model' => $model];
 
 		if ($rows === 0) {
 			return new NotUpdated($payload);
@@ -281,14 +281,14 @@ trait ApplicationDomainTrait {
 	 */
 	public function updateApplicationUris($id, $data) {
 		// find
-		$application = $this->get($id);
+		$model = $this->get($id);
 
-		if ($application === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Application not found.']);
 		}
 
 		// remove all relationships before
-		ApplicationUriQuery::create()->filterByApplication($application)->delete();
+		ApplicationUriQuery::create()->filterByApplication($model)->delete();
 
 		// add them
 		$errors = [];
@@ -296,8 +296,8 @@ trait ApplicationDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for ApplicationUri';
 			}
-			$applicationUri = ApplicationUriQuery::create()->findOneById($entry['id']);
-			$application->addApplicationUri($applicationUri);
+			$related = ApplicationUriQuery::create()->findOneById($entry['id']);
+			$model->addApplicationUri($related);
 		}
 
 		if (count($errors) > 0) {
@@ -305,29 +305,46 @@ trait ApplicationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ApplicationEvent($application);
+		$event = new ApplicationEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_UPDATE, $event);
 		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
-		$rows = $application->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ApplicationEvent::POST_APPLICATION_URIS_UPDATE, $event);
 		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $application]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $application]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\ApplicationDomain
-	 * 
-	 * @param ApplicationQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(ApplicationQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one Application with the given id from cache
@@ -342,10 +359,10 @@ trait ApplicationDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$application = ApplicationQuery::create()->findOneById($id);
-		$this->pool->set($id, $application);
+		$model = ApplicationQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $application;
+		return $model;
 	}
 
 	/**

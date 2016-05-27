@@ -11,7 +11,6 @@ trait CurrencySerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'numeric' => $model->getNumeric(),
 			'alpha-3' => $model->getAlpha3(),
 			'name' => $model->getName(),
@@ -20,14 +19,14 @@ trait CurrencySerializerTrait {
 			'decimal-digits' => $model->getDecimalDigits(),
 			'sub-divisor' => $model->getSubDivisor(),
 			'sub-symbol-left' => $model->getSubSymbolLeft(),
-			'sub-symbol-right' => $model->getSubSymbolRight(),
+			'sub-symbol-right' => $model->getSubSymbolRight()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'numeric', 'alpha-3', 'name', 'symbol-left', 'symbol-right', 'decimal-digits', 'sub-divisor', 'sub-symbol-left', 'sub-symbol-right'];
+		return ['numeric', 'alpha-3', 'name', 'symbol-left', 'symbol-right', 'decimal-digits', 'sub-divisor', 'sub-symbol-left', 'sub-symbol-right'];
 	}
 
 	/**
@@ -35,13 +34,17 @@ trait CurrencySerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'numeric', 'alpha-3', 'name', 'symbol-left', 'symbol-right', 'decimal-digits', 'sub-divisor', 'sub-symbol-left', 'sub-symbol-right'];
+		return ['numeric', 'alpha-3', 'name', 'symbol-left', 'symbol-right', 'decimal-digits', 'sub-divisor', 'sub-symbol-left', 'sub-symbol-right'];
 	}
 
 	/**

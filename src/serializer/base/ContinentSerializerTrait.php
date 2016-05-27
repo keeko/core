@@ -11,17 +11,16 @@ trait ContinentSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'parent-id' => $model->getParentId(),
 			'numeric' => $model->getNumeric(),
-			'name' => $model->getName(),
+			'name' => $model->getName()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'parent-id', 'numeric', 'name'];
+		return ['parent-id', 'numeric', 'name'];
 	}
 
 	/**
@@ -29,13 +28,17 @@ trait ContinentSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'parent-id', 'numeric', 'name'];
+		return ['parent-id', 'numeric', 'name'];
 	}
 
 	/**

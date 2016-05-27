@@ -35,25 +35,25 @@ trait ActivityDomainTrait {
 	public function create($data) {
 		// hydrate
 		$serializer = Activity::getSerializer();
-		$activity = $serializer->hydrate(new Activity(), $data);
+		$model = $serializer->hydrate(new Activity(), $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($activity)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ActivityEvent($activity);
+		$event = new ActivityEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ActivityEvent::PRE_CREATE, $event);
 		$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
-		$activity->save();
+		$model->save();
 		$dispatcher->dispatch(ActivityEvent::POST_CREATE, $event);
 		$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
-		return new Created(['model' => $activity]);
+		return new Created(['model' => $model]);
 	}
 
 	/**
@@ -64,21 +64,21 @@ trait ActivityDomainTrait {
 	 */
 	public function delete($id) {
 		// find
-		$activity = $this->get($id);
+		$model = $this->get($id);
 
-		if ($activity === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Activity not found.']);
 		}
 
 		// delete
-		$event = new ActivityEvent($activity);
+		$event = new ActivityEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ActivityEvent::PRE_DELETE, $event);
-		$activity->delete();
+		$model->delete();
 
-		if ($activity->isDeleted()) {
+		if ($model->isDeleted()) {
 			$dispatcher->dispatch(ActivityEvent::POST_DELETE, $event);
-			return new Deleted(['model' => $activity]);
+			return new Deleted(['model' => $model]);
 		}
 
 		return new NotDeleted(['message' => 'Could not delete Activity']);
@@ -112,10 +112,10 @@ trait ActivityDomainTrait {
 		}
 
 		// paginate
-		$activity = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $activity]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -126,113 +126,113 @@ trait ActivityDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$activity = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($activity === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Activity not found.']);
 		}
 
-		return new Found(['model' => $activity]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
 	 * Sets the Actor id
 	 * 
 	 * @param mixed $id
-	 * @param mixed $actorId
+	 * @param mixed $relatedId
 	 * @return PayloadInterface
 	 */
-	public function setActorId($id, $actorId) {
+	public function setActorId($id, $relatedId) {
 		// find
-		$activity = $this->get($id);
+		$model = $this->get($id);
 
-		if ($activity === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Activity not found.']);
 		}
 
 		// update
-		if ($activity->getActorId() !== $actorId) {
-			$activity->setActorId($actorId);
+		if ($model->getActorId() !== $relatedId) {
+			$model->setActorId($relatedId);
 
-			$event = new ActivityEvent($activity);
+			$event = new ActivityEvent($model);
 			$dispatcher = $this->getServiceContainer()->getDispatcher();
 			$dispatcher->dispatch(ActivityEvent::PRE_ACTOR_UPDATE, $event);
 			$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
-			$activity->save();
+			$model->save();
 			$dispatcher->dispatch(ActivityEvent::POST_ACTOR_UPDATE, $event);
 			$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
 			
-			return Updated(['model' => $activity]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $activity]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
 	 * Sets the Object id
 	 * 
 	 * @param mixed $id
-	 * @param mixed $objectId
+	 * @param mixed $relatedId
 	 * @return PayloadInterface
 	 */
-	public function setObjectId($id, $objectId) {
+	public function setObjectId($id, $relatedId) {
 		// find
-		$activity = $this->get($id);
+		$model = $this->get($id);
 
-		if ($activity === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Activity not found.']);
 		}
 
 		// update
-		if ($activity->getObjectId() !== $objectId) {
-			$activity->setObjectId($objectId);
+		if ($model->getObjectId() !== $relatedId) {
+			$model->setObjectId($relatedId);
 
-			$event = new ActivityEvent($activity);
+			$event = new ActivityEvent($model);
 			$dispatcher = $this->getServiceContainer()->getDispatcher();
 			$dispatcher->dispatch(ActivityEvent::PRE_OBJECT_UPDATE, $event);
 			$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
-			$activity->save();
+			$model->save();
 			$dispatcher->dispatch(ActivityEvent::POST_OBJECT_UPDATE, $event);
 			$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
 			
-			return Updated(['model' => $activity]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $activity]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
 	 * Sets the Target id
 	 * 
 	 * @param mixed $id
-	 * @param mixed $targetId
+	 * @param mixed $relatedId
 	 * @return PayloadInterface
 	 */
-	public function setTargetId($id, $targetId) {
+	public function setTargetId($id, $relatedId) {
 		// find
-		$activity = $this->get($id);
+		$model = $this->get($id);
 
-		if ($activity === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Activity not found.']);
 		}
 
 		// update
-		if ($activity->getTargetId() !== $targetId) {
-			$activity->setTargetId($targetId);
+		if ($model->getTargetId() !== $relatedId) {
+			$model->setTargetId($relatedId);
 
-			$event = new ActivityEvent($activity);
+			$event = new ActivityEvent($model);
 			$dispatcher = $this->getServiceContainer()->getDispatcher();
 			$dispatcher->dispatch(ActivityEvent::PRE_TARGET_UPDATE, $event);
 			$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
-			$activity->save();
+			$model->save();
 			$dispatcher->dispatch(ActivityEvent::POST_TARGET_UPDATE, $event);
 			$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
 			
-			return Updated(['model' => $activity]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $activity]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -244,34 +244,34 @@ trait ActivityDomainTrait {
 	 */
 	public function update($id, $data) {
 		// find
-		$activity = $this->get($id);
+		$model = $this->get($id);
 
-		if ($activity === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Activity not found.']);
 		}
 
 		// hydrate
 		$serializer = Activity::getSerializer();
-		$activity = $serializer->hydrate($activity, $data);
+		$model = $serializer->hydrate($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($activity)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ActivityEvent($activity);
+		$event = new ActivityEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ActivityEvent::PRE_UPDATE, $event);
 		$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
-		$rows = $activity->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ActivityEvent::POST_UPDATE, $event);
 		$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
 
-		$payload = ['model' => $activity];
+		$payload = ['model' => $model];
 
 		if ($rows === 0) {
 			return new NotUpdated($payload);
@@ -281,13 +281,30 @@ trait ActivityDomainTrait {
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\ActivityDomain
-	 * 
-	 * @param ActivityQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(ActivityQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one Activity with the given id from cache
@@ -302,10 +319,10 @@ trait ActivityDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$activity = ActivityQuery::create()->findOneById($id);
-		$this->pool->set($id, $activity);
+		$model = ActivityQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $activity;
+		return $model;
 	}
 
 	/**

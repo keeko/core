@@ -11,15 +11,14 @@ trait LanguageTypeSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
-			'name' => $model->getName(),
+			'name' => $model->getName()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'name'];
+		return ['name'];
 	}
 
 	/**
@@ -27,13 +26,17 @@ trait LanguageTypeSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'name'];
+		return ['name'];
 	}
 
 	/**

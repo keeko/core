@@ -25,21 +25,20 @@ trait ActivityObjectSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'class-name' => $model->getClassName(),
 			'type' => $model->getType(),
 			'display-name' => $model->getDisplayName(),
 			'url' => $model->getUrl(),
 			'reference-id' => $model->getReferenceId(),
 			'version' => $model->getVersion(),
-			'extra' => $model->getExtra(),
+			'extra' => $model->getExtra()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'class-name', 'type', 'display-name', 'url', 'reference-id', 'version', 'extra'];
+		return ['class-name', 'type', 'display-name', 'url', 'reference-id', 'version', 'extra'];
 	}
 
 	/**
@@ -47,7 +46,11 @@ trait ActivityObjectSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -61,7 +64,7 @@ trait ActivityObjectSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'class-name', 'type', 'display-name', 'url', 'reference-id', 'version', 'extra'];
+		return ['class-name', 'type', 'display-name', 'url', 'reference-id', 'version', 'extra'];
 	}
 
 	/**

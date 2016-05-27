@@ -30,18 +30,17 @@ trait ModuleSerializerTrait {
 			'default-action' => $model->getDefaultAction(),
 			'slug' => $model->getSlug(),
 			'has-api' => $model->getApi(),
-			'id' => $model->getId(),
 			'name' => $model->getName(),
 			'title' => $model->getTitle(),
 			'description' => $model->getDescription(),
-			'installed-version' => $model->getInstalledVersion(),
+			'installed-version' => $model->getInstalledVersion()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['class-name', 'activated-version', 'default-action', 'slug', 'has-api', 'id', 'name', 'title', 'description', 'installed-version'];
+		return ['class-name', 'activated-version', 'default-action', 'slug', 'has-api', 'name', 'title', 'description', 'installed-version'];
 	}
 
 	/**
@@ -49,7 +48,11 @@ trait ModuleSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -63,7 +66,7 @@ trait ModuleSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['class-name', 'activated-version', 'default-action', 'slug', 'has-api', 'id', 'name', 'title', 'description', 'installed-version'];
+		return ['class-name', 'activated-version', 'default-action', 'slug', 'has-api', 'name', 'title', 'description', 'installed-version'];
 	}
 
 	/**

@@ -11,29 +11,23 @@ trait LanguageSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'alpha-2' => $model->getAlpha2(),
 			'alpha-3-t' => $model->getAlpha3T(),
 			'alpha-3-b' => $model->getAlpha3B(),
 			'alpha-3' => $model->getAlpha3(),
-			'parent-id' => $model->getParentId(),
 			'macrolanguage-status' => $model->getMacrolanguageStatus(),
 			'name' => $model->getName(),
 			'native-name' => $model->getNativeName(),
 			'collate' => $model->getCollate(),
 			'subtag' => $model->getSubtag(),
-			'prefix' => $model->getPrefix(),
-			'scope-id' => $model->getScopeId(),
-			'type-id' => $model->getTypeId(),
-			'family-id' => $model->getFamilyId(),
-			'default-script-id' => $model->getDefaultScriptId(),
+			'prefix' => $model->getPrefix()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'alpha-2', 'alpha-3-t', 'alpha-3-b', 'alpha-3', 'parent-id', 'macrolanguage-status', 'name', 'native-name', 'collate', 'subtag', 'prefix', 'scope-id', 'type-id', 'family-id', 'default-script-id'];
+		return ['alpha-2', 'alpha-3-t', 'alpha-3-b', 'alpha-3', 'macrolanguage-status', 'name', 'native-name', 'collate', 'subtag', 'prefix'];
 	}
 
 	/**
@@ -41,13 +35,17 @@ trait LanguageSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'alpha-2', 'alpha-3-t', 'alpha-3-b', 'alpha-3', 'parent-id', 'macrolanguage-status', 'name', 'native-name', 'collate', 'subtag', 'prefix', 'scope-id', 'type-id', 'family-id', 'default-script-id'];
+		return ['alpha-2', 'alpha-3-t', 'alpha-3-b', 'alpha-3', 'macrolanguage-status', 'name', 'native-name', 'collate', 'subtag', 'prefix'];
 	}
 
 	/**

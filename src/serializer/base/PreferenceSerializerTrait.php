@@ -13,16 +13,15 @@ trait PreferenceSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'key' => $model->getKey(),
 			'value' => $model->getValue(),
-			'module-id' => $model->getModuleId(),
+			'module-id' => $model->getModuleId()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['key', 'value', 'module-id'];
+		return ['value', 'module-id'];
 	}
 
 	/**
@@ -30,7 +29,11 @@ trait PreferenceSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -43,7 +46,7 @@ trait PreferenceSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['key', 'value', 'module-id'];
+		return ['value', 'module-id'];
 	}
 
 	/**

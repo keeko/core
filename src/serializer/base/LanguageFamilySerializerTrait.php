@@ -11,17 +11,16 @@ trait LanguageFamilySerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'parent-id' => $model->getParentId(),
 			'alpha-3' => $model->getAlpha3(),
-			'name' => $model->getName(),
+			'name' => $model->getName()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'parent-id', 'alpha-3', 'name'];
+		return ['parent-id', 'alpha-3', 'name'];
 	}
 
 	/**
@@ -29,13 +28,17 @@ trait LanguageFamilySerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'parent-id', 'alpha-3', 'name'];
+		return ['parent-id', 'alpha-3', 'name'];
 	}
 
 	/**

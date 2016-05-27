@@ -36,9 +36,9 @@ trait ModuleDomainTrait {
 	 */
 	public function addActions($id, $data) {
 		// find
-		$module = $this->get($id);
+		$model = $this->get($id);
 
-		if ($module === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Module not found.']);
 		}
 		 
@@ -48,8 +48,8 @@ trait ModuleDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Action';
 			}
-			$action = ActionQuery::create()->findOneById($entry['id']);
-			$module->addAction($action);
+			$related = ActionQuery::create()->findOneById($entry['id']);
+			$model->addAction($related);
 		}
 
 		if (count($errors) > 0) {
@@ -57,19 +57,19 @@ trait ModuleDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ModuleEvent($module);
+		$event = new ModuleEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ModuleEvent::PRE_ACTIONS_ADD, $event);
 		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
-		$rows = $module->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ModuleEvent::POST_ACTIONS_ADD, $event);
 		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $module]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $module]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -81,25 +81,25 @@ trait ModuleDomainTrait {
 	public function create($data) {
 		// hydrate
 		$serializer = Module::getSerializer();
-		$module = $serializer->hydrate(new Module(), $data);
+		$model = $serializer->hydrate(new Module(), $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($module)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ModuleEvent($module);
+		$event = new ModuleEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ModuleEvent::PRE_CREATE, $event);
 		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
-		$module->save();
+		$model->save();
 		$dispatcher->dispatch(ModuleEvent::POST_CREATE, $event);
 		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
-		return new Created(['model' => $module]);
+		return new Created(['model' => $model]);
 	}
 
 	/**
@@ -110,21 +110,21 @@ trait ModuleDomainTrait {
 	 */
 	public function delete($id) {
 		// find
-		$module = $this->get($id);
+		$model = $this->get($id);
 
-		if ($module === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Module not found.']);
 		}
 
 		// delete
-		$event = new ModuleEvent($module);
+		$event = new ModuleEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ModuleEvent::PRE_DELETE, $event);
-		$module->delete();
+		$model->delete();
 
-		if ($module->isDeleted()) {
+		if ($model->isDeleted()) {
 			$dispatcher->dispatch(ModuleEvent::POST_DELETE, $event);
-			return new Deleted(['model' => $module]);
+			return new Deleted(['model' => $model]);
 		}
 
 		return new NotDeleted(['message' => 'Could not delete Module']);
@@ -158,10 +158,10 @@ trait ModuleDomainTrait {
 		}
 
 		// paginate
-		$module = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $module]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -172,14 +172,14 @@ trait ModuleDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$module = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($module === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Module not found.']);
 		}
 
-		return new Found(['model' => $module]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -191,9 +191,9 @@ trait ModuleDomainTrait {
 	 */
 	public function removeActions($id, $data) {
 		// find
-		$module = $this->get($id);
+		$model = $this->get($id);
 
-		if ($module === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Module not found.']);
 		}
 
@@ -203,8 +203,8 @@ trait ModuleDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Action';
 			}
-			$action = ActionQuery::create()->findOneById($entry['id']);
-			$module->removeAction($action);
+			$related = ActionQuery::create()->findOneById($entry['id']);
+			$model->removeAction($related);
 		}
 
 		if (count($errors) > 0) {
@@ -212,19 +212,19 @@ trait ModuleDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ModuleEvent($module);
+		$event = new ModuleEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ModuleEvent::PRE_ACTIONS_REMOVE, $event);
 		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
-		$rows = $module->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ModuleEvent::POST_ACTIONS_REMOVE, $event);
 		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $module]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $module]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -236,34 +236,34 @@ trait ModuleDomainTrait {
 	 */
 	public function update($id, $data) {
 		// find
-		$module = $this->get($id);
+		$model = $this->get($id);
 
-		if ($module === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Module not found.']);
 		}
 
 		// hydrate
 		$serializer = Module::getSerializer();
-		$module = $serializer->hydrate($module, $data);
+		$model = $serializer->hydrate($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($module)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ModuleEvent($module);
+		$event = new ModuleEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ModuleEvent::PRE_UPDATE, $event);
 		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
-		$rows = $module->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ModuleEvent::POST_UPDATE, $event);
 		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
 
-		$payload = ['model' => $module];
+		$payload = ['model' => $model];
 
 		if ($rows === 0) {
 			return new NotUpdated($payload);
@@ -281,14 +281,14 @@ trait ModuleDomainTrait {
 	 */
 	public function updateActions($id, $data) {
 		// find
-		$module = $this->get($id);
+		$model = $this->get($id);
 
-		if ($module === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Module not found.']);
 		}
 
 		// remove all relationships before
-		ActionQuery::create()->filterByModule($module)->delete();
+		ActionQuery::create()->filterByModule($model)->delete();
 
 		// add them
 		$errors = [];
@@ -296,8 +296,8 @@ trait ModuleDomainTrait {
 			if (!isset($entry['id'])) {
 				$errors[] = 'Missing id for Action';
 			}
-			$action = ActionQuery::create()->findOneById($entry['id']);
-			$module->addAction($action);
+			$related = ActionQuery::create()->findOneById($entry['id']);
+			$model->addAction($related);
 		}
 
 		if (count($errors) > 0) {
@@ -305,29 +305,46 @@ trait ModuleDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ModuleEvent($module);
+		$event = new ModuleEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ModuleEvent::PRE_ACTIONS_UPDATE, $event);
 		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
-		$rows = $module->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ModuleEvent::POST_ACTIONS_UPDATE, $event);
 		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
-			return Updated(['model' => $module]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $module]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\ModuleDomain
-	 * 
-	 * @param ModuleQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(ModuleQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one Module with the given id from cache
@@ -342,10 +359,10 @@ trait ModuleDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$module = ModuleQuery::create()->findOneById($id);
-		$this->pool->set($id, $module);
+		$model = ModuleQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $module;
+		return $model;
 	}
 
 	/**

@@ -17,11 +17,16 @@ trait ActivitySerializerTrait {
 	 */
 	public function actor($model) {
 		$serializer = User::getSerializer();
-		$relationship = new Relationship(new Resource($model->getActor(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'actor');
+		$id = $serializer->getId($model->getActor());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getActor(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'actor');
+		}
+
+		return null;
 	}
 
 	/**
@@ -30,18 +35,14 @@ trait ActivitySerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
-			'actor-id' => $model->getActorId(),
-			'verb' => $model->getVerb(),
-			'object-id' => $model->getObjectId(),
-			'target-id' => $model->getTargetId(),
+			'verb' => $model->getVerb()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'actor-id', 'verb', 'object-id', 'target-id'];
+		return ['verb'];
 	}
 
 	/**
@@ -49,7 +50,11 @@ trait ActivitySerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -65,7 +70,7 @@ trait ActivitySerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'actor-id', 'verb', 'object-id', 'target-id'];
+		return ['verb'];
 	}
 
 	/**
@@ -99,11 +104,16 @@ trait ActivitySerializerTrait {
 	 */
 	public function object($model) {
 		$serializer = ActivityObject::getSerializer();
-		$relationship = new Relationship(new Resource($model->getObject(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'object');
+		$id = $serializer->getId($model->getObject());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getObject(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'object');
+		}
+
+		return null;
 	}
 
 	/**
@@ -112,11 +122,16 @@ trait ActivitySerializerTrait {
 	 */
 	public function target($model) {
 		$serializer = ActivityObject::getSerializer();
-		$relationship = new Relationship(new Resource($model->getTarget(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'target');
+		$id = $serializer->getId($model->getTarget());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getTarget(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'target');
+		}
+
+		return null;
 	}
 
 	/**

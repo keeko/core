@@ -28,19 +28,17 @@ trait ActionSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'name' => $model->getName(),
 			'title' => $model->getTitle(),
 			'description' => $model->getDescription(),
-			'class-name' => $model->getClassName(),
-			'module-id' => $model->getModuleId(),
+			'class-name' => $model->getClassName()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'name', 'title', 'description', 'class-name', 'module-id'];
+		return ['name', 'title', 'description', 'class-name'];
 	}
 
 	/**
@@ -48,7 +46,11 @@ trait ActionSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -64,7 +66,7 @@ trait ActionSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'name', 'title', 'description', 'class-name', 'module-id'];
+		return ['name', 'title', 'description', 'class-name'];
 	}
 
 	/**
@@ -107,11 +109,16 @@ trait ActionSerializerTrait {
 	 */
 	public function module($model) {
 		$serializer = Module::getSerializer();
-		$relationship = new Relationship(new Resource($model->getModule(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'module');
+		$id = $serializer->getId($model->getModule());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getModule(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'module');
+		}
+
+		return null;
 	}
 
 	/**

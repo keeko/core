@@ -35,25 +35,25 @@ trait ApiDomainTrait {
 	public function create($data) {
 		// hydrate
 		$serializer = Api::getSerializer();
-		$api = $serializer->hydrate(new Api(), $data);
+		$model = $serializer->hydrate(new Api(), $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($api)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ApiEvent($api);
+		$event = new ApiEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApiEvent::PRE_CREATE, $event);
 		$dispatcher->dispatch(ApiEvent::PRE_SAVE, $event);
-		$api->save();
+		$model->save();
 		$dispatcher->dispatch(ApiEvent::POST_CREATE, $event);
 		$dispatcher->dispatch(ApiEvent::POST_SAVE, $event);
-		return new Created(['model' => $api]);
+		return new Created(['model' => $model]);
 	}
 
 	/**
@@ -64,21 +64,21 @@ trait ApiDomainTrait {
 	 */
 	public function delete($id) {
 		// find
-		$api = $this->get($id);
+		$model = $this->get($id);
 
-		if ($api === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Api not found.']);
 		}
 
 		// delete
-		$event = new ApiEvent($api);
+		$event = new ApiEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApiEvent::PRE_DELETE, $event);
-		$api->delete();
+		$model->delete();
 
-		if ($api->isDeleted()) {
+		if ($model->isDeleted()) {
 			$dispatcher->dispatch(ApiEvent::POST_DELETE, $event);
-			return new Deleted(['model' => $api]);
+			return new Deleted(['model' => $model]);
 		}
 
 		return new NotDeleted(['message' => 'Could not delete Api']);
@@ -112,10 +112,10 @@ trait ApiDomainTrait {
 		}
 
 		// paginate
-		$api = $query->paginate($page, $size);
+		$model = $query->paginate($page, $size);
 
 		// run response
-		return new Found(['model' => $api]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
@@ -126,47 +126,47 @@ trait ApiDomainTrait {
 	 */
 	public function read($id) {
 		// read
-		$api = $this->get($id);
+		$model = $this->get($id);
 
 		// check existence
-		if ($api === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Api not found.']);
 		}
 
-		return new Found(['model' => $api]);
+		return new Found(['model' => $model]);
 	}
 
 	/**
 	 * Sets the Action id
 	 * 
 	 * @param mixed $id
-	 * @param mixed $actionId
+	 * @param mixed $relatedId
 	 * @return PayloadInterface
 	 */
-	public function setActionId($id, $actionId) {
+	public function setActionId($id, $relatedId) {
 		// find
-		$api = $this->get($id);
+		$model = $this->get($id);
 
-		if ($api === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Api not found.']);
 		}
 
 		// update
-		if ($api->getActionId() !== $actionId) {
-			$api->setActionId($actionId);
+		if ($model->getActionId() !== $relatedId) {
+			$model->setActionId($relatedId);
 
-			$event = new ApiEvent($api);
+			$event = new ApiEvent($model);
 			$dispatcher = $this->getServiceContainer()->getDispatcher();
 			$dispatcher->dispatch(ApiEvent::PRE_ACTION_UPDATE, $event);
 			$dispatcher->dispatch(ApiEvent::PRE_SAVE, $event);
-			$api->save();
+			$model->save();
 			$dispatcher->dispatch(ApiEvent::POST_ACTION_UPDATE, $event);
 			$dispatcher->dispatch(ApiEvent::POST_SAVE, $event);
 			
-			return Updated(['model' => $api]);
+			return Updated(['model' => $model]);
 		}
 
-		return NotUpdated(['model' => $api]);
+		return NotUpdated(['model' => $model]);
 	}
 
 	/**
@@ -178,34 +178,34 @@ trait ApiDomainTrait {
 	 */
 	public function update($id, $data) {
 		// find
-		$api = $this->get($id);
+		$model = $this->get($id);
 
-		if ($api === null) {
+		if ($model === null) {
 			return new NotFound(['message' => 'Api not found.']);
 		}
 
 		// hydrate
 		$serializer = Api::getSerializer();
-		$api = $serializer->hydrate($api, $data);
+		$model = $serializer->hydrate($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
-		if ($validator !== null && !$validator->validate($api)) {
+		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
 			]);
 		}
 
 		// dispatch
-		$event = new ApiEvent($api);
+		$event = new ApiEvent($model);
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
 		$dispatcher->dispatch(ApiEvent::PRE_UPDATE, $event);
 		$dispatcher->dispatch(ApiEvent::PRE_SAVE, $event);
-		$rows = $api->save();
+		$rows = $model->save();
 		$dispatcher->dispatch(ApiEvent::POST_UPDATE, $event);
 		$dispatcher->dispatch(ApiEvent::POST_SAVE, $event);
 
-		$payload = ['model' => $api];
+		$payload = ['model' => $model];
 
 		if ($rows === 0) {
 			return new NotUpdated($payload);
@@ -215,13 +215,30 @@ trait ApiDomainTrait {
 	}
 
 	/**
-	 * Implement this functionality at keeko\core\domain\ApiDomain
-	 * 
-	 * @param ApiQuery $query
+	 * @param mixed $query
 	 * @param mixed $filter
 	 * @return void
 	 */
-	abstract protected function applyFilter(ApiQuery $query, $filter);
+	protected function applyFilter($query, $filter) {
+		foreach ($filter as $column => $value) {
+			$pos = strpos($column, '.');
+			if ($pos !== false) {
+				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+				$col = substr($column, $pos + 1);
+				$method = 'use' . $rel . 'Query';
+				if (method_exists($query, $method)) {
+					$sub = $query->$method();
+					$this->applyFilter($sub, [$col => $value]);
+					$sub->endUse();
+				}
+			} else {
+				$method = 'filterBy' . NameUtils::toStudlyCase($column);
+				if (method_exists($query, $method)) {
+					$query->$method($value);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns one Api with the given id from cache
@@ -236,10 +253,10 @@ trait ApiDomainTrait {
 			return $this->pool->get($id);
 		}
 
-		$api = ApiQuery::create()->findOneById($id);
-		$this->pool->set($id, $api);
+		$model = ApiQuery::create()->findOneById($id);
+		$this->pool->set($id, $model);
 
-		return $api;
+		return $model;
 	}
 
 	/**

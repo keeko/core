@@ -30,11 +30,16 @@ trait LocalizationSerializerTrait {
 	 */
 	public function extLang($model) {
 		$serializer = Language::getSerializer();
-		$relationship = new Relationship(new Resource($model->getExtLang(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'ext-lang');
+		$id = $serializer->getId($model->getExtLang());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getExtLang(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'ext-lang');
+		}
+
+		return null;
 	}
 
 	/**
@@ -43,22 +48,17 @@ trait LocalizationSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
-			'parent-id' => $model->getParentId(),
 			'name' => $model->getName(),
 			'locale' => $model->getLocale(),
-			'language-id' => $model->getLanguageId(),
-			'ext-language-id' => $model->getExtLanguageId(),
 			'region' => $model->getRegion(),
-			'script-id' => $model->getScriptId(),
-			'is-default' => $model->getIsDefault(),
+			'is-default' => $model->getIsDefault()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'parent-id', 'name', 'locale', 'language-id', 'ext-language-id', 'region', 'script-id', 'is-default'];
+		return ['name', 'locale', 'region', 'is-default'];
 	}
 
 	/**
@@ -66,7 +66,11 @@ trait LocalizationSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -86,7 +90,7 @@ trait LocalizationSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'parent-id', 'name', 'locale', 'language-id', 'ext-language-id', 'region', 'script-id', 'is-default'];
+		return ['name', 'locale', 'region', 'is-default'];
 	}
 
 	/**
@@ -120,11 +124,16 @@ trait LocalizationSerializerTrait {
 	 */
 	public function language($model) {
 		$serializer = Language::getSerializer();
-		$relationship = new Relationship(new Resource($model->getLanguage(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'language');
+		$id = $serializer->getId($model->getLanguage());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getLanguage(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'language');
+		}
+
+		return null;
 	}
 
 	/**
@@ -151,11 +160,16 @@ trait LocalizationSerializerTrait {
 	 */
 	public function parent($model) {
 		$serializer = Localization::getSerializer();
-		$relationship = new Relationship(new Resource($model->getParent(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'parent');
+		$id = $serializer->getId($model->getParent());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getParent(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'parent');
+		}
+
+		return null;
 	}
 
 	/**
@@ -164,11 +178,16 @@ trait LocalizationSerializerTrait {
 	 */
 	public function script($model) {
 		$serializer = LanguageScript::getSerializer();
-		$relationship = new Relationship(new Resource($model->getScript(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'script');
+		$id = $serializer->getId($model->getScript());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getScript(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'script');
+		}
+
+		return null;
 	}
 
 	/**

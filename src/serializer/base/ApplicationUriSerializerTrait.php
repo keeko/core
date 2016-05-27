@@ -17,11 +17,16 @@ trait ApplicationUriSerializerTrait {
 	 */
 	public function application($model) {
 		$serializer = Application::getSerializer();
-		$relationship = new Relationship(new Resource($model->getApplication(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'application');
+		$id = $serializer->getId($model->getApplication());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getApplication(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'application');
+		}
+
+		return null;
 	}
 
 	/**
@@ -30,19 +35,16 @@ trait ApplicationUriSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'httphost' => $model->getHttphost(),
 			'basepath' => $model->getBasepath(),
-			'secure' => $model->getSecure(),
-			'application-id' => $model->getApplicationId(),
-			'localization-id' => $model->getLocalizationId(),
+			'secure' => $model->getSecure()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'httphost', 'basepath', 'secure', 'application-id', 'localization-id'];
+		return ['httphost', 'basepath', 'secure'];
 	}
 
 	/**
@@ -50,7 +52,11 @@ trait ApplicationUriSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -65,7 +71,7 @@ trait ApplicationUriSerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'httphost', 'basepath', 'secure', 'application-id', 'localization-id'];
+		return ['httphost', 'basepath', 'secure'];
 	}
 
 	/**
@@ -99,11 +105,16 @@ trait ApplicationUriSerializerTrait {
 	 */
 	public function localization($model) {
 		$serializer = Localization::getSerializer();
-		$relationship = new Relationship(new Resource($model->getLocalization(), $serializer));
-		$relationship->setLinks([
-			'related' => '%apiurl%' . $serializer->getType(null) . '/' . $serializer->getId($model)
-		]);
-		return $this->addRelationshipSelfLink($relationship, $model, 'localization');
+		$id = $serializer->getId($model->getLocalization());
+		if ($id !== null) {
+			$relationship = new Relationship(new Resource($model->getLocalization(), $serializer));
+			$relationship->setLinks([
+				'related' => '%apiurl%' . $serializer->getType(null) . '/' . $id 
+			]);
+			return $this->addRelationshipSelfLink($relationship, $model, 'localization');
+		}
+
+		return null;
 	}
 
 	/**

@@ -11,18 +11,17 @@ trait LanguageVariantSerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'id' => $model->getId(),
 			'name' => $model->getName(),
 			'subtag' => $model->getSubtag(),
 			'prefixes' => $model->getPrefixes(),
-			'comment' => $model->getComment(),
+			'comment' => $model->getComment()
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['id', 'name', 'subtag', 'prefixes', 'comment'];
+		return ['name', 'subtag', 'prefixes', 'comment'];
 	}
 
 	/**
@@ -30,13 +29,17 @@ trait LanguageVariantSerializerTrait {
 	 * @return string
 	 */
 	public function getId($model) {
-		return $model->getId();
+		if ($model !== null) {
+			return $model->getId();
+		}
+
+		return null;
 	}
 
 	/**
 	 */
 	public function getSortFields() {
-		return ['id', 'name', 'subtag', 'prefixes', 'comment'];
+		return ['name', 'subtag', 'prefixes', 'comment'];
 	}
 
 	/**
