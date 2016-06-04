@@ -1,20 +1,20 @@
 <?php
 namespace keeko\core\responder\json\model;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use keeko\framework\foundation\AbstractPayloadResponder;
 use keeko\core\model\Session;
 use keeko\core\model\User;
 use keeko\framework\domain\payload\Found;
-use Tobscure\JsonApi\Document;
+use keeko\framework\foundation\AbstractPayloadResponder;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Tobscure\JsonApi\Collection;
+use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Parameters;
 
 /**
  * Automatically generated JsonResponder for Paginates sessions
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class SessionPaginateJsonResponder extends AbstractPayloadResponder {
 

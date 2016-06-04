@@ -1,20 +1,20 @@
 <?php
 namespace keeko\core\action\model;
 
+use keeko\core\domain\GroupDomain;
 use keeko\framework\foundation\AbstractAction;
+use phootwork\json\Json;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use phootwork\json\Json;
 use Tobscure\JsonApi\Exception\InvalidParameterException;
-use keeko\core\domain\GroupDomain;
 
 /**
  * Updates a group
  * 
  * This code is automatically created. Modifications will probably be overwritten.
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class GroupUpdateAction extends AbstractAction {
 

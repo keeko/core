@@ -1,18 +1,18 @@
 <?php
 namespace keeko\core\action\model;
 
+use keeko\core\domain\CountryDomain;
 use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\core\domain\CountryDomain;
 
 /**
  * Reads a country
  * 
  * This code is automatically created. Modifications will probably be overwritten.
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class CountryReadAction extends AbstractAction {
 

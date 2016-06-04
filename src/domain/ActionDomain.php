@@ -1,9 +1,9 @@
 <?php
 namespace keeko\core\domain;
 
-use keeko\framework\foundation\AbstractDomain;
-use keeko\core\model\ActionQuery;
 use keeko\core\domain\base\ActionDomainTrait;
+use keeko\core\model\ActionQuery;
+use keeko\framework\foundation\AbstractDomain;
 
 /**
  */

@@ -1,24 +1,24 @@
 <?php
 namespace keeko\core\responder\json\model;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use keeko\framework\foundation\AbstractPayloadResponder;
-use keeko\framework\domain\payload\NotFound;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use keeko\core\model\Action;
-use keeko\core\model\Module;
-use keeko\core\model\Group;
 use keeko\core\model\Api;
+use keeko\core\model\Group;
+use keeko\core\model\Module;
 use keeko\framework\domain\payload\Found;
+use keeko\framework\domain\payload\NotFound;
+use keeko\framework\foundation\AbstractPayloadResponder;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Tobscure\JsonApi\Document;
-use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Parameters;
+use Tobscure\JsonApi\Resource;
 
 /**
  * Automatically generated JsonResponder for Reads an action
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class ActionReadJsonResponder extends AbstractPayloadResponder {
 

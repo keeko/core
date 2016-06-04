@@ -1,19 +1,19 @@
 <?php
 namespace keeko\core\action\model;
 
+use keeko\core\domain\CountryDomain;
 use keeko\framework\foundation\AbstractAction;
+use keeko\framework\utils\Parameters;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\framework\utils\Parameters;
-use keeko\core\domain\CountryDomain;
 
 /**
  * Paginates countries
  * 
  * This code is automatically created. Modifications will probably be overwritten.
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class CountryPaginateAction extends AbstractAction {
 

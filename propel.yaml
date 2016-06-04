@@ -9,6 +9,7 @@ propel:
     phpDir: %outputDir%/src/model
     phpConfDir: %schemaDir%/generated-conf
     sqlDir: %schemaDir%/sql
+    migrationDir: $schemaDir%/migrations
 
   database:
     connections:

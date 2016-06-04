@@ -1,19 +1,19 @@
 <?php
 namespace keeko\core\action\model;
 
+use keeko\core\domain\ExtensionDomain;
 use keeko\framework\foundation\AbstractAction;
+use phootwork\json\Json;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use phootwork\json\Json;
 use Tobscure\JsonApi\Exception\InvalidParameterException;
-use keeko\core\domain\ExtensionDomain;
 
 /**
  * Creates an extension
  * 
  * This code is automatically created. Modifications will probably be overwritten.
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class ExtensionCreateAction extends AbstractAction {
 

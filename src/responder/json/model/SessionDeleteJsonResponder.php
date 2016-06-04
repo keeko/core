@@ -1,18 +1,18 @@
 <?php
 namespace keeko\core\responder\json\model;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use keeko\framework\foundation\AbstractPayloadResponder;
-use keeko\framework\domain\payload\NotFound;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\NotDeleted;
+use keeko\framework\domain\payload\NotFound;
+use keeko\framework\foundation\AbstractPayloadResponder;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * Automatically generated JsonResponder for Deletes a session
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class SessionDeleteJsonResponder extends AbstractPayloadResponder {
 

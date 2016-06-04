@@ -1,9 +1,9 @@
 <?php
 namespace keeko\core\domain;
 
-use keeko\framework\foundation\AbstractDomain;
-use keeko\core\model\ApplicationUriQuery;
 use keeko\core\domain\base\ApplicationUriDomainTrait;
+use keeko\core\model\ApplicationUriQuery;
+use keeko\framework\foundation\AbstractDomain;
 
 /**
  */

@@ -3,9 +3,9 @@ namespace keeko\core\model;
 
 use keeko\core\model\Base\User as BaseUser;
 use keeko\core\serializer\UserSerializer;
+use keeko\framework\model\ActivityObjectInterface;
 use keeko\framework\model\ApiModelInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\framework\model\ActivityObjectInterface;
 
 /**
  * Skeleton subclass for representing a row from the 'kk_user' table.

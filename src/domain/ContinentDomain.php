@@ -1,9 +1,9 @@
 <?php
 namespace keeko\core\domain;
 
-use keeko\framework\foundation\AbstractDomain;
-use keeko\core\model\ContinentQuery;
 use keeko\core\domain\base\ContinentDomainTrait;
+use keeko\core\model\ContinentQuery;
+use keeko\framework\foundation\AbstractDomain;
 
 /**
  */

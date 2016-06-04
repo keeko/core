@@ -1,23 +1,23 @@
 <?php
 namespace keeko\core\domain\base;
 
+use keeko\core\event\ModuleEvent;
+use keeko\core\model\ActionQuery;
 use keeko\core\model\Module;
 use keeko\core\model\ModuleQuery;
-use keeko\framework\service\ServiceContainer;
-use keeko\framework\domain\payload\PayloadInterface;
-use phootwork\collection\Map;
-use keeko\framework\domain\payload\Found;
-use keeko\framework\domain\payload\NotFound;
-use keeko\framework\utils\Parameters;
-use keeko\framework\utils\NameUtils;
-use keeko\core\event\ModuleEvent;
 use keeko\framework\domain\payload\Created;
-use keeko\framework\domain\payload\NotValid;
-use keeko\framework\domain\payload\Updated;
-use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\Deleted;
+use keeko\framework\domain\payload\Found;
 use keeko\framework\domain\payload\NotDeleted;
-use keeko\core\model\ActionQuery;
+use keeko\framework\domain\payload\NotFound;
+use keeko\framework\domain\payload\NotUpdated;
+use keeko\framework\domain\payload\NotValid;
+use keeko\framework\domain\payload\PayloadInterface;
+use keeko\framework\domain\payload\Updated;
+use keeko\framework\service\ServiceContainer;
+use keeko\framework\utils\NameUtils;
+use keeko\framework\utils\Parameters;
+use phootwork\collection\Map;
 
 /**
  */

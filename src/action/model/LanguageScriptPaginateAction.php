@@ -1,19 +1,19 @@
 <?php
 namespace keeko\core\action\model;
 
+use keeko\core\domain\LanguageScriptDomain;
 use keeko\framework\foundation\AbstractAction;
+use keeko\framework\utils\Parameters;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\framework\utils\Parameters;
-use keeko\core\domain\LanguageScriptDomain;
 
 /**
  * Paginates language_scripts
  * 
  * This code is automatically created. Modifications will probably be overwritten.
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class LanguageScriptPaginateAction extends AbstractAction {
 

@@ -1,23 +1,23 @@
 <?php
 namespace keeko\core\responder\json\model;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use keeko\framework\foundation\AbstractPayloadResponder;
-use keeko\framework\domain\payload\NotFound;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use keeko\core\model\Subdivision;
 use keeko\core\model\Country;
 use keeko\core\model\RegionType;
+use keeko\core\model\Subdivision;
 use keeko\framework\domain\payload\Found;
+use keeko\framework\domain\payload\NotFound;
+use keeko\framework\foundation\AbstractPayloadResponder;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Tobscure\JsonApi\Document;
-use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Parameters;
+use Tobscure\JsonApi\Resource;
 
 /**
  * Automatically generated JsonResponder for Reads a subdivision
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class SubdivisionReadJsonResponder extends AbstractPayloadResponder {
 

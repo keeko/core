@@ -1,11 +1,12 @@
 <?php
 namespace keeko\core\serializer\base;
 
+use keeko\core\model\ActivityObject;
+use keeko\core\model\User;
+use keeko\core\serializer\TypeInferencer;
 use keeko\framework\utils\HydrateUtils;
 use Tobscure\JsonApi\Relationship;
-use keeko\core\model\User;
 use Tobscure\JsonApi\Resource;
-use keeko\core\model\ActivityObject;
 
 /**
  */
@@ -141,6 +142,12 @@ trait ActivitySerializerTrait {
 	 * @return Relationship
 	 */
 	abstract protected function addRelationshipSelfLink(Relationship $relationship, $model, $related);
+
+	/**
+	 */
+	protected function getTypeInferencer() {
+		return TypeInferencer::getInstance();
+	}
 
 	/**
 	 * @param mixed $model

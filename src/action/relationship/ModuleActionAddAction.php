@@ -1,20 +1,20 @@
 <?php
 namespace keeko\core\action\relationship;
 
+use keeko\core\domain\ModuleDomain;
 use keeko\framework\foundation\AbstractAction;
+use phootwork\json\Json;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use phootwork\json\Json;
 use Tobscure\JsonApi\Exception\InvalidParameterException;
-use keeko\core\domain\ModuleDomain;
 
 /**
  * Adds action as relationship to module
  * 
  * This code is automatically created. Modifications will probably be overwritten.
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class ModuleActionAddAction extends AbstractAction {
 

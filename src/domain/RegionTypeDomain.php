@@ -1,9 +1,9 @@
 <?php
 namespace keeko\core\domain;
 
-use keeko\framework\foundation\AbstractDomain;
-use keeko\core\model\RegionTypeQuery;
 use keeko\core\domain\base\RegionTypeDomainTrait;
+use keeko\core\model\RegionTypeQuery;
+use keeko\framework\foundation\AbstractDomain;
 
 /**
  */

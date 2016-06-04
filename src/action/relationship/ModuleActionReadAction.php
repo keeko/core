@@ -1,18 +1,18 @@
 <?php
 namespace keeko\core\action\relationship;
 
+use keeko\core\domain\ModuleDomain;
 use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\core\domain\ModuleDomain;
 
 /**
  * Reads the relationship of module to action
  * 
  * This code is automatically created. Modifications will probably be overwritten.
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class ModuleActionReadAction extends AbstractAction {
 

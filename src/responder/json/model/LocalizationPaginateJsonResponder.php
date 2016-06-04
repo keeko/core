@@ -1,23 +1,23 @@
 <?php
 namespace keeko\core\responder\json\model;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use keeko\framework\foundation\AbstractPayloadResponder;
-use keeko\core\model\Localization;
+use keeko\core\model\ApplicationUri;
 use keeko\core\model\Language;
 use keeko\core\model\LanguageScript;
 use keeko\core\model\LanguageVariant;
-use keeko\core\model\ApplicationUri;
+use keeko\core\model\Localization;
 use keeko\framework\domain\payload\Found;
-use Tobscure\JsonApi\Document;
+use keeko\framework\foundation\AbstractPayloadResponder;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Tobscure\JsonApi\Collection;
+use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Parameters;
 
 /**
  * Automatically generated JsonResponder for Paginates localizations
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class LocalizationPaginateJsonResponder extends AbstractPayloadResponder {
 

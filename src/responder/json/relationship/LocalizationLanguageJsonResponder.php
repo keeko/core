@@ -1,19 +1,19 @@
 <?php
 namespace keeko\core\responder\json\relationship;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use keeko\framework\foundation\AbstractPayloadResponder;
-use keeko\framework\domain\payload\NotFound;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use keeko\framework\domain\payload\Found;
 use keeko\core\model\Localization;
+use keeko\framework\domain\payload\Found;
+use keeko\framework\domain\payload\NotFound;
 use keeko\framework\domain\payload\NotUpdated;
+use keeko\framework\foundation\AbstractPayloadResponder;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * Automatically generated JsonResponder for Reads the relationship of localization to language
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class LocalizationLanguageJsonResponder extends AbstractPayloadResponder {
 

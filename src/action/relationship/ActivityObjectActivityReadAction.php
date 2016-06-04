@@ -1,18 +1,18 @@
 <?php
 namespace keeko\core\action\relationship;
 
+use keeko\core\domain\ActivityObjectDomain;
 use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\core\domain\ActivityObjectDomain;
 
 /**
  * Reads the relationship of activity_object to activity
  * 
  * This code is automatically created. Modifications will probably be overwritten.
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class ActivityObjectActivityReadAction extends AbstractAction {
 

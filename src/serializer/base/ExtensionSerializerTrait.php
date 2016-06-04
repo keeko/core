@@ -1,6 +1,7 @@
 <?php
 namespace keeko\core\serializer\base;
 
+use keeko\core\serializer\TypeInferencer;
 use keeko\framework\utils\HydrateUtils;
 
 /**
@@ -72,6 +73,12 @@ trait ExtensionSerializerTrait {
 		$this->hydrateRelationships($model, $data);
 
 		return $model;
+	}
+
+	/**
+	 */
+	protected function getTypeInferencer() {
+		return TypeInferencer::getInstance();
 	}
 
 	/**

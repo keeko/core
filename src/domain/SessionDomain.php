@@ -1,9 +1,9 @@
 <?php
 namespace keeko\core\domain;
 
-use keeko\framework\foundation\AbstractDomain;
-use keeko\core\model\SessionQuery;
 use keeko\core\domain\base\SessionDomainTrait;
+use keeko\core\model\SessionQuery;
+use keeko\framework\foundation\AbstractDomain;
 
 /**
  */

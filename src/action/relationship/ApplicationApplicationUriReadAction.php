@@ -1,18 +1,18 @@
 <?php
 namespace keeko\core\action\relationship;
 
+use keeko\core\domain\ApplicationDomain;
 use keeko\framework\foundation\AbstractAction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\core\domain\ApplicationDomain;
 
 /**
  * Reads the relationship of application to application_uri
  * 
  * This code is automatically created. Modifications will probably be overwritten.
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class ApplicationApplicationUriReadAction extends AbstractAction {
 

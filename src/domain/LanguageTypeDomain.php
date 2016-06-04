@@ -1,9 +1,9 @@
 <?php
 namespace keeko\core\domain;
 
-use keeko\framework\foundation\AbstractDomain;
-use keeko\core\model\LanguageTypeQuery;
 use keeko\core\domain\base\LanguageTypeDomainTrait;
+use keeko\core\model\LanguageTypeQuery;
+use keeko\framework\foundation\AbstractDomain;
 
 /**
  */

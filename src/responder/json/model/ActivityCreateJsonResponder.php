@@ -1,20 +1,20 @@
 <?php
 namespace keeko\core\responder\json\model;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use keeko\framework\foundation\AbstractPayloadResponder;
+use keeko\core\model\Activity;
+use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\NotValid;
 use keeko\framework\exceptions\ValidationException;
-use keeko\framework\domain\payload\Created;
+use keeko\framework\foundation\AbstractPayloadResponder;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Resource;
-use keeko\core\model\Activity;
 
 /**
  * Automatically generated JsonResponder for Creates an activity
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class ActivityCreateJsonResponder extends AbstractPayloadResponder {
 

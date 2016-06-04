@@ -1,9 +1,9 @@
 <?php
 namespace keeko\core\domain;
 
-use keeko\framework\foundation\AbstractDomain;
-use keeko\core\model\LanguageScopeQuery;
 use keeko\core\domain\base\LanguageScopeDomainTrait;
+use keeko\core\model\LanguageScopeQuery;
+use keeko\framework\foundation\AbstractDomain;
 
 /**
  */

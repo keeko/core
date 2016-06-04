@@ -1,19 +1,19 @@
 <?php
 namespace keeko\core\action\model;
 
+use keeko\core\domain\ContinentDomain;
 use keeko\framework\foundation\AbstractAction;
+use keeko\framework\utils\Parameters;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use keeko\framework\utils\Parameters;
-use keeko\core\domain\ContinentDomain;
 
 /**
  * Paginates continents
  * 
  * This code is automatically created. Modifications will probably be overwritten.
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class ContinentPaginateAction extends AbstractAction {
 

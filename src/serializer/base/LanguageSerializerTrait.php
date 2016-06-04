@@ -1,6 +1,8 @@
 <?php
 namespace keeko\core\serializer\base;
 
+use keeko\core\serializer\TypeInferencer;
+
 /**
  */
 trait LanguageSerializerTrait {
@@ -64,5 +66,11 @@ trait LanguageSerializerTrait {
 	public function hydrate($model, $data) {
 		// this model is read-only!
 		return $model;
+	}
+
+	/**
+	 */
+	protected function getTypeInferencer() {
+		return TypeInferencer::getInstance();
 	}
 }

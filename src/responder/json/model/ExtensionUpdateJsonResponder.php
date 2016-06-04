@@ -1,24 +1,24 @@
 <?php
 namespace keeko\core\responder\json\model;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use keeko\framework\foundation\AbstractPayloadResponder;
-use keeko\framework\domain\payload\NotFound;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use keeko\framework\domain\payload\NotValid;
-use keeko\framework\exceptions\ValidationException;
 use keeko\core\model\Extension;
-use keeko\framework\domain\payload\Updated;
-use Tobscure\JsonApi\Document;
-use Tobscure\JsonApi\Resource;
-use Tobscure\JsonApi\Parameters;
+use keeko\framework\domain\payload\NotFound;
 use keeko\framework\domain\payload\NotUpdated;
+use keeko\framework\domain\payload\NotValid;
+use keeko\framework\domain\payload\Updated;
+use keeko\framework\exceptions\ValidationException;
+use keeko\framework\foundation\AbstractPayloadResponder;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Tobscure\JsonApi\Document;
+use Tobscure\JsonApi\Parameters;
+use Tobscure\JsonApi\Resource;
 
 /**
  * Automatically generated JsonResponder for Updates an extension
  * 
- * @author gossi
+ * @author Thomas Gossmann
  */
 class ExtensionUpdateJsonResponder extends AbstractPayloadResponder {
 

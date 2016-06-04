@@ -1,9 +1,9 @@
 <?php
 namespace keeko\core\domain;
 
-use keeko\framework\foundation\AbstractDomain;
-use keeko\core\model\SubdivisionQuery;
 use keeko\core\domain\base\SubdivisionDomainTrait;
+use keeko\core\model\SubdivisionQuery;
+use keeko\framework\foundation\AbstractDomain;
 
 /**
  */
