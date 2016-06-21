@@ -36,6 +36,7 @@ trait SessionDomainTrait {
 		// hydrate
 		$serializer = Session::getSerializer();
 		$model = $serializer->hydrate(new Session(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -47,12 +48,11 @@ trait SessionDomainTrait {
 
 		// dispatch
 		$event = new SessionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(SessionEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(SessionEvent::PRE_SAVE, $event);
+		$this->dispatch(SessionEvent::PRE_CREATE, $event);
+		$this->dispatch(SessionEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(SessionEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(SessionEvent::POST_SAVE, $event);
+		$this->dispatch(SessionEvent::POST_CREATE, $event);
+		$this->dispatch(SessionEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -72,12 +72,11 @@ trait SessionDomainTrait {
 
 		// delete
 		$event = new SessionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(SessionEvent::PRE_DELETE, $event);
+		$this->dispatch(SessionEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(SessionEvent::POST_DELETE, $event);
+			$this->dispatch(SessionEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -152,17 +151,14 @@ trait SessionDomainTrait {
 		}
 
 		// update
-		if ($model->getUserId() !== $relatedId) {
-			$model->setUserId($relatedId);
-
+		if ($this->doSetUserId($model, $relatedId)) {
 			$event = new SessionEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(SessionEvent::PRE_USER_UPDATE, $event);
-			$dispatcher->dispatch(SessionEvent::PRE_SAVE, $event);
+			$this->dispatch(SessionEvent::PRE_USER_UPDATE, $event);
+			$this->dispatch(SessionEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(SessionEvent::POST_USER_UPDATE, $event);
-			$dispatcher->dispatch(SessionEvent::POST_SAVE, $event);
-			
+			$this->dispatch(SessionEvent::POST_USER_UPDATE, $event);
+			$this->dispatch(SessionEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -187,6 +183,7 @@ trait SessionDomainTrait {
 		// hydrate
 		$serializer = Session::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -198,12 +195,11 @@ trait SessionDomainTrait {
 
 		// dispatch
 		$event = new SessionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(SessionEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(SessionEvent::PRE_SAVE, $event);
+		$this->dispatch(SessionEvent::PRE_UPDATE, $event);
+		$this->dispatch(SessionEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(SessionEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(SessionEvent::POST_SAVE, $event);
+		$this->dispatch(SessionEvent::POST_UPDATE, $event);
+		$this->dispatch(SessionEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -238,6 +234,50 @@ trait SessionDomainTrait {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param SessionEvent $event
+	 */
+	protected function dispatch($type, SessionEvent $event) {
+		$model = $event->getSession();
+		$methods = [
+			SessionEvent::PRE_CREATE => 'preCreate',
+			SessionEvent::POST_CREATE => 'postCreate',
+			SessionEvent::PRE_UPDATE => 'preUpdate',
+			SessionEvent::POST_UPDATE => 'postUpdate',
+			SessionEvent::PRE_DELETE => 'preDelete',
+			SessionEvent::POST_DELETE => 'postDelete',
+			SessionEvent::PRE_SAVE => 'preSave',
+			SessionEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
+	}
+
+	/**
+	 * Internal mechanism to set the User id
+	 * 
+	 * @param Session $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetUserId(Session $model, $relatedId) {
+		if ($model->getUserId() !== $relatedId) {
+			$model->setUserId($relatedId);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

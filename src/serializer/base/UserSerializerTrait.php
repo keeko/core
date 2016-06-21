@@ -14,11 +14,28 @@ use Tobscure\JsonApi\Relationship;
 trait UserSerializerTrait {
 
 	/**
+	 */
+	private $methodNames = [
+		'sessions' => 'Session',
+		'groups' => 'Group',
+		'activities' => 'Activity'
+	];
+
+	/**
+	 */
+	private $methodPluralNames = [
+		'sessions' => 'Sessions',
+		'groups' => 'Groups',
+		'activities' => 'Activities'
+	];
+
+	/**
 	 * @param mixed $model
 	 * @return Relationship
 	 */
 	public function activities($model) {
-		$relationship = new Relationship(new Collection($model->getActivities(), Activity::getSerializer()));
+		$method = 'get' . $this->getCollectionMethodPluralName('activities');
+		$relationship = new Relationship(new Collection($model->$method(), Activity::getSerializer()));
 		return $this->addRelationshipSelfLink($relationship, $model, 'activity');
 	}
 
@@ -89,7 +106,8 @@ trait UserSerializerTrait {
 	 * @return Relationship
 	 */
 	public function groups($model) {
-		$relationship = new Relationship(new Collection($model->getGroups(), Group::getSerializer()));
+		$method = 'get' . $this->getCollectionMethodPluralName('groups');
+		$relationship = new Relationship(new Collection($model->$method(), Group::getSerializer()));
 		return $this->addRelationshipSelfLink($relationship, $model, 'group');
 	}
 
@@ -113,7 +131,7 @@ trait UserSerializerTrait {
 		}, 'given-name', 'family-name', 'nick-name', 'display-name-user-select', 'email', 'birth', 'sex', 'slug']);
 
 		// relationships
-		$this->hydrateRelationships($model, $data);
+		//$this->hydrateRelationships($model, $data);
 
 		return $model;
 	}
@@ -123,7 +141,8 @@ trait UserSerializerTrait {
 	 * @return Relationship
 	 */
 	public function sessions($model) {
-		$relationship = new Relationship(new Collection($model->getSessions(), Session::getSerializer()));
+		$method = 'get' . $this->getCollectionMethodPluralName('sessions');
+		$relationship = new Relationship(new Collection($model->$method(), Session::getSerializer()));
 		return $this->addRelationshipSelfLink($relationship, $model, 'session');
 	}
 
@@ -136,15 +155,28 @@ trait UserSerializerTrait {
 	abstract protected function addRelationshipSelfLink(Relationship $relationship, $model, $related);
 
 	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodName($relatedName) {
+		if (isset($this->methodNames[$relatedName])) {
+			return $this->methodNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodPluralName($relatedName) {
+		if (isset($this->methodPluralNames[$relatedName])) {
+			return $this->methodPluralNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
 	 */
 	protected function getTypeInferencer() {
 		return TypeInferencer::getInstance();
 	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 * @return void
-	 */
-	abstract protected function hydrateRelationships($model, $data);
 }

@@ -4,8 +4,8 @@ namespace keeko\core\domain\base;
 use keeko\core\event\GroupEvent;
 use keeko\core\model\ActionQuery;
 use keeko\core\model\GroupActionQuery;
-use keeko\core\model\Group;
 use keeko\core\model\GroupQuery;
+use keeko\core\model\Group;
 use keeko\core\model\UserGroupQuery;
 use keeko\core\model\UserQuery;
 use keeko\framework\domain\payload\Created;
@@ -17,6 +17,7 @@ use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\PayloadInterface;
 use keeko\framework\domain\payload\Updated;
+use keeko\framework\exceptions\ErrorsException;
 use keeko\framework\service\ServiceContainer;
 use keeko\framework\utils\NameUtils;
 use keeko\framework\utils\Parameters;
@@ -44,29 +45,21 @@ trait GroupDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'Group not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Action';
-			}
-			$related = ActionQuery::create()->findOneById($entry['id']);
-			$model->addAction($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddActions($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new GroupEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(GroupEvent::PRE_ACTIONS_ADD, $event);
-		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_ACTIONS_ADD, $event);
+		$this->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(GroupEvent::POST_ACTIONS_ADD, $event);
-		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_ACTIONS_ADD, $event);
+		$this->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -89,29 +82,21 @@ trait GroupDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'Group not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for User';
-			}
-			$related = UserQuery::create()->findOneById($entry['id']);
-			$model->addUser($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddUsers($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new GroupEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(GroupEvent::PRE_USERS_ADD, $event);
-		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_USERS_ADD, $event);
+		$this->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(GroupEvent::POST_USERS_ADD, $event);
-		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_USERS_ADD, $event);
+		$this->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -130,6 +115,7 @@ trait GroupDomainTrait {
 		// hydrate
 		$serializer = Group::getSerializer();
 		$model = $serializer->hydrate(new Group(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -141,12 +127,11 @@ trait GroupDomainTrait {
 
 		// dispatch
 		$event = new GroupEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(GroupEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_CREATE, $event);
+		$this->dispatch(GroupEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(GroupEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_CREATE, $event);
+		$this->dispatch(GroupEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -166,12 +151,11 @@ trait GroupDomainTrait {
 
 		// delete
 		$event = new GroupEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(GroupEvent::PRE_DELETE, $event);
+		$this->dispatch(GroupEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(GroupEvent::POST_DELETE, $event);
+			$this->dispatch(GroupEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -245,28 +229,20 @@ trait GroupDomainTrait {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Action';
-			}
-			$related = ActionQuery::create()->findOneById($entry['id']);
-			$model->removeAction($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveActions($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new GroupEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(GroupEvent::PRE_ACTIONS_REMOVE, $event);
-		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_ACTIONS_REMOVE, $event);
+		$this->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(GroupEvent::POST_ACTIONS_REMOVE, $event);
-		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_ACTIONS_REMOVE, $event);
+		$this->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -290,28 +266,20 @@ trait GroupDomainTrait {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for User';
-			}
-			$related = UserQuery::create()->findOneById($entry['id']);
-			$model->removeUser($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveUsers($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new GroupEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(GroupEvent::PRE_USERS_REMOVE, $event);
-		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_USERS_REMOVE, $event);
+		$this->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(GroupEvent::POST_USERS_REMOVE, $event);
-		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_USERS_REMOVE, $event);
+		$this->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -338,6 +306,7 @@ trait GroupDomainTrait {
 		// hydrate
 		$serializer = Group::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -349,12 +318,11 @@ trait GroupDomainTrait {
 
 		// dispatch
 		$event = new GroupEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(GroupEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_UPDATE, $event);
+		$this->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(GroupEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_UPDATE, $event);
+		$this->dispatch(GroupEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -380,31 +348,20 @@ trait GroupDomainTrait {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 
-		// remove all relationships before
-		GroupActionQuery::create()->filterByGroup($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Action';
-			}
-			$related = ActionQuery::create()->findOneById($entry['id']);
-			$model->addAction($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateActions($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new GroupEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(GroupEvent::PRE_ACTIONS_UPDATE, $event);
-		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_ACTIONS_UPDATE, $event);
+		$this->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(GroupEvent::POST_ACTIONS_UPDATE, $event);
-		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_ACTIONS_UPDATE, $event);
+		$this->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -428,31 +385,20 @@ trait GroupDomainTrait {
 			return new NotFound(['message' => 'Group not found.']);
 		}
 
-		// remove all relationships before
-		UserGroupQuery::create()->filterByGroup($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for User';
-			}
-			$related = UserQuery::create()->findOneById($entry['id']);
-			$model->addUser($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateUsers($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new GroupEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(GroupEvent::PRE_USERS_UPDATE, $event);
-		$dispatcher->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_USERS_UPDATE, $event);
+		$this->dispatch(GroupEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(GroupEvent::POST_USERS_UPDATE, $event);
-		$dispatcher->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_USERS_UPDATE, $event);
+		$this->dispatch(GroupEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -484,6 +430,174 @@ trait GroupDomainTrait {
 					$query->$method($value);
 				}
 			}
+		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param GroupEvent $event
+	 */
+	protected function dispatch($type, GroupEvent $event) {
+		$model = $event->getGroup();
+		$methods = [
+			GroupEvent::PRE_CREATE => 'preCreate',
+			GroupEvent::POST_CREATE => 'postCreate',
+			GroupEvent::PRE_UPDATE => 'preUpdate',
+			GroupEvent::POST_UPDATE => 'postUpdate',
+			GroupEvent::PRE_DELETE => 'preDelete',
+			GroupEvent::POST_DELETE => 'postDelete',
+			GroupEvent::PRE_SAVE => 'preSave',
+			GroupEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
+	}
+
+	/**
+	 * Interal mechanism to add Actions to Group
+	 * 
+	 * @param Group $model
+	 * @param mixed $data
+	 */
+	protected function doAddActions(Group $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Action';
+			} else {
+				$related = ActionQuery::create()->findOneById($entry['id']);
+				$model->addAction($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to add Users to Group
+	 * 
+	 * @param Group $model
+	 * @param mixed $data
+	 */
+	protected function doAddUsers(Group $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for User';
+			} else {
+				$related = UserQuery::create()->findOneById($entry['id']);
+				$model->addUser($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove Actions from Group
+	 * 
+	 * @param Group $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveActions(Group $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Action';
+			} else {
+				$related = ActionQuery::create()->findOneById($entry['id']);
+				$model->removeAction($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove Users from Group
+	 * 
+	 * @param Group $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveUsers(Group $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for User';
+			} else {
+				$related = UserQuery::create()->findOneById($entry['id']);
+				$model->removeUser($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal update mechanism of Actions on Group
+	 * 
+	 * @param Group $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateActions(Group $model, $data) {
+		// remove all relationships before
+		GroupActionQuery::create()->filterByGroup($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Action';
+			} else {
+				$related = ActionQuery::create()->findOneById($entry['id']);
+				$model->addAction($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal update mechanism of Users on Group
+	 * 
+	 * @param Group $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateUsers(Group $model, $data) {
+		// remove all relationships before
+		UserGroupQuery::create()->filterByGroup($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for User';
+			} else {
+				$related = UserQuery::create()->findOneById($entry['id']);
+				$model->addUser($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
 		}
 	}
 

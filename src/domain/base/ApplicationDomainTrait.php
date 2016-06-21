@@ -14,6 +14,7 @@ use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\PayloadInterface;
 use keeko\framework\domain\payload\Updated;
+use keeko\framework\exceptions\ErrorsException;
 use keeko\framework\service\ServiceContainer;
 use keeko\framework\utils\NameUtils;
 use keeko\framework\utils\Parameters;
@@ -41,29 +42,21 @@ trait ApplicationDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'Application not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for ApplicationUri';
-			}
-			$related = ApplicationUriQuery::create()->findOneById($entry['id']);
-			$model->addApplicationUri($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddApplicationUris($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ApplicationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_ADD, $event);
-		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
+		$this->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_ADD, $event);
+		$this->dispatch(ApplicationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ApplicationEvent::POST_APPLICATION_URIS_ADD, $event);
-		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationEvent::POST_APPLICATION_URIS_ADD, $event);
+		$this->dispatch(ApplicationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -82,6 +75,7 @@ trait ApplicationDomainTrait {
 		// hydrate
 		$serializer = Application::getSerializer();
 		$model = $serializer->hydrate(new Application(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -93,12 +87,11 @@ trait ApplicationDomainTrait {
 
 		// dispatch
 		$event = new ApplicationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApplicationEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
+		$this->dispatch(ApplicationEvent::PRE_CREATE, $event);
+		$this->dispatch(ApplicationEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(ApplicationEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationEvent::POST_CREATE, $event);
+		$this->dispatch(ApplicationEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -118,12 +111,11 @@ trait ApplicationDomainTrait {
 
 		// delete
 		$event = new ApplicationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApplicationEvent::PRE_DELETE, $event);
+		$this->dispatch(ApplicationEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(ApplicationEvent::POST_DELETE, $event);
+			$this->dispatch(ApplicationEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -197,28 +189,20 @@ trait ApplicationDomainTrait {
 			return new NotFound(['message' => 'Application not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for ApplicationUri';
-			}
-			$related = ApplicationUriQuery::create()->findOneById($entry['id']);
-			$model->removeApplicationUri($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveApplicationUris($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ApplicationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_REMOVE, $event);
-		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
+		$this->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_REMOVE, $event);
+		$this->dispatch(ApplicationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ApplicationEvent::POST_APPLICATION_URIS_REMOVE, $event);
-		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationEvent::POST_APPLICATION_URIS_REMOVE, $event);
+		$this->dispatch(ApplicationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -245,6 +229,7 @@ trait ApplicationDomainTrait {
 		// hydrate
 		$serializer = Application::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -256,12 +241,11 @@ trait ApplicationDomainTrait {
 
 		// dispatch
 		$event = new ApplicationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApplicationEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
+		$this->dispatch(ApplicationEvent::PRE_UPDATE, $event);
+		$this->dispatch(ApplicationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ApplicationEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationEvent::POST_UPDATE, $event);
+		$this->dispatch(ApplicationEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -287,31 +271,20 @@ trait ApplicationDomainTrait {
 			return new NotFound(['message' => 'Application not found.']);
 		}
 
-		// remove all relationships before
-		ApplicationUriQuery::create()->filterByApplication($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for ApplicationUri';
-			}
-			$related = ApplicationUriQuery::create()->findOneById($entry['id']);
-			$model->addApplicationUri($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateApplicationUris($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ApplicationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_UPDATE, $event);
-		$dispatcher->dispatch(ApplicationEvent::PRE_SAVE, $event);
+		$this->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_UPDATE, $event);
+		$this->dispatch(ApplicationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ApplicationEvent::POST_APPLICATION_URIS_UPDATE, $event);
-		$dispatcher->dispatch(ApplicationEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationEvent::POST_APPLICATION_URIS_UPDATE, $event);
+		$this->dispatch(ApplicationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -343,6 +316,104 @@ trait ApplicationDomainTrait {
 					$query->$method($value);
 				}
 			}
+		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param ApplicationEvent $event
+	 */
+	protected function dispatch($type, ApplicationEvent $event) {
+		$model = $event->getApplication();
+		$methods = [
+			ApplicationEvent::PRE_CREATE => 'preCreate',
+			ApplicationEvent::POST_CREATE => 'postCreate',
+			ApplicationEvent::PRE_UPDATE => 'preUpdate',
+			ApplicationEvent::POST_UPDATE => 'postUpdate',
+			ApplicationEvent::PRE_DELETE => 'preDelete',
+			ApplicationEvent::POST_DELETE => 'postDelete',
+			ApplicationEvent::PRE_SAVE => 'preSave',
+			ApplicationEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
+	}
+
+	/**
+	 * Interal mechanism to add ApplicationUris to Application
+	 * 
+	 * @param Application $model
+	 * @param mixed $data
+	 */
+	protected function doAddApplicationUris(Application $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for ApplicationUri';
+			} else {
+				$related = ApplicationUriQuery::create()->findOneById($entry['id']);
+				$model->addApplicationUri($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove ApplicationUris from Application
+	 * 
+	 * @param Application $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveApplicationUris(Application $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for ApplicationUri';
+			} else {
+				$related = ApplicationUriQuery::create()->findOneById($entry['id']);
+				$model->removeApplicationUri($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal update mechanism of ApplicationUris on Application
+	 * 
+	 * @param Application $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateApplicationUris(Application $model, $data) {
+		// remove all relationships before
+		ApplicationUriQuery::create()->filterByApplication($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for ApplicationUri';
+			} else {
+				$related = ApplicationUriQuery::create()->findOneById($entry['id']);
+				$model->addApplicationUri($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
 		}
 	}
 

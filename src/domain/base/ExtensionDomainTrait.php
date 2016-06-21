@@ -36,6 +36,7 @@ trait ExtensionDomainTrait {
 		// hydrate
 		$serializer = Extension::getSerializer();
 		$model = $serializer->hydrate(new Extension(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -47,12 +48,11 @@ trait ExtensionDomainTrait {
 
 		// dispatch
 		$event = new ExtensionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ExtensionEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(ExtensionEvent::PRE_SAVE, $event);
+		$this->dispatch(ExtensionEvent::PRE_CREATE, $event);
+		$this->dispatch(ExtensionEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(ExtensionEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(ExtensionEvent::POST_SAVE, $event);
+		$this->dispatch(ExtensionEvent::POST_CREATE, $event);
+		$this->dispatch(ExtensionEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -72,12 +72,11 @@ trait ExtensionDomainTrait {
 
 		// delete
 		$event = new ExtensionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ExtensionEvent::PRE_DELETE, $event);
+		$this->dispatch(ExtensionEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(ExtensionEvent::POST_DELETE, $event);
+			$this->dispatch(ExtensionEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -154,6 +153,7 @@ trait ExtensionDomainTrait {
 		// hydrate
 		$serializer = Extension::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -165,12 +165,11 @@ trait ExtensionDomainTrait {
 
 		// dispatch
 		$event = new ExtensionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ExtensionEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(ExtensionEvent::PRE_SAVE, $event);
+		$this->dispatch(ExtensionEvent::PRE_UPDATE, $event);
+		$this->dispatch(ExtensionEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ExtensionEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(ExtensionEvent::POST_SAVE, $event);
+		$this->dispatch(ExtensionEvent::POST_UPDATE, $event);
+		$this->dispatch(ExtensionEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -205,6 +204,34 @@ trait ExtensionDomainTrait {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param ExtensionEvent $event
+	 */
+	protected function dispatch($type, ExtensionEvent $event) {
+		$model = $event->getExtension();
+		$methods = [
+			ExtensionEvent::PRE_CREATE => 'preCreate',
+			ExtensionEvent::POST_CREATE => 'postCreate',
+			ExtensionEvent::PRE_UPDATE => 'preUpdate',
+			ExtensionEvent::POST_UPDATE => 'postUpdate',
+			ExtensionEvent::PRE_DELETE => 'preDelete',
+			ExtensionEvent::POST_DELETE => 'postDelete',
+			ExtensionEvent::PRE_SAVE => 'preSave',
+			ExtensionEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
 	}
 
 	/**

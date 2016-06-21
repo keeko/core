@@ -16,6 +16,7 @@ use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\PayloadInterface;
 use keeko\framework\domain\payload\Updated;
+use keeko\framework\exceptions\ErrorsException;
 use keeko\framework\service\ServiceContainer;
 use keeko\framework\utils\NameUtils;
 use keeko\framework\utils\Parameters;
@@ -43,29 +44,21 @@ trait LocalizationDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'Localization not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for ApplicationUri';
-			}
-			$related = ApplicationUriQuery::create()->findOneById($entry['id']);
-			$model->addApplicationUri($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddApplicationUris($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_ADD, $event);
-		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_ADD, $event);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(LocalizationEvent::POST_APPLICATION_URIS_ADD, $event);
-		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_APPLICATION_URIS_ADD, $event);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -88,29 +81,21 @@ trait LocalizationDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'Localization not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for LanguageVariant';
-			}
-			$related = LanguageVariantQuery::create()->findOneById($entry['id']);
-			$model->addLanguageVariant($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddLanguageVariants($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_ADD, $event);
-		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_ADD, $event);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_ADD, $event);
-		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_ADD, $event);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -133,29 +118,21 @@ trait LocalizationDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'Localization not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Localization';
-			}
-			$related = LocalizationQuery::create()->findOneById($entry['id']);
-			$model->addLocalization($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddLocalizations($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_ADD, $event);
-		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_ADD, $event);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(LocalizationEvent::POST_LOCALIZATIONS_ADD, $event);
-		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LOCALIZATIONS_ADD, $event);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -174,6 +151,7 @@ trait LocalizationDomainTrait {
 		// hydrate
 		$serializer = Localization::getSerializer();
 		$model = $serializer->hydrate(new Localization(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -185,12 +163,11 @@ trait LocalizationDomainTrait {
 
 		// dispatch
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_CREATE, $event);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(LocalizationEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_CREATE, $event);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -210,12 +187,11 @@ trait LocalizationDomainTrait {
 
 		// delete
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_DELETE, $event);
+		$this->dispatch(LocalizationEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(LocalizationEvent::POST_DELETE, $event);
+			$this->dispatch(LocalizationEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -289,28 +265,20 @@ trait LocalizationDomainTrait {
 			return new NotFound(['message' => 'Localization not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for ApplicationUri';
-			}
-			$related = ApplicationUriQuery::create()->findOneById($entry['id']);
-			$model->removeApplicationUri($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveApplicationUris($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_REMOVE, $event);
-		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_REMOVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(LocalizationEvent::POST_APPLICATION_URIS_REMOVE, $event);
-		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_APPLICATION_URIS_REMOVE, $event);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -334,28 +302,20 @@ trait LocalizationDomainTrait {
 			return new NotFound(['message' => 'Localization not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for LanguageVariant';
-			}
-			$related = LanguageVariantQuery::create()->findOneById($entry['id']);
-			$model->removeLanguageVariant($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveLanguageVariants($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_REMOVE, $event);
-		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_REMOVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_REMOVE, $event);
-		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_REMOVE, $event);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -379,28 +339,20 @@ trait LocalizationDomainTrait {
 			return new NotFound(['message' => 'Localization not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Localization';
-			}
-			$related = LocalizationQuery::create()->findOneById($entry['id']);
-			$model->removeLocalization($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveLocalizations($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_REMOVE, $event);
-		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_REMOVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(LocalizationEvent::POST_LOCALIZATIONS_REMOVE, $event);
-		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LOCALIZATIONS_REMOVE, $event);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -425,17 +377,14 @@ trait LocalizationDomainTrait {
 		}
 
 		// update
-		if ($model->getExtLanguageId() !== $relatedId) {
-			$model->setExtLanguageId($relatedId);
-
+		if ($this->doSetExtLangId($model, $relatedId)) {
 			$event = new LocalizationEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(LocalizationEvent::PRE_EXT_LANG_UPDATE, $event);
-			$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+			$this->dispatch(LocalizationEvent::PRE_EXT_LANG_UPDATE, $event);
+			$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(LocalizationEvent::POST_EXT_LANG_UPDATE, $event);
-			$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
-			
+			$this->dispatch(LocalizationEvent::POST_EXT_LANG_UPDATE, $event);
+			$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -458,17 +407,14 @@ trait LocalizationDomainTrait {
 		}
 
 		// update
-		if ($model->getLanguageId() !== $relatedId) {
-			$model->setLanguageId($relatedId);
-
+		if ($this->doSetLanguageId($model, $relatedId)) {
 			$event = new LocalizationEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(LocalizationEvent::PRE_LANGUAGE_UPDATE, $event);
-			$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+			$this->dispatch(LocalizationEvent::PRE_LANGUAGE_UPDATE, $event);
+			$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(LocalizationEvent::POST_LANGUAGE_UPDATE, $event);
-			$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
-			
+			$this->dispatch(LocalizationEvent::POST_LANGUAGE_UPDATE, $event);
+			$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -491,17 +437,14 @@ trait LocalizationDomainTrait {
 		}
 
 		// update
-		if ($model->getParentId() !== $relatedId) {
-			$model->setParentId($relatedId);
-
+		if ($this->doSetParentId($model, $relatedId)) {
 			$event = new LocalizationEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(LocalizationEvent::PRE_PARENT_UPDATE, $event);
-			$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+			$this->dispatch(LocalizationEvent::PRE_PARENT_UPDATE, $event);
+			$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(LocalizationEvent::POST_PARENT_UPDATE, $event);
-			$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
-			
+			$this->dispatch(LocalizationEvent::POST_PARENT_UPDATE, $event);
+			$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -524,17 +467,14 @@ trait LocalizationDomainTrait {
 		}
 
 		// update
-		if ($model->getScriptId() !== $relatedId) {
-			$model->setScriptId($relatedId);
-
+		if ($this->doSetScriptId($model, $relatedId)) {
 			$event = new LocalizationEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(LocalizationEvent::PRE_SCRIPT_UPDATE, $event);
-			$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+			$this->dispatch(LocalizationEvent::PRE_SCRIPT_UPDATE, $event);
+			$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(LocalizationEvent::POST_SCRIPT_UPDATE, $event);
-			$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
-			
+			$this->dispatch(LocalizationEvent::POST_SCRIPT_UPDATE, $event);
+			$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -559,6 +499,7 @@ trait LocalizationDomainTrait {
 		// hydrate
 		$serializer = Localization::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -570,12 +511,11 @@ trait LocalizationDomainTrait {
 
 		// dispatch
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_UPDATE, $event);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(LocalizationEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_UPDATE, $event);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -601,31 +541,20 @@ trait LocalizationDomainTrait {
 			return new NotFound(['message' => 'Localization not found.']);
 		}
 
-		// remove all relationships before
-		ApplicationUriQuery::create()->filterByLocalization($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for ApplicationUri';
-			}
-			$related = ApplicationUriQuery::create()->findOneById($entry['id']);
-			$model->addApplicationUri($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateApplicationUris($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_UPDATE, $event);
-		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_UPDATE, $event);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(LocalizationEvent::POST_APPLICATION_URIS_UPDATE, $event);
-		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_APPLICATION_URIS_UPDATE, $event);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -649,31 +578,20 @@ trait LocalizationDomainTrait {
 			return new NotFound(['message' => 'Localization not found.']);
 		}
 
-		// remove all relationships before
-		LocalizationVariantQuery::create()->filterByLocalization($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for LanguageVariant';
-			}
-			$related = LanguageVariantQuery::create()->findOneById($entry['id']);
-			$model->addLanguageVariant($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateLanguageVariants($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_UPDATE, $event);
-		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_UPDATE, $event);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_UPDATE, $event);
-		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_UPDATE, $event);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -697,31 +615,20 @@ trait LocalizationDomainTrait {
 			return new NotFound(['message' => 'Localization not found.']);
 		}
 
-		// remove all relationships before
-		LocalizationQuery::create()->filterByParent($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Localization';
-			}
-			$related = LocalizationQuery::create()->findOneById($entry['id']);
-			$model->addLocalization($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateLocalizations($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new LocalizationEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_UPDATE, $event);
-		$dispatcher->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_UPDATE, $event);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(LocalizationEvent::POST_LOCALIZATIONS_UPDATE, $event);
-		$dispatcher->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LOCALIZATIONS_UPDATE, $event);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -753,6 +660,308 @@ trait LocalizationDomainTrait {
 					$query->$method($value);
 				}
 			}
+		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param LocalizationEvent $event
+	 */
+	protected function dispatch($type, LocalizationEvent $event) {
+		$model = $event->getLocalization();
+		$methods = [
+			LocalizationEvent::PRE_CREATE => 'preCreate',
+			LocalizationEvent::POST_CREATE => 'postCreate',
+			LocalizationEvent::PRE_UPDATE => 'preUpdate',
+			LocalizationEvent::POST_UPDATE => 'postUpdate',
+			LocalizationEvent::PRE_DELETE => 'preDelete',
+			LocalizationEvent::POST_DELETE => 'postDelete',
+			LocalizationEvent::PRE_SAVE => 'preSave',
+			LocalizationEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
+	}
+
+	/**
+	 * Interal mechanism to add ApplicationUris to Localization
+	 * 
+	 * @param Localization $model
+	 * @param mixed $data
+	 */
+	protected function doAddApplicationUris(Localization $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for ApplicationUri';
+			} else {
+				$related = ApplicationUriQuery::create()->findOneById($entry['id']);
+				$model->addApplicationUri($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to add LanguageVariants to Localization
+	 * 
+	 * @param Localization $model
+	 * @param mixed $data
+	 */
+	protected function doAddLanguageVariants(Localization $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for LanguageVariant';
+			} else {
+				$related = LanguageVariantQuery::create()->findOneById($entry['id']);
+				$model->addLanguageVariant($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to add Localizations to Localization
+	 * 
+	 * @param Localization $model
+	 * @param mixed $data
+	 */
+	protected function doAddLocalizations(Localization $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Localization';
+			} else {
+				$related = LocalizationQuery::create()->findOneById($entry['id']);
+				$model->addLocalization($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove ApplicationUris from Localization
+	 * 
+	 * @param Localization $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveApplicationUris(Localization $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for ApplicationUri';
+			} else {
+				$related = ApplicationUriQuery::create()->findOneById($entry['id']);
+				$model->removeApplicationUri($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove LanguageVariants from Localization
+	 * 
+	 * @param Localization $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveLanguageVariants(Localization $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for LanguageVariant';
+			} else {
+				$related = LanguageVariantQuery::create()->findOneById($entry['id']);
+				$model->removeLanguageVariant($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove Localizations from Localization
+	 * 
+	 * @param Localization $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveLocalizations(Localization $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Localization';
+			} else {
+				$related = LocalizationQuery::create()->findOneById($entry['id']);
+				$model->removeLocalization($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal mechanism to set the ExtLang id
+	 * 
+	 * @param Localization $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetExtLangId(Localization $model, $relatedId) {
+		if ($model->getExtLanguageId() !== $relatedId) {
+			$model->setExtLanguageId($relatedId);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Internal mechanism to set the Language id
+	 * 
+	 * @param Localization $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetLanguageId(Localization $model, $relatedId) {
+		if ($model->getLanguageId() !== $relatedId) {
+			$model->setLanguageId($relatedId);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Internal mechanism to set the Parent id
+	 * 
+	 * @param Localization $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetParentId(Localization $model, $relatedId) {
+		if ($model->getParentId() !== $relatedId) {
+			$model->setParentId($relatedId);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Internal mechanism to set the Script id
+	 * 
+	 * @param Localization $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetScriptId(Localization $model, $relatedId) {
+		if ($model->getScriptId() !== $relatedId) {
+			$model->setScriptId($relatedId);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Internal update mechanism of ApplicationUris on Localization
+	 * 
+	 * @param Localization $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateApplicationUris(Localization $model, $data) {
+		// remove all relationships before
+		ApplicationUriQuery::create()->filterByLocalization($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for ApplicationUri';
+			} else {
+				$related = ApplicationUriQuery::create()->findOneById($entry['id']);
+				$model->addApplicationUri($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal update mechanism of LanguageVariants on Localization
+	 * 
+	 * @param Localization $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateLanguageVariants(Localization $model, $data) {
+		// remove all relationships before
+		LocalizationVariantQuery::create()->filterByLocalization($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for LanguageVariant';
+			} else {
+				$related = LanguageVariantQuery::create()->findOneById($entry['id']);
+				$model->addLanguageVariant($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal update mechanism of Localizations on Localization
+	 * 
+	 * @param Localization $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateLocalizations(Localization $model, $data) {
+		// remove all relationships before
+		LocalizationQuery::create()->filterByParent($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Localization';
+			} else {
+				$related = LocalizationQuery::create()->findOneById($entry['id']);
+				$model->addLocalization($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
 		}
 	}
 

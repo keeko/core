@@ -14,6 +14,7 @@ use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\PayloadInterface;
 use keeko\framework\domain\payload\Updated;
+use keeko\framework\exceptions\ErrorsException;
 use keeko\framework\service\ServiceContainer;
 use keeko\framework\utils\NameUtils;
 use keeko\framework\utils\Parameters;
@@ -41,29 +42,21 @@ trait ActivityObjectDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'ActivityObject not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Activity';
-			}
-			$related = ActivityQuery::create()->findOneById($entry['id']);
-			$model->addActivity($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddActivities($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ActivityObjectEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActivityObjectEvent::PRE_ACTIVITIES_ADD, $event);
-		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
+		$this->dispatch(ActivityObjectEvent::PRE_ACTIVITIES_ADD, $event);
+		$this->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActivityObjectEvent::POST_ACTIVITIES_ADD, $event);
-		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
+		$this->dispatch(ActivityObjectEvent::POST_ACTIVITIES_ADD, $event);
+		$this->dispatch(ActivityObjectEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -82,6 +75,7 @@ trait ActivityObjectDomainTrait {
 		// hydrate
 		$serializer = ActivityObject::getSerializer();
 		$model = $serializer->hydrate(new ActivityObject(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -93,12 +87,11 @@ trait ActivityObjectDomainTrait {
 
 		// dispatch
 		$event = new ActivityObjectEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActivityObjectEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
+		$this->dispatch(ActivityObjectEvent::PRE_CREATE, $event);
+		$this->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(ActivityObjectEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
+		$this->dispatch(ActivityObjectEvent::POST_CREATE, $event);
+		$this->dispatch(ActivityObjectEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -118,12 +111,11 @@ trait ActivityObjectDomainTrait {
 
 		// delete
 		$event = new ActivityObjectEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActivityObjectEvent::PRE_DELETE, $event);
+		$this->dispatch(ActivityObjectEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(ActivityObjectEvent::POST_DELETE, $event);
+			$this->dispatch(ActivityObjectEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -197,28 +189,20 @@ trait ActivityObjectDomainTrait {
 			return new NotFound(['message' => 'ActivityObject not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Activity';
-			}
-			$related = ActivityQuery::create()->findOneById($entry['id']);
-			$model->removeActivity($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveActivities($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ActivityObjectEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActivityObjectEvent::PRE_ACTIVITIES_REMOVE, $event);
-		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
+		$this->dispatch(ActivityObjectEvent::PRE_ACTIVITIES_REMOVE, $event);
+		$this->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActivityObjectEvent::POST_ACTIVITIES_REMOVE, $event);
-		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
+		$this->dispatch(ActivityObjectEvent::POST_ACTIVITIES_REMOVE, $event);
+		$this->dispatch(ActivityObjectEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -245,6 +229,7 @@ trait ActivityObjectDomainTrait {
 		// hydrate
 		$serializer = ActivityObject::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -256,12 +241,11 @@ trait ActivityObjectDomainTrait {
 
 		// dispatch
 		$event = new ActivityObjectEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActivityObjectEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
+		$this->dispatch(ActivityObjectEvent::PRE_UPDATE, $event);
+		$this->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActivityObjectEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
+		$this->dispatch(ActivityObjectEvent::POST_UPDATE, $event);
+		$this->dispatch(ActivityObjectEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -287,31 +271,20 @@ trait ActivityObjectDomainTrait {
 			return new NotFound(['message' => 'ActivityObject not found.']);
 		}
 
-		// remove all relationships before
-		ActivityQuery::create()->filterByTarget($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Activity';
-			}
-			$related = ActivityQuery::create()->findOneById($entry['id']);
-			$model->addActivity($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateActivities($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ActivityObjectEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActivityObjectEvent::PRE_ACTIVITIES_UPDATE, $event);
-		$dispatcher->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
+		$this->dispatch(ActivityObjectEvent::PRE_ACTIVITIES_UPDATE, $event);
+		$this->dispatch(ActivityObjectEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActivityObjectEvent::POST_ACTIVITIES_UPDATE, $event);
-		$dispatcher->dispatch(ActivityObjectEvent::POST_SAVE, $event);
+		$this->dispatch(ActivityObjectEvent::POST_ACTIVITIES_UPDATE, $event);
+		$this->dispatch(ActivityObjectEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -343,6 +316,104 @@ trait ActivityObjectDomainTrait {
 					$query->$method($value);
 				}
 			}
+		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param ActivityObjectEvent $event
+	 */
+	protected function dispatch($type, ActivityObjectEvent $event) {
+		$model = $event->getActivityObject();
+		$methods = [
+			ActivityObjectEvent::PRE_CREATE => 'preCreate',
+			ActivityObjectEvent::POST_CREATE => 'postCreate',
+			ActivityObjectEvent::PRE_UPDATE => 'preUpdate',
+			ActivityObjectEvent::POST_UPDATE => 'postUpdate',
+			ActivityObjectEvent::PRE_DELETE => 'preDelete',
+			ActivityObjectEvent::POST_DELETE => 'postDelete',
+			ActivityObjectEvent::PRE_SAVE => 'preSave',
+			ActivityObjectEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
+	}
+
+	/**
+	 * Interal mechanism to add Activities to ActivityObject
+	 * 
+	 * @param ActivityObject $model
+	 * @param mixed $data
+	 */
+	protected function doAddActivities(ActivityObject $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Activity';
+			} else {
+				$related = ActivityQuery::create()->findOneById($entry['id']);
+				$model->addActivity($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove Activities from ActivityObject
+	 * 
+	 * @param ActivityObject $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveActivities(ActivityObject $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Activity';
+			} else {
+				$related = ActivityQuery::create()->findOneById($entry['id']);
+				$model->removeActivity($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal update mechanism of Activities on ActivityObject
+	 * 
+	 * @param ActivityObject $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateActivities(ActivityObject $model, $data) {
+		// remove all relationships before
+		ActivityQuery::create()->filterByTarget($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Activity';
+			} else {
+				$related = ActivityQuery::create()->findOneById($entry['id']);
+				$model->addActivity($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
 		}
 	}
 

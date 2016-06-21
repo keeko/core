@@ -12,6 +12,18 @@ use Tobscure\JsonApi\Resource;
 trait SessionSerializerTrait {
 
 	/**
+	 */
+	private $methodNames = [
+
+	];
+
+	/**
+	 */
+	private $methodPluralNames = [
+
+	];
+
+	/**
 	 * @param mixed $model
 	 * @param array $fields
 	 */
@@ -80,7 +92,7 @@ trait SessionSerializerTrait {
 		$model = HydrateUtils::hydrate($attribs, $model, ['token', 'user-id', 'ip', 'user-agent', 'browser', 'device', 'os', 'location']);
 
 		// relationships
-		$this->hydrateRelationships($model, $data);
+		//$this->hydrateRelationships($model, $data);
 
 		return $model;
 	}
@@ -112,15 +124,28 @@ trait SessionSerializerTrait {
 	abstract protected function addRelationshipSelfLink(Relationship $relationship, $model, $related);
 
 	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodName($relatedName) {
+		if (isset($this->methodNames[$relatedName])) {
+			return $this->methodNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodPluralName($relatedName) {
+		if (isset($this->methodPluralNames[$relatedName])) {
+			return $this->methodPluralNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
 	 */
 	protected function getTypeInferencer() {
 		return TypeInferencer::getInstance();
 	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 * @return void
-	 */
-	abstract protected function hydrateRelationships($model, $data);
 }

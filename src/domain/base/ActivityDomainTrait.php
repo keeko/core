@@ -36,6 +36,7 @@ trait ActivityDomainTrait {
 		// hydrate
 		$serializer = Activity::getSerializer();
 		$model = $serializer->hydrate(new Activity(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -47,12 +48,11 @@ trait ActivityDomainTrait {
 
 		// dispatch
 		$event = new ActivityEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActivityEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
+		$this->dispatch(ActivityEvent::PRE_CREATE, $event);
+		$this->dispatch(ActivityEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(ActivityEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
+		$this->dispatch(ActivityEvent::POST_CREATE, $event);
+		$this->dispatch(ActivityEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -72,12 +72,11 @@ trait ActivityDomainTrait {
 
 		// delete
 		$event = new ActivityEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActivityEvent::PRE_DELETE, $event);
+		$this->dispatch(ActivityEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(ActivityEvent::POST_DELETE, $event);
+			$this->dispatch(ActivityEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -152,17 +151,14 @@ trait ActivityDomainTrait {
 		}
 
 		// update
-		if ($model->getActorId() !== $relatedId) {
-			$model->setActorId($relatedId);
-
+		if ($this->doSetActorId($model, $relatedId)) {
 			$event = new ActivityEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(ActivityEvent::PRE_ACTOR_UPDATE, $event);
-			$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
+			$this->dispatch(ActivityEvent::PRE_ACTOR_UPDATE, $event);
+			$this->dispatch(ActivityEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(ActivityEvent::POST_ACTOR_UPDATE, $event);
-			$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
-			
+			$this->dispatch(ActivityEvent::POST_ACTOR_UPDATE, $event);
+			$this->dispatch(ActivityEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -185,17 +181,14 @@ trait ActivityDomainTrait {
 		}
 
 		// update
-		if ($model->getObjectId() !== $relatedId) {
-			$model->setObjectId($relatedId);
-
+		if ($this->doSetObjectId($model, $relatedId)) {
 			$event = new ActivityEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(ActivityEvent::PRE_OBJECT_UPDATE, $event);
-			$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
+			$this->dispatch(ActivityEvent::PRE_OBJECT_UPDATE, $event);
+			$this->dispatch(ActivityEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(ActivityEvent::POST_OBJECT_UPDATE, $event);
-			$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
-			
+			$this->dispatch(ActivityEvent::POST_OBJECT_UPDATE, $event);
+			$this->dispatch(ActivityEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -218,17 +211,14 @@ trait ActivityDomainTrait {
 		}
 
 		// update
-		if ($model->getTargetId() !== $relatedId) {
-			$model->setTargetId($relatedId);
-
+		if ($this->doSetTargetId($model, $relatedId)) {
 			$event = new ActivityEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(ActivityEvent::PRE_TARGET_UPDATE, $event);
-			$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
+			$this->dispatch(ActivityEvent::PRE_TARGET_UPDATE, $event);
+			$this->dispatch(ActivityEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(ActivityEvent::POST_TARGET_UPDATE, $event);
-			$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
-			
+			$this->dispatch(ActivityEvent::POST_TARGET_UPDATE, $event);
+			$this->dispatch(ActivityEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -253,6 +243,7 @@ trait ActivityDomainTrait {
 		// hydrate
 		$serializer = Activity::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -264,12 +255,11 @@ trait ActivityDomainTrait {
 
 		// dispatch
 		$event = new ActivityEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActivityEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(ActivityEvent::PRE_SAVE, $event);
+		$this->dispatch(ActivityEvent::PRE_UPDATE, $event);
+		$this->dispatch(ActivityEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActivityEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(ActivityEvent::POST_SAVE, $event);
+		$this->dispatch(ActivityEvent::POST_UPDATE, $event);
+		$this->dispatch(ActivityEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -304,6 +294,82 @@ trait ActivityDomainTrait {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param ActivityEvent $event
+	 */
+	protected function dispatch($type, ActivityEvent $event) {
+		$model = $event->getActivity();
+		$methods = [
+			ActivityEvent::PRE_CREATE => 'preCreate',
+			ActivityEvent::POST_CREATE => 'postCreate',
+			ActivityEvent::PRE_UPDATE => 'preUpdate',
+			ActivityEvent::POST_UPDATE => 'postUpdate',
+			ActivityEvent::PRE_DELETE => 'preDelete',
+			ActivityEvent::POST_DELETE => 'postDelete',
+			ActivityEvent::PRE_SAVE => 'preSave',
+			ActivityEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
+	}
+
+	/**
+	 * Internal mechanism to set the Actor id
+	 * 
+	 * @param Activity $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetActorId(Activity $model, $relatedId) {
+		if ($model->getActorId() !== $relatedId) {
+			$model->setActorId($relatedId);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Internal mechanism to set the Object id
+	 * 
+	 * @param Activity $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetObjectId(Activity $model, $relatedId) {
+		if ($model->getObjectId() !== $relatedId) {
+			$model->setObjectId($relatedId);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Internal mechanism to set the Target id
+	 * 
+	 * @param Activity $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetTargetId(Activity $model, $relatedId) {
+		if ($model->getTargetId() !== $relatedId) {
+			$model->setTargetId($relatedId);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

@@ -36,6 +36,7 @@ trait ApiDomainTrait {
 		// hydrate
 		$serializer = Api::getSerializer();
 		$model = $serializer->hydrate(new Api(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -47,12 +48,11 @@ trait ApiDomainTrait {
 
 		// dispatch
 		$event = new ApiEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApiEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(ApiEvent::PRE_SAVE, $event);
+		$this->dispatch(ApiEvent::PRE_CREATE, $event);
+		$this->dispatch(ApiEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(ApiEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(ApiEvent::POST_SAVE, $event);
+		$this->dispatch(ApiEvent::POST_CREATE, $event);
+		$this->dispatch(ApiEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -72,12 +72,11 @@ trait ApiDomainTrait {
 
 		// delete
 		$event = new ApiEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApiEvent::PRE_DELETE, $event);
+		$this->dispatch(ApiEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(ApiEvent::POST_DELETE, $event);
+			$this->dispatch(ApiEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -152,17 +151,14 @@ trait ApiDomainTrait {
 		}
 
 		// update
-		if ($model->getActionId() !== $relatedId) {
-			$model->setActionId($relatedId);
-
+		if ($this->doSetActionId($model, $relatedId)) {
 			$event = new ApiEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(ApiEvent::PRE_ACTION_UPDATE, $event);
-			$dispatcher->dispatch(ApiEvent::PRE_SAVE, $event);
+			$this->dispatch(ApiEvent::PRE_ACTION_UPDATE, $event);
+			$this->dispatch(ApiEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(ApiEvent::POST_ACTION_UPDATE, $event);
-			$dispatcher->dispatch(ApiEvent::POST_SAVE, $event);
-			
+			$this->dispatch(ApiEvent::POST_ACTION_UPDATE, $event);
+			$this->dispatch(ApiEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -187,6 +183,7 @@ trait ApiDomainTrait {
 		// hydrate
 		$serializer = Api::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -198,12 +195,11 @@ trait ApiDomainTrait {
 
 		// dispatch
 		$event = new ApiEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApiEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(ApiEvent::PRE_SAVE, $event);
+		$this->dispatch(ApiEvent::PRE_UPDATE, $event);
+		$this->dispatch(ApiEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ApiEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(ApiEvent::POST_SAVE, $event);
+		$this->dispatch(ApiEvent::POST_UPDATE, $event);
+		$this->dispatch(ApiEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -238,6 +234,50 @@ trait ApiDomainTrait {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param ApiEvent $event
+	 */
+	protected function dispatch($type, ApiEvent $event) {
+		$model = $event->getApi();
+		$methods = [
+			ApiEvent::PRE_CREATE => 'preCreate',
+			ApiEvent::POST_CREATE => 'postCreate',
+			ApiEvent::PRE_UPDATE => 'preUpdate',
+			ApiEvent::POST_UPDATE => 'postUpdate',
+			ApiEvent::PRE_DELETE => 'preDelete',
+			ApiEvent::POST_DELETE => 'postDelete',
+			ApiEvent::PRE_SAVE => 'preSave',
+			ApiEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
+	}
+
+	/**
+	 * Internal mechanism to set the Action id
+	 * 
+	 * @param Api $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetActionId(Api $model, $relatedId) {
+		if ($model->getActionId() !== $relatedId) {
+			$model->setActionId($relatedId);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

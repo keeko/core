@@ -12,11 +12,24 @@ use Tobscure\JsonApi\Relationship;
 trait ApplicationSerializerTrait {
 
 	/**
+	 */
+	private $methodNames = [
+		'application-uris' => 'ApplicationUri'
+	];
+
+	/**
+	 */
+	private $methodPluralNames = [
+		'application-uris' => 'ApplicationUris'
+	];
+
+	/**
 	 * @param mixed $model
 	 * @return Relationship
 	 */
 	public function applicationUris($model) {
-		$relationship = new Relationship(new Collection($model->getApplicationUris(), ApplicationUri::getSerializer()));
+		$method = 'get' . $this->getCollectionMethodPluralName('application-uris');
+		$relationship = new Relationship(new Collection($model->$method(), ApplicationUri::getSerializer()));
 		return $this->addRelationshipSelfLink($relationship, $model, 'application-uri');
 	}
 
@@ -86,7 +99,7 @@ trait ApplicationSerializerTrait {
 		$model = HydrateUtils::hydrate($attribs, $model, ['class-name', 'id', 'name', 'title', 'description', 'installed-version']);
 
 		// relationships
-		$this->hydrateRelationships($model, $data);
+		//$this->hydrateRelationships($model, $data);
 
 		return $model;
 	}
@@ -100,15 +113,28 @@ trait ApplicationSerializerTrait {
 	abstract protected function addRelationshipSelfLink(Relationship $relationship, $model, $related);
 
 	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodName($relatedName) {
+		if (isset($this->methodNames[$relatedName])) {
+			return $this->methodNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodPluralName($relatedName) {
+		if (isset($this->methodPluralNames[$relatedName])) {
+			return $this->methodPluralNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
 	 */
 	protected function getTypeInferencer() {
 		return TypeInferencer::getInstance();
 	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 * @return void
-	 */
-	abstract protected function hydrateRelationships($model, $data);
 }

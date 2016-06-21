@@ -13,6 +13,18 @@ use Tobscure\JsonApi\Resource;
 trait ActivitySerializerTrait {
 
 	/**
+	 */
+	private $methodNames = [
+
+	];
+
+	/**
+	 */
+	private $methodPluralNames = [
+
+	];
+
+	/**
 	 * @param mixed $model
 	 * @return Relationship
 	 */
@@ -94,7 +106,7 @@ trait ActivitySerializerTrait {
 		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'actor-id', 'verb', 'object-id', 'target-id']);
 
 		// relationships
-		$this->hydrateRelationships($model, $data);
+		//$this->hydrateRelationships($model, $data);
 
 		return $model;
 	}
@@ -144,15 +156,28 @@ trait ActivitySerializerTrait {
 	abstract protected function addRelationshipSelfLink(Relationship $relationship, $model, $related);
 
 	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodName($relatedName) {
+		if (isset($this->methodNames[$relatedName])) {
+			return $this->methodNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodPluralName($relatedName) {
+		if (isset($this->methodPluralNames[$relatedName])) {
+			return $this->methodPluralNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
 	 */
 	protected function getTypeInferencer() {
 		return TypeInferencer::getInstance();
 	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 * @return void
-	 */
-	abstract protected function hydrateRelationships($model, $data);
 }

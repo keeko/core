@@ -3,8 +3,8 @@ namespace keeko\core\domain\base;
 
 use keeko\core\event\ModuleEvent;
 use keeko\core\model\ActionQuery;
-use keeko\core\model\Module;
 use keeko\core\model\ModuleQuery;
+use keeko\core\model\Module;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\Found;
@@ -14,6 +14,7 @@ use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\PayloadInterface;
 use keeko\framework\domain\payload\Updated;
+use keeko\framework\exceptions\ErrorsException;
 use keeko\framework\service\ServiceContainer;
 use keeko\framework\utils\NameUtils;
 use keeko\framework\utils\Parameters;
@@ -41,29 +42,21 @@ trait ModuleDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'Module not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Action';
-			}
-			$related = ActionQuery::create()->findOneById($entry['id']);
-			$model->addAction($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddActions($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ModuleEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ModuleEvent::PRE_ACTIONS_ADD, $event);
-		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
+		$this->dispatch(ModuleEvent::PRE_ACTIONS_ADD, $event);
+		$this->dispatch(ModuleEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ModuleEvent::POST_ACTIONS_ADD, $event);
-		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
+		$this->dispatch(ModuleEvent::POST_ACTIONS_ADD, $event);
+		$this->dispatch(ModuleEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -82,6 +75,7 @@ trait ModuleDomainTrait {
 		// hydrate
 		$serializer = Module::getSerializer();
 		$model = $serializer->hydrate(new Module(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -93,12 +87,11 @@ trait ModuleDomainTrait {
 
 		// dispatch
 		$event = new ModuleEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ModuleEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
+		$this->dispatch(ModuleEvent::PRE_CREATE, $event);
+		$this->dispatch(ModuleEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(ModuleEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
+		$this->dispatch(ModuleEvent::POST_CREATE, $event);
+		$this->dispatch(ModuleEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -118,12 +111,11 @@ trait ModuleDomainTrait {
 
 		// delete
 		$event = new ModuleEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ModuleEvent::PRE_DELETE, $event);
+		$this->dispatch(ModuleEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(ModuleEvent::POST_DELETE, $event);
+			$this->dispatch(ModuleEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -197,28 +189,20 @@ trait ModuleDomainTrait {
 			return new NotFound(['message' => 'Module not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Action';
-			}
-			$related = ActionQuery::create()->findOneById($entry['id']);
-			$model->removeAction($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveActions($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ModuleEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ModuleEvent::PRE_ACTIONS_REMOVE, $event);
-		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
+		$this->dispatch(ModuleEvent::PRE_ACTIONS_REMOVE, $event);
+		$this->dispatch(ModuleEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ModuleEvent::POST_ACTIONS_REMOVE, $event);
-		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
+		$this->dispatch(ModuleEvent::POST_ACTIONS_REMOVE, $event);
+		$this->dispatch(ModuleEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -245,6 +229,7 @@ trait ModuleDomainTrait {
 		// hydrate
 		$serializer = Module::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -256,12 +241,11 @@ trait ModuleDomainTrait {
 
 		// dispatch
 		$event = new ModuleEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ModuleEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
+		$this->dispatch(ModuleEvent::PRE_UPDATE, $event);
+		$this->dispatch(ModuleEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ModuleEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
+		$this->dispatch(ModuleEvent::POST_UPDATE, $event);
+		$this->dispatch(ModuleEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -287,31 +271,20 @@ trait ModuleDomainTrait {
 			return new NotFound(['message' => 'Module not found.']);
 		}
 
-		// remove all relationships before
-		ActionQuery::create()->filterByModule($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Action';
-			}
-			$related = ActionQuery::create()->findOneById($entry['id']);
-			$model->addAction($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateActions($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ModuleEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ModuleEvent::PRE_ACTIONS_UPDATE, $event);
-		$dispatcher->dispatch(ModuleEvent::PRE_SAVE, $event);
+		$this->dispatch(ModuleEvent::PRE_ACTIONS_UPDATE, $event);
+		$this->dispatch(ModuleEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ModuleEvent::POST_ACTIONS_UPDATE, $event);
-		$dispatcher->dispatch(ModuleEvent::POST_SAVE, $event);
+		$this->dispatch(ModuleEvent::POST_ACTIONS_UPDATE, $event);
+		$this->dispatch(ModuleEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -343,6 +316,104 @@ trait ModuleDomainTrait {
 					$query->$method($value);
 				}
 			}
+		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param ModuleEvent $event
+	 */
+	protected function dispatch($type, ModuleEvent $event) {
+		$model = $event->getModule();
+		$methods = [
+			ModuleEvent::PRE_CREATE => 'preCreate',
+			ModuleEvent::POST_CREATE => 'postCreate',
+			ModuleEvent::PRE_UPDATE => 'preUpdate',
+			ModuleEvent::POST_UPDATE => 'postUpdate',
+			ModuleEvent::PRE_DELETE => 'preDelete',
+			ModuleEvent::POST_DELETE => 'postDelete',
+			ModuleEvent::PRE_SAVE => 'preSave',
+			ModuleEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
+	}
+
+	/**
+	 * Interal mechanism to add Actions to Module
+	 * 
+	 * @param Module $model
+	 * @param mixed $data
+	 */
+	protected function doAddActions(Module $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Action';
+			} else {
+				$related = ActionQuery::create()->findOneById($entry['id']);
+				$model->addAction($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove Actions from Module
+	 * 
+	 * @param Module $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveActions(Module $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Action';
+			} else {
+				$related = ActionQuery::create()->findOneById($entry['id']);
+				$model->removeAction($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal update mechanism of Actions on Module
+	 * 
+	 * @param Module $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateActions(Module $model, $data) {
+		// remove all relationships before
+		ActionQuery::create()->filterByModule($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Action';
+			} else {
+				$related = ActionQuery::create()->findOneById($entry['id']);
+				$model->addAction($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
 		}
 	}
 

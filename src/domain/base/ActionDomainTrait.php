@@ -16,6 +16,7 @@ use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\PayloadInterface;
 use keeko\framework\domain\payload\Updated;
+use keeko\framework\exceptions\ErrorsException;
 use keeko\framework\service\ServiceContainer;
 use keeko\framework\utils\NameUtils;
 use keeko\framework\utils\Parameters;
@@ -43,29 +44,21 @@ trait ActionDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'Action not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Api';
-			}
-			$related = ApiQuery::create()->findOneById($entry['id']);
-			$model->addApi($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddApis($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ActionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActionEvent::PRE_APIS_ADD, $event);
-		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_APIS_ADD, $event);
+		$this->dispatch(ActionEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActionEvent::POST_APIS_ADD, $event);
-		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_APIS_ADD, $event);
+		$this->dispatch(ActionEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -88,29 +81,21 @@ trait ActionDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'Action not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Group';
-			}
-			$related = GroupQuery::create()->findOneById($entry['id']);
-			$model->addGroup($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddGroups($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ActionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActionEvent::PRE_GROUPS_ADD, $event);
-		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_GROUPS_ADD, $event);
+		$this->dispatch(ActionEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActionEvent::POST_GROUPS_ADD, $event);
-		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_GROUPS_ADD, $event);
+		$this->dispatch(ActionEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -129,6 +114,7 @@ trait ActionDomainTrait {
 		// hydrate
 		$serializer = Action::getSerializer();
 		$model = $serializer->hydrate(new Action(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -140,12 +126,11 @@ trait ActionDomainTrait {
 
 		// dispatch
 		$event = new ActionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActionEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_CREATE, $event);
+		$this->dispatch(ActionEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(ActionEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_CREATE, $event);
+		$this->dispatch(ActionEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -165,12 +150,11 @@ trait ActionDomainTrait {
 
 		// delete
 		$event = new ActionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActionEvent::PRE_DELETE, $event);
+		$this->dispatch(ActionEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(ActionEvent::POST_DELETE, $event);
+			$this->dispatch(ActionEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -244,28 +228,20 @@ trait ActionDomainTrait {
 			return new NotFound(['message' => 'Action not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Api';
-			}
-			$related = ApiQuery::create()->findOneById($entry['id']);
-			$model->removeApi($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveApis($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ActionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActionEvent::PRE_APIS_REMOVE, $event);
-		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_APIS_REMOVE, $event);
+		$this->dispatch(ActionEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActionEvent::POST_APIS_REMOVE, $event);
-		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_APIS_REMOVE, $event);
+		$this->dispatch(ActionEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -289,28 +265,20 @@ trait ActionDomainTrait {
 			return new NotFound(['message' => 'Action not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Group';
-			}
-			$related = GroupQuery::create()->findOneById($entry['id']);
-			$model->removeGroup($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveGroups($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ActionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActionEvent::PRE_GROUPS_REMOVE, $event);
-		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_GROUPS_REMOVE, $event);
+		$this->dispatch(ActionEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActionEvent::POST_GROUPS_REMOVE, $event);
-		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_GROUPS_REMOVE, $event);
+		$this->dispatch(ActionEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -335,17 +303,14 @@ trait ActionDomainTrait {
 		}
 
 		// update
-		if ($model->getModuleId() !== $relatedId) {
-			$model->setModuleId($relatedId);
-
+		if ($this->doSetModuleId($model, $relatedId)) {
 			$event = new ActionEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(ActionEvent::PRE_MODULE_UPDATE, $event);
-			$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
+			$this->dispatch(ActionEvent::PRE_MODULE_UPDATE, $event);
+			$this->dispatch(ActionEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(ActionEvent::POST_MODULE_UPDATE, $event);
-			$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
-			
+			$this->dispatch(ActionEvent::POST_MODULE_UPDATE, $event);
+			$this->dispatch(ActionEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -370,6 +335,7 @@ trait ActionDomainTrait {
 		// hydrate
 		$serializer = Action::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -381,12 +347,11 @@ trait ActionDomainTrait {
 
 		// dispatch
 		$event = new ActionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActionEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_UPDATE, $event);
+		$this->dispatch(ActionEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActionEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_UPDATE, $event);
+		$this->dispatch(ActionEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -412,31 +377,20 @@ trait ActionDomainTrait {
 			return new NotFound(['message' => 'Action not found.']);
 		}
 
-		// remove all relationships before
-		ApiQuery::create()->filterByAction($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Api';
-			}
-			$related = ApiQuery::create()->findOneById($entry['id']);
-			$model->addApi($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateApis($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ActionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActionEvent::PRE_APIS_UPDATE, $event);
-		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_APIS_UPDATE, $event);
+		$this->dispatch(ActionEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActionEvent::POST_APIS_UPDATE, $event);
-		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_APIS_UPDATE, $event);
+		$this->dispatch(ActionEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -460,31 +414,20 @@ trait ActionDomainTrait {
 			return new NotFound(['message' => 'Action not found.']);
 		}
 
-		// remove all relationships before
-		GroupActionQuery::create()->filterByAction($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Group';
-			}
-			$related = GroupQuery::create()->findOneById($entry['id']);
-			$model->addGroup($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateGroups($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new ActionEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ActionEvent::PRE_GROUPS_UPDATE, $event);
-		$dispatcher->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_GROUPS_UPDATE, $event);
+		$this->dispatch(ActionEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ActionEvent::POST_GROUPS_UPDATE, $event);
-		$dispatcher->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_GROUPS_UPDATE, $event);
+		$this->dispatch(ActionEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -516,6 +459,190 @@ trait ActionDomainTrait {
 					$query->$method($value);
 				}
 			}
+		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param ActionEvent $event
+	 */
+	protected function dispatch($type, ActionEvent $event) {
+		$model = $event->getAction();
+		$methods = [
+			ActionEvent::PRE_CREATE => 'preCreate',
+			ActionEvent::POST_CREATE => 'postCreate',
+			ActionEvent::PRE_UPDATE => 'preUpdate',
+			ActionEvent::POST_UPDATE => 'postUpdate',
+			ActionEvent::PRE_DELETE => 'preDelete',
+			ActionEvent::POST_DELETE => 'postDelete',
+			ActionEvent::PRE_SAVE => 'preSave',
+			ActionEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
+	}
+
+	/**
+	 * Interal mechanism to add Apis to Action
+	 * 
+	 * @param Action $model
+	 * @param mixed $data
+	 */
+	protected function doAddApis(Action $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Api';
+			} else {
+				$related = ApiQuery::create()->findOneById($entry['id']);
+				$model->addApi($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to add Groups to Action
+	 * 
+	 * @param Action $model
+	 * @param mixed $data
+	 */
+	protected function doAddGroups(Action $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			} else {
+				$related = GroupQuery::create()->findOneById($entry['id']);
+				$model->addGroup($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove Apis from Action
+	 * 
+	 * @param Action $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveApis(Action $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Api';
+			} else {
+				$related = ApiQuery::create()->findOneById($entry['id']);
+				$model->removeApi($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove Groups from Action
+	 * 
+	 * @param Action $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveGroups(Action $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			} else {
+				$related = GroupQuery::create()->findOneById($entry['id']);
+				$model->removeGroup($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal mechanism to set the Module id
+	 * 
+	 * @param Action $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetModuleId(Action $model, $relatedId) {
+		if ($model->getModuleId() !== $relatedId) {
+			$model->setModuleId($relatedId);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Internal update mechanism of Apis on Action
+	 * 
+	 * @param Action $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateApis(Action $model, $data) {
+		// remove all relationships before
+		ApiQuery::create()->filterByAction($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Api';
+			} else {
+				$related = ApiQuery::create()->findOneById($entry['id']);
+				$model->addApi($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal update mechanism of Groups on Action
+	 * 
+	 * @param Action $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateGroups(Action $model, $data) {
+		// remove all relationships before
+		GroupActionQuery::create()->filterByAction($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			} else {
+				$related = GroupQuery::create()->findOneById($entry['id']);
+				$model->addGroup($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
 		}
 	}
 

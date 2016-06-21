@@ -12,11 +12,24 @@ use Tobscure\JsonApi\Relationship;
 trait ModuleSerializerTrait {
 
 	/**
+	 */
+	private $methodNames = [
+		'actions' => 'Action'
+	];
+
+	/**
+	 */
+	private $methodPluralNames = [
+		'actions' => 'Actions'
+	];
+
+	/**
 	 * @param mixed $model
 	 * @return Relationship
 	 */
 	public function actions($model) {
-		$relationship = new Relationship(new Collection($model->getActions(), Action::getSerializer()));
+		$method = 'get' . $this->getCollectionMethodPluralName('actions');
+		$relationship = new Relationship(new Collection($model->$method(), Action::getSerializer()));
 		return $this->addRelationshipSelfLink($relationship, $model, 'action');
 	}
 
@@ -90,7 +103,7 @@ trait ModuleSerializerTrait {
 		$model = HydrateUtils::hydrate($attribs, $model, ['class-name', 'activated-version', 'default-action', 'slug', 'has-api', 'id', 'name', 'title', 'description', 'installed-version']);
 
 		// relationships
-		$this->hydrateRelationships($model, $data);
+		//$this->hydrateRelationships($model, $data);
 
 		return $model;
 	}
@@ -104,15 +117,28 @@ trait ModuleSerializerTrait {
 	abstract protected function addRelationshipSelfLink(Relationship $relationship, $model, $related);
 
 	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodName($relatedName) {
+		if (isset($this->methodNames[$relatedName])) {
+			return $this->methodNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodPluralName($relatedName) {
+		if (isset($this->methodPluralNames[$relatedName])) {
+			return $this->methodPluralNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
 	 */
 	protected function getTypeInferencer() {
 		return TypeInferencer::getInstance();
 	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 * @return void
-	 */
-	abstract protected function hydrateRelationships($model, $data);
 }

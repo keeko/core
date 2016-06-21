@@ -9,6 +9,18 @@ use keeko\framework\utils\HydrateUtils;
 trait PreferenceSerializerTrait {
 
 	/**
+	 */
+	private $methodNames = [
+
+	];
+
+	/**
+	 */
+	private $methodPluralNames = [
+
+	];
+
+	/**
 	 * @param mixed $model
 	 * @param array $fields
 	 */
@@ -70,9 +82,29 @@ trait PreferenceSerializerTrait {
 		$model = HydrateUtils::hydrate($attribs, $model, ['key', 'value', 'module-id']);
 
 		// relationships
-		$this->hydrateRelationships($model, $data);
+		//$this->hydrateRelationships($model, $data);
 
 		return $model;
+	}
+
+	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodName($relatedName) {
+		if (isset($this->methodNames[$relatedName])) {
+			return $this->methodNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodPluralName($relatedName) {
+		if (isset($this->methodPluralNames[$relatedName])) {
+			return $this->methodPluralNames[$relatedName];
+		}
+		return null;
 	}
 
 	/**
@@ -80,11 +112,4 @@ trait PreferenceSerializerTrait {
 	protected function getTypeInferencer() {
 		return TypeInferencer::getInstance();
 	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 * @return void
-	 */
-	abstract protected function hydrateRelationships($model, $data);
 }

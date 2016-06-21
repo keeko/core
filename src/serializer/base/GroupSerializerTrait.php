@@ -13,11 +13,26 @@ use Tobscure\JsonApi\Relationship;
 trait GroupSerializerTrait {
 
 	/**
+	 */
+	private $methodNames = [
+		'users' => 'User',
+		'actions' => 'Action'
+	];
+
+	/**
+	 */
+	private $methodPluralNames = [
+		'users' => 'Users',
+		'actions' => 'Actions'
+	];
+
+	/**
 	 * @param mixed $model
 	 * @return Relationship
 	 */
 	public function actions($model) {
-		$relationship = new Relationship(new Collection($model->getActions(), Action::getSerializer()));
+		$method = 'get' . $this->getCollectionMethodPluralName('actions');
+		$relationship = new Relationship(new Collection($model->$method(), Action::getSerializer()));
 		return $this->addRelationshipSelfLink($relationship, $model, 'action');
 	}
 
@@ -91,7 +106,7 @@ trait GroupSerializerTrait {
 		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'owner-id', 'name', 'is-guest', 'is-default', 'is-active', 'is-system']);
 
 		// relationships
-		$this->hydrateRelationships($model, $data);
+		//$this->hydrateRelationships($model, $data);
 
 		return $model;
 	}
@@ -101,7 +116,8 @@ trait GroupSerializerTrait {
 	 * @return Relationship
 	 */
 	public function users($model) {
-		$relationship = new Relationship(new Collection($model->getUsers(), User::getSerializer()));
+		$method = 'get' . $this->getCollectionMethodPluralName('users');
+		$relationship = new Relationship(new Collection($model->$method(), User::getSerializer()));
 		return $this->addRelationshipSelfLink($relationship, $model, 'user');
 	}
 
@@ -114,15 +130,28 @@ trait GroupSerializerTrait {
 	abstract protected function addRelationshipSelfLink(Relationship $relationship, $model, $related);
 
 	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodName($relatedName) {
+		if (isset($this->methodNames[$relatedName])) {
+			return $this->methodNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodPluralName($relatedName) {
+		if (isset($this->methodPluralNames[$relatedName])) {
+			return $this->methodPluralNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
 	 */
 	protected function getTypeInferencer() {
 		return TypeInferencer::getInstance();
 	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 * @return void
-	 */
-	abstract protected function hydrateRelationships($model, $data);
 }

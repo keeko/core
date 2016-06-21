@@ -36,6 +36,7 @@ trait ApplicationUriDomainTrait {
 		// hydrate
 		$serializer = ApplicationUri::getSerializer();
 		$model = $serializer->hydrate(new ApplicationUri(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -47,12 +48,11 @@ trait ApplicationUriDomainTrait {
 
 		// dispatch
 		$event = new ApplicationUriEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApplicationUriEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
+		$this->dispatch(ApplicationUriEvent::PRE_CREATE, $event);
+		$this->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(ApplicationUriEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationUriEvent::POST_CREATE, $event);
+		$this->dispatch(ApplicationUriEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -72,12 +72,11 @@ trait ApplicationUriDomainTrait {
 
 		// delete
 		$event = new ApplicationUriEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApplicationUriEvent::PRE_DELETE, $event);
+		$this->dispatch(ApplicationUriEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(ApplicationUriEvent::POST_DELETE, $event);
+			$this->dispatch(ApplicationUriEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -152,17 +151,14 @@ trait ApplicationUriDomainTrait {
 		}
 
 		// update
-		if ($model->getApplicationId() !== $relatedId) {
-			$model->setApplicationId($relatedId);
-
+		if ($this->doSetApplicationId($model, $relatedId)) {
 			$event = new ApplicationUriEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(ApplicationUriEvent::PRE_APPLICATION_UPDATE, $event);
-			$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
+			$this->dispatch(ApplicationUriEvent::PRE_APPLICATION_UPDATE, $event);
+			$this->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(ApplicationUriEvent::POST_APPLICATION_UPDATE, $event);
-			$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
-			
+			$this->dispatch(ApplicationUriEvent::POST_APPLICATION_UPDATE, $event);
+			$this->dispatch(ApplicationUriEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -185,17 +181,14 @@ trait ApplicationUriDomainTrait {
 		}
 
 		// update
-		if ($model->getLocalizationId() !== $relatedId) {
-			$model->setLocalizationId($relatedId);
-
+		if ($this->doSetLocalizationId($model, $relatedId)) {
 			$event = new ApplicationUriEvent($model);
-			$dispatcher = $this->getServiceContainer()->getDispatcher();
-			$dispatcher->dispatch(ApplicationUriEvent::PRE_LOCALIZATION_UPDATE, $event);
-			$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
+			$this->dispatch(ApplicationUriEvent::PRE_LOCALIZATION_UPDATE, $event);
+			$this->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
 			$model->save();
-			$dispatcher->dispatch(ApplicationUriEvent::POST_LOCALIZATION_UPDATE, $event);
-			$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
-			
+			$this->dispatch(ApplicationUriEvent::POST_LOCALIZATION_UPDATE, $event);
+			$this->dispatch(ApplicationUriEvent::POST_SAVE, $event);
+
 			return Updated(['model' => $model]);
 		}
 
@@ -220,6 +213,7 @@ trait ApplicationUriDomainTrait {
 		// hydrate
 		$serializer = ApplicationUri::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -231,12 +225,11 @@ trait ApplicationUriDomainTrait {
 
 		// dispatch
 		$event = new ApplicationUriEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(ApplicationUriEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
+		$this->dispatch(ApplicationUriEvent::PRE_UPDATE, $event);
+		$this->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(ApplicationUriEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(ApplicationUriEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationUriEvent::POST_UPDATE, $event);
+		$this->dispatch(ApplicationUriEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -271,6 +264,66 @@ trait ApplicationUriDomainTrait {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param ApplicationUriEvent $event
+	 */
+	protected function dispatch($type, ApplicationUriEvent $event) {
+		$model = $event->getApplicationUri();
+		$methods = [
+			ApplicationUriEvent::PRE_CREATE => 'preCreate',
+			ApplicationUriEvent::POST_CREATE => 'postCreate',
+			ApplicationUriEvent::PRE_UPDATE => 'preUpdate',
+			ApplicationUriEvent::POST_UPDATE => 'postUpdate',
+			ApplicationUriEvent::PRE_DELETE => 'preDelete',
+			ApplicationUriEvent::POST_DELETE => 'postDelete',
+			ApplicationUriEvent::PRE_SAVE => 'preSave',
+			ApplicationUriEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
+	}
+
+	/**
+	 * Internal mechanism to set the Application id
+	 * 
+	 * @param ApplicationUri $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetApplicationId(ApplicationUri $model, $relatedId) {
+		if ($model->getApplicationId() !== $relatedId) {
+			$model->setApplicationId($relatedId);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Internal mechanism to set the Localization id
+	 * 
+	 * @param ApplicationUri $model
+	 * @param mixed $relatedId
+	 */
+	protected function doSetLocalizationId(ApplicationUri $model, $relatedId) {
+		if ($model->getLocalizationId() !== $relatedId) {
+			$model->setLocalizationId($relatedId);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

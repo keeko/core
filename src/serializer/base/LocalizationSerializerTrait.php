@@ -17,11 +17,28 @@ use Tobscure\JsonApi\Resource;
 trait LocalizationSerializerTrait {
 
 	/**
+	 */
+	private $methodNames = [
+		'localizations' => 'Localization',
+		'language-variants' => 'LanguageVariant',
+		'application-uris' => 'ApplicationUri'
+	];
+
+	/**
+	 */
+	private $methodPluralNames = [
+		'localizations' => 'Localizations',
+		'language-variants' => 'LanguageVariants',
+		'application-uris' => 'ApplicationUris'
+	];
+
+	/**
 	 * @param mixed $model
 	 * @return Relationship
 	 */
 	public function applicationUris($model) {
-		$relationship = new Relationship(new Collection($model->getApplicationUris(), ApplicationUri::getSerializer()));
+		$method = 'get' . $this->getCollectionMethodPluralName('application-uris');
+		$relationship = new Relationship(new Collection($model->$method(), ApplicationUri::getSerializer()));
 		return $this->addRelationshipSelfLink($relationship, $model, 'application-uri');
 	}
 
@@ -114,7 +131,7 @@ trait LocalizationSerializerTrait {
 		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'parent-id', 'name', 'locale', 'language-id', 'ext-language-id', 'region', 'script-id', 'is-default']);
 
 		// relationships
-		$this->hydrateRelationships($model, $data);
+		//$this->hydrateRelationships($model, $data);
 
 		return $model;
 	}
@@ -142,7 +159,8 @@ trait LocalizationSerializerTrait {
 	 * @return Relationship
 	 */
 	public function languageVariants($model) {
-		$relationship = new Relationship(new Collection($model->getLanguageVariants(), LanguageVariant::getSerializer()));
+		$method = 'get' . $this->getCollectionMethodPluralName('language-variants');
+		$relationship = new Relationship(new Collection($model->$method(), LanguageVariant::getSerializer()));
 		return $this->addRelationshipSelfLink($relationship, $model, 'language-variant');
 	}
 
@@ -151,7 +169,8 @@ trait LocalizationSerializerTrait {
 	 * @return Relationship
 	 */
 	public function localizations($model) {
-		$relationship = new Relationship(new Collection($model->getLocalizations(), Localization::getSerializer()));
+		$method = 'get' . $this->getCollectionMethodPluralName('localizations');
+		$relationship = new Relationship(new Collection($model->$method(), Localization::getSerializer()));
 		return $this->addRelationshipSelfLink($relationship, $model, 'localization');
 	}
 
@@ -200,15 +219,28 @@ trait LocalizationSerializerTrait {
 	abstract protected function addRelationshipSelfLink(Relationship $relationship, $model, $related);
 
 	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodName($relatedName) {
+		if (isset($this->methodNames[$relatedName])) {
+			return $this->methodNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
+	 * @param mixed $relatedName
+	 */
+	protected function getCollectionMethodPluralName($relatedName) {
+		if (isset($this->methodPluralNames[$relatedName])) {
+			return $this->methodPluralNames[$relatedName];
+		}
+		return null;
+	}
+
+	/**
 	 */
 	protected function getTypeInferencer() {
 		return TypeInferencer::getInstance();
 	}
-
-	/**
-	 * @param mixed $model
-	 * @param mixed $data
-	 * @return void
-	 */
-	abstract protected function hydrateRelationships($model, $data);
 }

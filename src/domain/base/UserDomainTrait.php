@@ -5,9 +5,9 @@ use keeko\core\event\UserEvent;
 use keeko\core\model\ActivityQuery;
 use keeko\core\model\GroupQuery;
 use keeko\core\model\SessionQuery;
+use keeko\core\model\User;
 use keeko\core\model\UserGroupQuery;
 use keeko\core\model\UserQuery;
-use keeko\core\model\User;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\Found;
@@ -17,6 +17,7 @@ use keeko\framework\domain\payload\NotUpdated;
 use keeko\framework\domain\payload\NotValid;
 use keeko\framework\domain\payload\PayloadInterface;
 use keeko\framework\domain\payload\Updated;
+use keeko\framework\exceptions\ErrorsException;
 use keeko\framework\service\ServiceContainer;
 use keeko\framework\utils\NameUtils;
 use keeko\framework\utils\Parameters;
@@ -44,29 +45,21 @@ trait UserDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Activity';
-			}
-			$related = ActivityQuery::create()->findOneById($entry['id']);
-			$model->addActivity($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddActivities($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_ACTIVITIES_ADD, $event);
-		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_ACTIVITIES_ADD, $event);
+		$this->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(UserEvent::POST_ACTIVITIES_ADD, $event);
-		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_ACTIVITIES_ADD, $event);
+		$this->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -89,29 +82,21 @@ trait UserDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Group';
-			}
-			$related = GroupQuery::create()->findOneById($entry['id']);
-			$model->addGroup($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddGroups($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_GROUPS_ADD, $event);
-		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_GROUPS_ADD, $event);
+		$this->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(UserEvent::POST_GROUPS_ADD, $event);
-		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_GROUPS_ADD, $event);
+		$this->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -134,29 +119,21 @@ trait UserDomainTrait {
 		if ($model === null) {
 			return new NotFound(['message' => 'User not found.']);
 		}
-		 
-		// update
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Session';
-			}
-			$related = SessionQuery::create()->findOneById($entry['id']);
-			$model->addSession($related);
-		}
 
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass add to internal logic
+		try {
+			$this->doAddSessions($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_SESSIONS_ADD, $event);
-		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_SESSIONS_ADD, $event);
+		$this->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(UserEvent::POST_SESSIONS_ADD, $event);
-		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_SESSIONS_ADD, $event);
+		$this->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -175,6 +152,7 @@ trait UserDomainTrait {
 		// hydrate
 		$serializer = User::getSerializer();
 		$model = $serializer->hydrate(new User(), $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -186,12 +164,11 @@ trait UserDomainTrait {
 
 		// dispatch
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_CREATE, $event);
-		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_CREATE, $event);
+		$this->dispatch(UserEvent::PRE_SAVE, $event);
 		$model->save();
-		$dispatcher->dispatch(UserEvent::POST_CREATE, $event);
-		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_CREATE, $event);
+		$this->dispatch(UserEvent::POST_SAVE, $event);
 		return new Created(['model' => $model]);
 	}
 
@@ -211,12 +188,11 @@ trait UserDomainTrait {
 
 		// delete
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_DELETE, $event);
+		$this->dispatch(UserEvent::PRE_DELETE, $event);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$dispatcher->dispatch(UserEvent::POST_DELETE, $event);
+			$this->dispatch(UserEvent::POST_DELETE, $event);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -290,28 +266,20 @@ trait UserDomainTrait {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Activity';
-			}
-			$related = ActivityQuery::create()->findOneById($entry['id']);
-			$model->removeActivity($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveActivities($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_ACTIVITIES_REMOVE, $event);
-		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_ACTIVITIES_REMOVE, $event);
+		$this->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(UserEvent::POST_ACTIVITIES_REMOVE, $event);
-		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_ACTIVITIES_REMOVE, $event);
+		$this->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -335,28 +303,20 @@ trait UserDomainTrait {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Group';
-			}
-			$related = GroupQuery::create()->findOneById($entry['id']);
-			$model->removeGroup($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveGroups($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_GROUPS_REMOVE, $event);
-		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_GROUPS_REMOVE, $event);
+		$this->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(UserEvent::POST_GROUPS_REMOVE, $event);
-		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_GROUPS_REMOVE, $event);
+		$this->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -380,28 +340,20 @@ trait UserDomainTrait {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
-		// remove them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Session';
-			}
-			$related = SessionQuery::create()->findOneById($entry['id']);
-			$model->removeSession($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass remove to internal logic
+		try {
+			$this->doRemoveSessions($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_SESSIONS_REMOVE, $event);
-		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_SESSIONS_REMOVE, $event);
+		$this->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(UserEvent::POST_SESSIONS_REMOVE, $event);
-		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_SESSIONS_REMOVE, $event);
+		$this->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -428,6 +380,7 @@ trait UserDomainTrait {
 		// hydrate
 		$serializer = User::getSerializer();
 		$model = $serializer->hydrate($model, $data);
+		$this->hydrateRelationships($model, $data);
 
 		// validate
 		$validator = $this->getValidator();
@@ -439,12 +392,11 @@ trait UserDomainTrait {
 
 		// dispatch
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_UPDATE, $event);
-		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_UPDATE, $event);
+		$this->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(UserEvent::POST_UPDATE, $event);
-		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_UPDATE, $event);
+		$this->dispatch(UserEvent::POST_SAVE, $event);
 
 		$payload = ['model' => $model];
 
@@ -470,31 +422,20 @@ trait UserDomainTrait {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
-		// remove all relationships before
-		ActivityQuery::create()->filterByActor($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Activity';
-			}
-			$related = ActivityQuery::create()->findOneById($entry['id']);
-			$model->addActivity($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateActivities($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_ACTIVITIES_UPDATE, $event);
-		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_ACTIVITIES_UPDATE, $event);
+		$this->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(UserEvent::POST_ACTIVITIES_UPDATE, $event);
-		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_ACTIVITIES_UPDATE, $event);
+		$this->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -518,31 +459,20 @@ trait UserDomainTrait {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
-		// remove all relationships before
-		UserGroupQuery::create()->filterByUser($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Group';
-			}
-			$related = GroupQuery::create()->findOneById($entry['id']);
-			$model->addGroup($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateGroups($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_GROUPS_UPDATE, $event);
-		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_GROUPS_UPDATE, $event);
+		$this->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(UserEvent::POST_GROUPS_UPDATE, $event);
-		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_GROUPS_UPDATE, $event);
+		$this->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -566,31 +496,20 @@ trait UserDomainTrait {
 			return new NotFound(['message' => 'User not found.']);
 		}
 
-		// remove all relationships before
-		SessionQuery::create()->filterByUser($model)->delete();
-
-		// add them
-		$errors = [];
-		foreach ($data as $entry) {
-			if (!isset($entry['id'])) {
-				$errors[] = 'Missing id for Session';
-			}
-			$related = SessionQuery::create()->findOneById($entry['id']);
-			$model->addSession($related);
-		}
-
-		if (count($errors) > 0) {
-			return new NotValid(['errors' => $errors]);
+		// pass update to internal logic
+		try {
+			$this->doUpdateSessions($model, $data);
+		} catch (ErrorsException $e) {
+			return new NotValid(['errors' => $e->getErrors()]);
 		}
 
 		// save and dispatch events
 		$event = new UserEvent($model);
-		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch(UserEvent::PRE_SESSIONS_UPDATE, $event);
-		$dispatcher->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_SESSIONS_UPDATE, $event);
+		$this->dispatch(UserEvent::PRE_SAVE, $event);
 		$rows = $model->save();
-		$dispatcher->dispatch(UserEvent::POST_SESSIONS_UPDATE, $event);
-		$dispatcher->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_SESSIONS_UPDATE, $event);
+		$this->dispatch(UserEvent::POST_SAVE, $event);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -622,6 +541,244 @@ trait UserDomainTrait {
 					$query->$method($value);
 				}
 			}
+		}
+	}
+
+	/**
+	 * @param string $type
+	 * @param UserEvent $event
+	 */
+	protected function dispatch($type, UserEvent $event) {
+		$model = $event->getUser();
+		$methods = [
+			UserEvent::PRE_CREATE => 'preCreate',
+			UserEvent::POST_CREATE => 'postCreate',
+			UserEvent::PRE_UPDATE => 'preUpdate',
+			UserEvent::POST_UPDATE => 'postUpdate',
+			UserEvent::PRE_DELETE => 'preDelete',
+			UserEvent::POST_DELETE => 'postDelete',
+			UserEvent::PRE_SAVE => 'preSave',
+			UserEvent::POST_SAVE => 'postSave'
+		];
+
+		if (isset($methods[$type])) {
+			$method = $methods[$type];
+			if (method_exists($this, $method)) {
+				$this->$method($model);
+			}
+		}
+
+		$dispatcher = $this->getServiceContainer()->getDispatcher();
+		$dispatcher->dispatch($type, $event);
+	}
+
+	/**
+	 * Interal mechanism to add Activities to User
+	 * 
+	 * @param User $model
+	 * @param mixed $data
+	 */
+	protected function doAddActivities(User $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Activity';
+			} else {
+				$related = ActivityQuery::create()->findOneById($entry['id']);
+				$model->addActivity($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to add Groups to User
+	 * 
+	 * @param User $model
+	 * @param mixed $data
+	 */
+	protected function doAddGroups(User $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			} else {
+				$related = GroupQuery::create()->findOneById($entry['id']);
+				$model->addGroup($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to add Sessions to User
+	 * 
+	 * @param User $model
+	 * @param mixed $data
+	 */
+	protected function doAddSessions(User $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Session';
+			} else {
+				$related = SessionQuery::create()->findOneById($entry['id']);
+				$model->addSession($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove Activities from User
+	 * 
+	 * @param User $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveActivities(User $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Activity';
+			} else {
+				$related = ActivityQuery::create()->findOneById($entry['id']);
+				$model->removeActivity($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove Groups from User
+	 * 
+	 * @param User $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveGroups(User $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			} else {
+				$related = GroupQuery::create()->findOneById($entry['id']);
+				$model->removeGroup($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Interal mechanism to remove Sessions from User
+	 * 
+	 * @param User $model
+	 * @param mixed $data
+	 */
+	protected function doRemoveSessions(User $model, $data) {
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Session';
+			} else {
+				$related = SessionQuery::create()->findOneById($entry['id']);
+				$model->removeSession($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			return new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal update mechanism of Activities on User
+	 * 
+	 * @param User $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateActivities(User $model, $data) {
+		// remove all relationships before
+		ActivityQuery::create()->filterByActor($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Activity';
+			} else {
+				$related = ActivityQuery::create()->findOneById($entry['id']);
+				$model->addActivity($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal update mechanism of Groups on User
+	 * 
+	 * @param User $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateGroups(User $model, $data) {
+		// remove all relationships before
+		UserGroupQuery::create()->filterByUser($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Group';
+			} else {
+				$related = GroupQuery::create()->findOneById($entry['id']);
+				$model->addGroup($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
+		}
+	}
+
+	/**
+	 * Internal update mechanism of Sessions on User
+	 * 
+	 * @param User $model
+	 * @param mixed $data
+	 */
+	protected function doUpdateSessions(User $model, $data) {
+		// remove all relationships before
+		SessionQuery::create()->filterByUser($model)->delete();
+
+		// add them
+		$errors = [];
+		foreach ($data as $entry) {
+			if (!isset($entry['id'])) {
+				$errors[] = 'Missing id for Session';
+			} else {
+				$related = SessionQuery::create()->findOneById($entry['id']);
+				$model->addSession($related);
+			}
+		}
+
+		if (count($errors) > 0) {
+			throw new ErrorsException($errors);
 		}
 	}
 
