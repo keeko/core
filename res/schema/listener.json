@@ -7,11 +7,11 @@
     	"properties": {
     	    "subscriber": {
     	    	"type": "string",
-    	    	"description": "A subscriber class. Needs to implement keeko\framework\events\KeekoEventSubscriberInterface"
+    	    	"description": "A subscriber class. Needs to implement keeko\\framework\\events\\KeekoEventSubscriberInterface"
     	    },
     	    "class": {
     	    	"type": "string",
-    	    	"description": "Fully-qualified listener class name. Needs to implement keeko\framework\events\KeekoEventListenerInterface"
+    	    	"description": "Fully-qualified listener class name. Needs to implement keeko\\framework\\events\\KeekoEventListenerInterface"
     	    },
     	    "method": {
     	        "type": "string",

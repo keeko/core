@@ -38,6 +38,10 @@ trait ApiDomainTrait {
 		$model = $serializer->hydrate(new Api(), $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ApiEvent::PRE_CREATE, $model, $data);
+		$this->dispatch(ApiEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -46,13 +50,11 @@ trait ApiDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ApiEvent($model);
-		$this->dispatch(ApiEvent::PRE_CREATE, $event);
-		$this->dispatch(ApiEvent::PRE_SAVE, $event);
+		// save and dispatch post save hooks
 		$model->save();
-		$this->dispatch(ApiEvent::POST_CREATE, $event);
-		$this->dispatch(ApiEvent::POST_SAVE, $event);
+		$this->dispatch(ApiEvent::POST_CREATE, $model, $data);
+		$this->dispatch(ApiEvent::POST_SAVE, $model, $data);
+
 		return new Created(['model' => $model]);
 	}
 
@@ -71,12 +73,11 @@ trait ApiDomainTrait {
 		}
 
 		// delete
-		$event = new ApiEvent($model);
-		$this->dispatch(ApiEvent::PRE_DELETE, $event);
+		$this->dispatch(ApiEvent::PRE_DELETE, $model);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$this->dispatch(ApiEvent::POST_DELETE, $event);
+			$this->dispatch(ApiEvent::POST_DELETE, $model);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -152,12 +153,11 @@ trait ApiDomainTrait {
 
 		// update
 		if ($this->doSetActionId($model, $relatedId)) {
-			$event = new ApiEvent($model);
-			$this->dispatch(ApiEvent::PRE_ACTION_UPDATE, $event);
-			$this->dispatch(ApiEvent::PRE_SAVE, $event);
+			$this->dispatch(ApiEvent::PRE_ACTION_UPDATE, $model);
+			$this->dispatch(ApiEvent::PRE_SAVE, $model);
 			$model->save();
-			$this->dispatch(ApiEvent::POST_ACTION_UPDATE, $event);
-			$this->dispatch(ApiEvent::POST_SAVE, $event);
+			$this->dispatch(ApiEvent::POST_ACTION_UPDATE, $model);
+			$this->dispatch(ApiEvent::POST_SAVE, $model);
 
 			return Updated(['model' => $model]);
 		}
@@ -185,6 +185,10 @@ trait ApiDomainTrait {
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ApiEvent::PRE_UPDATE, $model, $data);
+		$this->dispatch(ApiEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -193,13 +197,10 @@ trait ApiDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ApiEvent($model);
-		$this->dispatch(ApiEvent::PRE_UPDATE, $event);
-		$this->dispatch(ApiEvent::PRE_SAVE, $event);
+		// save and dispath post save hooks
 		$rows = $model->save();
-		$this->dispatch(ApiEvent::POST_UPDATE, $event);
-		$this->dispatch(ApiEvent::POST_SAVE, $event);
+		$this->dispatch(ApiEvent::POST_UPDATE, $model, $data);
+		$this->dispatch(ApiEvent::POST_SAVE, $model, $data);
 
 		$payload = ['model' => $model];
 
@@ -238,10 +239,10 @@ trait ApiDomainTrait {
 
 	/**
 	 * @param string $type
-	 * @param ApiEvent $event
+	 * @param Api $model
+	 * @param array $data
 	 */
-	protected function dispatch($type, ApiEvent $event) {
-		$model = $event->getApi();
+	protected function dispatch($type, Api $model, array $data = []) {
 		$methods = [
 			ApiEvent::PRE_CREATE => 'preCreate',
 			ApiEvent::POST_CREATE => 'postCreate',
@@ -256,12 +257,12 @@ trait ApiDomainTrait {
 		if (isset($methods[$type])) {
 			$method = $methods[$type];
 			if (method_exists($this, $method)) {
-				$this->$method($model);
+				$this->$method($model, $data);
 			}
 		}
 
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch($type, $event);
+		$dispatcher->dispatch($type, new ApiEvent($model));
 	}
 
 	/**

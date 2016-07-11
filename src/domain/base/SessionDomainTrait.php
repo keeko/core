@@ -38,6 +38,10 @@ trait SessionDomainTrait {
 		$model = $serializer->hydrate(new Session(), $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(SessionEvent::PRE_CREATE, $model, $data);
+		$this->dispatch(SessionEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -46,13 +50,11 @@ trait SessionDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new SessionEvent($model);
-		$this->dispatch(SessionEvent::PRE_CREATE, $event);
-		$this->dispatch(SessionEvent::PRE_SAVE, $event);
+		// save and dispatch post save hooks
 		$model->save();
-		$this->dispatch(SessionEvent::POST_CREATE, $event);
-		$this->dispatch(SessionEvent::POST_SAVE, $event);
+		$this->dispatch(SessionEvent::POST_CREATE, $model, $data);
+		$this->dispatch(SessionEvent::POST_SAVE, $model, $data);
+
 		return new Created(['model' => $model]);
 	}
 
@@ -71,12 +73,11 @@ trait SessionDomainTrait {
 		}
 
 		// delete
-		$event = new SessionEvent($model);
-		$this->dispatch(SessionEvent::PRE_DELETE, $event);
+		$this->dispatch(SessionEvent::PRE_DELETE, $model);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$this->dispatch(SessionEvent::POST_DELETE, $event);
+			$this->dispatch(SessionEvent::POST_DELETE, $model);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -152,12 +153,11 @@ trait SessionDomainTrait {
 
 		// update
 		if ($this->doSetUserId($model, $relatedId)) {
-			$event = new SessionEvent($model);
-			$this->dispatch(SessionEvent::PRE_USER_UPDATE, $event);
-			$this->dispatch(SessionEvent::PRE_SAVE, $event);
+			$this->dispatch(SessionEvent::PRE_USER_UPDATE, $model);
+			$this->dispatch(SessionEvent::PRE_SAVE, $model);
 			$model->save();
-			$this->dispatch(SessionEvent::POST_USER_UPDATE, $event);
-			$this->dispatch(SessionEvent::POST_SAVE, $event);
+			$this->dispatch(SessionEvent::POST_USER_UPDATE, $model);
+			$this->dispatch(SessionEvent::POST_SAVE, $model);
 
 			return Updated(['model' => $model]);
 		}
@@ -185,6 +185,10 @@ trait SessionDomainTrait {
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(SessionEvent::PRE_UPDATE, $model, $data);
+		$this->dispatch(SessionEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -193,13 +197,10 @@ trait SessionDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new SessionEvent($model);
-		$this->dispatch(SessionEvent::PRE_UPDATE, $event);
-		$this->dispatch(SessionEvent::PRE_SAVE, $event);
+		// save and dispath post save hooks
 		$rows = $model->save();
-		$this->dispatch(SessionEvent::POST_UPDATE, $event);
-		$this->dispatch(SessionEvent::POST_SAVE, $event);
+		$this->dispatch(SessionEvent::POST_UPDATE, $model, $data);
+		$this->dispatch(SessionEvent::POST_SAVE, $model, $data);
 
 		$payload = ['model' => $model];
 
@@ -238,10 +239,10 @@ trait SessionDomainTrait {
 
 	/**
 	 * @param string $type
-	 * @param SessionEvent $event
+	 * @param Session $model
+	 * @param array $data
 	 */
-	protected function dispatch($type, SessionEvent $event) {
-		$model = $event->getSession();
+	protected function dispatch($type, Session $model, array $data = []) {
 		$methods = [
 			SessionEvent::PRE_CREATE => 'preCreate',
 			SessionEvent::POST_CREATE => 'postCreate',
@@ -256,12 +257,12 @@ trait SessionDomainTrait {
 		if (isset($methods[$type])) {
 			$method = $methods[$type];
 			if (method_exists($this, $method)) {
-				$this->$method($model);
+				$this->$method($model, $data);
 			}
 		}
 
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch($type, $event);
+		$dispatcher->dispatch($type, new SessionEvent($model));
 	}
 
 	/**

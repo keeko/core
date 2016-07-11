@@ -38,6 +38,10 @@ trait ExtensionDomainTrait {
 		$model = $serializer->hydrate(new Extension(), $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ExtensionEvent::PRE_CREATE, $model, $data);
+		$this->dispatch(ExtensionEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -46,13 +50,11 @@ trait ExtensionDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ExtensionEvent($model);
-		$this->dispatch(ExtensionEvent::PRE_CREATE, $event);
-		$this->dispatch(ExtensionEvent::PRE_SAVE, $event);
+		// save and dispatch post save hooks
 		$model->save();
-		$this->dispatch(ExtensionEvent::POST_CREATE, $event);
-		$this->dispatch(ExtensionEvent::POST_SAVE, $event);
+		$this->dispatch(ExtensionEvent::POST_CREATE, $model, $data);
+		$this->dispatch(ExtensionEvent::POST_SAVE, $model, $data);
+
 		return new Created(['model' => $model]);
 	}
 
@@ -71,12 +73,11 @@ trait ExtensionDomainTrait {
 		}
 
 		// delete
-		$event = new ExtensionEvent($model);
-		$this->dispatch(ExtensionEvent::PRE_DELETE, $event);
+		$this->dispatch(ExtensionEvent::PRE_DELETE, $model);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$this->dispatch(ExtensionEvent::POST_DELETE, $event);
+			$this->dispatch(ExtensionEvent::POST_DELETE, $model);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -155,6 +156,10 @@ trait ExtensionDomainTrait {
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ExtensionEvent::PRE_UPDATE, $model, $data);
+		$this->dispatch(ExtensionEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -163,13 +168,10 @@ trait ExtensionDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ExtensionEvent($model);
-		$this->dispatch(ExtensionEvent::PRE_UPDATE, $event);
-		$this->dispatch(ExtensionEvent::PRE_SAVE, $event);
+		// save and dispath post save hooks
 		$rows = $model->save();
-		$this->dispatch(ExtensionEvent::POST_UPDATE, $event);
-		$this->dispatch(ExtensionEvent::POST_SAVE, $event);
+		$this->dispatch(ExtensionEvent::POST_UPDATE, $model, $data);
+		$this->dispatch(ExtensionEvent::POST_SAVE, $model, $data);
 
 		$payload = ['model' => $model];
 
@@ -208,10 +210,10 @@ trait ExtensionDomainTrait {
 
 	/**
 	 * @param string $type
-	 * @param ExtensionEvent $event
+	 * @param Extension $model
+	 * @param array $data
 	 */
-	protected function dispatch($type, ExtensionEvent $event) {
-		$model = $event->getExtension();
+	protected function dispatch($type, Extension $model, array $data = []) {
 		$methods = [
 			ExtensionEvent::PRE_CREATE => 'preCreate',
 			ExtensionEvent::POST_CREATE => 'postCreate',
@@ -226,12 +228,12 @@ trait ExtensionDomainTrait {
 		if (isset($methods[$type])) {
 			$method = $methods[$type];
 			if (method_exists($this, $method)) {
-				$this->$method($model);
+				$this->$method($model, $data);
 			}
 		}
 
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch($type, $event);
+		$dispatcher->dispatch($type, new ExtensionEvent($model));
 	}
 
 	/**

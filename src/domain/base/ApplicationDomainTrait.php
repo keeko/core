@@ -51,12 +51,11 @@ trait ApplicationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ApplicationEvent($model);
-		$this->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_ADD, $event);
-		$this->dispatch(ApplicationEvent::PRE_SAVE, $event);
+		$this->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_ADD, $model, $data);
+		$this->dispatch(ApplicationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ApplicationEvent::POST_APPLICATION_URIS_ADD, $event);
-		$this->dispatch(ApplicationEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationEvent::POST_APPLICATION_URIS_ADD, $model, $data);
+		$this->dispatch(ApplicationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -77,6 +76,10 @@ trait ApplicationDomainTrait {
 		$model = $serializer->hydrate(new Application(), $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ApplicationEvent::PRE_CREATE, $model, $data);
+		$this->dispatch(ApplicationEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -85,13 +88,11 @@ trait ApplicationDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ApplicationEvent($model);
-		$this->dispatch(ApplicationEvent::PRE_CREATE, $event);
-		$this->dispatch(ApplicationEvent::PRE_SAVE, $event);
+		// save and dispatch post save hooks
 		$model->save();
-		$this->dispatch(ApplicationEvent::POST_CREATE, $event);
-		$this->dispatch(ApplicationEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationEvent::POST_CREATE, $model, $data);
+		$this->dispatch(ApplicationEvent::POST_SAVE, $model, $data);
+
 		return new Created(['model' => $model]);
 	}
 
@@ -110,12 +111,11 @@ trait ApplicationDomainTrait {
 		}
 
 		// delete
-		$event = new ApplicationEvent($model);
-		$this->dispatch(ApplicationEvent::PRE_DELETE, $event);
+		$this->dispatch(ApplicationEvent::PRE_DELETE, $model);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$this->dispatch(ApplicationEvent::POST_DELETE, $event);
+			$this->dispatch(ApplicationEvent::POST_DELETE, $model);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -197,12 +197,11 @@ trait ApplicationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ApplicationEvent($model);
-		$this->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_REMOVE, $event);
-		$this->dispatch(ApplicationEvent::PRE_SAVE, $event);
+		$this->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_REMOVE, $model, $data);
+		$this->dispatch(ApplicationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ApplicationEvent::POST_APPLICATION_URIS_REMOVE, $event);
-		$this->dispatch(ApplicationEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationEvent::POST_APPLICATION_URIS_REMOVE, $model, $data);
+		$this->dispatch(ApplicationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -231,6 +230,10 @@ trait ApplicationDomainTrait {
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ApplicationEvent::PRE_UPDATE, $model, $data);
+		$this->dispatch(ApplicationEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -239,13 +242,10 @@ trait ApplicationDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ApplicationEvent($model);
-		$this->dispatch(ApplicationEvent::PRE_UPDATE, $event);
-		$this->dispatch(ApplicationEvent::PRE_SAVE, $event);
+		// save and dispath post save hooks
 		$rows = $model->save();
-		$this->dispatch(ApplicationEvent::POST_UPDATE, $event);
-		$this->dispatch(ApplicationEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationEvent::POST_UPDATE, $model, $data);
+		$this->dispatch(ApplicationEvent::POST_SAVE, $model, $data);
 
 		$payload = ['model' => $model];
 
@@ -279,12 +279,11 @@ trait ApplicationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ApplicationEvent($model);
-		$this->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_UPDATE, $event);
-		$this->dispatch(ApplicationEvent::PRE_SAVE, $event);
+		$this->dispatch(ApplicationEvent::PRE_APPLICATION_URIS_UPDATE, $model, $data);
+		$this->dispatch(ApplicationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ApplicationEvent::POST_APPLICATION_URIS_UPDATE, $event);
-		$this->dispatch(ApplicationEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationEvent::POST_APPLICATION_URIS_UPDATE, $model, $data);
+		$this->dispatch(ApplicationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -321,10 +320,10 @@ trait ApplicationDomainTrait {
 
 	/**
 	 * @param string $type
-	 * @param ApplicationEvent $event
+	 * @param Application $model
+	 * @param array $data
 	 */
-	protected function dispatch($type, ApplicationEvent $event) {
-		$model = $event->getApplication();
+	protected function dispatch($type, Application $model, array $data = []) {
 		$methods = [
 			ApplicationEvent::PRE_CREATE => 'preCreate',
 			ApplicationEvent::POST_CREATE => 'postCreate',
@@ -339,12 +338,12 @@ trait ApplicationDomainTrait {
 		if (isset($methods[$type])) {
 			$method = $methods[$type];
 			if (method_exists($this, $method)) {
-				$this->$method($model);
+				$this->$method($model, $data);
 			}
 		}
 
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch($type, $event);
+		$dispatcher->dispatch($type, new ApplicationEvent($model));
 	}
 
 	/**

@@ -12,17 +12,17 @@ DROP TABLE IF EXISTS `kk_language`;
 CREATE TABLE `kk_language`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `alpha_2` VARCHAR(2),
-    `alpha_3T` VARCHAR(3),
-    `alpha_3B` VARCHAR(3),
-    `alpha_3` VARCHAR(3),
+    `alpha_2` VARCHAR(2) COMMENT 'ISO 639-1 two-letter code',
+    `alpha_3T` VARCHAR(3) COMMENT 'ISO 639-2/T three-letter code',
+    `alpha_3B` VARCHAR(3) COMMENT 'ISO 639-2/B three-letter code',
+    `alpha_3` VARCHAR(3) COMMENT 'ISO 639-3 three-letter code',
     `parent_id` INTEGER(10),
     `macrolanguage_status` CHAR(1),
     `name` VARCHAR(128),
     `native_name` VARCHAR(128),
     `collate` VARCHAR(10),
-    `subtag` VARCHAR(76),
-    `prefix` VARCHAR(76),
+    `subtag` VARCHAR(76) COMMENT 'Subtag used for locales',
+    `prefix` VARCHAR(76) COMMENT 'Possibly (required) subtag (means this is an extlang)',
     `scope_id` INTEGER(10) NOT NULL,
     `type_id` INTEGER(10),
     `family_id` INTEGER(10),
@@ -85,8 +85,8 @@ DROP TABLE IF EXISTS `kk_language_script`;
 CREATE TABLE `kk_language_script`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `alpha_4` CHAR(4),
-    `numeric` INTEGER,
+    `alpha_4` CHAR(4) COMMENT 'ISO 15924 alpha-4 code',
+    `numeric` INTEGER COMMENT 'ISO 15924 numeric representation',
     `name` VARCHAR(255),
     `alias` VARCHAR(255),
     `direction` VARCHAR(255),
@@ -103,7 +103,7 @@ CREATE TABLE `kk_language_family`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `parent_id` INTEGER,
-    `alpha_3` VARCHAR(3),
+    `alpha_3` VARCHAR(3) COMMENT 'ISO 639-5 Alpha-3 code',
     `name` VARCHAR(255),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
@@ -118,9 +118,9 @@ CREATE TABLE `kk_language_variant`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255),
-    `subtag` VARCHAR(76),
-    `prefixes` VARCHAR(255),
-    `comment` TEXT,
+    `subtag` VARCHAR(76) COMMENT 'Subtag used for locales',
+    `prefixes` VARCHAR(255) COMMENT 'A comma separated list of possibly multiple prefixes',
+    `comment` TEXT COMMENT 'A comment for the variant',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -154,13 +154,13 @@ DROP TABLE IF EXISTS `kk_country`;
 CREATE TABLE `kk_country`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `numeric` INTEGER,
-    `alpha_2` CHAR(2),
-    `alpha_3` CHAR(3),
+    `numeric` INTEGER COMMENT 'ISO 3166-1 numeric three-digit country code',
+    `alpha_2` CHAR(2) COMMENT 'ISO 3166-1 alpha-2 two-letter country code',
+    `alpha_3` CHAR(3) COMMENT 'ISO 3166-1 alpha-3 three-letter country code',
     `short_name` VARCHAR(128),
-    `ioc` CHAR(3),
-    `tld` VARCHAR(3),
-    `phone` VARCHAR(16),
+    `ioc` CHAR(3) COMMENT 'IOC Country code',
+    `tld` VARCHAR(3) COMMENT 'IANA Top-Level-Domain',
+    `phone` VARCHAR(16) COMMENT 'ITU-T country calling code',
     `capital` VARCHAR(128),
     `postal_code_format` VARCHAR(255),
     `postal_code_regex` VARCHAR(255),
@@ -209,7 +209,7 @@ CREATE TABLE `kk_continent`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `parent_id` INTEGER,
-    `numeric` INTEGER,
+    `numeric` INTEGER COMMENT 'M.49 numeric code',
     `name` VARCHAR(45) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
@@ -223,7 +223,7 @@ DROP TABLE IF EXISTS `kk_subdivision`;
 CREATE TABLE `kk_subdivision`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `code` VARCHAR(45),
+    `code` VARCHAR(45) COMMENT 'The ISO 3166-2 subdivision code',
     `name` VARCHAR(128),
     `native_name` VARCHAR(128),
     `alt_names` VARCHAR(255),
@@ -626,6 +626,8 @@ CREATE TABLE `kk_activity`
     `verb` VARCHAR(255),
     `object_id` INTEGER NOT NULL,
     `target_id` INTEGER,
+    `created_at` DATETIME,
+    `updated_at` DATETIME,
     PRIMARY KEY (`id`),
     INDEX `activity_fi_user` (`actor_id`),
     INDEX `activity_fi_object` (`object_id`),

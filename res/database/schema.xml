@@ -437,6 +437,9 @@
 		<column name="verb" type="VARCHAR"/>
 		<column name="object_id" type="INTEGER" required="true"/>
 		<column name="target_id" type="INTEGER" required="false"/>
+		
+		<!-- Behaviors -->
+		<behavior name="timestampable"></behavior>
 
 		<!-- Foreign Keys -->
 		<foreign-key foreignTable="user" phpName="Actor" name="activity_fk_user">

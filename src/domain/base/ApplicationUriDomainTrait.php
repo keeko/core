@@ -38,6 +38,10 @@ trait ApplicationUriDomainTrait {
 		$model = $serializer->hydrate(new ApplicationUri(), $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ApplicationUriEvent::PRE_CREATE, $model, $data);
+		$this->dispatch(ApplicationUriEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -46,13 +50,11 @@ trait ApplicationUriDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ApplicationUriEvent($model);
-		$this->dispatch(ApplicationUriEvent::PRE_CREATE, $event);
-		$this->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
+		// save and dispatch post save hooks
 		$model->save();
-		$this->dispatch(ApplicationUriEvent::POST_CREATE, $event);
-		$this->dispatch(ApplicationUriEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationUriEvent::POST_CREATE, $model, $data);
+		$this->dispatch(ApplicationUriEvent::POST_SAVE, $model, $data);
+
 		return new Created(['model' => $model]);
 	}
 
@@ -71,12 +73,11 @@ trait ApplicationUriDomainTrait {
 		}
 
 		// delete
-		$event = new ApplicationUriEvent($model);
-		$this->dispatch(ApplicationUriEvent::PRE_DELETE, $event);
+		$this->dispatch(ApplicationUriEvent::PRE_DELETE, $model);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$this->dispatch(ApplicationUriEvent::POST_DELETE, $event);
+			$this->dispatch(ApplicationUriEvent::POST_DELETE, $model);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -152,12 +153,11 @@ trait ApplicationUriDomainTrait {
 
 		// update
 		if ($this->doSetApplicationId($model, $relatedId)) {
-			$event = new ApplicationUriEvent($model);
-			$this->dispatch(ApplicationUriEvent::PRE_APPLICATION_UPDATE, $event);
-			$this->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
+			$this->dispatch(ApplicationUriEvent::PRE_APPLICATION_UPDATE, $model);
+			$this->dispatch(ApplicationUriEvent::PRE_SAVE, $model);
 			$model->save();
-			$this->dispatch(ApplicationUriEvent::POST_APPLICATION_UPDATE, $event);
-			$this->dispatch(ApplicationUriEvent::POST_SAVE, $event);
+			$this->dispatch(ApplicationUriEvent::POST_APPLICATION_UPDATE, $model);
+			$this->dispatch(ApplicationUriEvent::POST_SAVE, $model);
 
 			return Updated(['model' => $model]);
 		}
@@ -182,12 +182,11 @@ trait ApplicationUriDomainTrait {
 
 		// update
 		if ($this->doSetLocalizationId($model, $relatedId)) {
-			$event = new ApplicationUriEvent($model);
-			$this->dispatch(ApplicationUriEvent::PRE_LOCALIZATION_UPDATE, $event);
-			$this->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
+			$this->dispatch(ApplicationUriEvent::PRE_LOCALIZATION_UPDATE, $model);
+			$this->dispatch(ApplicationUriEvent::PRE_SAVE, $model);
 			$model->save();
-			$this->dispatch(ApplicationUriEvent::POST_LOCALIZATION_UPDATE, $event);
-			$this->dispatch(ApplicationUriEvent::POST_SAVE, $event);
+			$this->dispatch(ApplicationUriEvent::POST_LOCALIZATION_UPDATE, $model);
+			$this->dispatch(ApplicationUriEvent::POST_SAVE, $model);
 
 			return Updated(['model' => $model]);
 		}
@@ -215,6 +214,10 @@ trait ApplicationUriDomainTrait {
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ApplicationUriEvent::PRE_UPDATE, $model, $data);
+		$this->dispatch(ApplicationUriEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -223,13 +226,10 @@ trait ApplicationUriDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ApplicationUriEvent($model);
-		$this->dispatch(ApplicationUriEvent::PRE_UPDATE, $event);
-		$this->dispatch(ApplicationUriEvent::PRE_SAVE, $event);
+		// save and dispath post save hooks
 		$rows = $model->save();
-		$this->dispatch(ApplicationUriEvent::POST_UPDATE, $event);
-		$this->dispatch(ApplicationUriEvent::POST_SAVE, $event);
+		$this->dispatch(ApplicationUriEvent::POST_UPDATE, $model, $data);
+		$this->dispatch(ApplicationUriEvent::POST_SAVE, $model, $data);
 
 		$payload = ['model' => $model];
 
@@ -268,10 +268,10 @@ trait ApplicationUriDomainTrait {
 
 	/**
 	 * @param string $type
-	 * @param ApplicationUriEvent $event
+	 * @param ApplicationUri $model
+	 * @param array $data
 	 */
-	protected function dispatch($type, ApplicationUriEvent $event) {
-		$model = $event->getApplicationUri();
+	protected function dispatch($type, ApplicationUri $model, array $data = []) {
 		$methods = [
 			ApplicationUriEvent::PRE_CREATE => 'preCreate',
 			ApplicationUriEvent::POST_CREATE => 'postCreate',
@@ -286,12 +286,12 @@ trait ApplicationUriDomainTrait {
 		if (isset($methods[$type])) {
 			$method = $methods[$type];
 			if (method_exists($this, $method)) {
-				$this->$method($model);
+				$this->$method($model, $data);
 			}
 		}
 
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch($type, $event);
+		$dispatcher->dispatch($type, new ApplicationUriEvent($model));
 	}
 
 	/**

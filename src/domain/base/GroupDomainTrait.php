@@ -54,12 +54,11 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($model);
-		$this->dispatch(GroupEvent::PRE_ACTIONS_ADD, $event);
-		$this->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_ACTIONS_ADD, $model, $data);
+		$this->dispatch(GroupEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(GroupEvent::POST_ACTIONS_ADD, $event);
-		$this->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_ACTIONS_ADD, $model, $data);
+		$this->dispatch(GroupEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -91,12 +90,11 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($model);
-		$this->dispatch(GroupEvent::PRE_USERS_ADD, $event);
-		$this->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_USERS_ADD, $model, $data);
+		$this->dispatch(GroupEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(GroupEvent::POST_USERS_ADD, $event);
-		$this->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_USERS_ADD, $model, $data);
+		$this->dispatch(GroupEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -117,6 +115,10 @@ trait GroupDomainTrait {
 		$model = $serializer->hydrate(new Group(), $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(GroupEvent::PRE_CREATE, $model, $data);
+		$this->dispatch(GroupEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -125,13 +127,11 @@ trait GroupDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new GroupEvent($model);
-		$this->dispatch(GroupEvent::PRE_CREATE, $event);
-		$this->dispatch(GroupEvent::PRE_SAVE, $event);
+		// save and dispatch post save hooks
 		$model->save();
-		$this->dispatch(GroupEvent::POST_CREATE, $event);
-		$this->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_CREATE, $model, $data);
+		$this->dispatch(GroupEvent::POST_SAVE, $model, $data);
+
 		return new Created(['model' => $model]);
 	}
 
@@ -150,12 +150,11 @@ trait GroupDomainTrait {
 		}
 
 		// delete
-		$event = new GroupEvent($model);
-		$this->dispatch(GroupEvent::PRE_DELETE, $event);
+		$this->dispatch(GroupEvent::PRE_DELETE, $model);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$this->dispatch(GroupEvent::POST_DELETE, $event);
+			$this->dispatch(GroupEvent::POST_DELETE, $model);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -237,12 +236,11 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($model);
-		$this->dispatch(GroupEvent::PRE_ACTIONS_REMOVE, $event);
-		$this->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_ACTIONS_REMOVE, $model, $data);
+		$this->dispatch(GroupEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(GroupEvent::POST_ACTIONS_REMOVE, $event);
-		$this->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_ACTIONS_REMOVE, $model, $data);
+		$this->dispatch(GroupEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -274,12 +272,11 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($model);
-		$this->dispatch(GroupEvent::PRE_USERS_REMOVE, $event);
-		$this->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_USERS_REMOVE, $model, $data);
+		$this->dispatch(GroupEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(GroupEvent::POST_USERS_REMOVE, $event);
-		$this->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_USERS_REMOVE, $model, $data);
+		$this->dispatch(GroupEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -308,6 +305,10 @@ trait GroupDomainTrait {
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(GroupEvent::PRE_UPDATE, $model, $data);
+		$this->dispatch(GroupEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -316,13 +317,10 @@ trait GroupDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new GroupEvent($model);
-		$this->dispatch(GroupEvent::PRE_UPDATE, $event);
-		$this->dispatch(GroupEvent::PRE_SAVE, $event);
+		// save and dispath post save hooks
 		$rows = $model->save();
-		$this->dispatch(GroupEvent::POST_UPDATE, $event);
-		$this->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_UPDATE, $model, $data);
+		$this->dispatch(GroupEvent::POST_SAVE, $model, $data);
 
 		$payload = ['model' => $model];
 
@@ -356,12 +354,11 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($model);
-		$this->dispatch(GroupEvent::PRE_ACTIONS_UPDATE, $event);
-		$this->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_ACTIONS_UPDATE, $model, $data);
+		$this->dispatch(GroupEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(GroupEvent::POST_ACTIONS_UPDATE, $event);
-		$this->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_ACTIONS_UPDATE, $model, $data);
+		$this->dispatch(GroupEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -393,12 +390,11 @@ trait GroupDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new GroupEvent($model);
-		$this->dispatch(GroupEvent::PRE_USERS_UPDATE, $event);
-		$this->dispatch(GroupEvent::PRE_SAVE, $event);
+		$this->dispatch(GroupEvent::PRE_USERS_UPDATE, $model, $data);
+		$this->dispatch(GroupEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(GroupEvent::POST_USERS_UPDATE, $event);
-		$this->dispatch(GroupEvent::POST_SAVE, $event);
+		$this->dispatch(GroupEvent::POST_USERS_UPDATE, $model, $data);
+		$this->dispatch(GroupEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -435,10 +431,10 @@ trait GroupDomainTrait {
 
 	/**
 	 * @param string $type
-	 * @param GroupEvent $event
+	 * @param Group $model
+	 * @param array $data
 	 */
-	protected function dispatch($type, GroupEvent $event) {
-		$model = $event->getGroup();
+	protected function dispatch($type, Group $model, array $data = []) {
 		$methods = [
 			GroupEvent::PRE_CREATE => 'preCreate',
 			GroupEvent::POST_CREATE => 'postCreate',
@@ -453,12 +449,12 @@ trait GroupDomainTrait {
 		if (isset($methods[$type])) {
 			$method = $methods[$type];
 			if (method_exists($this, $method)) {
-				$this->$method($model);
+				$this->$method($model, $data);
 			}
 		}
 
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch($type, $event);
+		$dispatcher->dispatch($type, new GroupEvent($model));
 	}
 
 	/**

@@ -54,12 +54,11 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_ACTIVITIES_ADD, $event);
-		$this->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_ACTIVITIES_ADD, $model, $data);
+		$this->dispatch(UserEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(UserEvent::POST_ACTIVITIES_ADD, $event);
-		$this->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_ACTIVITIES_ADD, $model, $data);
+		$this->dispatch(UserEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -91,12 +90,11 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_GROUPS_ADD, $event);
-		$this->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_GROUPS_ADD, $model, $data);
+		$this->dispatch(UserEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(UserEvent::POST_GROUPS_ADD, $event);
-		$this->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_GROUPS_ADD, $model, $data);
+		$this->dispatch(UserEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -128,12 +126,11 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_SESSIONS_ADD, $event);
-		$this->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_SESSIONS_ADD, $model, $data);
+		$this->dispatch(UserEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(UserEvent::POST_SESSIONS_ADD, $event);
-		$this->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_SESSIONS_ADD, $model, $data);
+		$this->dispatch(UserEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -154,6 +151,10 @@ trait UserDomainTrait {
 		$model = $serializer->hydrate(new User(), $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(UserEvent::PRE_CREATE, $model, $data);
+		$this->dispatch(UserEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -162,13 +163,11 @@ trait UserDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_CREATE, $event);
-		$this->dispatch(UserEvent::PRE_SAVE, $event);
+		// save and dispatch post save hooks
 		$model->save();
-		$this->dispatch(UserEvent::POST_CREATE, $event);
-		$this->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_CREATE, $model, $data);
+		$this->dispatch(UserEvent::POST_SAVE, $model, $data);
+
 		return new Created(['model' => $model]);
 	}
 
@@ -187,12 +186,11 @@ trait UserDomainTrait {
 		}
 
 		// delete
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_DELETE, $event);
+		$this->dispatch(UserEvent::PRE_DELETE, $model);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$this->dispatch(UserEvent::POST_DELETE, $event);
+			$this->dispatch(UserEvent::POST_DELETE, $model);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -274,12 +272,11 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_ACTIVITIES_REMOVE, $event);
-		$this->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_ACTIVITIES_REMOVE, $model, $data);
+		$this->dispatch(UserEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(UserEvent::POST_ACTIVITIES_REMOVE, $event);
-		$this->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_ACTIVITIES_REMOVE, $model, $data);
+		$this->dispatch(UserEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -311,12 +308,11 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_GROUPS_REMOVE, $event);
-		$this->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_GROUPS_REMOVE, $model, $data);
+		$this->dispatch(UserEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(UserEvent::POST_GROUPS_REMOVE, $event);
-		$this->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_GROUPS_REMOVE, $model, $data);
+		$this->dispatch(UserEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -348,12 +344,11 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_SESSIONS_REMOVE, $event);
-		$this->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_SESSIONS_REMOVE, $model, $data);
+		$this->dispatch(UserEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(UserEvent::POST_SESSIONS_REMOVE, $event);
-		$this->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_SESSIONS_REMOVE, $model, $data);
+		$this->dispatch(UserEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -382,6 +377,10 @@ trait UserDomainTrait {
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(UserEvent::PRE_UPDATE, $model, $data);
+		$this->dispatch(UserEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -390,13 +389,10 @@ trait UserDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_UPDATE, $event);
-		$this->dispatch(UserEvent::PRE_SAVE, $event);
+		// save and dispath post save hooks
 		$rows = $model->save();
-		$this->dispatch(UserEvent::POST_UPDATE, $event);
-		$this->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_UPDATE, $model, $data);
+		$this->dispatch(UserEvent::POST_SAVE, $model, $data);
 
 		$payload = ['model' => $model];
 
@@ -430,12 +426,11 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_ACTIVITIES_UPDATE, $event);
-		$this->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_ACTIVITIES_UPDATE, $model, $data);
+		$this->dispatch(UserEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(UserEvent::POST_ACTIVITIES_UPDATE, $event);
-		$this->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_ACTIVITIES_UPDATE, $model, $data);
+		$this->dispatch(UserEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -467,12 +462,11 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_GROUPS_UPDATE, $event);
-		$this->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_GROUPS_UPDATE, $model, $data);
+		$this->dispatch(UserEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(UserEvent::POST_GROUPS_UPDATE, $event);
-		$this->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_GROUPS_UPDATE, $model, $data);
+		$this->dispatch(UserEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -504,12 +498,11 @@ trait UserDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new UserEvent($model);
-		$this->dispatch(UserEvent::PRE_SESSIONS_UPDATE, $event);
-		$this->dispatch(UserEvent::PRE_SAVE, $event);
+		$this->dispatch(UserEvent::PRE_SESSIONS_UPDATE, $model, $data);
+		$this->dispatch(UserEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(UserEvent::POST_SESSIONS_UPDATE, $event);
-		$this->dispatch(UserEvent::POST_SAVE, $event);
+		$this->dispatch(UserEvent::POST_SESSIONS_UPDATE, $model, $data);
+		$this->dispatch(UserEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -546,10 +539,10 @@ trait UserDomainTrait {
 
 	/**
 	 * @param string $type
-	 * @param UserEvent $event
+	 * @param User $model
+	 * @param array $data
 	 */
-	protected function dispatch($type, UserEvent $event) {
-		$model = $event->getUser();
+	protected function dispatch($type, User $model, array $data = []) {
 		$methods = [
 			UserEvent::PRE_CREATE => 'preCreate',
 			UserEvent::POST_CREATE => 'postCreate',
@@ -564,12 +557,12 @@ trait UserDomainTrait {
 		if (isset($methods[$type])) {
 			$method = $methods[$type];
 			if (method_exists($this, $method)) {
-				$this->$method($model);
+				$this->$method($model, $data);
 			}
 		}
 
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch($type, $event);
+		$dispatcher->dispatch($type, new UserEvent($model));
 	}
 
 	/**

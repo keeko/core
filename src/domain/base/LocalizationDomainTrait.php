@@ -53,12 +53,11 @@ trait LocalizationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_ADD, $event);
-		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_ADD, $model, $data);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(LocalizationEvent::POST_APPLICATION_URIS_ADD, $event);
-		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_APPLICATION_URIS_ADD, $model, $data);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -90,12 +89,11 @@ trait LocalizationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_ADD, $event);
-		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_ADD, $model, $data);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_ADD, $event);
-		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_ADD, $model, $data);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -127,12 +125,11 @@ trait LocalizationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_ADD, $event);
-		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_ADD, $model, $data);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(LocalizationEvent::POST_LOCALIZATIONS_ADD, $event);
-		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LOCALIZATIONS_ADD, $model, $data);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -153,6 +150,10 @@ trait LocalizationDomainTrait {
 		$model = $serializer->hydrate(new Localization(), $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(LocalizationEvent::PRE_CREATE, $model, $data);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -161,13 +162,11 @@ trait LocalizationDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_CREATE, $event);
-		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		// save and dispatch post save hooks
 		$model->save();
-		$this->dispatch(LocalizationEvent::POST_CREATE, $event);
-		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_CREATE, $model, $data);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $model, $data);
+
 		return new Created(['model' => $model]);
 	}
 
@@ -186,12 +185,11 @@ trait LocalizationDomainTrait {
 		}
 
 		// delete
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_DELETE, $event);
+		$this->dispatch(LocalizationEvent::PRE_DELETE, $model);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$this->dispatch(LocalizationEvent::POST_DELETE, $event);
+			$this->dispatch(LocalizationEvent::POST_DELETE, $model);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -273,12 +271,11 @@ trait LocalizationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_REMOVE, $event);
-		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_REMOVE, $model, $data);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(LocalizationEvent::POST_APPLICATION_URIS_REMOVE, $event);
-		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_APPLICATION_URIS_REMOVE, $model, $data);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -310,12 +307,11 @@ trait LocalizationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_REMOVE, $event);
-		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_REMOVE, $model, $data);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_REMOVE, $event);
-		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_REMOVE, $model, $data);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -347,12 +343,11 @@ trait LocalizationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_REMOVE, $event);
-		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_REMOVE, $model, $data);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(LocalizationEvent::POST_LOCALIZATIONS_REMOVE, $event);
-		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LOCALIZATIONS_REMOVE, $model, $data);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -378,12 +373,11 @@ trait LocalizationDomainTrait {
 
 		// update
 		if ($this->doSetExtLangId($model, $relatedId)) {
-			$event = new LocalizationEvent($model);
-			$this->dispatch(LocalizationEvent::PRE_EXT_LANG_UPDATE, $event);
-			$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+			$this->dispatch(LocalizationEvent::PRE_EXT_LANG_UPDATE, $model);
+			$this->dispatch(LocalizationEvent::PRE_SAVE, $model);
 			$model->save();
-			$this->dispatch(LocalizationEvent::POST_EXT_LANG_UPDATE, $event);
-			$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+			$this->dispatch(LocalizationEvent::POST_EXT_LANG_UPDATE, $model);
+			$this->dispatch(LocalizationEvent::POST_SAVE, $model);
 
 			return Updated(['model' => $model]);
 		}
@@ -408,12 +402,11 @@ trait LocalizationDomainTrait {
 
 		// update
 		if ($this->doSetLanguageId($model, $relatedId)) {
-			$event = new LocalizationEvent($model);
-			$this->dispatch(LocalizationEvent::PRE_LANGUAGE_UPDATE, $event);
-			$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+			$this->dispatch(LocalizationEvent::PRE_LANGUAGE_UPDATE, $model);
+			$this->dispatch(LocalizationEvent::PRE_SAVE, $model);
 			$model->save();
-			$this->dispatch(LocalizationEvent::POST_LANGUAGE_UPDATE, $event);
-			$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+			$this->dispatch(LocalizationEvent::POST_LANGUAGE_UPDATE, $model);
+			$this->dispatch(LocalizationEvent::POST_SAVE, $model);
 
 			return Updated(['model' => $model]);
 		}
@@ -438,12 +431,11 @@ trait LocalizationDomainTrait {
 
 		// update
 		if ($this->doSetParentId($model, $relatedId)) {
-			$event = new LocalizationEvent($model);
-			$this->dispatch(LocalizationEvent::PRE_PARENT_UPDATE, $event);
-			$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+			$this->dispatch(LocalizationEvent::PRE_PARENT_UPDATE, $model);
+			$this->dispatch(LocalizationEvent::PRE_SAVE, $model);
 			$model->save();
-			$this->dispatch(LocalizationEvent::POST_PARENT_UPDATE, $event);
-			$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+			$this->dispatch(LocalizationEvent::POST_PARENT_UPDATE, $model);
+			$this->dispatch(LocalizationEvent::POST_SAVE, $model);
 
 			return Updated(['model' => $model]);
 		}
@@ -468,12 +460,11 @@ trait LocalizationDomainTrait {
 
 		// update
 		if ($this->doSetScriptId($model, $relatedId)) {
-			$event = new LocalizationEvent($model);
-			$this->dispatch(LocalizationEvent::PRE_SCRIPT_UPDATE, $event);
-			$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+			$this->dispatch(LocalizationEvent::PRE_SCRIPT_UPDATE, $model);
+			$this->dispatch(LocalizationEvent::PRE_SAVE, $model);
 			$model->save();
-			$this->dispatch(LocalizationEvent::POST_SCRIPT_UPDATE, $event);
-			$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+			$this->dispatch(LocalizationEvent::POST_SCRIPT_UPDATE, $model);
+			$this->dispatch(LocalizationEvent::POST_SAVE, $model);
 
 			return Updated(['model' => $model]);
 		}
@@ -501,6 +492,10 @@ trait LocalizationDomainTrait {
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(LocalizationEvent::PRE_UPDATE, $model, $data);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -509,13 +504,10 @@ trait LocalizationDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_UPDATE, $event);
-		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		// save and dispath post save hooks
 		$rows = $model->save();
-		$this->dispatch(LocalizationEvent::POST_UPDATE, $event);
-		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_UPDATE, $model, $data);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $model, $data);
 
 		$payload = ['model' => $model];
 
@@ -549,12 +541,11 @@ trait LocalizationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_UPDATE, $event);
-		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_APPLICATION_URIS_UPDATE, $model, $data);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(LocalizationEvent::POST_APPLICATION_URIS_UPDATE, $event);
-		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_APPLICATION_URIS_UPDATE, $model, $data);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -586,12 +577,11 @@ trait LocalizationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_UPDATE, $event);
-		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LANGUAGE_VARIANTS_UPDATE, $model, $data);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_UPDATE, $event);
-		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LANGUAGE_VARIANTS_UPDATE, $model, $data);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -623,12 +613,11 @@ trait LocalizationDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new LocalizationEvent($model);
-		$this->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_UPDATE, $event);
-		$this->dispatch(LocalizationEvent::PRE_SAVE, $event);
+		$this->dispatch(LocalizationEvent::PRE_LOCALIZATIONS_UPDATE, $model, $data);
+		$this->dispatch(LocalizationEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(LocalizationEvent::POST_LOCALIZATIONS_UPDATE, $event);
-		$this->dispatch(LocalizationEvent::POST_SAVE, $event);
+		$this->dispatch(LocalizationEvent::POST_LOCALIZATIONS_UPDATE, $model, $data);
+		$this->dispatch(LocalizationEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -665,10 +654,10 @@ trait LocalizationDomainTrait {
 
 	/**
 	 * @param string $type
-	 * @param LocalizationEvent $event
+	 * @param Localization $model
+	 * @param array $data
 	 */
-	protected function dispatch($type, LocalizationEvent $event) {
-		$model = $event->getLocalization();
+	protected function dispatch($type, Localization $model, array $data = []) {
 		$methods = [
 			LocalizationEvent::PRE_CREATE => 'preCreate',
 			LocalizationEvent::POST_CREATE => 'postCreate',
@@ -683,12 +672,12 @@ trait LocalizationDomainTrait {
 		if (isset($methods[$type])) {
 			$method = $methods[$type];
 			if (method_exists($this, $method)) {
-				$this->$method($model);
+				$this->$method($model, $data);
 			}
 		}
 
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch($type, $event);
+		$dispatcher->dispatch($type, new LocalizationEvent($model));
 	}
 
 	/**

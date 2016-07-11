@@ -53,12 +53,11 @@ trait ActionDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ActionEvent($model);
-		$this->dispatch(ActionEvent::PRE_APIS_ADD, $event);
-		$this->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_APIS_ADD, $model, $data);
+		$this->dispatch(ActionEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ActionEvent::POST_APIS_ADD, $event);
-		$this->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_APIS_ADD, $model, $data);
+		$this->dispatch(ActionEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -90,12 +89,11 @@ trait ActionDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ActionEvent($model);
-		$this->dispatch(ActionEvent::PRE_GROUPS_ADD, $event);
-		$this->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_GROUPS_ADD, $model, $data);
+		$this->dispatch(ActionEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ActionEvent::POST_GROUPS_ADD, $event);
-		$this->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_GROUPS_ADD, $model, $data);
+		$this->dispatch(ActionEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -116,6 +114,10 @@ trait ActionDomainTrait {
 		$model = $serializer->hydrate(new Action(), $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ActionEvent::PRE_CREATE, $model, $data);
+		$this->dispatch(ActionEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -124,13 +126,11 @@ trait ActionDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ActionEvent($model);
-		$this->dispatch(ActionEvent::PRE_CREATE, $event);
-		$this->dispatch(ActionEvent::PRE_SAVE, $event);
+		// save and dispatch post save hooks
 		$model->save();
-		$this->dispatch(ActionEvent::POST_CREATE, $event);
-		$this->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_CREATE, $model, $data);
+		$this->dispatch(ActionEvent::POST_SAVE, $model, $data);
+
 		return new Created(['model' => $model]);
 	}
 
@@ -149,12 +149,11 @@ trait ActionDomainTrait {
 		}
 
 		// delete
-		$event = new ActionEvent($model);
-		$this->dispatch(ActionEvent::PRE_DELETE, $event);
+		$this->dispatch(ActionEvent::PRE_DELETE, $model);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$this->dispatch(ActionEvent::POST_DELETE, $event);
+			$this->dispatch(ActionEvent::POST_DELETE, $model);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -236,12 +235,11 @@ trait ActionDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ActionEvent($model);
-		$this->dispatch(ActionEvent::PRE_APIS_REMOVE, $event);
-		$this->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_APIS_REMOVE, $model, $data);
+		$this->dispatch(ActionEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ActionEvent::POST_APIS_REMOVE, $event);
-		$this->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_APIS_REMOVE, $model, $data);
+		$this->dispatch(ActionEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -273,12 +271,11 @@ trait ActionDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ActionEvent($model);
-		$this->dispatch(ActionEvent::PRE_GROUPS_REMOVE, $event);
-		$this->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_GROUPS_REMOVE, $model, $data);
+		$this->dispatch(ActionEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ActionEvent::POST_GROUPS_REMOVE, $event);
-		$this->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_GROUPS_REMOVE, $model, $data);
+		$this->dispatch(ActionEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -304,12 +301,11 @@ trait ActionDomainTrait {
 
 		// update
 		if ($this->doSetModuleId($model, $relatedId)) {
-			$event = new ActionEvent($model);
-			$this->dispatch(ActionEvent::PRE_MODULE_UPDATE, $event);
-			$this->dispatch(ActionEvent::PRE_SAVE, $event);
+			$this->dispatch(ActionEvent::PRE_MODULE_UPDATE, $model);
+			$this->dispatch(ActionEvent::PRE_SAVE, $model);
 			$model->save();
-			$this->dispatch(ActionEvent::POST_MODULE_UPDATE, $event);
-			$this->dispatch(ActionEvent::POST_SAVE, $event);
+			$this->dispatch(ActionEvent::POST_MODULE_UPDATE, $model);
+			$this->dispatch(ActionEvent::POST_SAVE, $model);
 
 			return Updated(['model' => $model]);
 		}
@@ -337,6 +333,10 @@ trait ActionDomainTrait {
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ActionEvent::PRE_UPDATE, $model, $data);
+		$this->dispatch(ActionEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -345,13 +345,10 @@ trait ActionDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ActionEvent($model);
-		$this->dispatch(ActionEvent::PRE_UPDATE, $event);
-		$this->dispatch(ActionEvent::PRE_SAVE, $event);
+		// save and dispath post save hooks
 		$rows = $model->save();
-		$this->dispatch(ActionEvent::POST_UPDATE, $event);
-		$this->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_UPDATE, $model, $data);
+		$this->dispatch(ActionEvent::POST_SAVE, $model, $data);
 
 		$payload = ['model' => $model];
 
@@ -385,12 +382,11 @@ trait ActionDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ActionEvent($model);
-		$this->dispatch(ActionEvent::PRE_APIS_UPDATE, $event);
-		$this->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_APIS_UPDATE, $model, $data);
+		$this->dispatch(ActionEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ActionEvent::POST_APIS_UPDATE, $event);
-		$this->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_APIS_UPDATE, $model, $data);
+		$this->dispatch(ActionEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -422,12 +418,11 @@ trait ActionDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ActionEvent($model);
-		$this->dispatch(ActionEvent::PRE_GROUPS_UPDATE, $event);
-		$this->dispatch(ActionEvent::PRE_SAVE, $event);
+		$this->dispatch(ActionEvent::PRE_GROUPS_UPDATE, $model, $data);
+		$this->dispatch(ActionEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ActionEvent::POST_GROUPS_UPDATE, $event);
-		$this->dispatch(ActionEvent::POST_SAVE, $event);
+		$this->dispatch(ActionEvent::POST_GROUPS_UPDATE, $model, $data);
+		$this->dispatch(ActionEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -464,10 +459,10 @@ trait ActionDomainTrait {
 
 	/**
 	 * @param string $type
-	 * @param ActionEvent $event
+	 * @param Action $model
+	 * @param array $data
 	 */
-	protected function dispatch($type, ActionEvent $event) {
-		$model = $event->getAction();
+	protected function dispatch($type, Action $model, array $data = []) {
 		$methods = [
 			ActionEvent::PRE_CREATE => 'preCreate',
 			ActionEvent::POST_CREATE => 'postCreate',
@@ -482,12 +477,12 @@ trait ActionDomainTrait {
 		if (isset($methods[$type])) {
 			$method = $methods[$type];
 			if (method_exists($this, $method)) {
-				$this->$method($model);
+				$this->$method($model, $data);
 			}
 		}
 
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch($type, $event);
+		$dispatcher->dispatch($type, new ActionEvent($model));
 	}
 
 	/**

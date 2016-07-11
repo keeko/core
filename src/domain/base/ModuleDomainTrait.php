@@ -51,12 +51,11 @@ trait ModuleDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ModuleEvent($model);
-		$this->dispatch(ModuleEvent::PRE_ACTIONS_ADD, $event);
-		$this->dispatch(ModuleEvent::PRE_SAVE, $event);
+		$this->dispatch(ModuleEvent::PRE_ACTIONS_ADD, $model, $data);
+		$this->dispatch(ModuleEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ModuleEvent::POST_ACTIONS_ADD, $event);
-		$this->dispatch(ModuleEvent::POST_SAVE, $event);
+		$this->dispatch(ModuleEvent::POST_ACTIONS_ADD, $model, $data);
+		$this->dispatch(ModuleEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -77,6 +76,10 @@ trait ModuleDomainTrait {
 		$model = $serializer->hydrate(new Module(), $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ModuleEvent::PRE_CREATE, $model, $data);
+		$this->dispatch(ModuleEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -85,13 +88,11 @@ trait ModuleDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ModuleEvent($model);
-		$this->dispatch(ModuleEvent::PRE_CREATE, $event);
-		$this->dispatch(ModuleEvent::PRE_SAVE, $event);
+		// save and dispatch post save hooks
 		$model->save();
-		$this->dispatch(ModuleEvent::POST_CREATE, $event);
-		$this->dispatch(ModuleEvent::POST_SAVE, $event);
+		$this->dispatch(ModuleEvent::POST_CREATE, $model, $data);
+		$this->dispatch(ModuleEvent::POST_SAVE, $model, $data);
+
 		return new Created(['model' => $model]);
 	}
 
@@ -110,12 +111,11 @@ trait ModuleDomainTrait {
 		}
 
 		// delete
-		$event = new ModuleEvent($model);
-		$this->dispatch(ModuleEvent::PRE_DELETE, $event);
+		$this->dispatch(ModuleEvent::PRE_DELETE, $model);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$this->dispatch(ModuleEvent::POST_DELETE, $event);
+			$this->dispatch(ModuleEvent::POST_DELETE, $model);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -197,12 +197,11 @@ trait ModuleDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ModuleEvent($model);
-		$this->dispatch(ModuleEvent::PRE_ACTIONS_REMOVE, $event);
-		$this->dispatch(ModuleEvent::PRE_SAVE, $event);
+		$this->dispatch(ModuleEvent::PRE_ACTIONS_REMOVE, $model, $data);
+		$this->dispatch(ModuleEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ModuleEvent::POST_ACTIONS_REMOVE, $event);
-		$this->dispatch(ModuleEvent::POST_SAVE, $event);
+		$this->dispatch(ModuleEvent::POST_ACTIONS_REMOVE, $model, $data);
+		$this->dispatch(ModuleEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -231,6 +230,10 @@ trait ModuleDomainTrait {
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(ModuleEvent::PRE_UPDATE, $model, $data);
+		$this->dispatch(ModuleEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -239,13 +242,10 @@ trait ModuleDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new ModuleEvent($model);
-		$this->dispatch(ModuleEvent::PRE_UPDATE, $event);
-		$this->dispatch(ModuleEvent::PRE_SAVE, $event);
+		// save and dispath post save hooks
 		$rows = $model->save();
-		$this->dispatch(ModuleEvent::POST_UPDATE, $event);
-		$this->dispatch(ModuleEvent::POST_SAVE, $event);
+		$this->dispatch(ModuleEvent::POST_UPDATE, $model, $data);
+		$this->dispatch(ModuleEvent::POST_SAVE, $model, $data);
 
 		$payload = ['model' => $model];
 
@@ -279,12 +279,11 @@ trait ModuleDomainTrait {
 		}
 
 		// save and dispatch events
-		$event = new ModuleEvent($model);
-		$this->dispatch(ModuleEvent::PRE_ACTIONS_UPDATE, $event);
-		$this->dispatch(ModuleEvent::PRE_SAVE, $event);
+		$this->dispatch(ModuleEvent::PRE_ACTIONS_UPDATE, $model, $data);
+		$this->dispatch(ModuleEvent::PRE_SAVE, $model, $data);
 		$rows = $model->save();
-		$this->dispatch(ModuleEvent::POST_ACTIONS_UPDATE, $event);
-		$this->dispatch(ModuleEvent::POST_SAVE, $event);
+		$this->dispatch(ModuleEvent::POST_ACTIONS_UPDATE, $model, $data);
+		$this->dispatch(ModuleEvent::POST_SAVE, $model, $data);
 
 		if ($rows > 0) {
 			return Updated(['model' => $model]);
@@ -321,10 +320,10 @@ trait ModuleDomainTrait {
 
 	/**
 	 * @param string $type
-	 * @param ModuleEvent $event
+	 * @param Module $model
+	 * @param array $data
 	 */
-	protected function dispatch($type, ModuleEvent $event) {
-		$model = $event->getModule();
+	protected function dispatch($type, Module $model, array $data = []) {
 		$methods = [
 			ModuleEvent::PRE_CREATE => 'preCreate',
 			ModuleEvent::POST_CREATE => 'postCreate',
@@ -339,12 +338,12 @@ trait ModuleDomainTrait {
 		if (isset($methods[$type])) {
 			$method = $methods[$type];
 			if (method_exists($this, $method)) {
-				$this->$method($model);
+				$this->$method($model, $data);
 			}
 		}
 
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch($type, $event);
+		$dispatcher->dispatch($type, new ModuleEvent($model));
 	}
 
 	/**

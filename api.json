@@ -4,6 +4,20 @@
 		"title": "Keeko core API"
 	},
 	"paths": {
+		"/languages": {
+			"get": {
+				"description": "Paginates languages",
+				"operationId": "language-paginate",
+				"responses": {
+					"200": {
+						"description": "Array of languages",
+						"schema": {
+							"$ref": "#/definitions/PagedLanguages"
+						}
+					}
+				}
+			}
+		},
 		"/languages/{id}": {
 			"get": {
 				"description": "Reads a language",
@@ -36,27 +50,21 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
-		"/languages": {
+		"/language-scopes": {
 			"get": {
-				"description": "Paginates languages",
-				"operationId": "language-paginate",
+				"description": "Paginates language_scopes",
+				"operationId": "language_scope-paginate",
 				"responses": {
 					"200": {
-						"description": "Array of languages",
+						"description": "Array of language_scopes",
 						"schema": {
-							"$ref": "#/definitions/PagedLanguages"
+							"$ref": "#/definitions/PagedLanguageScopes"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/language-scopes/{id}": {
@@ -91,27 +99,21 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
-		"/language-scopes": {
+		"/language-types": {
 			"get": {
-				"description": "Paginates language_scopes",
-				"operationId": "language_scope-paginate",
+				"description": "Paginates language_types",
+				"operationId": "language_type-paginate",
 				"responses": {
 					"200": {
-						"description": "Array of language_scopes",
+						"description": "Array of language_types",
 						"schema": {
-							"$ref": "#/definitions/PagedLanguageScopes"
+							"$ref": "#/definitions/PagedLanguageTypes"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/language-types/{id}": {
@@ -146,27 +148,21 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
-		"/language-types": {
+		"/language-scripts": {
 			"get": {
-				"description": "Paginates language_types",
-				"operationId": "language_type-paginate",
+				"description": "Paginates language_scripts",
+				"operationId": "language_script-paginate",
 				"responses": {
 					"200": {
-						"description": "Array of language_types",
+						"description": "Array of language_scripts",
 						"schema": {
-							"$ref": "#/definitions/PagedLanguageTypes"
+							"$ref": "#/definitions/PagedLanguageScripts"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/language-scripts/{id}": {
@@ -201,27 +197,21 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
-		"/language-scripts": {
+		"/language-families": {
 			"get": {
-				"description": "Paginates language_scripts",
-				"operationId": "language_script-paginate",
+				"description": "Paginates language_families",
+				"operationId": "language_family-paginate",
 				"responses": {
 					"200": {
-						"description": "Array of language_scripts",
+						"description": "Array of language_families",
 						"schema": {
-							"$ref": "#/definitions/PagedLanguageScripts"
+							"$ref": "#/definitions/PagedLanguageFamilies"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/language-families/{id}": {
@@ -256,27 +246,21 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
-		"/language-families": {
+		"/language-variants": {
 			"get": {
-				"description": "Paginates language_families",
-				"operationId": "language_family-paginate",
+				"description": "Paginates language_variants",
+				"operationId": "language_variant-paginate",
 				"responses": {
 					"200": {
-						"description": "Array of language_families",
+						"description": "Array of language_variants",
 						"schema": {
-							"$ref": "#/definitions/PagedLanguageFamilies"
+							"$ref": "#/definitions/PagedLanguageVariants"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/language-variants/{id}": {
@@ -311,27 +295,21 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
-		"/language-variants": {
+		"/currencies": {
 			"get": {
-				"description": "Paginates language_variants",
-				"operationId": "language_variant-paginate",
+				"description": "Paginates currencies",
+				"operationId": "currency-paginate",
 				"responses": {
 					"200": {
-						"description": "Array of language_variants",
+						"description": "Array of currencies",
 						"schema": {
-							"$ref": "#/definitions/PagedLanguageVariants"
+							"$ref": "#/definitions/PagedCurrencies"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/currencies/{id}": {
@@ -366,27 +344,21 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
-		"/currencies": {
+		"/countries": {
 			"get": {
-				"description": "Paginates currencies",
-				"operationId": "currency-paginate",
+				"description": "Paginates countries",
+				"operationId": "country-paginate",
 				"responses": {
 					"200": {
-						"description": "Array of currencies",
+						"description": "Array of countries",
 						"schema": {
-							"$ref": "#/definitions/PagedCurrencies"
+							"$ref": "#/definitions/PagedCountries"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/countries/{id}": {
@@ -421,27 +393,21 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
-		"/countries": {
+		"/continents": {
 			"get": {
-				"description": "Paginates countries",
-				"operationId": "country-paginate",
+				"description": "Paginates continents",
+				"operationId": "continent-paginate",
 				"responses": {
 					"200": {
-						"description": "Array of countries",
+						"description": "Array of continents",
 						"schema": {
-							"$ref": "#/definitions/PagedCountries"
+							"$ref": "#/definitions/PagedContinents"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/continents/{id}": {
@@ -476,27 +442,21 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
-		"/continents": {
+		"/subdivisions": {
 			"get": {
-				"description": "Paginates continents",
-				"operationId": "continent-paginate",
+				"description": "Paginates subdivisions",
+				"operationId": "subdivision-paginate",
 				"responses": {
 					"200": {
-						"description": "Array of continents",
+						"description": "Array of subdivisions",
 						"schema": {
-							"$ref": "#/definitions/PagedContinents"
+							"$ref": "#/definitions/PagedSubdivisions"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/subdivisions/{id}": {
@@ -531,27 +491,21 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
-		"/subdivisions": {
+		"/region-types": {
 			"get": {
-				"description": "Paginates subdivisions",
-				"operationId": "subdivision-paginate",
+				"description": "Paginates region_types",
+				"operationId": "region_type-paginate",
 				"responses": {
 					"200": {
-						"description": "Array of subdivisions",
+						"description": "Array of region_types",
 						"schema": {
-							"$ref": "#/definitions/PagedSubdivisions"
+							"$ref": "#/definitions/PagedRegionTypes"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/region-types/{id}": {
@@ -586,27 +540,21 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
-		"/region-types": {
+		"/region-areas": {
 			"get": {
-				"description": "Paginates region_types",
-				"operationId": "region_type-paginate",
+				"description": "Paginates region_areas",
+				"operationId": "region_area-paginate",
 				"responses": {
 					"200": {
-						"description": "Array of region_types",
+						"description": "Array of region_areas",
 						"schema": {
-							"$ref": "#/definitions/PagedRegionTypes"
+							"$ref": "#/definitions/PagedRegionAreas"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/region-areas/{id}": {
@@ -641,27 +589,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			}
-		},
-		"/region-areas": {
-			"get": {
-				"description": "Paginates region_areas",
-				"operationId": "region_area-paginate",
-				"responses": {
-					"200": {
-						"description": "Array of region_areas",
-						"schema": {
-							"$ref": "#/definitions/PagedRegionAreas"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/localizations": {
@@ -675,10 +603,7 @@
 							"$ref": "#/definitions/PagedLocalizations"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates a localization",
@@ -698,10 +623,7 @@
 					"201": {
 						"description": "localization created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/localizations/{id}": {
@@ -736,10 +658,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates a localization",
@@ -772,10 +691,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes a localization",
@@ -805,10 +721,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/localizations/{id}/relationship/localizations": {
@@ -859,79 +772,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds localization as relationship to localization",
-				"operationId": "localization-to-localization-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The localization id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds Localization",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve Localization from localization",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No localization found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of localization to localization",
@@ -997,10 +838,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds localization as relationship to localization",
+				"operationId": "localization-to-localization-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The localization id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds Localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve Localization from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes localization as relationship to localization",
@@ -1049,10 +953,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/localizations/{id}/relationship/parent": {
@@ -1104,10 +1005,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of localization to parent",
@@ -1171,10 +1069,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/localizations/{id}/relationship/language": {
@@ -1226,10 +1121,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of localization to language",
@@ -1293,10 +1185,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/localizations/{id}/relationship/ext-lang": {
@@ -1348,10 +1237,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of localization to ext_lang",
@@ -1415,10 +1301,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/localizations/{id}/relationship/script": {
@@ -1470,10 +1353,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of localization to script",
@@ -1537,10 +1417,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/localizations/{id}/relationship/language-variants": {
@@ -1591,79 +1468,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds language_variant as relationship to localization",
-				"operationId": "localization-to-language_variant-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The localization id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds LanguageVariant",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve LanguageVariant from localization",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No localization found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of localization to language_variant",
@@ -1729,10 +1534,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds language_variant as relationship to localization",
+				"operationId": "localization-to-language_variant-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The localization id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds LanguageVariant",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve LanguageVariant from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes language_variant as relationship to localization",
@@ -1781,10 +1649,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/localizations/{id}/relationship/application-uris": {
@@ -1835,79 +1700,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds application_uri as relationship to localization",
-				"operationId": "localization-to-application_uri-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The localization id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds ApplicationUri",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve ApplicationUri from localization",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No localization found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of localization to application_uri",
@@ -1973,10 +1766,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds application_uri as relationship to localization",
+				"operationId": "localization-to-application_uri-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The localization id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds ApplicationUri",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve ApplicationUri from localization",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No localization found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes application_uri as relationship to localization",
@@ -2025,10 +1881,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/applications": {
@@ -2042,10 +1895,7 @@
 							"$ref": "#/definitions/PagedApplications"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates an application",
@@ -2065,10 +1915,7 @@
 					"201": {
 						"description": "application created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/applications/{id}": {
@@ -2103,10 +1950,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates an application",
@@ -2139,10 +1983,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes an application",
@@ -2172,10 +2013,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/applications/{id}/relationship/application-uris": {
@@ -2226,79 +2064,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds application_uri as relationship to application",
-				"operationId": "application-to-application_uri-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The application id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds ApplicationUri",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve ApplicationUri from application",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No application found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of application to application_uri",
@@ -2364,10 +2130,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds application_uri as relationship to application",
+				"operationId": "application-to-application_uri-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The application id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds ApplicationUri",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve ApplicationUri from application",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No application found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes application_uri as relationship to application",
@@ -2416,10 +2245,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/application-uris": {
@@ -2433,10 +2259,7 @@
 							"$ref": "#/definitions/PagedApplicationUris"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates an application_uri",
@@ -2456,10 +2279,7 @@
 					"201": {
 						"description": "application_uri created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/application-uris/{id}": {
@@ -2494,10 +2314,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates an application_uri",
@@ -2530,10 +2347,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes an application_uri",
@@ -2563,10 +2377,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/application-uris/{id}/relationship/application": {
@@ -2618,10 +2429,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of application_uri to application",
@@ -2685,10 +2493,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/application-uris/{id}/relationship/localization": {
@@ -2740,10 +2545,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of application_uri to localization",
@@ -2807,10 +2609,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/modules": {
@@ -2824,10 +2623,7 @@
 							"$ref": "#/definitions/PagedModules"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates a module",
@@ -2847,10 +2643,7 @@
 					"201": {
 						"description": "module created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/modules/{id}": {
@@ -2885,10 +2678,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates a module",
@@ -2921,10 +2711,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes a module",
@@ -2954,10 +2741,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/modules/{id}/relationship/actions": {
@@ -3008,79 +2792,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds action as relationship to module",
-				"operationId": "module-to-action-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The module id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds Action",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve Action from module",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No module found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of module to action",
@@ -3146,10 +2858,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds action as relationship to module",
+				"operationId": "module-to-action-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The module id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds Action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve Action from module",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No module found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes action as relationship to module",
@@ -3198,10 +2973,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/actions": {
@@ -3215,10 +2987,7 @@
 							"$ref": "#/definitions/PagedActions"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates an action",
@@ -3238,10 +3007,7 @@
 					"201": {
 						"description": "action created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/actions/{id}": {
@@ -3276,10 +3042,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates an action",
@@ -3312,10 +3075,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes an action",
@@ -3345,10 +3105,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/actions/{id}/relationship/module": {
@@ -3400,10 +3157,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of action to module",
@@ -3467,10 +3221,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/actions/{id}/relationship/groups": {
@@ -3521,79 +3272,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds group as relationship to action",
-				"operationId": "action-to-group-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The action id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds Group",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve Group from action",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No action found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of action to group",
@@ -3659,10 +3338,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds group as relationship to action",
+				"operationId": "action-to-group-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The action id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds Group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve Group from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes group as relationship to action",
@@ -3711,10 +3453,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/actions/{id}/relationship/apis": {
@@ -3765,79 +3504,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds api as relationship to action",
-				"operationId": "action-to-api-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The action id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds Api",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve Api from action",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No action found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of action to api",
@@ -3903,10 +3570,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds api as relationship to action",
+				"operationId": "action-to-api-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The action id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds Api",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve Api from action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No action found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes api as relationship to action",
@@ -3955,10 +3685,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/extensions": {
@@ -3972,10 +3699,7 @@
 							"$ref": "#/definitions/PagedExtensions"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates an extension",
@@ -3995,10 +3719,7 @@
 					"201": {
 						"description": "extension created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/extensions/{id}": {
@@ -4033,10 +3754,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates an extension",
@@ -4069,10 +3787,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes an extension",
@@ -4102,10 +3817,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/preferences": {
@@ -4119,10 +3831,7 @@
 							"$ref": "#/definitions/PagedPreferences"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates a preference",
@@ -4142,10 +3851,7 @@
 					"201": {
 						"description": "preference created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/preferences/{id}": {
@@ -4180,10 +3886,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates a preference",
@@ -4216,10 +3919,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes a preference",
@@ -4249,10 +3949,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/apis": {
@@ -4266,10 +3963,7 @@
 							"$ref": "#/definitions/PagedApis"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates an api",
@@ -4289,10 +3983,7 @@
 					"201": {
 						"description": "api created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/apis/{id}": {
@@ -4327,10 +4018,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates an api",
@@ -4363,10 +4051,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes an api",
@@ -4396,10 +4081,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/apis/{id}/relationship/action": {
@@ -4451,10 +4133,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of api to action",
@@ -4518,10 +4197,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/users": {
@@ -4535,10 +4211,7 @@
 							"$ref": "#/definitions/PagedUsers"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates an user",
@@ -4558,10 +4231,7 @@
 					"201": {
 						"description": "user created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/users/{id}": {
@@ -4596,10 +4266,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates an user",
@@ -4632,10 +4299,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes an user",
@@ -4665,10 +4329,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/users/{id}/relationship/groups": {
@@ -4719,79 +4380,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds group as relationship to user",
-				"operationId": "user-to-group-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The user id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds Group",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve Group from user",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No user found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of user to group",
@@ -4857,10 +4446,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds group as relationship to user",
+				"operationId": "user-to-group-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The user id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds Group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve Group from user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes group as relationship to user",
@@ -4909,10 +4561,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/users/{id}/relationship/activities": {
@@ -4963,79 +4612,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds activity as relationship to user",
-				"operationId": "user-to-activity-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The user id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds Activity",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve Activity from user",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No user found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of user to activity",
@@ -5101,10 +4678,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds activity as relationship to user",
+				"operationId": "user-to-activity-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The user id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds Activity",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve Activity from user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No user found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes activity as relationship to user",
@@ -5153,10 +4793,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/groups": {
@@ -5170,10 +4807,7 @@
 							"$ref": "#/definitions/PagedGroups"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates a group",
@@ -5193,10 +4827,7 @@
 					"201": {
 						"description": "group created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/groups/{id}": {
@@ -5231,10 +4862,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates a group",
@@ -5267,10 +4895,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes a group",
@@ -5300,10 +4925,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/groups/{id}/relationship/users": {
@@ -5354,79 +4976,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds user as relationship to group",
-				"operationId": "group-to-user-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The group id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds User",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve User from group",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No group found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of group to user",
@@ -5492,10 +5042,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds user as relationship to group",
+				"operationId": "group-to-user-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The group id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds User",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve User from group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes user as relationship to group",
@@ -5544,10 +5157,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/groups/{id}/relationship/actions": {
@@ -5598,79 +5208,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds action as relationship to group",
-				"operationId": "group-to-action-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The group id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds Action",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve Action from group",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No group found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of group to action",
@@ -5736,10 +5274,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds action as relationship to group",
+				"operationId": "group-to-action-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The group id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds Action",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve Action from group",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No group found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes action as relationship to group",
@@ -5788,10 +5389,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/activities": {
@@ -5805,10 +5403,7 @@
 							"$ref": "#/definitions/PagedActivities"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates an activity",
@@ -5828,10 +5423,7 @@
 					"201": {
 						"description": "activity created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/activities/{id}": {
@@ -5866,10 +5458,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates an activity",
@@ -5902,10 +5491,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes an activity",
@@ -5935,10 +5521,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/activities/{id}/relationship/actor": {
@@ -5990,10 +5573,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of activity to actor",
@@ -6057,10 +5637,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/activities/{id}/relationship/object": {
@@ -6112,10 +5689,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of activity to object",
@@ -6179,10 +5753,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/activities/{id}/relationship/target": {
@@ -6234,10 +5805,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of activity to target",
@@ -6301,10 +5869,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/activity-objects": {
@@ -6318,10 +5883,7 @@
 							"$ref": "#/definitions/PagedActivityObjects"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"post": {
 				"description": "Creates an activity_object",
@@ -6341,10 +5903,7 @@
 					"201": {
 						"description": "activity_object created"
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/activity-objects/{id}": {
@@ -6379,10 +5938,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates an activity_object",
@@ -6415,10 +5971,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"delete": {
 				"description": "Deletes an activity_object",
@@ -6448,10 +6001,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		},
 		"/activity-objects/{id}/relationship/activities": {
@@ -6502,79 +6052,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
-			},
-			"post": {
-				"description": "Adds activity as relationship to activity_object",
-				"operationId": "activity_object-to-activity-relationship-add",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "The activity_object id",
-						"type": "integer"
-					},
-					{
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"description": "Adds Activity",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Retrieve Activity from activity_object",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"links": {
-									"type": "object",
-									"properties": {
-										"self": {
-											"type": "string"
-										}
-									}
-								},
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/ResourceIdentifier"
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid ID supplied",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					},
-					"404": {
-						"description": "No activity_object found",
-						"schema": {
-							"$ref": "#/definitions/Errors"
-						}
-					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			},
 			"patch": {
 				"description": "Updates the relationship of activity_object to activity",
@@ -6640,10 +6118,73 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
+			},
+			"post": {
+				"description": "Adds activity as relationship to activity_object",
+				"operationId": "activity_object-to-activity-relationship-add",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "The activity_object id",
+						"type": "integer"
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"description": "Adds Activity",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Retrieve Activity from activity_object",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/ResourceIdentifier"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					},
+					"404": {
+						"description": "No activity_object found",
+						"schema": {
+							"$ref": "#/definitions/Errors"
+						}
+					}
+				}
 			},
 			"delete": {
 				"description": "Removes activity as relationship to activity_object",
@@ -6692,10 +6233,7 @@
 							"$ref": "#/definitions/Errors"
 						}
 					}
-				},
-				"tags": [
-					"core"
-				]
+				}
 			}
 		}
 	},
@@ -6720,12 +6258,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -6794,15 +6326,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -6810,15 +6340,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -6826,15 +6354,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -6842,15 +6368,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -6858,15 +6382,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -6884,6 +6406,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -6901,12 +6429,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -6991,15 +6513,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -7015,15 +6535,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -7039,15 +6557,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -7063,15 +6579,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -7087,15 +6601,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -7121,6 +6633,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7144,12 +6662,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7175,6 +6687,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7192,12 +6710,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7231,6 +6743,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7254,12 +6772,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7285,6 +6797,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7302,12 +6820,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7341,6 +6853,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7364,12 +6882,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7418,6 +6930,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7435,12 +6953,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7505,6 +7017,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7528,12 +7046,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7565,6 +7077,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7582,12 +7100,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7627,6 +7139,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7650,12 +7168,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7690,6 +7202,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7707,12 +7225,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7755,6 +7267,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7778,12 +7296,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7833,6 +7345,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7850,12 +7368,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -7913,6 +7425,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -7936,12 +7454,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -8020,15 +7532,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8036,15 +7546,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8052,15 +7560,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8068,15 +7574,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8095,15 +7599,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8121,6 +7623,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -8138,12 +7646,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -8230,15 +7732,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8254,15 +7754,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8278,15 +7776,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8302,15 +7798,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8345,15 +7839,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8379,6 +7871,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -8402,12 +7900,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -8439,6 +7931,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -8456,12 +7954,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -8501,6 +7993,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -8524,12 +8022,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -8563,15 +8055,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8579,21 +8069,25 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								}
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -8611,12 +8105,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -8658,15 +8146,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -8682,21 +8168,25 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								}
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -8720,12 +8210,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -8766,21 +8250,25 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								}
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -8798,12 +8286,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -8868,21 +8350,25 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								}
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -8906,12 +8392,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -8937,6 +8417,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -8954,12 +8440,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -8993,6 +8473,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -9016,12 +8502,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -9069,15 +8549,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -9085,15 +8563,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -9101,15 +8577,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -9117,15 +8591,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -9154,6 +8626,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -9171,12 +8649,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -9240,15 +8712,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -9264,15 +8734,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -9288,15 +8756,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -9312,15 +8778,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -9365,6 +8829,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -9388,12 +8858,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -9431,6 +8895,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -9448,12 +8918,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -9499,6 +8963,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -9522,12 +8992,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -9555,15 +9019,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -9571,21 +9033,25 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								}
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -9603,12 +9069,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -9644,15 +9104,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -9668,21 +9126,25 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								}
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -9706,12 +9168,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -9761,6 +9217,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -9778,12 +9240,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -9841,6 +9297,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -9864,12 +9326,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -9897,15 +9353,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -9934,6 +9388,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -9951,12 +9411,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -9992,15 +9446,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -10045,6 +9497,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10068,12 +9526,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10089,6 +9541,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10106,12 +9564,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10127,6 +9579,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10150,12 +9608,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10171,6 +9623,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10188,12 +9646,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10209,6 +9661,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10232,12 +9690,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10262,21 +9714,25 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								}
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10294,12 +9750,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10332,21 +9782,25 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								}
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10370,12 +9824,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10439,6 +9887,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10456,12 +9910,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10544,6 +9992,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10567,12 +10021,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10624,6 +10072,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10641,12 +10095,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10720,6 +10168,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10743,12 +10197,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10773,15 +10221,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -10789,15 +10235,13 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -10805,21 +10249,25 @@
 									"type": "object",
 									"properties": {
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								}
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10837,12 +10285,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -10875,15 +10317,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -10899,15 +10339,13 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								},
@@ -10923,21 +10361,25 @@
 											}
 										},
 										"data": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string"
-												},
-												"type": {
-													"type": "string"
-												}
-											}
+											"type": "object"
+										},
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
 										}
 									}
 								}
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -10961,12 +10403,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -11010,6 +10446,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},
@@ -11027,12 +10469,6 @@
 				"data": {
 					"type": "object",
 					"properties": {
-						"id": {
-							"type": "string"
-						},
-						"type": {
-							"type": "string"
-						},
 						"attributes": {
 							"type": "object",
 							"properties": {
@@ -11084,6 +10520,12 @@
 							}
 						}
 					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
 				}
 			}
 		},

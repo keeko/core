@@ -38,6 +38,10 @@ trait PreferenceDomainTrait {
 		$model = $serializer->hydrate(new Preference(), $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(PreferenceEvent::PRE_CREATE, $model, $data);
+		$this->dispatch(PreferenceEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -46,13 +50,11 @@ trait PreferenceDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new PreferenceEvent($model);
-		$this->dispatch(PreferenceEvent::PRE_CREATE, $event);
-		$this->dispatch(PreferenceEvent::PRE_SAVE, $event);
+		// save and dispatch post save hooks
 		$model->save();
-		$this->dispatch(PreferenceEvent::POST_CREATE, $event);
-		$this->dispatch(PreferenceEvent::POST_SAVE, $event);
+		$this->dispatch(PreferenceEvent::POST_CREATE, $model, $data);
+		$this->dispatch(PreferenceEvent::POST_SAVE, $model, $data);
+
 		return new Created(['model' => $model]);
 	}
 
@@ -71,12 +73,11 @@ trait PreferenceDomainTrait {
 		}
 
 		// delete
-		$event = new PreferenceEvent($model);
-		$this->dispatch(PreferenceEvent::PRE_DELETE, $event);
+		$this->dispatch(PreferenceEvent::PRE_DELETE, $model);
 		$model->delete();
 
 		if ($model->isDeleted()) {
-			$this->dispatch(PreferenceEvent::POST_DELETE, $event);
+			$this->dispatch(PreferenceEvent::POST_DELETE, $model);
 			return new Deleted(['model' => $model]);
 		}
 
@@ -155,6 +156,10 @@ trait PreferenceDomainTrait {
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
 
+		// dispatch pre save hooks
+		$this->dispatch(PreferenceEvent::PRE_UPDATE, $model, $data);
+		$this->dispatch(PreferenceEvent::PRE_SAVE, $model, $data);
+
 		// validate
 		$validator = $this->getValidator();
 		if ($validator !== null && !$validator->validate($model)) {
@@ -163,13 +168,10 @@ trait PreferenceDomainTrait {
 			]);
 		}
 
-		// dispatch
-		$event = new PreferenceEvent($model);
-		$this->dispatch(PreferenceEvent::PRE_UPDATE, $event);
-		$this->dispatch(PreferenceEvent::PRE_SAVE, $event);
+		// save and dispath post save hooks
 		$rows = $model->save();
-		$this->dispatch(PreferenceEvent::POST_UPDATE, $event);
-		$this->dispatch(PreferenceEvent::POST_SAVE, $event);
+		$this->dispatch(PreferenceEvent::POST_UPDATE, $model, $data);
+		$this->dispatch(PreferenceEvent::POST_SAVE, $model, $data);
 
 		$payload = ['model' => $model];
 
@@ -208,10 +210,10 @@ trait PreferenceDomainTrait {
 
 	/**
 	 * @param string $type
-	 * @param PreferenceEvent $event
+	 * @param Preference $model
+	 * @param array $data
 	 */
-	protected function dispatch($type, PreferenceEvent $event) {
-		$model = $event->getPreference();
+	protected function dispatch($type, Preference $model, array $data = []) {
 		$methods = [
 			PreferenceEvent::PRE_CREATE => 'preCreate',
 			PreferenceEvent::POST_CREATE => 'postCreate',
@@ -226,12 +228,12 @@ trait PreferenceDomainTrait {
 		if (isset($methods[$type])) {
 			$method = $methods[$type];
 			if (method_exists($this, $method)) {
-				$this->$method($model);
+				$this->$method($model, $data);
 			}
 		}
 
 		$dispatcher = $this->getServiceContainer()->getDispatcher();
-		$dispatcher->dispatch($type, $event);
+		$dispatcher->dispatch($type, new PreferenceEvent($model));
 	}
 
 	/**
