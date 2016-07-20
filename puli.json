@@ -1,6 +1,9 @@
 {
     "version": "1.0",
     "name": "keeko/core",
+    "path-mappings": {
+        "/keeko/core": "res/"
+    },
     "config": {
         "bootstrap-file": "vendor/autoload.php"
     },
