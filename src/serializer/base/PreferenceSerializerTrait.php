@@ -79,6 +79,7 @@ trait PreferenceSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
+		// hydrate
 		$model = HydrateUtils::hydrate($attribs, $model, ['key', 'value', 'module-id']);
 
 		// relationships

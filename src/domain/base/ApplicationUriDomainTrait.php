@@ -2,8 +2,8 @@
 namespace keeko\core\domain\base;
 
 use keeko\core\event\ApplicationUriEvent;
-use keeko\core\model\ApplicationUriQuery;
 use keeko\core\model\ApplicationUri;
+use keeko\core\model\ApplicationUriQuery;
 use keeko\framework\domain\payload\Created;
 use keeko\framework\domain\payload\Deleted;
 use keeko\framework\domain\payload\Found;
@@ -17,6 +17,7 @@ use keeko\framework\service\ServiceContainer;
 use keeko\framework\utils\NameUtils;
 use keeko\framework\utils\Parameters;
 use phootwork\collection\Map;
+use phootwork\lang\Text;
 
 /**
  */
@@ -34,6 +35,7 @@ trait ApplicationUriDomainTrait {
 	 */
 	public function create($data) {
 		// hydrate
+		$data = $this->normalize($data);
 		$serializer = ApplicationUri::getSerializer();
 		$model = $serializer->hydrate(new ApplicationUri(), $data);
 		$this->hydrateRelationships($model, $data);
@@ -43,7 +45,7 @@ trait ApplicationUriDomainTrait {
 		$this->dispatch(ApplicationUriEvent::PRE_SAVE, $model, $data);
 
 		// validate
-		$validator = $this->getValidator();
+		$validator = $this->getValidator($model);
 		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
@@ -85,6 +87,20 @@ trait ApplicationUriDomainTrait {
 	}
 
 	/**
+	 * @param array $data
+	 * @return array normalized data
+	 */
+	public function normalize(array $data) {
+		$service = $this->getServiceContainer();
+		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
+
+
+		$data['attributes'] = $attribs;
+
+		return $data;
+	}
+
+	/**
 	 * Returns a paginated result
 	 * 
 	 * @param Parameters $params
@@ -112,7 +128,11 @@ trait ApplicationUriDomainTrait {
 		}
 
 		// paginate
-		$model = $query->paginate($page, $size);
+		if ($size == -1) {
+			$model = $query->findAll();
+		} else {
+			$model = $query->paginate($page, $size);
+		}
 
 		// run response
 		return new Found(['model' => $model]);
@@ -210,6 +230,7 @@ trait ApplicationUriDomainTrait {
 		}
 
 		// hydrate
+		$data = $this->normalize($data);
 		$serializer = ApplicationUri::getSerializer();
 		$model = $serializer->hydrate($model, $data);
 		$this->hydrateRelationships($model, $data);
@@ -219,7 +240,7 @@ trait ApplicationUriDomainTrait {
 		$this->dispatch(ApplicationUriEvent::PRE_SAVE, $model, $data);
 
 		// validate
-		$validator = $this->getValidator();
+		$validator = $this->getValidator($model);
 		if ($validator !== null && !$validator->validate($model)) {
 			return new NotValid([
 				'errors' => $validator->getValidationFailures()
@@ -246,23 +267,41 @@ trait ApplicationUriDomainTrait {
 	 * @return void
 	 */
 	protected function applyFilter($query, $filter) {
-		foreach ($filter as $column => $value) {
-			$pos = strpos($column, '.');
-			if ($pos !== false) {
-				$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
-				$col = substr($column, $pos + 1);
-				$method = 'use' . $rel . 'Query';
-				if (method_exists($query, $method)) {
-					$sub = $query->$method();
-					$this->applyFilter($sub, [$col => $value]);
-					$sub->endUse();
-				}
-			} else {
-				$method = 'filterBy' . NameUtils::toStudlyCase($column);
-				if (method_exists($query, $method)) {
-					$query->$method($value);
-				}
-			}
+		if (is_array($filter)) {
+
+			// filter by fields
+			if (isset($filter['fields'])) {
+		    	foreach ($filter['fields'] as $column => $value) {
+		        	$pos = strpos($column, '.');
+		        	if ($pos !== false) {
+		        		$rel = NameUtils::toStudlyCase(substr($column, 0, $pos));
+		        		$col = substr($column, $pos + 1);
+		        		$method = 'use' . $rel . 'Query';
+		        		if (method_exists($query, $method)) {
+		        			$sub = $query->$method();
+		        			$this->applyFilter($sub, ['fields' => [$col => $value]]);
+		        			$sub->endUse();
+		        		}
+		        	} else {
+		        		$method = 'filterBy' . NameUtils::toStudlyCase($column);
+		        		if (method_exists($query, $method)) {
+		        			$query->$method($value);
+		        		}
+		        	}
+		        }
+		    }
+		    
+		    // filter by features
+		    if (isset($filter['features'])) {
+		    	$features = new Text($filter['features']);
+		    	if ($features->contains('random')) {
+		    		$query->addAscendingOrderByColumn('RAND()');
+		    	}
+		    }
+		}
+
+		if (method_exists($this, 'filter')) {
+			$this->filter($query, $filter);
 		}
 	}
 

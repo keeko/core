@@ -7,7 +7,7 @@ use keeko\framework\model\ApiModelInterface;
 
 /**
  * Skeleton subclass for representing a row from the 'kk_application_uri' table.
- *
+ * 
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
@@ -28,11 +28,10 @@ class ApplicationUri extends BaseApplicationUri implements ApiModelInterface {
 
 		return self::$serializer;
 	}
-	
+
+	/**
+	 */
 	public function getUrl() {
-		return sprintf('http%s://%s%s',
-			$this->getSecure() ? 's' : '',
-			$this->getHttphost(),
-			$this->getBasepath());
+		return sprintf('http%s://%s%s', $this->getSecure() ? 's' : '', $this->getHttphost(), $this->getBasepath());
 	}
 }

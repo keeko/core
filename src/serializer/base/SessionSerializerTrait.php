@@ -89,6 +89,7 @@ trait SessionSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
+		// hydrate
 		$model = HydrateUtils::hydrate($attribs, $model, ['token', 'user-id', 'ip', 'user-agent', 'browser', 'device', 'os', 'location']);
 
 		// relationships

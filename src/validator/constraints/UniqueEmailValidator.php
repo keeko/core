@@ -8,8 +8,8 @@ use keeko\core\model\UserQuery;
 class UniqueEmailValidator extends ConstraintValidator {
 	
 	public function validate($value, Constraint $constraint) {
-		$users = UserQuery::create()->findByEmail($value);
-		if (count($users) > 0) {
+		$users = UserQuery::create()->filterByEmail($value)->count();
+		if ($users > 0) {
 			$this->context->buildViolation($constraint->message)
 				->setParameter('email', $value)
 				->addViolation();

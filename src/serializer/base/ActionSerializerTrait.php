@@ -112,6 +112,7 @@ trait ActionSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
+		// hydrate
 		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'name', 'title', 'description', 'class-name', 'module-id']);
 
 		// relationships

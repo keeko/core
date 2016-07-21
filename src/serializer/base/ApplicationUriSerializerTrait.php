@@ -104,6 +104,7 @@ trait ApplicationUriSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
+		// hydrate
 		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'httphost', 'basepath', 'secure', 'application-id', 'localization-id']);
 
 		// relationships

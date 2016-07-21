@@ -4,11 +4,11 @@ namespace keeko\core\responder\json\model;
 use keeko\core\model\Extension;
 use keeko\framework\domain\payload\Found;
 use keeko\framework\foundation\AbstractPayloadResponder;
+use keeko\framework\utils\Parameters;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Tobscure\JsonApi\Collection;
 use Tobscure\JsonApi\Document;
-use Tobscure\JsonApi\Parameters;
 
 /**
  * Automatically generated JsonResponder for Paginates extensions
@@ -33,13 +33,15 @@ class ExtensionPaginateJsonResponder extends AbstractPayloadResponder {
 		$document = new Document($resource);
 
 		// meta
-		$document->setMeta([
-			'total' => $data->getNbResults(),
-			'first' => $data->getFirstPage(),
-			'next' => $data->getNextPage(),
-			'previous' => $data->getPreviousPage(),
-			'last' => $data->getLastPage()
-		]);
+		if ($params->getPage('size') != -1) {
+		    $document->setMeta([
+		    	'total' => $data->getNbResults(),
+		    	'first' => '%apiurl%/' . $serializer->getType(null) . '?' . $params->toQueryString(['page' => ['number' => $data->getFirstPage()]]),
+		    	'next' => '%apiurl%/' . $serializer->getType(null) . '?' . $params->toQueryString(['page' => ['number' => $data->getNextPage()]]),
+		    	'previous' => '%apiurl%/' . $serializer->getType(null) . '?' . $params->toQueryString(['page' => ['number' => $data->getPreviousPage()]]),
+		    	'last' => '%apiurl%/' . $serializer->getType(null) . '?' . $params->toQueryString(['page' => ['number' => $data->getLastPage()]])
+		    ]);
+		}
 
 		// return response
 		return new JsonResponse($document->toArray());

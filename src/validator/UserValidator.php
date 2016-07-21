@@ -11,13 +11,6 @@ class UserValidator extends ModelValidator {
 		
 		$validations = [];
 		
-		if ($prefs->getUserLogin() != SystemPreferences::LOGIN_EMAIL) {
-			$validations['user_name'] = [
-				['constraint' => 'notnull'],
-				['constraint' => 'unique-username']
-			];
-		}
-		
 		if ($prefs->getUserEmail() || $prefs->getUserLogin() != SystemPreferences::LOGIN_USERNAME) {
 			$validations['email'] = [['constraint' => 'email']];
 			if ($prefs->getUserLogin() != SystemPreferences::LOGIN_USERNAME) {
@@ -26,8 +19,8 @@ class UserValidator extends ModelValidator {
 		}
 
 		if ($prefs->getUserNames() == SystemPreferences::VALUE_REQUIRED) {
-			$validations['given_name'] = [['constraint' => 'notnull']];
-			$validations['family_name'] = [['constraint' => 'notnull']];
+			$validations['given-name'] = [['constraint' => 'notnull']];
+			$validations['family-name'] = [['constraint' => 'notnull']];
 		}
 		
 		if ($prefs->getUserBirth() == SystemPreferences::VALUE_REQUIRED) {

@@ -48,14 +48,16 @@ trait ActivitySerializerTrait {
 	 */
 	public function getAttributes($model, array $fields = null) {
 		return [
-			'verb' => $model->getVerb()
+			'verb' => $model->getVerb(),
+			'created-at' => $model->getCreatedAt(\DateTime::ISO8601),
+			'updated-at' => $model->getUpdatedAt(\DateTime::ISO8601)
 		];
 	}
 
 	/**
 	 */
 	public function getFields() {
-		return ['verb'];
+		return ['verb', 'created-at', 'updated-at'];
 	}
 
 	/**
@@ -83,7 +85,7 @@ trait ActivitySerializerTrait {
 	/**
 	 */
 	public function getSortFields() {
-		return ['verb'];
+		return ['verb', 'created-at', 'updated-at'];
 	}
 
 	/**
@@ -103,6 +105,7 @@ trait ActivitySerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
+		// hydrate
 		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'actor-id', 'verb', 'object-id', 'target-id']);
 
 		// relationships

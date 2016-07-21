@@ -128,6 +128,7 @@ trait LocalizationSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
+		// hydrate
 		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'parent-id', 'name', 'locale', 'language-id', 'ext-language-id', 'region', 'script-id', 'is-default']);
 
 		// relationships

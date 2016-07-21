@@ -98,6 +98,7 @@ trait ActivityObjectSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
+		// hydrate
 		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'class-name', 'type', 'display-name', 'url', 'reference-id', 'version', 'extra']);
 
 		// relationships

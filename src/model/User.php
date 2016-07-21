@@ -45,10 +45,10 @@ class User extends BaseUser implements ApiModelInterface {
 	 */
 	public function newActivity(array $activity) {
 		$resolver = new OptionsResolver();
-		$resolver->setRequired(['verb', 'object']);
-		$resolver->setDefined(['target']);
-		$resolver->setAllowedTypes('target', ['keeko\\framework\\model\\ActivityObjectInterface', 'keeko\\core\\model\\ActivityObject']);
-		$resolver->setAllowedTypes('object', ['keeko\\framework\\model\\ActivityObjectInterface', 'keeko\\core\\model\\ActivityObject']);
+		$resolver->setRequired(array('verb', 'object'));
+		$resolver->setDefined(array('target'));
+		$resolver->setAllowedTypes('target', array('keeko\\framework\\model\\ActivityObjectInterface', 'keeko\\core\\model\\ActivityObject'));
+		$resolver->setAllowedTypes('object', array('keeko\\framework\\model\\ActivityObjectInterface', 'keeko\\core\\model\\ActivityObject'));
 		$options = $resolver->resolve($activity);
 		$obj = new Activity();
 		$obj->setActor($this);
@@ -62,14 +62,11 @@ class User extends BaseUser implements ApiModelInterface {
 
 	/**
 	 * @param ActivityObject $ao
+	 * @param mixed $isObject
 	 * @return ActivityObject
 	 */
 	private function findActivityObject(ActivityObject $ao, $isObject) {
-		$q = ActivityObjectQuery::create()
-			->filterByClassName($ao->getClassName())
-			->filterByType($ao->getType())
-			->filterByReferenceId($ao->getReferenceId());
-
+		$q = ActivityObjectQuery::create()->filterByClassName($ao->getClassName())->filterByType($ao->getType())->filterByReferenceId($ao->getReferenceId());
 		if (method_exists($ao, 'getVersion') && $isObject) {
 		    $version = $ao->getVersion();
 		    if (!empty($version)) {
@@ -86,6 +83,7 @@ class User extends BaseUser implements ApiModelInterface {
 
 	/**
 	 * @param mixed $obj
+	 * @param mixed $isObject
 	 * @return ActivityObject
 	 */
 	private function getActivityObject($obj, $isObject = false) {

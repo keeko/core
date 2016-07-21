@@ -96,6 +96,7 @@ trait ApplicationSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
+		// hydrate
 		$model = HydrateUtils::hydrate($attribs, $model, ['class-name', 'id', 'name', 'title', 'description', 'installed-version']);
 
 		// relationships

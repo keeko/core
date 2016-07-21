@@ -10299,6 +10299,12 @@
 								},
 								"target_id": {
 									"type": "integer"
+								},
+								"created_at": {
+									"type": "string"
+								},
+								"updated_at": {
+									"type": "string"
 								}
 							}
 						},
@@ -10565,16 +10571,16 @@
 					"type": "integer"
 				},
 				"first": {
-					"type": "integer"
+					"type": "string"
 				},
 				"next": {
-					"type": "integer"
+					"type": "string"
 				},
 				"previous": {
-					"type": "integer"
+					"type": "string"
 				},
 				"last": {
-					"type": "integer"
+					"type": "string"
 				}
 			}
 		},

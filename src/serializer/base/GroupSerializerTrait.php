@@ -103,6 +103,7 @@ trait GroupSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
+		// hydrate
 		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'owner-id', 'name', 'is-guest', 'is-default', 'is-active', 'is-system']);
 
 		// relationships

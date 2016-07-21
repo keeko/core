@@ -102,6 +102,7 @@ trait ApiSerializerTrait {
 		// attributes
 		$attribs = isset($data['attributes']) ? $data['attributes'] : [];
 
+		// hydrate
 		$model = HydrateUtils::hydrate($attribs, $model, ['id', 'route', 'method', 'action-id', 'required-params']);
 
 		// relationships
